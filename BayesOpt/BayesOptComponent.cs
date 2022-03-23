@@ -46,6 +46,7 @@ namespace BayesOpt
             {
                 _cacheValue = 0;
                 _state = SolverState.Running;
+                Message = "Init";
             }
 
             if (!active)
@@ -79,6 +80,8 @@ namespace BayesOpt
                 Message = "Completed";
                 return;
             }
+
+            Message = "Running";
 
             foreach (IGH_DocumentObject obj in _doc.Objects)
             {
