@@ -1,17 +1,18 @@
-using System.Linq;
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 
-using GH_IO.Serialization;
-
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 
 namespace BayesOpt
 {
     public class BayesOptComponent : GH_Component
     {
-        int _i = 0;
+        private int _i = 0;
+        private double _cacheValue;
+        private GH_Document _doc;
+
         private SolverState _state = SolverState.Inactive;
 
         public BayesOptComponent()
@@ -23,7 +24,8 @@ namespace BayesOpt
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddBooleanParameter("run", "run", "", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Active", "Active", "", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Reset", "Reset", "", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -32,45 +34,79 @@ namespace BayesOpt
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            bool run = false;
-            if (!DA.GetData("run", ref run)) { return; }
+            bool active = false;
+            bool reset = false;
+            if (!DA.GetData("Active", ref active)) { return; }
+            if (!DA.GetData("Reset", ref reset)) { return; }
 
-            GH_Document doc = OnPingDocument();
-            doc.SolutionEnd -= OnSolutionEnd;
+            _doc = OnPingDocument();
+            _doc.SolutionEnd -= OnSolutionEnd;
 
-            if (run)
+            if (reset)
             {
-                Message = _state.ToString();
-                foreach (IGH_DocumentObject obj in doc.Objects)
-                {
-                    if (obj is Grasshopper.Kernel.Special.GH_Group group && obj.NickName == "Variables")
-                    {
-                        foreach (IGH_DocumentObject gObj in group.Objects())
-                        {
-                            if (gObj is Grasshopper.Kernel.Special.GH_NumberSlider s)
-                            {
-                                decimal min = s.Slider.Minimum;
-                                decimal max = s.Slider.Maximum;
-                                var random = new Random(_i++ * CreateRandomSeed());
+                _cacheValue = 0;
+                _state = SolverState.Running;
+            }
 
-                                decimal val = min + (max - min) * random.Next(0, 100) / 100;
-                                s.TrySetSliderValue(val);
-                            }
+            if (!active)
+            {
+                _cacheValue = 0;
+                _state = SolverState.Inactive;
+                Message = _state.ToString();
+                return;
+            }
+
+            _doc.SolutionEnd += OnSolutionEnd;
+
+            if (_state == SolverState.Inactive)
+            {
+                _cacheValue = 0;
+                _state = SolverState.Running;
+                Message = _state.ToString();
+            }
+        }
+
+        private void OnSolutionEnd(object sender, GH_SolutionEventArgs e)
+        {
+            if (_state == SolverState.Inactive) return;
+            if (_state == SolverState.Completed) return;
+
+            _cacheValue = GetResult();
+            if (_cacheValue > 10 && _cacheValue < 11)
+            {
+                // We're done.
+                _state = SolverState.Completed;
+                Message = "Completed";
+                return;
+            }
+
+            foreach (IGH_DocumentObject obj in _doc.Objects)
+            {
+                if (obj is Grasshopper.Kernel.Special.GH_Group group && group.NickName == "Variables")
+                {
+                    foreach (IGH_DocumentObject gObj in group.Objects())
+                    {
+                        if (gObj is Grasshopper.Kernel.Special.GH_NumberSlider s && _state != SolverState.Completed)
+                        {
+                            decimal min = s.Slider.Minimum;
+                            decimal max = s.Slider.Maximum;
+                            var random = new Random(_i++ * CreateRandomSeed());
+
+                            decimal val = min + (max - min) * random.Next(0, 100) / 100;
+                            s.SetSliderValue(val);
                         }
                     }
                 }
             }
-            doc.SolutionEnd += OnSolutionEnd;
-        }
-        private void OnSolutionEnd(object sender, GH_SolutionEventArgs e)
-        {
-            OnPingDocument().ScheduleSolution(5, Callback);
+
+            _doc.ScheduleSolution(5, Callback);
         }
 
         private void Callback(GH_Document doc)
         {
             ExpireSolution(false);
         }
+
         private int CreateRandomSeed()
         {
             var bs = new byte[4];
@@ -86,6 +122,35 @@ namespace BayesOpt
             Inactive,
             Running,
             Completed
+        }
+
+        private double GetResult()
+        {
+            foreach (IGH_DocumentObject obj in _doc.Objects)
+            {
+                if (!(obj is Grasshopper.Kernel.Parameters.Param_Number param))
+                {
+                    continue;
+                }
+                if (param.NickName == "Objectives")
+                {
+                    if (!(param.VolatileData is GH_Structure<GH_Number> data))
+                    {
+                        return double.NaN;
+                    }
+
+                    foreach (GH_Number number in data.AllData(true))
+                    {
+                        if (number != null)
+                        {
+                            return number.Value;
+                        }
+                    }
+
+                    return double.NaN;
+                }
+            }
+            return double.NaN;
         }
 
         protected override System.Drawing.Bitmap Icon => null;
