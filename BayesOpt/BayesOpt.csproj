@@ -6,6 +6,10 @@
     <Title>BayesOpt</Title>
     <Description>Description of BayesOpt</Description>
     <TargetExt>.gha</TargetExt>
+    <Authors>hrntsm</Authors>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    <AssemblyName>BayesOpt</AssemblyName>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
   
   <ItemGroup>
