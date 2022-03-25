@@ -1,10 +1,5 @@
 using System;
-using System.Security.Cryptography;
-
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
-using Grasshopper.Kernel.Types;
-
 using Python.Runtime;
 
 namespace BayesOpt
@@ -21,7 +16,8 @@ namespace BayesOpt
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Active", "Active", "", GH_ParamAccess.item, false);
-            pManager.AddBooleanParameter("Reset", "Reset", "", GH_ParamAccess.item, false);
+            pManager.AddIntegerParameter("Seed", "Seed", "", GH_ParamAccess.item, 10);
+            pManager.AddIntegerParameter("Trial", "Trial", "", GH_ParamAccess.item, 10);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -31,9 +27,10 @@ namespace BayesOpt
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             bool active = false;
-            bool reset = false;
+            int seed = 0, trial = 0;
             if (!DA.GetData("Active", ref active)) { return; }
-            if (!DA.GetData("Reset", ref reset)) { return; }
+            if (!DA.GetData("Seed", ref seed)) { return; }
+            if (!DA.GetData("Trial", ref trial)) { return; }
 
             if (active)
             {
@@ -41,15 +38,17 @@ namespace BayesOpt
                 {
                     PyModule ps = Py.CreateScope();
                     ps.Import("optuna");
+                    ps.Set("seed_val", seed);
+                    ps.Set("trial_val", trial);
                     ps.Exec(
                         "def objective(trial):\n" +
                         "    x = trial.suggest_float('x', -2, 2)\n" +
                         "    y = trial.suggest_float('y', -2, 2)\n" +
                         "    return (1 + (x + y + 1)**2 * (19 - 14* x + 3* x **2 -14* y + 6* x * y + 3* y **2)) * (30 + (2* x - 3* y) **2 * (18 - 32* x + 12* x **2 + 48* y - 36* x * y + 27* y **2))\n" +
 
-                        "sampler = optuna.samplers.TPESampler(seed=10)\n" +
+                        "sampler = optuna.samplers.TPESampler(seed=seed_val)\n" +
                         "study = optuna.create_study(sampler=sampler)\n" +
-                        "study.optimize(objective, n_trials=300)\n" +
+                        "study.optimize(objective, n_trials=trial_val)\n" +
 
                         "fig = optuna.visualization.plot_optimization_history(study)\n" +
                         "fig.show()\n"
