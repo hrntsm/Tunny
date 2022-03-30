@@ -7,7 +7,7 @@ using Grasshopper.Kernel.Types;
 
 namespace BayesOpt
 {
-    public class BayesOptComponent : GH_Component
+    public class Ten2ElevenSearchComponent : GH_Component
     {
         private int _i = 0;
         private double _cacheValue;
@@ -15,8 +15,8 @@ namespace BayesOpt
 
         private SolverState _state = SolverState.Inactive;
 
-        public BayesOptComponent()
-          : base("BayesOpt Component", "Nickname",
+        public Ten2ElevenSearchComponent()
+          : base("10 to 11 Search Component", "Nickname",
             "Description of component",
             "NaUtil", "BayesOpt")
         {
