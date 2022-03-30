@@ -1,5 +1,7 @@
 using System;
+
 using Grasshopper.Kernel;
+
 using Python.Runtime;
 
 namespace BayesOpt
