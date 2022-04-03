@@ -28,6 +28,7 @@ namespace BayesOpt.UI
 
             backgroundWorkerSolver.DoWork += Loop.RunOptimizationLoopMultiple;
             backgroundWorkerSolver.ProgressChanged += ProgressChangedHandler;
+            backgroundWorkerSolver.RunWorkerCompleted += ButtonStop_Click;
             backgroundWorkerSolver.WorkerReportsProgress = true;
             backgroundWorkerSolver.WorkerSupportsCancellation = true;
         }
@@ -63,7 +64,8 @@ namespace BayesOpt.UI
             GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas.DisableUI();
 
-            Loop.Runs = 1;
+            RunOptimize.Enabled = false;
+
             backgroundWorkerSolver.RunWorkerAsync(_component);
 
             Stop.Enabled = true;
@@ -71,6 +73,7 @@ namespace BayesOpt.UI
 
         private void ButtonStop_Click(object sender, EventArgs e)
         {
+            RunOptimize.Enabled = true;
             Stop.Enabled = false;
 
             //Enable GUI

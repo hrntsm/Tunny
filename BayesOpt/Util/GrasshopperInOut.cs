@@ -160,7 +160,7 @@ namespace BayesOpt.Util
 
             _document.NewSolution(true);
 
-            while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
+            while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
         }
 
         public void NewSolution(IList<decimal> parameters)

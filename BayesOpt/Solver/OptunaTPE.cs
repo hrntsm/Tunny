@@ -29,8 +29,8 @@ namespace BayesOpt.Solver
             List<Variable> variables, Func<IList<decimal>, List<double>> evaluate,
             string preset, string expertsettings, string installFolder, string documentPath)
         {
-            var settings = _presets[preset];
-            var dVar = variables.Count;
+            Dictionary<string, double> settings = _presets[preset];
+            int dVar = variables.Count;
             var lb = new double[dVar];
             var ub = new double[dVar];
             var integer = new bool[dVar];
@@ -71,12 +71,12 @@ namespace BayesOpt.Solver
 
     public class OptunaTPEAlgorithm
     {
-        public double[] Lb { get; private set; }
-        public double[] Ub { get; private set; }
-        public int IterMax { get; private set; }
-        public Func<double[], double[]> EvalFunc { get; private set; }
-        public double[] XOpt { get; private set; }
-        public double[] FxOpt { get; private set; }
+        private double[] Lb { get; set; }
+        private double[] Ub { get; set; }
+        private int IterMax { get; set; }
+        private Func<double[], double[]> EvalFunc { get; set; }
+        private double[] XOpt { get; set; }
+        private double[] FxOpt { get; set; }
 
         public OptunaTPEAlgorithm(double[] lb, double[] ub, int iterMax, Func<double[], double[]> evalFunc)
         {
@@ -114,6 +114,9 @@ namespace BayesOpt.Solver
                 }
                 dynamic vis = optuna.visualization.plot_optimization_history(study);
                 vis.show();
+
+                XOpt = (double[])study.best_params.values();
+                FxOpt = new[] { (double)study.best_value };
             }
         }
 

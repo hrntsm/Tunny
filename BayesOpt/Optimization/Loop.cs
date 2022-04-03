@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 using BayesOpt.Component;
 using BayesOpt.Solver;
+using BayesOpt.UI;
 
 namespace BayesOpt.Util
 {
@@ -10,7 +13,6 @@ namespace BayesOpt.Util
     {
         private static BackgroundWorker s_worker;
         private static WithUI s_component;
-        public static int Runs;
 
         internal static void RunOptimizationLoopMultiple(object sender, DoWorkEventArgs e)
         {
@@ -21,40 +23,46 @@ namespace BayesOpt.Util
             s_component.GhInOut.SetVariables();
             s_component.GhInOut.SetObjectives();
 
-            int runCount = 0;
+            double[] result = RunOptimizationLoop(s_worker);
+            List<decimal> decimalResults = result.Select(Convert.ToDecimal).ToList();
 
-            while (runCount < Runs)
+            s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+            s_worker.ReportProgress(0, decimalResults);
+            while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+            { /* just wait until the cows come home */}
+
+            if (s_worker != null)
             {
-                if (s_worker == null || s_worker.CancellationPending)
-                {
-                    break;
-                }
-
-                RunOptimizationLoop(s_worker);
-
-                runCount++;
+                s_worker.CancelAsync();
             }
         }
 
-        private static void RunOptimizationLoop(BackgroundWorker worker)
+        private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
 
             if (worker.CancellationPending)
             {
-                return;
+                return new[] { double.NaN };
             }
 
             var solver = new OptunaTPE();
 
             bool solverStarted = solver.RunSolver(
                 variables, EvaluateFunction, "OptunaTPE", "", "", "");
+
+            return solverStarted ? solver.XOpt : new[] { double.NaN };
         }
 
         public static List<double> EvaluateFunction(IList<decimal> values)
         {
+            s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+
             s_worker.ReportProgress(0, values);
-            var objectiveValues = s_component.GhInOut.GetObjectiveValues();
+            while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+            { /*just wait*/ }
+
+            List<double> objectiveValues = s_component.GhInOut.GetObjectiveValues();
             return objectiveValues;
         }
     }
