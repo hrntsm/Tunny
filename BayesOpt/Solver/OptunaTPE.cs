@@ -33,12 +33,14 @@ namespace BayesOpt.Solver
             var lb = new double[dVar];
             var ub = new double[dVar];
             var integer = new bool[dVar];
+            var nickName = new string[dVar];
 
             for (var i = 0; i < dVar; i++)
             {
                 lb[i] = Convert.ToDouble(variables[i].LowerBond);
                 ub[i] = Convert.ToDouble(variables[i].UpperBond);
                 integer[i] = variables[i].Integer;
+                nickName[i] = variables[i].NickName;
             }
 
             double[] Eval(double[] x, int progress)
@@ -49,7 +51,7 @@ namespace BayesOpt.Solver
 
             try
             {
-                var tpe = new OptunaTPEAlgorithm(lb, ub, settings, Eval);
+                var tpe = new OptunaTPEAlgorithm(lb, ub, nickName, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
@@ -113,15 +115,17 @@ namespace BayesOpt.Solver
     {
         private double[] Lb { get; set; }
         private double[] Ub { get; set; }
+        private string[] NickName { get; set; }
         private Dictionary<string, object> Settings { get; set; }
         private Func<double[], int, double[]> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
-        public OptunaTPEAlgorithm(double[] lb, double[] ub, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
+        public OptunaTPEAlgorithm(double[] lb, double[] ub, string[] nickName, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
         {
             Lb = lb;
             Ub = ub;
+            NickName = nickName;
             Settings = settings;
             EvalFunc = evalFunc;
         }
@@ -146,7 +150,7 @@ namespace BayesOpt.Solver
                     dynamic trial = study.ask();
                     for (int j = 0; j < n; j++)
                     {
-                        xTest[j] = trial.suggest_uniform(j, Lb[j], Ub[j]);
+                        xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
                     }
                     double fxTest = EvalFunc(xTest, progress)[0];
                     study.tell(trial, fxTest);

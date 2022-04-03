@@ -74,6 +74,7 @@ namespace BayesOpt.Util
                 decimal lowerBond;
                 decimal upperBond;
                 bool isInteger;
+                string nickName = slider.NickName;
 
                 switch (slider.Slider.Type)
                 {
@@ -99,7 +100,7 @@ namespace BayesOpt.Util
                         break;
                 }
 
-                variables.Add(new Variable(lowerBond, upperBond, isInteger));
+                variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
             }
 
             Variables = variables;
