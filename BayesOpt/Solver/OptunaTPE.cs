@@ -26,10 +26,9 @@ namespace BayesOpt.Solver
         }
 
         public bool RunSolver(
-            List<Variable> variables, Func<IList<decimal>, List<double>> evaluate,
-            string preset, string expertsettings, string installFolder, string documentPath)
+            List<Variable> variables, Func<IList<decimal>, int, List<double>> evaluate,
+            string preset, Dictionary<string, object> settings, string installFolder, string documentPath)
         {
-            Dictionary<string, double> settings = _presets[preset];
             int dVar = variables.Count;
             var lb = new double[dVar];
             var ub = new double[dVar];
@@ -42,16 +41,15 @@ namespace BayesOpt.Solver
                 integer[i] = variables[i].Integer;
             }
 
-            double[] Eval(double[] x)
+            double[] Eval(double[] x, int progress)
             {
                 List<decimal> decimals = x.Select(Convert.ToDecimal).ToList();
-                return evaluate(decimals).ToArray();
+                return evaluate(decimals, progress).ToArray();
             }
 
             try
             {
-                var iterMax = (int)settings["itermax"];
-                var tpe = new OptunaTPEAlgorithm(lb, ub, iterMax, Eval);
+                var tpe = new OptunaTPEAlgorithm(lb, ub, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
@@ -73,38 +71,41 @@ namespace BayesOpt.Solver
     {
         private double[] Lb { get; set; }
         private double[] Ub { get; set; }
-        private int IterMax { get; set; }
-        private Func<double[], double[]> EvalFunc { get; set; }
+        private Dictionary<string, object> Settings { get; set; }
+        private Func<double[], int, double[]> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
-        public OptunaTPEAlgorithm(double[] lb, double[] ub, int iterMax, Func<double[], double[]> evalFunc)
+        public OptunaTPEAlgorithm(double[] lb, double[] ub, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
         {
             Lb = lb;
             Ub = ub;
-            IterMax = iterMax;
+            Settings = settings;
             EvalFunc = evalFunc;
         }
 
         public void Solve()
         {
             int n = Lb.Length;
+            int nTrials = (int)Settings["nTrials"];
+            bool loadIfExists = (bool)Settings["loadIfExists"];
+            string studyName = (string)Settings["studyName"];
 
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.create_study();
-                int nTrials = IterMax;
+                dynamic study = optuna.create_study(storage: "sqlite:///grasshopper_opt.db", study_name: studyName, load_if_exists: loadIfExists);
 
                 for (int i = 0; i < nTrials; i++)
                 {
+                    int progress = i / nTrials;
                     double[] xTest = new double[n];
                     dynamic trial = study.ask();
                     for (int j = 0; j < n; j++)
                     {
                         xTest[j] = trial.suggest_uniform(j, Lb[j], Ub[j]);
                     }
-                    double fxTest = EvalFunc(xTest)[0];
+                    double fxTest = EvalFunc(xTest, progress)[0];
                     study.tell(trial, fxTest);
 
                     if (double.IsNaN(fxTest))

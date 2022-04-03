@@ -10,8 +10,8 @@ namespace BayesOpt.Solver
         double[] XOpt { get; }
         double[] FxOpt { get; }
         bool RunSolver(
-            List<Variable> variables, Func<IList<decimal>,
-            List<double>> evaluate, string preset, string expertsettings,
+            List<Variable> variables, Func<IList<decimal>, int, List<double>> evaluate,
+            string preset, Dictionary<string, object> settings,
             string installFolder, string documentPath);
 
         string GetErrorMessage();

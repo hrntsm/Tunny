@@ -25,6 +25,7 @@ namespace BayesOpt.UI
         {
             InitializeComponent();
             _component = component;
+            SamplerComboBox.SelectedIndex = 0;
 
             backgroundWorkerSolver.DoWork += Loop.RunOptimizationLoopMultiple;
             backgroundWorkerSolver.ProgressChanged += ProgressChangedHandler;
@@ -35,13 +36,11 @@ namespace BayesOpt.UI
 
         private void ProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
-            switch (e.ProgressPercentage)
-            {
-                case 0:
-                    var parameters = (IList<decimal>)e.UserState;
-                    UpdateGrasshopper(parameters);
-                    break;
-            }
+            var parameters = (IList<decimal>)e.UserState;
+            UpdateGrasshopper(parameters);
+
+            progressBar.Value = e.ProgressPercentage;
+            progressBar.Update();
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
@@ -64,21 +63,45 @@ namespace BayesOpt.UI
             GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas.DisableUI();
 
-            RunOptimize.Enabled = false;
+            runOptimizeButton.Enabled = false;
+            Loop.NTrials = (int)nTrialNumUpDown.Value;
+            Loop.LoadIfExists = loadIfExistsCheckBox.Checked;
+            Loop.SamplerType = SamplerComboBox.Text;
+            Loop.StudyName = studyNameTextBox.Text;
 
             backgroundWorkerSolver.RunWorkerAsync(_component);
 
-            Stop.Enabled = true;
+            stopButton.Enabled = true;
         }
 
         private void ButtonStop_Click(object sender, EventArgs e)
         {
-            RunOptimize.Enabled = true;
-            Stop.Enabled = false;
+            runOptimizeButton.Enabled = true;
+            stopButton.Enabled = false;
 
             //Enable GUI
             GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas.EnableUI();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LoadIfExists_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void nTrialNumUpDown_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
