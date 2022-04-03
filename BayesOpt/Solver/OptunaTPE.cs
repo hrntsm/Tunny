@@ -98,7 +98,7 @@ namespace BayesOpt.Solver
 
                 for (int i = 0; i < nTrials; i++)
                 {
-                    int progress = i / nTrials;
+                    int progress = i * 100 / nTrials;
                     double[] xTest = new double[n];
                     dynamic trial = study.ask();
                     for (int j = 0; j < n; j++)

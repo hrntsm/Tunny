@@ -95,6 +95,8 @@ namespace BayesOpt.UI
             // loadIfExistsCheckBox
             // 
             this.loadIfExistsCheckBox.AutoSize = true;
+            this.loadIfExistsCheckBox.Checked = true;
+            this.loadIfExistsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.loadIfExistsCheckBox.Location = new System.Drawing.Point(12, 78);
             this.loadIfExistsCheckBox.Name = "loadIfExistsCheckBox";
             this.loadIfExistsCheckBox.Size = new System.Drawing.Size(146, 16);
@@ -109,6 +111,7 @@ namespace BayesOpt.UI
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(195, 23);
             this.progressBar.TabIndex = 6;
+            this.progressBar.Click += new System.EventHandler(this.progressBar_Click);
             // 
             // SamplerComboBox
             // 

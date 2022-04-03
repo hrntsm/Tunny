@@ -103,5 +103,10 @@ namespace BayesOpt.UI
         {
 
         }
+
+        private void progressBar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
