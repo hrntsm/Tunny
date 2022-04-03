@@ -1,4 +1,4 @@
-namespace BaysOpt.Util
+namespace BayesOpt.Util
 {
     public struct Variable
     {

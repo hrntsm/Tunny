@@ -6,12 +6,10 @@ using System.Windows.Forms;
 
 using BayesOpt.Component;
 
-using BaysOpt.Util;
-
-using Grasshopper.Kernel; 
-using Grasshopper.Kernel.Types; 
-using Grasshopper.Kernel.Data; 
+using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
+using Grasshopper.Kernel.Types;
 
 namespace BayesOpt.Util
 {
@@ -35,7 +33,7 @@ namespace BayesOpt.Util
             InputGuids = new List<Guid>();
         }
 
-        public bool SetInputs()
+        public bool SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
 
@@ -60,18 +58,18 @@ namespace BayesOpt.Util
                 }
             }
 
-            SetVariables();
+            SetSliderValues();
             return true;
         }
 
-        public void SetVariables()
+        private void SetSliderValues()
         {
             var variables = new List<Variable>();
 
             foreach (GH_NumberSlider slider in Sliders)
             {
-                var min = slider.Slider.Minimum;
-                var max = slider.Slider.Maximum;
+                decimal min = slider.Slider.Minimum;
+                decimal max = slider.Slider.Maximum;
 
                 decimal lowerBond;
                 decimal upperBond;
@@ -119,7 +117,7 @@ namespace BayesOpt.Util
             return true;
         }
 
-        public bool SetSliderValues(IList<decimal> parameters)
+        private bool SetSliderValues(IList<decimal> parameters)
         {
             int i = 0;
 
@@ -156,7 +154,7 @@ namespace BayesOpt.Util
             return true;
         }
 
-        public void Recalculate()
+        private void Recalculate()
         {
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
 

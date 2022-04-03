@@ -29,27 +29,40 @@ namespace BayesOpt.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.RunOptimize = new System.Windows.Forms.Button();
+            this.backgroundWorkerSolver = new System.ComponentModel.BackgroundWorker();
+            this.Stop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // RunOptimize
             // 
-            this.button1.Location = new System.Drawing.Point(80, 41);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(103, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "RunOptimise";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.RunOptimize_Click);
+            this.RunOptimize.Location = new System.Drawing.Point(26, 43);
+            this.RunOptimize.Name = "RunOptimize";
+            this.RunOptimize.Size = new System.Drawing.Size(103, 23);
+            this.RunOptimize.TabIndex = 0;
+            this.RunOptimize.Text = "RunOptimize";
+            this.RunOptimize.UseVisualStyleBackColor = true;
+            this.RunOptimize.Click += new System.EventHandler(this.ButtonRunOptimize_Click);
+            // 
+            // Stop
+            // 
+            this.Stop.Location = new System.Drawing.Point(163, 43);
+            this.Stop.Name = "Stop";
+            this.Stop.Size = new System.Drawing.Size(75, 23);
+            this.Stop.TabIndex = 1;
+            this.Stop.Text = "Stop";
+            this.Stop.UseVisualStyleBackColor = true;
+            this.Stop.Click += new System.EventHandler(this.ButtonStop_Click);
             // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(270, 102);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Stop);
+            this.Controls.Add(this.RunOptimize);
             this.Name = "OptimizationWindow";
-            this.Text = "OptimiseWindow";
+            this.Text = "Optimization Window";
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
             this.ResumeLayout(false);
 
@@ -57,7 +70,9 @@ namespace BayesOpt.UI
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button RunOptimize;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerSolver;
+        private System.Windows.Forms.Button Stop;
     }
 }
 
