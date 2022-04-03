@@ -65,6 +65,48 @@ namespace BayesOpt.Solver
         public string GetErrorMessage() => "";
         public double[] Get_XOptimum => XOpt;
         public IEnumerable<string> GetPresetNames() => _presets.Keys;
+
+        public void ShowResult(string visualize, string studyName)
+        {
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {   dynamic vis;
+                dynamic optuna = Py.Import("optuna");
+                dynamic study = optuna.create_study(storage: "sqlite:///grasshopper_opt.db", study_name: studyName, load_if_exists: true);
+                switch (visualize)
+                {
+                    case "contour":
+                        vis = optuna.visualization.plot_contour(study);
+                        break;
+                    case "edf":
+                        vis = optuna.visualization.plot_edf(study);
+                        break;
+                    case "intermediate values":
+                        vis = optuna.visualization.plot_intermediate_values(study);
+                        break;
+                    case "optimization history":
+                        vis = optuna.visualization.plot_optimization_history(study);
+                        break;
+                    case "parallel coordinate":
+                        vis = optuna.visualization.plot_parallel_coordinate(study);
+                        break;
+                    case "param importances":
+                        vis = optuna.visualization.plot_param_importances(study);
+                        break;
+                    case "pareto front":
+                        vis = optuna.visualization.plot_pareto_front(study);
+                        break;
+                    case "slice":
+                        vis = optuna.visualization.plot_slice(study);
+                        break;
+                    default:
+                        vis = optuna.visualization.plot_optimization_history(study);
+                        break;
+                }
+                vis.show();
+            }
+            PythonEngine.Shutdown();
+        }
     }
 
     public class OptunaTPEAlgorithm
@@ -91,6 +133,7 @@ namespace BayesOpt.Solver
             bool loadIfExists = (bool)Settings["loadIfExists"];
             string studyName = (string)Settings["studyName"];
 
+            PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
@@ -113,13 +156,13 @@ namespace BayesOpt.Solver
                         return;
                     }
                 }
-                dynamic vis = optuna.visualization.plot_optimization_history(study);
-                vis.show();
 
                 XOpt = (double[])study.best_params.values();
                 FxOpt = new[] { (double)study.best_value };
             }
+            PythonEngine.Shutdown();
         }
+
 
         public double[] Get_XOptimum()
         {

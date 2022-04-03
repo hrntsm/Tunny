@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 
 using BayesOpt.Component;
+using BayesOpt.Solver;
 using BayesOpt.Util;
 
 using Grasshopper.GUI;
@@ -25,7 +26,8 @@ namespace BayesOpt.UI
         {
             InitializeComponent();
             _component = component;
-            SamplerComboBox.SelectedIndex = 0;
+            samplerComboBox.SelectedIndex = 0;
+            visualizeTypeComboBox.SelectedIndex = 3;
 
             backgroundWorkerSolver.DoWork += Loop.RunOptimizationLoopMultiple;
             backgroundWorkerSolver.ProgressChanged += ProgressChangedHandler;
@@ -66,7 +68,7 @@ namespace BayesOpt.UI
             runOptimizeButton.Enabled = false;
             Loop.NTrials = (int)nTrialNumUpDown.Value;
             Loop.LoadIfExists = loadIfExistsCheckBox.Checked;
-            Loop.SamplerType = SamplerComboBox.Text;
+            Loop.SamplerType = samplerComboBox.Text;
             Loop.StudyName = studyNameTextBox.Text;
 
             backgroundWorkerSolver.RunWorkerAsync(_component);
@@ -84,29 +86,10 @@ namespace BayesOpt.UI
             ghCanvas.EnableUI();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void VisualizeButton_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void LoadIfExists_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void nTrialNumUpDown_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar_Click(object sender, EventArgs e)
-        {
-
+            var optuna = new OptunaTPE();
+            optuna.ShowResult(visualizeTypeComboBox.Text, studyNameTextBox.Text);
         }
     }
 }
