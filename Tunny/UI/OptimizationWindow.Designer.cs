@@ -43,9 +43,9 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
-            this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.VisualizeButton = new System.Windows.Forms.Button();
+            this.visualizeTypeLabel = new System.Windows.Forms.Label();
+            this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -199,12 +199,31 @@ namespace Tunny.UI
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
+            // VisualizeButton
+            // 
+            this.VisualizeButton.Location = new System.Drawing.Point(6, 54);
+            this.VisualizeButton.Name = "VisualizeButton";
+            this.VisualizeButton.Size = new System.Drawing.Size(75, 23);
+            this.VisualizeButton.TabIndex = 2;
+            this.VisualizeButton.Text = "Show";
+            this.VisualizeButton.UseVisualStyleBackColor = true;
+            this.VisualizeButton.Click += new System.EventHandler(this.VisualizeButton_Click);
+            // 
+            // visualizeTypeLabel
+            // 
+            this.visualizeTypeLabel.AutoSize = true;
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(3, 9);
+            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
+            this.visualizeTypeLabel.Size = new System.Drawing.Size(77, 12);
+            this.visualizeTypeLabel.TabIndex = 1;
+            this.visualizeTypeLabel.Text = "Visualize type";
+            // 
             // visualizeTypeComboBox
             // 
             this.visualizeTypeComboBox.FormattingEnabled = true;
             this.visualizeTypeComboBox.Items.AddRange(new object[] {
             "contour",
-            "edf",
+            "EDF",
             "intermediate values",
             "optimization history",
             "parallel coordinate",
@@ -216,25 +235,6 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(150, 20);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
-            // visualizeTypeLabel
-            // 
-            this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(3, 9);
-            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
-            this.visualizeTypeLabel.Size = new System.Drawing.Size(77, 12);
-            this.visualizeTypeLabel.TabIndex = 1;
-            this.visualizeTypeLabel.Text = "Visualize type";
-            // 
-            // VisualizeButton
-            // 
-            this.VisualizeButton.Location = new System.Drawing.Point(6, 54);
-            this.VisualizeButton.Name = "VisualizeButton";
-            this.VisualizeButton.Size = new System.Drawing.Size(75, 23);
-            this.VisualizeButton.TabIndex = 2;
-            this.VisualizeButton.Text = "Show";
-            this.VisualizeButton.UseVisualStyleBackColor = true;
-            this.VisualizeButton.Click += new System.EventHandler(this.VisualizeButton_Click);
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -242,7 +242,7 @@ namespace Tunny.UI
             this.ClientSize = new System.Drawing.Size(244, 245);
             this.Controls.Add(this.optimizeTabControl);
             this.Name = "OptimizationWindow";
-            this.Text = "Opt";
+            this.Text = "Tunny";
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).EndInit();
             this.optimizeTabControl.ResumeLayout(false);
