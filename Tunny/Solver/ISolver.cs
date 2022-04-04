@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-using BayesOpt.Util;
+using Tunny.Util;
 
-namespace BayesOpt.Solver
+namespace Tunny.Solver
 {
     internal interface ISolver
     {

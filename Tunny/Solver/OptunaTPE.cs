@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using BayesOpt.Util;
+using Tunny.Util;
 
 using Python.Runtime;
 
-namespace BayesOpt.Solver
+namespace Tunny.Solver
 {
     public class OptunaTPE : ISolver
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace BayesOpt.UI
+namespace Tunny.UI
 {
     partial class OptimizationWindow
     {

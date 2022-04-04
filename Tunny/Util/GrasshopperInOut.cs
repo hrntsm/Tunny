@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-using BayesOpt.Component;
+using Tunny.Component;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-namespace BayesOpt.Util
+namespace Tunny.Util
 {
     public class GrasshopperInOut
     {
@@ -20,12 +20,12 @@ namespace BayesOpt.Util
         public List<Guid> InputGuids;
         public List<Variable> Variables;
         public List<IGH_Param> Objectives;
-        public WithUI Component;
+        public TunnyComponent Component;
         public string ComponentFolder;
         public string DocumentPath;
         public string DocumentName;
 
-        public GrasshopperInOut(WithUI component)
+        public GrasshopperInOut(TunnyComponent component)
         {
             Component = component;
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(Component).Location);

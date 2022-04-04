@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-using BayesOpt.Component;
-using BayesOpt.Solver;
-using BayesOpt.UI;
+using Tunny.Component;
+using Tunny.Solver;
+using Tunny.UI;
 
-namespace BayesOpt.Util
+namespace Tunny.Util
 {
     internal static class Loop
     {
         private static BackgroundWorker s_worker;
-        private static WithUI s_component;
+        private static TunnyComponent s_component;
         public static int NTrials;
         public static bool LoadIfExists;
         public static string SamplerType;
@@ -21,7 +21,7 @@ namespace BayesOpt.Util
         internal static void RunOptimizationLoopMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as WithUI;
+            s_component = e.Argument as TunnyComponent;
 
             s_component.GhInOutInstantiate();
             s_component.GhInOut.SetVariables();

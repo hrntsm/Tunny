@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <Version>1.0</Version>
-    <Title>BayesOpt</Title>
-    <Description>Description of BayesOpt</Description>
+    <Title>Tunny</Title>
+    <Description>Tunny is an optimization component wrapped in optuna.</Description>
     <TargetExt>.gha</TargetExt>
     <Authors>hrntsm</Authors>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>

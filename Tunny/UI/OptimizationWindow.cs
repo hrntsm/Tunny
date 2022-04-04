@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using BayesOpt.Component;
-using BayesOpt.Solver;
-using BayesOpt.Util;
+using Tunny.Component;
+using Tunny.Solver;
+using Tunny.Util;
 
 using Grasshopper.GUI;
 
-namespace BayesOpt.UI
+namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private readonly WithUI _component;
+        private readonly TunnyComponent _component;
         internal enum GrasshopperStates
         {
             RequestSent,
@@ -22,7 +22,7 @@ namespace BayesOpt.UI
         }
         internal GrasshopperStates GrasshopperStatus;
 
-        public OptimizationWindow(WithUI component)
+        public OptimizationWindow(TunnyComponent component)
         {
             InitializeComponent();
             _component = component;

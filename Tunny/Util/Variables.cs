@@ -1,4 +1,4 @@
-namespace BayesOpt.Util
+namespace Tunny.Util
 {
     public struct Variable
     {

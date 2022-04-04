@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using BayesOpt.UI;
-using BayesOpt.Util;
+using Tunny.UI;
+using Tunny.Util;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
 
-namespace BayesOpt.Component
+namespace Tunny.Component
 {
-    public class WithUI : GH_Component
+    public class TunnyComponent : GH_Component
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
 
-        public WithUI()
-          : base("component", "Nickname",
-              "Description",
-              "Category", "Subcategory")
+        public override GH_Exposure Exposure => GH_Exposure.senary;
+
+        public TunnyComponent()
+          : base("Tunny", "Tunny",
+              "Tunny is an optimization component wrapped in optuna.",
+              "Params", "Util")
         {
         }
 
@@ -55,7 +57,7 @@ namespace BayesOpt.Component
 
             public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
             {
-                ((WithUI)Owner).ShowOptimizationWindow();
+                ((TunnyComponent)Owner).ShowOptimizationWindow();
                 return GH_ObjectResponse.Handled;
             }
         }
