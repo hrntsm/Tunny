@@ -8,7 +8,7 @@
     <TargetExt>.gha</TargetExt>
     <Authors>hrntsm</Authors>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-    <AssemblyName>BayesOpt</AssemblyName>
+    <AssemblyName>Tunny</AssemblyName>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
   </PropertyGroup>
   
@@ -25,5 +25,9 @@
     <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)Python $(OutDir)Python /I /S /D" />
+  </Target>
 
 </Project>

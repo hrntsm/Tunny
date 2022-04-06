@@ -17,12 +17,8 @@ namespace Tunny.Solver
 
         public OptunaTPE()
         {
-            var tpe = new Dictionary<string, double>
-            {
-                {"itermax", 100}
-            };
-
-            _presets.Add("OptunaTPE", tpe);
+            const string envPath = @".\Python\python310.dll";
+            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         public bool RunSolver(
