@@ -64,6 +64,7 @@ namespace Tunny.Util
 
         private void SetSliderValues()
         {
+            int i = 0;
             var variables = new List<Variable>();
 
             foreach (GH_NumberSlider slider in Sliders)
@@ -75,6 +76,10 @@ namespace Tunny.Util
                 decimal upperBond;
                 bool isInteger;
                 string nickName = slider.NickName;
+                if (nickName == "")
+                {
+                    nickName = "param" + i++;
+                }
 
                 switch (slider.Slider.Type)
                 {
