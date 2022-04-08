@@ -88,7 +88,7 @@ namespace Tunny.UI
 
         private void VisualizeButton_Click(object sender, EventArgs e)
         {
-            var optuna = new OptunaTPE(_component.GhInOut.ComponentFolder);
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder);
             optuna.ShowResult(visualizeTypeComboBox.Text, studyNameTextBox.Text);
         }
     }

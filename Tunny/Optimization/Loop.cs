@@ -50,7 +50,7 @@ namespace Tunny.Util
                 return new[] { double.NaN };
             }
 
-            var solver = new OptunaTPE(s_component.GhInOut.ComponentFolder);
+            var solver = new Optuna(s_component.GhInOut.ComponentFolder);
             Dictionary<string, object> settings = new Dictionary<string, object>()
             {
                 { "nTrials", NTrials },

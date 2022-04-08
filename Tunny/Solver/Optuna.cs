@@ -10,7 +10,7 @@ using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class OptunaTPE : ISolver
+    public class Optuna : ISolver
     {
         public double[] XOpt { get; private set; }
         public double[] FxOpt { get; private set; }
@@ -18,7 +18,7 @@ namespace Tunny.Solver
         private readonly string _componentFolder;
         private readonly Dictionary<string, Dictionary<string, double>> _presets = new Dictionary<string, Dictionary<string, double>>();
 
-        public OptunaTPE(string componentFolder)
+        public Optuna(string componentFolder)
         {
             _componentFolder = componentFolder;
             string envPath = componentFolder + @"\Python\python310.dll";
@@ -51,7 +51,7 @@ namespace Tunny.Solver
 
             try
             {
-                var tpe = new OptunaTPEAlgorithm(lb, ub, nickName, settings, Eval);
+                var tpe = new OptunaAlgorithm(lb, ub, nickName, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
@@ -61,7 +61,7 @@ namespace Tunny.Solver
             }
             catch (Exception e)
             {
-                TunnyMessageBox.Show("Tunny runtime error:\nPlease below message to Tunny support.\n" + e.Message, "Tunny");
+                TunnyMessageBox.Show("Tunny runtime error:\nPlease below message to Tunny support.\n\n\"" + e.Message + "\"", "Tunny");
                 return false;
             }
         }
@@ -122,7 +122,7 @@ namespace Tunny.Solver
         }
     }
 
-    public class OptunaTPEAlgorithm
+    public class OptunaAlgorithm
     {
         private double[] Lb { get; set; }
         private double[] Ub { get; set; }
@@ -132,7 +132,7 @@ namespace Tunny.Solver
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
-        public OptunaTPEAlgorithm(double[] lb, double[] ub, string[] nickName, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
+        public OptunaAlgorithm(double[] lb, double[] ub, string[] nickName, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
         {
             Lb = lb;
             Ub = ub;
@@ -144,6 +144,7 @@ namespace Tunny.Solver
         public void Solve()
         {
             int n = Lb.Length;
+            string samplerType = (string)Settings["samplerType"];
             int nTrials = (int)Settings["nTrials"];
             bool loadIfExists = (bool)Settings["loadIfExists"];
             string studyName = (string)Settings["studyName"];
@@ -153,7 +154,24 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.create_study(storage: strage, study_name: studyName, load_if_exists: loadIfExists);
+                dynamic sampler;
+                switch (samplerType)
+                {
+                    case "Random":
+                        sampler = optuna.samplers.RandomSampler();
+                        break;
+                    case "CMA-ES":
+                        sampler = optuna.samplers.CmaEsSampler();
+                        break;
+                    case "NSGA-II":
+                        sampler = optuna.samplers.NSGAIISampler();
+                        break;
+                   default: 
+                        sampler = optuna.samplers.TPESampler();
+                        break;
+                }
+
+                dynamic study = optuna.create_study(sampler: sampler, storage: strage, study_name: studyName, load_if_exists: loadIfExists);
 
                 for (int i = 0; i < nTrials; i++)
                 {

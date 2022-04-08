@@ -123,8 +123,9 @@ namespace Tunny.UI
             this.samplerComboBox.FormattingEnabled = true;
             this.samplerComboBox.Items.AddRange(new object[] {
             "TPE",
-            "NSGAII",
-            "MOTPE"});
+            "NSGA-II",
+            "CMA-ES",
+            "Random"});
             this.samplerComboBox.Location = new System.Drawing.Point(85, 6);
             this.samplerComboBox.Name = "samplerComboBox";
             this.samplerComboBox.Size = new System.Drawing.Size(121, 20);
