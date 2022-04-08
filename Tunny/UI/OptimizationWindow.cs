@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
+using Grasshopper.GUI;
+
 using Tunny.Component;
 using Tunny.Solver;
 using Tunny.Util;
-
-using Grasshopper.GUI;
 
 namespace Tunny.UI
 {

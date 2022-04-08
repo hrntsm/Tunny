@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Tunny.Util;
+using System.Windows.Forms;
 
 using Python.Runtime;
-using System.Windows.Forms;
+
+using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -55,12 +56,12 @@ namespace Tunny.Solver
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
 
-                MessageBox.Show("Solver completed successfully.");
+                TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                TunnyMessageBox.Show("Tunny runtime error:\nPlease below message to Tunny support.\n" + e.Message, "Tunny");
                 return false;
             }
         }
@@ -82,33 +83,40 @@ namespace Tunny.Solver
                 {
                     case "contour":
                         vis = optuna.visualization.plot_contour(study);
+                        vis.show();
                         break;
-                    case "edf":
+                    case "EDF":
                         vis = optuna.visualization.plot_edf(study);
+                        vis.show();
                         break;
                     case "intermediate values":
                         vis = optuna.visualization.plot_intermediate_values(study);
+                        vis.show();
                         break;
                     case "optimization history":
                         vis = optuna.visualization.plot_optimization_history(study);
+                        vis.show();
                         break;
                     case "parallel coordinate":
                         vis = optuna.visualization.plot_parallel_coordinate(study);
+                        vis.show();
                         break;
                     case "param importances":
                         vis = optuna.visualization.plot_param_importances(study);
+                        vis.show();
                         break;
                     case "pareto front":
                         vis = optuna.visualization.plot_pareto_front(study);
+                        vis.show();
                         break;
                     case "slice":
                         vis = optuna.visualization.plot_slice(study);
+                        vis.show();
                         break;
                     default:
-                        vis = optuna.visualization.plot_optimization_history(study);
+                        TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
                         break;
                 }
-                vis.show();
             }
             PythonEngine.Shutdown();
         }

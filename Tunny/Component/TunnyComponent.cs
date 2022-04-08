@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Tunny.UI;
-using Tunny.Util;
-
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
+
+using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Component
 {

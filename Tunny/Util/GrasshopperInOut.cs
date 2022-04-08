@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-using Tunny.Component;
-
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
+
+using Tunny.Component;
+using Tunny.UI;
 
 namespace Tunny.Util
 {
@@ -44,7 +45,7 @@ namespace Tunny.Util
 
             if (InputGuids.Count == 0)
             {
-                MessageBox.Show("No input variables found. Please connect a number slider to the input of the component.");
+                TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
                 return false;
             }
 
@@ -115,7 +116,7 @@ namespace Tunny.Util
         {
             if (Component.Params.Input[1].SourceCount == 0)
             {
-                MessageBox.Show("No objective found. Please connect a number to the objective of the component.");
+                TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
                 return false;
             }
 
