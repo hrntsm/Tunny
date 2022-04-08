@@ -50,13 +50,14 @@ namespace Tunny.Util
                 return new[] { double.NaN };
             }
 
-            var solver = new OptunaTPE();
+            var solver = new OptunaTPE(s_component.GhInOut.ComponentFolder);
             Dictionary<string, object> settings = new Dictionary<string, object>()
             {
                 { "nTrials", NTrials },
                 { "loadIfExists", LoadIfExists },
                 { "samplerType", SamplerType },
-                { "studyName", StudyName }
+                { "studyName", StudyName },
+                { "storage", s_component.GhInOut.ComponentFolder }
             };
 
             bool solverStarted = solver.RunSolver(

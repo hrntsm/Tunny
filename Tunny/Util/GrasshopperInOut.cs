@@ -37,7 +37,7 @@ namespace Tunny.Util
         {
             Sliders = new List<GH_NumberSlider>();
 
-            foreach (var source in Component.Params.Input[0].Sources)
+            foreach (IGH_Param source in Component.Params.Input[0].Sources)
             {
                 InputGuids.Add(source.InstanceGuid);
             }
@@ -50,7 +50,7 @@ namespace Tunny.Util
 
             foreach (Guid guid in InputGuids)
             {
-                var input = _document.FindObject(guid, true);
+                IGH_DocumentObject input = _document.FindObject(guid, true);
 
                 if (input is GH_NumberSlider slider)
                 {

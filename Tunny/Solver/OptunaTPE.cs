@@ -5,6 +5,7 @@ using System.Linq;
 using Tunny.Util;
 
 using Python.Runtime;
+using System.Windows.Forms;
 
 namespace Tunny.Solver
 {
@@ -13,11 +14,13 @@ namespace Tunny.Solver
         public double[] XOpt { get; private set; }
         public double[] FxOpt { get; private set; }
 
+        private readonly string _componentFolder;
         private readonly Dictionary<string, Dictionary<string, double>> _presets = new Dictionary<string, Dictionary<string, double>>();
 
-        public OptunaTPE()
+        public OptunaTPE(string componentFolder)
         {
-            const string envPath = @".\Python\python310.dll";
+            _componentFolder = componentFolder;
+            string envPath = componentFolder + @"\Python\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
@@ -52,10 +55,12 @@ namespace Tunny.Solver
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
 
+                MessageBox.Show("Solver completed successfully.");
                 return true;
             }
-            catch
+            catch(Exception e)
             {
+                MessageBox.Show(e.Message);
                 return false;
             }
         }
@@ -66,11 +71,13 @@ namespace Tunny.Solver
 
         public void ShowResult(string visualize, string studyName)
         {
+            var strage = "sqlite:///" + _componentFolder + "/tunny.db";
             PythonEngine.Initialize();
             using (Py.GIL())
-            {   dynamic vis;
+            {
+                dynamic vis;
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.create_study(storage: "sqlite:///grasshopper_opt.db", study_name: studyName, load_if_exists: true);
+                dynamic study = optuna.create_study(storage: strage, study_name: studyName, load_if_exists: true);
                 switch (visualize)
                 {
                     case "contour":
@@ -132,12 +139,13 @@ namespace Tunny.Solver
             int nTrials = (int)Settings["nTrials"];
             bool loadIfExists = (bool)Settings["loadIfExists"];
             string studyName = (string)Settings["studyName"];
+            var strage = "sqlite:///" + (string)Settings["storage"] + "/tunny.db";
 
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.create_study(storage: "sqlite:///grasshopper_opt.db", study_name: studyName, load_if_exists: loadIfExists);
+                dynamic study = optuna.create_study(storage: strage, study_name: studyName, load_if_exists: loadIfExists);
 
                 for (int i = 0; i < nTrials; i++)
                 {
