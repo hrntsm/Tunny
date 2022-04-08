@@ -10,7 +10,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       "program": "C:/Program Files/Rhino 7/System/Rhino.exe",
-      "args": [],
+      "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopAtEntry": true
