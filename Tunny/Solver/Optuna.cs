@@ -87,7 +87,7 @@ namespace Tunny.Solver
 
         public void ShowResult(string visualize, string studyName)
         {
-            var strage = "sqlite:///" + _componentFolder + "/tunny.db";
+            var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -163,7 +163,7 @@ namespace Tunny.Solver
             int nTrials = (int)Settings["nTrials"];
             bool loadIfExists = (bool)Settings["loadIfExists"];
             string studyName = (string)Settings["studyName"];
-            string storage = "sqlite:///" + (string)Settings["storage"] + "/tunny.db";
+            string storage = "sqlite:///" + (string)Settings["storage"] + "/Tunny_Opt_Result.db";
 
             int nObjective = (int)Settings["nObjective"];
             string[] directions = new string[nObjective];

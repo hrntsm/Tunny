@@ -6,8 +6,9 @@ using System.Linq;
 using Tunny.Component;
 using Tunny.Solver;
 using Tunny.UI;
+using Tunny.Util;
 
-namespace Tunny.Util
+namespace Tunny.Optimization
 {
     internal static class Loop
     {

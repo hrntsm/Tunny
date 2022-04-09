@@ -46,6 +46,8 @@ namespace Tunny.UI
             this.VisualizeButton = new System.Windows.Forms.Button();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.clearResultButton = new System.Windows.Forms.Button();
+            this.openResultFolderButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -189,6 +191,8 @@ namespace Tunny.UI
             // 
             // resultTabPage
             // 
+            this.resultTabPage.Controls.Add(this.openResultFolderButton);
+            this.resultTabPage.Controls.Add(this.clearResultButton);
             this.resultTabPage.Controls.Add(this.VisualizeButton);
             this.resultTabPage.Controls.Add(this.visualizeTypeLabel);
             this.resultTabPage.Controls.Add(this.visualizeTypeComboBox);
@@ -236,6 +240,26 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(150, 20);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
+            // clearResultButton
+            // 
+            this.clearResultButton.Location = new System.Drawing.Point(27, 129);
+            this.clearResultButton.Name = "clearResultButton";
+            this.clearResultButton.Size = new System.Drawing.Size(151, 23);
+            this.clearResultButton.TabIndex = 3;
+            this.clearResultButton.Text = "Clear result flie";
+            this.clearResultButton.UseVisualStyleBackColor = true;
+            this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
+            // 
+            // openResultFolderButton
+            // 
+            this.openResultFolderButton.Location = new System.Drawing.Point(27, 100);
+            this.openResultFolderButton.Name = "openResultFolderButton";
+            this.openResultFolderButton.Size = new System.Drawing.Size(151, 23);
+            this.openResultFolderButton.TabIndex = 4;
+            this.openResultFolderButton.Text = "Open result file folder";
+            this.openResultFolderButton.UseVisualStyleBackColor = true;
+            this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -274,6 +298,8 @@ namespace Tunny.UI
         private System.Windows.Forms.Button VisualizeButton;
         private System.Windows.Forms.Label visualizeTypeLabel;
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
+        private System.Windows.Forms.Button clearResultButton;
+        private System.Windows.Forms.Button openResultFolderButton;
     }
 }
 

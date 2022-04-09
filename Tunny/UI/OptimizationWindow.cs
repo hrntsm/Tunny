@@ -6,8 +6,8 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Component;
+using Tunny.Optimization;
 using Tunny.Solver;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -26,6 +26,7 @@ namespace Tunny.UI
         {
             InitializeComponent();
             _component = component;
+            _component.GhInOutInstantiate();
             samplerComboBox.SelectedIndex = 0;
             visualizeTypeComboBox.SelectedIndex = 3;
 
@@ -90,6 +91,17 @@ namespace Tunny.UI
         {
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
             optuna.ShowResult(visualizeTypeComboBox.Text, studyNameTextBox.Text);
+        }
+
+        private void OpenResultFolderButton_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(
+                "EXPLORER.EXE", _component.GhInOut.ComponentFolder);
+        }
+
+        private void ClearResultButton_Click(object sender, EventArgs e)
+        {
+            System.IO.File.Delete(_component.GhInOut.ComponentFolder + "/Tunny_Opt_Result.db");
         }
     }
 }
