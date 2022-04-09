@@ -27,8 +27,8 @@ namespace Tunny.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Variables", "The value of the optimization problem's objective function depends on variables, the unknowns. Connect an arbitrary number of number sliders and gene pools as the variables of the optimization problem.\n\nThe number sliders' bounds are the bounds of the variables. After optimization, the number sliders (variables) are set to the optimal position.\n\nIn Galapagos, the variables are called genes.", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Objective", "Objective", "The objective value depends on the values of the variables. The algorithm searches for the objective's optimal value by changing the variables' values.\n\nThe objective value should be a single Number Parameter that yields a single value for any configuration of the variables.\n\nIn Galapagos, the objective value is called fitness.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Variables", "Variables", "Connect variable number slider here.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Objective", "Objective", "Connect objective number component here", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
