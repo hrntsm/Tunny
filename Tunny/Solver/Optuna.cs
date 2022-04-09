@@ -56,12 +56,27 @@ namespace Tunny.Solver
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
 
-                TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
+                if (FxOpt.Length == 1)
+                {
+                    TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
+                }
+                else
+                {
+                    TunnyMessageBox.Show(
+                        "Solver completed successfully.\n\n" +
+                        "**Multi objective optimization is experimental.**\n\n" +
+                        "NumberSliders are not update to best value." +
+                        "Please see pareto front graph & update these values manually.", "Tunny");
+                }
                 return true;
             }
             catch (Exception e)
             {
-                TunnyMessageBox.Show("Tunny runtime error:\nPlease below message to Tunny support.\n\n\"" + e.Message + "\"", "Tunny");
+                TunnyMessageBox.Show(
+                    "Tunny runtime error:\n" +
+                    "Please send below message (& gh file if possible) to Tunny support.\n\n" +
+                    "\" " + e.Message + " \"", "Tunny",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -78,7 +93,7 @@ namespace Tunny.Solver
             {
                 dynamic vis;
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.create_study(storage: strage, study_name: studyName, load_if_exists: true);
+                dynamic study = optuna.load_study(storage: strage, study_name: studyName);
                 switch (visualize)
                 {
                     case "contour":
@@ -148,7 +163,15 @@ namespace Tunny.Solver
             int nTrials = (int)Settings["nTrials"];
             bool loadIfExists = (bool)Settings["loadIfExists"];
             string studyName = (string)Settings["studyName"];
-            var strage = "sqlite:///" + (string)Settings["storage"] + "/tunny.db";
+            string storage = "sqlite:///" + (string)Settings["storage"] + "/tunny.db";
+
+            int nObjective = (int)Settings["nObjective"];
+            string[] directions = new string[nObjective];
+            for (int i = 0; i < nObjective; i++)
+            {
+                directions[i] = "minimize";
+            }
+
 
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -166,12 +189,18 @@ namespace Tunny.Solver
                     case "NSGA-II":
                         sampler = optuna.samplers.NSGAIISampler();
                         break;
-                   default: 
+                    default:
                         sampler = optuna.samplers.TPESampler();
                         break;
                 }
 
-                dynamic study = optuna.create_study(sampler: sampler, storage: strage, study_name: studyName, load_if_exists: loadIfExists);
+                dynamic study = optuna.create_study(
+                    sampler: sampler,
+                    storage: storage,
+                    study_name: studyName,
+                    load_if_exists: loadIfExists,
+                    directions: directions
+                );
 
                 for (int i = 0; i < nTrials; i++)
                 {
@@ -182,17 +211,20 @@ namespace Tunny.Solver
                     {
                         xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
                     }
-                    double fxTest = EvalFunc(xTest, progress)[0];
+                    double[] fxTest = EvalFunc(xTest, progress);
                     study.tell(trial, fxTest);
-
-                    if (double.IsNaN(fxTest))
-                    {
-                        return;
-                    }
                 }
 
-                XOpt = (double[])study.best_params.values();
-                FxOpt = new[] { (double)study.best_value };
+                if (nObjective == 1)
+                {
+                    XOpt = (double[])study.best_params.values();
+                    FxOpt = new[] { (double)study.best_value };
+                }
+                else
+                {
+                    XOpt = Lb;
+                    FxOpt = new double[nObjective];
+                }
             }
             PythonEngine.Shutdown();
         }

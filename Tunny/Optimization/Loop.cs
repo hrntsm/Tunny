@@ -57,7 +57,8 @@ namespace Tunny.Util
                 { "loadIfExists", LoadIfExists },
                 { "samplerType", SamplerType },
                 { "studyName", StudyName },
-                { "storage", s_component.GhInOut.ComponentFolder }
+                { "storage", s_component.GhInOut.ComponentFolder },
+                { "nObjective", s_component.GhInOut.GetObjectiveValues().Count }
             };
 
             bool solverStarted = solver.RunSolver(
