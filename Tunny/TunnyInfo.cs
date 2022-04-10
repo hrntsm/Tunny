@@ -3,6 +3,8 @@ using System.Drawing;
 
 using Grasshopper.Kernel;
 
+using Tunny.Resources;
+
 namespace Tunny
 {
     public class TunnyInfo : GH_AssemblyInfo
@@ -10,7 +12,7 @@ namespace Tunny
         public override string Name => "Tunny Info";
 
         //Return a 24x24 pixel bitmap to represent this GHA library.
-        public override Bitmap Icon => null;
+        public override Bitmap Icon => Resource.TunnyIcon;
 
         //Return a short string describing the purpose of this GHA library.
         public override string Description => "Tunny is an optimization component wrapped in optuna.";

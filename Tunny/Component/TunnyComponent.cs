@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
+using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
 
+using Tunny.Resources;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -64,7 +67,7 @@ namespace Tunny.Component
 
         private void ShowOptimizationWindow()
         {
-            var owner = Grasshopper.Instances.DocumentEditor;
+            GH_DocumentEditor owner = Instances.DocumentEditor;
 
             if (OptimizationWindow == null || OptimizationWindow.IsDisposed)
             {
@@ -79,7 +82,7 @@ namespace Tunny.Component
             OptimizationWindow.Show(owner);
         }
 
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.TunnyIcon;
         public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }
