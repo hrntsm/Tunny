@@ -172,7 +172,6 @@ namespace Tunny.Solver
                 directions[i] = "minimize";
             }
 
-
             PythonEngine.Initialize();
             using (Py.GIL())
             {

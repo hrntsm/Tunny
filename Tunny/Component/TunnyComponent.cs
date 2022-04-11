@@ -4,9 +4,7 @@ using System.Windows.Forms;
 
 using Grasshopper;
 using Grasshopper.GUI;
-using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Attributes;
 
 using Tunny.Resources;
 using Tunny.UI;
@@ -14,7 +12,7 @@ using Tunny.Util;
 
 namespace Tunny.Component
 {
-    public class TunnyComponent : GH_Component
+    public partial class TunnyComponent : GH_Component
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
@@ -49,20 +47,7 @@ namespace Tunny.Component
 
         public override void CreateAttributes()
         {
-            m_attributes = new AttributesA(this);
-        }
-
-        private class AttributesA : GH_ComponentAttributes
-        {
-            public AttributesA(IGH_Component component) : base(component)
-            {
-            }
-
-            public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
-            {
-                ((TunnyComponent)Owner).ShowOptimizationWindow();
-                return GH_ObjectResponse.Handled;
-            }
+            m_attributes = new TunnyAttributes(this);
         }
 
         private void ShowOptimizationWindow()

@@ -29,6 +29,7 @@ namespace Tunny.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizationWindow));
             this.runOptimizeButton = new System.Windows.Forms.Button();
             this.backgroundWorkerSolver = new System.ComponentModel.BackgroundWorker();
             this.stopButton = new System.Windows.Forms.Button();
@@ -43,11 +44,11 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
+            this.openResultFolderButton = new System.Windows.Forms.Button();
+            this.clearResultButton = new System.Windows.Forms.Button();
             this.VisualizeButton = new System.Windows.Forms.Button();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.clearResultButton = new System.Windows.Forms.Button();
-            this.openResultFolderButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -56,9 +57,10 @@ namespace Tunny.UI
             // 
             // runOptimizeButton
             // 
-            this.runOptimizeButton.Location = new System.Drawing.Point(11, 134);
+            this.runOptimizeButton.Location = new System.Drawing.Point(13, 168);
+            this.runOptimizeButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.runOptimizeButton.Name = "runOptimizeButton";
-            this.runOptimizeButton.Size = new System.Drawing.Size(103, 23);
+            this.runOptimizeButton.Size = new System.Drawing.Size(120, 29);
             this.runOptimizeButton.TabIndex = 0;
             this.runOptimizeButton.Text = "RunOptimize";
             this.runOptimizeButton.UseVisualStyleBackColor = true;
@@ -66,9 +68,10 @@ namespace Tunny.UI
             // 
             // stopButton
             // 
-            this.stopButton.Location = new System.Drawing.Point(133, 134);
+            this.stopButton.Location = new System.Drawing.Point(155, 168);
+            this.stopButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(75, 23);
+            this.stopButton.Size = new System.Drawing.Size(87, 29);
             this.stopButton.TabIndex = 1;
             this.stopButton.Text = "Stop";
             this.stopButton.UseVisualStyleBackColor = true;
@@ -76,14 +79,15 @@ namespace Tunny.UI
             // 
             // nTrialNumUpDown
             // 
-            this.nTrialNumUpDown.Location = new System.Drawing.Point(112, 32);
+            this.nTrialNumUpDown.Location = new System.Drawing.Point(131, 40);
+            this.nTrialNumUpDown.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.nTrialNumUpDown.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.nTrialNumUpDown.Name = "nTrialNumUpDown";
-            this.nTrialNumUpDown.Size = new System.Drawing.Size(94, 19);
+            this.nTrialNumUpDown.Size = new System.Drawing.Size(110, 23);
             this.nTrialNumUpDown.TabIndex = 2;
             this.nTrialNumUpDown.ThousandsSeparator = true;
             this.nTrialNumUpDown.Value = new decimal(new int[] {
@@ -95,9 +99,9 @@ namespace Tunny.UI
             // nTrialText
             // 
             this.nTrialText.AutoSize = true;
-            this.nTrialText.Location = new System.Drawing.Point(9, 34);
+            this.nTrialText.Location = new System.Drawing.Point(10, 42);
             this.nTrialText.Name = "nTrialText";
-            this.nTrialText.Size = new System.Drawing.Size(82, 12);
+            this.nTrialText.Size = new System.Drawing.Size(96, 15);
             this.nTrialText.TabIndex = 3;
             this.nTrialText.Text = "Number of trial";
             // 
@@ -106,18 +110,20 @@ namespace Tunny.UI
             this.loadIfExistsCheckBox.AutoSize = true;
             this.loadIfExistsCheckBox.Checked = true;
             this.loadIfExistsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.loadIfExistsCheckBox.Location = new System.Drawing.Point(11, 72);
+            this.loadIfExistsCheckBox.Location = new System.Drawing.Point(13, 90);
+            this.loadIfExistsCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.loadIfExistsCheckBox.Name = "loadIfExistsCheckBox";
-            this.loadIfExistsCheckBox.Size = new System.Drawing.Size(146, 16);
+            this.loadIfExistsCheckBox.Size = new System.Drawing.Size(160, 19);
             this.loadIfExistsCheckBox.TabIndex = 5;
             this.loadIfExistsCheckBox.Text = "Load if study file exists";
             this.loadIfExistsCheckBox.UseVisualStyleBackColor = true;
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(11, 163);
+            this.progressBar.Location = new System.Drawing.Point(13, 204);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(195, 23);
+            this.progressBar.Size = new System.Drawing.Size(227, 29);
             this.progressBar.TabIndex = 6;
             // 
             // samplerComboBox
@@ -128,34 +134,36 @@ namespace Tunny.UI
             "NSGA-II",
             "CMA-ES",
             "Random"});
-            this.samplerComboBox.Location = new System.Drawing.Point(85, 6);
+            this.samplerComboBox.Location = new System.Drawing.Point(99, 8);
+            this.samplerComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.samplerComboBox.Name = "samplerComboBox";
-            this.samplerComboBox.Size = new System.Drawing.Size(121, 20);
+            this.samplerComboBox.Size = new System.Drawing.Size(140, 23);
             this.samplerComboBox.TabIndex = 7;
             // 
             // SamplerTypeText
             // 
             this.SamplerTypeText.AutoSize = true;
-            this.SamplerTypeText.Location = new System.Drawing.Point(11, 9);
+            this.SamplerTypeText.Location = new System.Drawing.Point(10, 11);
             this.SamplerTypeText.Name = "SamplerTypeText";
-            this.SamplerTypeText.Size = new System.Drawing.Size(46, 12);
+            this.SamplerTypeText.Size = new System.Drawing.Size(56, 15);
             this.SamplerTypeText.TabIndex = 8;
             this.SamplerTypeText.Text = "Sampler";
             // 
             // studyNameLabel
             // 
             this.studyNameLabel.AutoSize = true;
-            this.studyNameLabel.Location = new System.Drawing.Point(9, 92);
+            this.studyNameLabel.Location = new System.Drawing.Point(10, 115);
             this.studyNameLabel.Name = "studyNameLabel";
-            this.studyNameLabel.Size = new System.Drawing.Size(67, 12);
+            this.studyNameLabel.Size = new System.Drawing.Size(80, 15);
             this.studyNameLabel.TabIndex = 9;
             this.studyNameLabel.Text = "Study Name";
             // 
             // studyNameTextBox
             // 
-            this.studyNameTextBox.Location = new System.Drawing.Point(87, 89);
+            this.studyNameTextBox.Location = new System.Drawing.Point(101, 111);
+            this.studyNameTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.studyNameTextBox.Name = "studyNameTextBox";
-            this.studyNameTextBox.Size = new System.Drawing.Size(119, 19);
+            this.studyNameTextBox.Size = new System.Drawing.Size(138, 23);
             this.studyNameTextBox.TabIndex = 10;
             this.studyNameTextBox.Text = "study1";
             // 
@@ -163,10 +171,11 @@ namespace Tunny.UI
             // 
             this.optimizeTabControl.Controls.Add(this.optimizeTabPage);
             this.optimizeTabControl.Controls.Add(this.resultTabPage);
-            this.optimizeTabControl.Location = new System.Drawing.Point(12, 12);
+            this.optimizeTabControl.Location = new System.Drawing.Point(14, 15);
+            this.optimizeTabControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optimizeTabControl.Name = "optimizeTabControl";
             this.optimizeTabControl.SelectedIndex = 0;
-            this.optimizeTabControl.Size = new System.Drawing.Size(221, 223);
+            this.optimizeTabControl.Size = new System.Drawing.Size(258, 270);
             this.optimizeTabControl.TabIndex = 11;
             // 
             // optimizeTabPage
@@ -181,10 +190,11 @@ namespace Tunny.UI
             this.optimizeTabPage.Controls.Add(this.progressBar);
             this.optimizeTabPage.Controls.Add(this.nTrialText);
             this.optimizeTabPage.Controls.Add(this.loadIfExistsCheckBox);
-            this.optimizeTabPage.Location = new System.Drawing.Point(4, 22);
+            this.optimizeTabPage.Location = new System.Drawing.Point(4, 24);
+            this.optimizeTabPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optimizeTabPage.Name = "optimizeTabPage";
-            this.optimizeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.optimizeTabPage.Size = new System.Drawing.Size(213, 197);
+            this.optimizeTabPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.optimizeTabPage.Size = new System.Drawing.Size(250, 242);
             this.optimizeTabPage.TabIndex = 0;
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
@@ -196,19 +206,43 @@ namespace Tunny.UI
             this.resultTabPage.Controls.Add(this.VisualizeButton);
             this.resultTabPage.Controls.Add(this.visualizeTypeLabel);
             this.resultTabPage.Controls.Add(this.visualizeTypeComboBox);
-            this.resultTabPage.Location = new System.Drawing.Point(4, 22);
+            this.resultTabPage.Location = new System.Drawing.Point(4, 24);
+            this.resultTabPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.resultTabPage.Name = "resultTabPage";
-            this.resultTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.resultTabPage.Size = new System.Drawing.Size(213, 197);
+            this.resultTabPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.resultTabPage.Size = new System.Drawing.Size(250, 242);
             this.resultTabPage.TabIndex = 1;
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
+            // openResultFolderButton
+            // 
+            this.openResultFolderButton.Location = new System.Drawing.Point(31, 125);
+            this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.openResultFolderButton.Name = "openResultFolderButton";
+            this.openResultFolderButton.Size = new System.Drawing.Size(176, 29);
+            this.openResultFolderButton.TabIndex = 4;
+            this.openResultFolderButton.Text = "Open result file folder";
+            this.openResultFolderButton.UseVisualStyleBackColor = true;
+            this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
+            // 
+            // clearResultButton
+            // 
+            this.clearResultButton.Location = new System.Drawing.Point(31, 161);
+            this.clearResultButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.clearResultButton.Name = "clearResultButton";
+            this.clearResultButton.Size = new System.Drawing.Size(176, 29);
+            this.clearResultButton.TabIndex = 3;
+            this.clearResultButton.Text = "Clear result flie";
+            this.clearResultButton.UseVisualStyleBackColor = true;
+            this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
+            // 
             // VisualizeButton
             // 
-            this.VisualizeButton.Location = new System.Drawing.Point(6, 54);
+            this.VisualizeButton.Location = new System.Drawing.Point(187, 30);
+            this.VisualizeButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.VisualizeButton.Name = "VisualizeButton";
-            this.VisualizeButton.Size = new System.Drawing.Size(75, 23);
+            this.VisualizeButton.Size = new System.Drawing.Size(57, 23);
             this.VisualizeButton.TabIndex = 2;
             this.VisualizeButton.Text = "Show";
             this.VisualizeButton.UseVisualStyleBackColor = true;
@@ -217,9 +251,9 @@ namespace Tunny.UI
             // visualizeTypeLabel
             // 
             this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(3, 9);
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(3, 4);
             this.visualizeTypeLabel.Name = "visualizeTypeLabel";
-            this.visualizeTypeLabel.Size = new System.Drawing.Size(77, 12);
+            this.visualizeTypeLabel.Size = new System.Drawing.Size(87, 15);
             this.visualizeTypeLabel.TabIndex = 1;
             this.visualizeTypeLabel.Text = "Visualize type";
             // 
@@ -235,37 +269,21 @@ namespace Tunny.UI
             "param importances",
             "pareto front",
             "slice"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(38, 28);
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(6, 30);
+            this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
-            this.visualizeTypeComboBox.Size = new System.Drawing.Size(150, 20);
+            this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
-            // 
-            // clearResultButton
-            // 
-            this.clearResultButton.Location = new System.Drawing.Point(27, 129);
-            this.clearResultButton.Name = "clearResultButton";
-            this.clearResultButton.Size = new System.Drawing.Size(151, 23);
-            this.clearResultButton.TabIndex = 3;
-            this.clearResultButton.Text = "Clear result flie";
-            this.clearResultButton.UseVisualStyleBackColor = true;
-            this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
-            // 
-            // openResultFolderButton
-            // 
-            this.openResultFolderButton.Location = new System.Drawing.Point(27, 100);
-            this.openResultFolderButton.Name = "openResultFolderButton";
-            this.openResultFolderButton.Size = new System.Drawing.Size(151, 23);
-            this.openResultFolderButton.TabIndex = 4;
-            this.openResultFolderButton.Text = "Open result file folder";
-            this.openResultFolderButton.UseVisualStyleBackColor = true;
-            this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
             // 
             // OptimizationWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 245);
+            this.ClientSize = new System.Drawing.Size(285, 298);
             this.Controls.Add(this.optimizeTabControl);
+            this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "OptimizationWindow";
             this.Text = "Tunny";
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
