@@ -1,4 +1,6 @@
-# Tunny
+![TunnyIcon](https://user-images.githubusercontent.com/23289252/162955418-1dbe2830-f0ed-4664-993b-b6f23aaa702a.png)
+
+# Tunny : A Grasshopper optimization component using Optuna
 
 [![License](https://img.shields.io/github/license/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/v/release/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/releases)
@@ -8,11 +10,12 @@
 
 The following is taken from the official website
 
->Optuna™, an open-source automatic hyperparameter optimization framework, automates the trial-and-error process of optimizing the hyperparameters. It automatically finds optimal hyperparameter values based on an optimization target. Optuna is framework agnostic and can be used with most Python frameworks, including Chainer, Scikit-learn, Pytorch, etc.
+> Optuna™, an open-source automatic hyperparameter optimization framework, automates the trial-and-error process of optimizing the hyperparameters. It automatically finds optimal hyperparameter values based on an optimization target. Optuna is framework agnostic and can be used with most Python frameworks, including Chainer, Scikit-learn, Pytorch, etc.
 >
->Optuna is used in PFN projects with good results. One example is the second place award in the [Google AI Open Images 2018 – Object Detection Track](https://www.preferred.jp/en/news/pr20180907/) competition.
+> Optuna is used in PFN projects with good results. One example is the second place award in the [Google AI Open Images 2018 – Object Detection Track](https://www.preferred.jp/en/news/pr20180907/) competition.
 
 Optuna official site
+
 - https://optuna.org/
 
 ## Install
@@ -46,7 +49,7 @@ If you like this software, please donation.
 
 Or [pixivFANBOX](https://hiron.fanbox.cc/)
 
-## License 
+## License
 
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
 Copyright© 2019-2021, hrntsm
