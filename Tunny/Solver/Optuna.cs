@@ -90,13 +90,13 @@ namespace Tunny.Solver
 
         public void ShowResultVisualize(string visualize, string studyName)
         {
-            var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic vis;
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.load_study(storage: strage, study_name: studyName);
+                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
                 switch (visualize)
                 {
                     case "contour":
@@ -141,13 +141,13 @@ namespace Tunny.Solver
 
         public string[] GetResultDraco(int[] num, string studyName)
         {
-            var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             var resultDraco = new string[num.Length];
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.load_study(storage: strage, study_name: studyName);
+                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
                 for (var i = 0; i < num.Length; i++)
                 {
                     resultDraco[i] = (string)study.trials[num[i]].user_attrs["geometry"];

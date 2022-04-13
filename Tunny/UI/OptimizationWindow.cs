@@ -101,8 +101,7 @@ namespace Tunny.UI
 
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
-            Process.Start(
-                "EXPLORER.EXE", _component.GhInOut.ComponentFolder);
+            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
@@ -115,7 +114,7 @@ namespace Tunny.UI
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
             string studyName = studyNameTextBox.Text;
 
-            int[] num = restoreModelNumTextBox.Text.Split(',').Select(n => int.Parse(n)).ToArray();
+            int[] num = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
             var result = new Mesh[num.Length];
             string[] draco = optuna.GetResultDraco(num, studyName);
             for (int i = 0; i < num.Length; i++)
@@ -123,9 +122,7 @@ namespace Tunny.UI
                 result[i] = (Mesh)DracoCompression.DecompressBase64String(draco[i]);
             }
             _component.Result = result.ToList();
-
-            //TODO: これだと全体の再実行なので、改善したい
-            _component.OnPingDocument().NewSolution(true);
+            _component.ExpireSolution(true);
         }
     }
 }
