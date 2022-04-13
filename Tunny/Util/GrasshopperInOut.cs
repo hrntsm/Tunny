@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
+
+using Rhino.FileIO;
 
 using Tunny.Component;
 using Tunny.UI;
@@ -21,6 +22,7 @@ namespace Tunny.Util
         public List<Guid> InputGuids;
         public List<Variable> Variables;
         public List<IGH_Param> Objectives;
+        public IGH_Param ModelMesh;
         public TunnyComponent Component;
         public string ComponentFolder;
         public string DocumentPath;
@@ -32,6 +34,16 @@ namespace Tunny.Util
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(Component).Location);
             _document = Component.OnPingDocument();
             InputGuids = new List<Guid>();
+            SetInputs();
+        }
+
+        public bool SetInputs()
+        {
+            SetVariables();
+            SetObjectives();
+            SetModelMesh();
+
+            return true;
         }
 
         public bool SetVariables()
@@ -124,6 +136,12 @@ namespace Tunny.Util
             return true;
         }
 
+        public bool SetModelMesh()
+        {
+            ModelMesh = Component.Params.Input[2].Sources[0];
+            return true;
+        }
+
         private bool SetSliderValues(IList<decimal> parameters)
         {
             int i = 0;
@@ -193,6 +211,24 @@ namespace Tunny.Util
             }
 
             return values;
+        }
+
+        public string GetModelDraco()
+        {
+            IGH_StructureEnumerator ghEnumerator = ModelMesh.VolatileData.AllData(true);
+            foreach (IGH_Goo goo in ghEnumerator)
+            {
+                if (goo is GH_Mesh mesh)
+                {
+                    var option = new DracoCompressionOptions
+                    {
+                        CompressionLevel = 10
+                    };
+                    return DracoCompression.Compress(mesh.Value, option).ToBase64String();
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

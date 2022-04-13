@@ -44,6 +44,9 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
+            this.RestoreButton = new System.Windows.Forms.Button();
+            this.restoreModelNumTextBox = new System.Windows.Forms.TextBox();
+            this.restoreModelLabel = new System.Windows.Forms.Label();
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
             this.VisualizeButton = new System.Windows.Forms.Button();
@@ -201,6 +204,9 @@ namespace Tunny.UI
             // 
             // resultTabPage
             // 
+            this.resultTabPage.Controls.Add(this.RestoreButton);
+            this.resultTabPage.Controls.Add(this.restoreModelNumTextBox);
+            this.resultTabPage.Controls.Add(this.restoreModelLabel);
             this.resultTabPage.Controls.Add(this.openResultFolderButton);
             this.resultTabPage.Controls.Add(this.clearResultButton);
             this.resultTabPage.Controls.Add(this.VisualizeButton);
@@ -215,9 +221,35 @@ namespace Tunny.UI
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
+            // RestoreButton
+            // 
+            this.RestoreButton.Location = new System.Drawing.Point(172, 173);
+            this.RestoreButton.Name = "RestoreButton";
+            this.RestoreButton.Size = new System.Drawing.Size(75, 23);
+            this.RestoreButton.TabIndex = 7;
+            this.RestoreButton.Text = "Restore";
+            this.RestoreButton.UseVisualStyleBackColor = true;
+            this.RestoreButton.Click += new System.EventHandler(this.RestoreButton_Click);
+            // 
+            // restoreModelNumTextBox
+            // 
+            this.restoreModelNumTextBox.Location = new System.Drawing.Point(6, 174);
+            this.restoreModelNumTextBox.Name = "restoreModelNumTextBox";
+            this.restoreModelNumTextBox.Size = new System.Drawing.Size(158, 23);
+            this.restoreModelNumTextBox.TabIndex = 6;
+            // 
+            // restoreModelLabel
+            // 
+            this.restoreModelLabel.AutoSize = true;
+            this.restoreModelLabel.Location = new System.Drawing.Point(7, 156);
+            this.restoreModelLabel.Name = "restoreModelLabel";
+            this.restoreModelLabel.Size = new System.Drawing.Size(130, 15);
+            this.restoreModelLabel.TabIndex = 5;
+            this.restoreModelLabel.Text = "Restore Result Model";
+            // 
             // openResultFolderButton
             // 
-            this.openResultFolderButton.Location = new System.Drawing.Point(31, 125);
+            this.openResultFolderButton.Location = new System.Drawing.Point(31, 61);
             this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.openResultFolderButton.Name = "openResultFolderButton";
             this.openResultFolderButton.Size = new System.Drawing.Size(176, 29);
@@ -228,7 +260,7 @@ namespace Tunny.UI
             // 
             // clearResultButton
             // 
-            this.clearResultButton.Location = new System.Drawing.Point(31, 161);
+            this.clearResultButton.Location = new System.Drawing.Point(31, 97);
             this.clearResultButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(176, 29);
@@ -318,6 +350,9 @@ namespace Tunny.UI
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.Windows.Forms.Button clearResultButton;
         private System.Windows.Forms.Button openResultFolderButton;
+        private System.Windows.Forms.Button RestoreButton;
+        private System.Windows.Forms.TextBox restoreModelNumTextBox;
+        private System.Windows.Forms.Label restoreModelLabel;
     }
 }
 

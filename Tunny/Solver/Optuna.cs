@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Optimization;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -26,8 +27,10 @@ namespace Tunny.Solver
         }
 
         public bool RunSolver(
-            List<Variable> variables, Func<IList<decimal>, int, List<double>> evaluate,
-            string preset, Dictionary<string, object> settings, string installFolder, string documentPath)
+            List<Variable> variables,
+            Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
+            string preset,
+            Dictionary<string, object> settings, string installFolder, string documentPath)
         {
             int dVar = variables.Count;
             var lb = new double[dVar];
@@ -43,10 +46,10 @@ namespace Tunny.Solver
                 nickName[i] = variables[i].NickName;
             }
 
-            double[] Eval(double[] x, int progress)
+            EvaluatedGHResult Eval(double[] x, int progress)
             {
                 List<decimal> decimals = x.Select(Convert.ToDecimal).ToList();
-                return evaluate(decimals, progress).ToArray();
+                return evaluate(decimals, progress);
             }
 
             try
@@ -85,7 +88,7 @@ namespace Tunny.Solver
         public double[] Get_XOptimum => XOpt;
         public IEnumerable<string> GetPresetNames() => _presets.Keys;
 
-        public void ShowResult(string visualize, string studyName)
+        public void ShowResultVisualize(string visualize, string studyName)
         {
             var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
@@ -135,108 +138,24 @@ namespace Tunny.Solver
             }
             PythonEngine.Shutdown();
         }
-    }
 
-    public class OptunaAlgorithm
-    {
-        private double[] Lb { get; set; }
-        private double[] Ub { get; set; }
-        private string[] NickName { get; set; }
-        private Dictionary<string, object> Settings { get; set; }
-        private Func<double[], int, double[]> EvalFunc { get; set; }
-        private double[] XOpt { get; set; }
-        private double[] FxOpt { get; set; }
-
-        public OptunaAlgorithm(double[] lb, double[] ub, string[] nickName, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
+        public string[] GetResultDraco(int[] num, string studyName)
         {
-            Lb = lb;
-            Ub = ub;
-            NickName = nickName;
-            Settings = settings;
-            EvalFunc = evalFunc;
-        }
-
-        public void Solve()
-        {
-            int n = Lb.Length;
-            string samplerType = (string)Settings["samplerType"];
-            int nTrials = (int)Settings["nTrials"];
-            bool loadIfExists = (bool)Settings["loadIfExists"];
-            string studyName = (string)Settings["studyName"];
-            string storage = "sqlite:///" + (string)Settings["storage"] + "/Tunny_Opt_Result.db";
-
-            int nObjective = (int)Settings["nObjective"];
-            string[] directions = new string[nObjective];
-            for (int i = 0; i < nObjective; i++)
-            {
-                directions[i] = "minimize";
-            }
-
+            var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            var resultDraco = new string[num.Length];
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler;
-                switch (samplerType)
+                dynamic study = optuna.load_study(storage: strage, study_name: studyName);
+                for (var i = 0; i < num.Length; i++)
                 {
-                    case "Random":
-                        sampler = optuna.samplers.RandomSampler();
-                        break;
-                    case "CMA-ES":
-                        sampler = optuna.samplers.CmaEsSampler();
-                        break;
-                    case "NSGA-II":
-                        sampler = optuna.samplers.NSGAIISampler();
-                        break;
-                    default:
-                        sampler = optuna.samplers.TPESampler();
-                        break;
-                }
-
-                dynamic study = optuna.create_study(
-                    sampler: sampler,
-                    storage: storage,
-                    study_name: studyName,
-                    load_if_exists: loadIfExists,
-                    directions: directions
-                );
-
-                for (int i = 0; i < nTrials; i++)
-                {
-                    int progress = i * 100 / nTrials;
-                    double[] xTest = new double[n];
-                    dynamic trial = study.ask();
-                    for (int j = 0; j < n; j++)
-                    {
-                        xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
-                    }
-                    double[] fxTest = EvalFunc(xTest, progress);
-                    study.tell(trial, fxTest);
-                }
-
-                if (nObjective == 1)
-                {
-                    XOpt = (double[])study.best_params.values();
-                    FxOpt = new[] { (double)study.best_value };
-                }
-                else
-                {
-                    XOpt = Lb;
-                    FxOpt = new double[nObjective];
+                    resultDraco[i] = (string)study.trials[num[i]].user_attrs["geometry"];
                 }
             }
             PythonEngine.Shutdown();
-        }
 
-
-        public double[] Get_XOptimum()
-        {
-            return XOpt;
-        }
-
-        public double[] Get_fxOptimum()
-        {
-            return FxOpt;
+            return resultDraco;
         }
     }
 }

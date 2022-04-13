@@ -25,8 +25,6 @@ namespace Tunny.Optimization
             s_component = e.Argument as TunnyComponent;
 
             s_component.GhInOutInstantiate();
-            s_component.GhInOut.SetVariables();
-            s_component.GhInOut.SetObjectives();
 
             double[] result = RunOptimizationLoop(s_worker);
             List<decimal> decimalResults = result.Select(Convert.ToDecimal).ToList();
@@ -68,7 +66,7 @@ namespace Tunny.Optimization
             return solverStarted ? solver.XOpt : new[] { double.NaN };
         }
 
-        public static List<double> EvaluateFunction(IList<decimal> values, int progress)
+        public static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
         {
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
 
@@ -76,8 +74,12 @@ namespace Tunny.Optimization
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
-            List<double> objectiveValues = s_component.GhInOut.GetObjectiveValues();
-            return objectiveValues;
+            var result = new EvaluatedGHResult
+            {
+                ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
+                ModelDraco = s_component.GhInOut.GetModelDraco()
+            };
+            return result;
         }
     }
 }
