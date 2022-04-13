@@ -237,6 +237,7 @@ namespace Tunny.UI
             this.restoreModelNumTextBox.Name = "restoreModelNumTextBox";
             this.restoreModelNumTextBox.Size = new System.Drawing.Size(158, 23);
             this.restoreModelNumTextBox.TabIndex = 6;
+            this.restoreModelNumTextBox.Text = "-1";
             // 
             // restoreModelLabel
             // 

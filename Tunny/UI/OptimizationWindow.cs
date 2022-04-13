@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 
 using Rhino.FileIO;
 using Rhino.Geometry;
@@ -115,13 +117,14 @@ namespace Tunny.UI
             string studyName = studyNameTextBox.Text;
 
             int[] num = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-            var result = new Mesh[num.Length];
-            string[] draco = optuna.GetResultDraco(num, studyName);
-            for (int i = 0; i < num.Length; i++)
+            var result = new GH_Structure<GH_Mesh>();
+            ModelResult[] modelResult = optuna.GetModelResult(num, studyName);
+            foreach (ModelResult model in modelResult)
             {
-                result[i] = (Mesh)DracoCompression.DecompressBase64String(draco[i]);
+                var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
+                result.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
             }
-            _component.Result = result.ToList();
+            _component.Result = result;
             _component.ExpireSolution(true);
         }
     }

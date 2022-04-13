@@ -59,18 +59,8 @@ namespace Tunny.Solver
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
 
-                if (FxOpt.Length == 1)
-                {
-                    TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
-                }
-                else
-                {
-                    TunnyMessageBox.Show(
-                        "Solver completed successfully.\n\n" +
-                        "**Multi objective optimization is experimental.**\n\n" +
-                        "NumberSliders are not update to best value." +
-                        "Please see pareto front graph & update these values manually.", "Tunny");
-                }
+                TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
+
                 return true;
             }
             catch (Exception e)
@@ -97,65 +87,99 @@ namespace Tunny.Solver
                 dynamic vis;
                 dynamic optuna = Py.Import("optuna");
                 dynamic study = optuna.load_study(storage: storage, study_name: studyName);
-                switch (visualize)
+
+                try
                 {
-                    case "contour":
-                        vis = optuna.visualization.plot_contour(study);
-                        vis.show();
-                        break;
-                    case "EDF":
-                        vis = optuna.visualization.plot_edf(study);
-                        vis.show();
-                        break;
-                    case "intermediate values":
-                        vis = optuna.visualization.plot_intermediate_values(study);
-                        vis.show();
-                        break;
-                    case "optimization history":
-                        vis = optuna.visualization.plot_optimization_history(study);
-                        vis.show();
-                        break;
-                    case "parallel coordinate":
-                        vis = optuna.visualization.plot_parallel_coordinate(study);
-                        vis.show();
-                        break;
-                    case "param importances":
-                        vis = optuna.visualization.plot_param_importances(study);
-                        vis.show();
-                        break;
-                    case "pareto front":
-                        vis = optuna.visualization.plot_pareto_front(study);
-                        vis.show();
-                        break;
-                    case "slice":
-                        vis = optuna.visualization.plot_slice(study);
-                        vis.show();
-                        break;
-                    default:
-                        TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
-                        break;
+                    switch (visualize)
+                    {
+                        case "contour":
+                            vis = optuna.visualization.plot_contour(study);
+                            vis.show();
+                            break;
+                        case "EDF":
+                            vis = optuna.visualization.plot_edf(study);
+                            vis.show();
+                            break;
+                        case "intermediate values":
+                            vis = optuna.visualization.plot_intermediate_values(study);
+                            vis.show();
+                            break;
+                        case "optimization history":
+                            vis = optuna.visualization.plot_optimization_history(study);
+                            vis.show();
+                            break;
+                        case "parallel coordinate":
+                            vis = optuna.visualization.plot_parallel_coordinate(study);
+                            vis.show();
+                            break;
+                        case "param importances":
+                            vis = optuna.visualization.plot_param_importances(study);
+                            vis.show();
+                            break;
+                        case "pareto front":
+                            vis = optuna.visualization.plot_pareto_front(study);
+                            vis.show();
+                            break;
+                        case "slice":
+                            vis = optuna.visualization.plot_slice(study);
+                            vis.show();
+                            break;
+                        default:
+                            TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             PythonEngine.Shutdown();
         }
 
-        public string[] GetResultDraco(int[] num, string studyName)
+        public ModelResult[] GetModelResult(int[] num, string studyName)
         {
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
-            var resultDraco = new string[num.Length];
+            var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic study = optuna.load_study(storage: storage, study_name: studyName);
-                for (var i = 0; i < num.Length; i++)
+                if (num[0] == -1)
                 {
-                    resultDraco[i] = (string)study.trials[num[i]].user_attrs["geometry"];
+                    var bestTrials = (dynamic[])study.best_trials;
+                    foreach (dynamic trial in bestTrials)
+                    {
+                        modelResult.Add(new ModelResult()
+                        {
+                            Number = (int)trial.number,
+                            Draco = (string)trial.user_attrs["geometry"],
+                        });
+
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < num.Length; i++)
+                    {
+                        modelResult.Add(new ModelResult()
+                        {
+                            Number = num[i],
+                            Draco = (string)study.trials[num[i]].user_attrs["geometry"],
+                        });
+                    }
                 }
             }
             PythonEngine.Shutdown();
 
-            return resultDraco;
+            return modelResult.ToArray();
         }
+    }
+
+    public class ModelResult
+    {
+        public int Number { get; set; }
+        public string Draco { get; set; }
     }
 }
