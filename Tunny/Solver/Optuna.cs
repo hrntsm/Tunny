@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Optimization;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -26,8 +27,10 @@ namespace Tunny.Solver
         }
 
         public bool RunSolver(
-            List<Variable> variables, Func<IList<decimal>, int, List<double>> evaluate,
-            string preset, Dictionary<string, object> settings, string installFolder, string documentPath)
+            List<Variable> variables,
+            Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
+            string preset,
+            Dictionary<string, object> settings, string installFolder, string documentPath)
         {
             int dVar = variables.Count;
             var lb = new double[dVar];
@@ -43,10 +46,10 @@ namespace Tunny.Solver
                 nickName[i] = variables[i].NickName;
             }
 
-            double[] Eval(double[] x, int progress)
+            EvaluatedGHResult Eval(double[] x, int progress)
             {
                 List<decimal> decimals = x.Select(Convert.ToDecimal).ToList();
-                return evaluate(decimals, progress).ToArray();
+                return evaluate(decimals, progress);
             }
 
             try
@@ -56,18 +59,8 @@ namespace Tunny.Solver
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
 
-                if (FxOpt.Length == 1)
-                {
-                    TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
-                }
-                else
-                {
-                    TunnyMessageBox.Show(
-                        "Solver completed successfully.\n\n" +
-                        "**Multi objective optimization is experimental.**\n\n" +
-                        "NumberSliders are not update to best value." +
-                        "Please see pareto front graph & update these values manually.", "Tunny");
-                }
+                TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
+
                 return true;
             }
             catch (Exception e)
@@ -85,158 +78,108 @@ namespace Tunny.Solver
         public double[] Get_XOptimum => XOpt;
         public IEnumerable<string> GetPresetNames() => _presets.Keys;
 
-        public void ShowResult(string visualize, string studyName)
+        public void ShowResultVisualize(string visualize, string studyName)
         {
-            var strage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic vis;
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.load_study(storage: strage, study_name: studyName);
-                switch (visualize)
+                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
+
+                try
                 {
-                    case "contour":
-                        vis = optuna.visualization.plot_contour(study);
-                        vis.show();
-                        break;
-                    case "EDF":
-                        vis = optuna.visualization.plot_edf(study);
-                        vis.show();
-                        break;
-                    case "intermediate values":
-                        vis = optuna.visualization.plot_intermediate_values(study);
-                        vis.show();
-                        break;
-                    case "optimization history":
-                        vis = optuna.visualization.plot_optimization_history(study);
-                        vis.show();
-                        break;
-                    case "parallel coordinate":
-                        vis = optuna.visualization.plot_parallel_coordinate(study);
-                        vis.show();
-                        break;
-                    case "param importances":
-                        vis = optuna.visualization.plot_param_importances(study);
-                        vis.show();
-                        break;
-                    case "pareto front":
-                        vis = optuna.visualization.plot_pareto_front(study);
-                        vis.show();
-                        break;
-                    case "slice":
-                        vis = optuna.visualization.plot_slice(study);
-                        vis.show();
-                        break;
-                    default:
-                        TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
-                        break;
+                    switch (visualize)
+                    {
+                        case "contour":
+                            vis = optuna.visualization.plot_contour(study);
+                            vis.show();
+                            break;
+                        case "EDF":
+                            vis = optuna.visualization.plot_edf(study);
+                            vis.show();
+                            break;
+                        case "intermediate values":
+                            vis = optuna.visualization.plot_intermediate_values(study);
+                            vis.show();
+                            break;
+                        case "optimization history":
+                            vis = optuna.visualization.plot_optimization_history(study);
+                            vis.show();
+                            break;
+                        case "parallel coordinate":
+                            vis = optuna.visualization.plot_parallel_coordinate(study);
+                            vis.show();
+                            break;
+                        case "param importances":
+                            vis = optuna.visualization.plot_param_importances(study);
+                            vis.show();
+                            break;
+                        case "pareto front":
+                            vis = optuna.visualization.plot_pareto_front(study);
+                            vis.show();
+                            break;
+                        case "slice":
+                            vis = optuna.visualization.plot_slice(study);
+                            vis.show();
+                            break;
+                        default:
+                            TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             PythonEngine.Shutdown();
         }
-    }
 
-    public class OptunaAlgorithm
-    {
-        private double[] Lb { get; set; }
-        private double[] Ub { get; set; }
-        private string[] NickName { get; set; }
-        private Dictionary<string, object> Settings { get; set; }
-        private Func<double[], int, double[]> EvalFunc { get; set; }
-        private double[] XOpt { get; set; }
-        private double[] FxOpt { get; set; }
-
-        public OptunaAlgorithm(double[] lb, double[] ub, string[] nickName, Dictionary<string, object> settings, Func<double[], int, double[]> evalFunc)
+        public ModelResult[] GetModelResult(int[] num, string studyName)
         {
-            Lb = lb;
-            Ub = ub;
-            NickName = nickName;
-            Settings = settings;
-            EvalFunc = evalFunc;
-        }
-
-        public void Solve()
-        {
-            int n = Lb.Length;
-            string samplerType = (string)Settings["samplerType"];
-            int nTrials = (int)Settings["nTrials"];
-            bool loadIfExists = (bool)Settings["loadIfExists"];
-            string studyName = (string)Settings["studyName"];
-            string storage = "sqlite:///" + (string)Settings["storage"] + "/Tunny_Opt_Result.db";
-
-            int nObjective = (int)Settings["nObjective"];
-            string[] directions = new string[nObjective];
-            for (int i = 0; i < nObjective; i++)
-            {
-                directions[i] = "minimize";
-            }
-
+            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler;
-                switch (samplerType)
+                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
+                if (num[0] == -1)
                 {
-                    case "Random":
-                        sampler = optuna.samplers.RandomSampler();
-                        break;
-                    case "CMA-ES":
-                        sampler = optuna.samplers.CmaEsSampler();
-                        break;
-                    case "NSGA-II":
-                        sampler = optuna.samplers.NSGAIISampler();
-                        break;
-                    default:
-                        sampler = optuna.samplers.TPESampler();
-                        break;
-                }
-
-                dynamic study = optuna.create_study(
-                    sampler: sampler,
-                    storage: storage,
-                    study_name: studyName,
-                    load_if_exists: loadIfExists,
-                    directions: directions
-                );
-
-                for (int i = 0; i < nTrials; i++)
-                {
-                    int progress = i * 100 / nTrials;
-                    double[] xTest = new double[n];
-                    dynamic trial = study.ask();
-                    for (int j = 0; j < n; j++)
+                    var bestTrials = (dynamic[])study.best_trials;
+                    foreach (dynamic trial in bestTrials)
                     {
-                        xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
-                    }
-                    double[] fxTest = EvalFunc(xTest, progress);
-                    study.tell(trial, fxTest);
-                }
+                        modelResult.Add(new ModelResult()
+                        {
+                            Number = (int)trial.number,
+                            Draco = (string)trial.user_attrs["geometry"],
+                        });
 
-                if (nObjective == 1)
-                {
-                    XOpt = (double[])study.best_params.values();
-                    FxOpt = new[] { (double)study.best_value };
+                    }
                 }
                 else
                 {
-                    XOpt = Lb;
-                    FxOpt = new double[nObjective];
+                    for (var i = 0; i < num.Length; i++)
+                    {
+                        modelResult.Add(new ModelResult()
+                        {
+                            Number = num[i],
+                            Draco = (string)study.trials[num[i]].user_attrs["geometry"],
+                        });
+                    }
                 }
             }
             PythonEngine.Shutdown();
-        }
 
-
-        public double[] Get_XOptimum()
-        {
-            return XOpt;
+            return modelResult.ToArray();
         }
+    }
 
-        public double[] Get_fxOptimum()
-        {
-            return FxOpt;
-        }
+    public class ModelResult
+    {
+        public int Number { get; set; }
+        public string Draco { get; set; }
     }
 }

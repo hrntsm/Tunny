@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
+
+using Rhino.FileIO;
+using Rhino.Geometry;
 
 using Tunny.Component;
 using Tunny.Optimization;
@@ -90,18 +98,34 @@ namespace Tunny.UI
         private void VisualizeButton_Click(object sender, EventArgs e)
         {
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
-            optuna.ShowResult(visualizeTypeComboBox.Text, studyNameTextBox.Text);
+            optuna.ShowResultVisualize(visualizeTypeComboBox.Text, studyNameTextBox.Text);
         }
 
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(
-                "EXPLORER.EXE", _component.GhInOut.ComponentFolder);
+            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
         {
-            System.IO.File.Delete(_component.GhInOut.ComponentFolder + "/Tunny_Opt_Result.db");
+            File.Delete(_component.GhInOut.ComponentFolder + "/Tunny_Opt_Result.db");
+        }
+
+        private void RestoreButton_Click(object sender, EventArgs e)
+        {
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder);
+            string studyName = studyNameTextBox.Text;
+
+            int[] num = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
+            var result = new GH_Structure<GH_Mesh>();
+            ModelResult[] modelResult = optuna.GetModelResult(num, studyName);
+            foreach (ModelResult model in modelResult)
+            {
+                var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
+                result.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
+            }
+            _component.Result = result;
+            _component.ExpireSolution(true);
         }
     }
 }
