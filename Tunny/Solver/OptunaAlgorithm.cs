@@ -74,16 +74,17 @@ namespace Tunny.Solver
                     directions: directions
                 );
 
+                var xTest = new double[n];
+                var result = new EvaluatedGHResult();
                 for (int i = 0; i < nTrials; i++)
                 {
                     int progress = i * 100 / nTrials;
-                    double[] xTest = new double[n];
                     dynamic trial = study.ask();
                     for (int j = 0; j < n; j++)
                     {
                         xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
                     }
-                    EvaluatedGHResult result = EvalFunc(xTest, progress);
+                    result = EvalFunc(xTest, progress);
                     trial.set_user_attr("geometry", result.ModelDraco);
                     study.tell(trial, result.ObjectiveValues.ToArray());
                 }
@@ -95,8 +96,8 @@ namespace Tunny.Solver
                 }
                 else
                 {
-                    XOpt = Lb;
-                    FxOpt = new double[nObjective];
+                    XOpt = xTest;
+                    FxOpt = result.ObjectiveValues.ToArray();
                 }
             }
             PythonEngine.Shutdown();

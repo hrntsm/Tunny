@@ -244,9 +244,9 @@ namespace Tunny.UI
             this.restoreModelLabel.AutoSize = true;
             this.restoreModelLabel.Location = new System.Drawing.Point(7, 156);
             this.restoreModelLabel.Name = "restoreModelLabel";
-            this.restoreModelLabel.Size = new System.Drawing.Size(130, 15);
+            this.restoreModelLabel.Size = new System.Drawing.Size(162, 15);
             this.restoreModelLabel.TabIndex = 5;
-            this.restoreModelLabel.Text = "Restore Result Model";
+            this.restoreModelLabel.Text = "Set restore model number";
             // 
             // openResultFolderButton
             // 
