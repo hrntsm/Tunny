@@ -20,6 +20,8 @@ Optuna official site
 
 ## Install
 
+First, Tunny runs on Windows only.
+
 1. Download Tunny from [food4rhino](https://www.food4rhino.com/app/tunny) or [release page](https://github.com/hrntsm/tunny/releases)
 1. Right-click the file > Properties > make sure there is no "blocked" text
 1. In Grasshopper, choose File > Special Folders > Components folder. Move Tunny folder you downloaded there.
@@ -30,7 +32,100 @@ Tunny also support yak. So you can find Tunny in Rhinoceros package manager.
 
 ## Usage
 
-WIP
+### Quick usage
+
+![tunny](https://user-images.githubusercontent.com/23289252/163386009-c60e529e-20d1-4314-b9f5-df8bed3c791e.gif)
+
+### Component location
+
+Tunny can be found in the same Params tab as Galapagos under Util if it has been installed.
+
+![image](https://user-images.githubusercontent.com/23289252/163377645-6c397380-8896-4e33-8b74-8305e9a2ef04.png)
+
+### Inputs
+
+#### Variables
+
+Connect a NumberSlider to Variables. No other components are supported.
+Optimization is performed when this value is changed by Tunny.
+
+It is recommended that components be given nicknames, as this makes it easier to understand the resulting process. Here it is named x, y, z.
+
+![image](https://user-images.githubusercontent.com/23289252/163378057-3c0a6a84-4dd2-4d2a-a55d-3202f9abc8bf.png)
+
+#### Objectives
+
+Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.
+
+For multi-objective optimization, put the target values as a list in one Number component. Multiple Number components are not supported.
+
+![image](https://user-images.githubusercontent.com/23289252/163378644-e066dfa8-c36d-4a56-92dd-206dff5eed92.png)
+
+#### ModelMesh
+
+This input is optional.
+
+Mesh input is supported as a function to save the model during optimization.
+If multiple meshes are entered as a list, only the first one will be saved.
+
+Input of large size meshes is deprecated because it makes the analysis heavier.
+
+![image](https://user-images.githubusercontent.com/23289252/163379419-40368cc4-8abd-40d0-94ca-d0a468796c57.png)
+
+### Optimize Window
+
+Double-click on the component icon to open the form for performing optimization.
+
+The component differs from other optimization components in that it does not graph the learning status during optimization.  
+On the other hand, it is possible to save the learning status, and even after the optimization has been completed once, the study content can be used to perform ongoing optimization.
+
+It is recommended that optimization be performed a small number of times, and after completion, the results should be reviewed to determine if continued optimization should be performed.
+
+#### Optimize Tab
+
+![image](https://user-images.githubusercontent.com/23289252/163382306-b44f5e7c-4c62-4887-8766-f399c23c33b4.png)
+
+Values that can be set and their meanings are as follows.
+
+- Sampler
+  - Sets the algorithm to perform the optimization. The following types are available.
+    1. TPE (Tree-structured Parzen Estimator)
+    1. NSGA-II
+    1. CMA-ES
+    1. Random
+- Number of trial
+  - This number of trials will be performed.
+- Load if study file exists
+  - If the checkbox is checked and a file of optimization results is available, the results of the training will be used to perform ongoing optimization.
+- Study Name
+  - Name of the training result to be saved in the optimization result file
+- RunOptimize
+  - Push the button to perform the optimization.
+
+#### Result Tab
+
+![image](https://user-images.githubusercontent.com/23289252/163382006-3cb37a7e-ff38-4ced-8227-7c06a0621cd3.png)
+
+Values that can be set and their meanings are as follows.
+
+- Visualize type
+  - The following types of graphing are supported. See the [Optuna.visualization](https://optuna.readthedocs.io/en/stable/reference/visualization/index.html) page below for more information.
+    1. contour
+    1. EDF
+    1. intermediate values
+    1. optimization history
+    1. parallel coordinate
+    1. param importance
+    1. pareto front
+    1. slice
+- Open result file folder
+  - Open the folder where the file containing the optimization results is located. The results are stored under the name "Tunny_Opt_Result.db".
+- Clear result file
+  - Deletes the optimization result file.
+- Set restore model number
+  - The model with the number entered here is restored from the optimization results file and is the output of the component.
+  - The model number matches the tree structure of the output.
+  - -1 is input, the results of all models on the Pareto front will be the main focus.
 
 ## Contact information
 
