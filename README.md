@@ -72,7 +72,7 @@ Input of large size meshes is deprecated because it makes the analysis heavier.
 
 ![image](https://user-images.githubusercontent.com/23289252/163379419-40368cc4-8abd-40d0-94ca-d0a468796c57.png)
 
-### Optimize Window
+### Optimization Window
 
 Double-click on the component icon to open the form for performing optimization.
 
@@ -89,9 +89,10 @@ Values that can be set and their meanings are as follows.
 
 - Sampler
   - Sets the algorithm to perform the optimization. The following types are available.
-    1. TPE (Tree-structured Parzen Estimator)
-    1. NSGA-II
-    1. CMA-ES
+  - All are optimization algorithms provided by Optuna.
+    1. TPE (Bayesian optimization)
+    1. NSGA-II (Genetic algorithm)
+    1. CMA-ES (Evolution strategy)
     1. Random
 - Number of trial
   - This number of trials will be performed.
@@ -122,6 +123,7 @@ Values that can be set and their meanings are as follows.
   - Open the folder where the file containing the optimization results is located. The results are stored under the name "Tunny_Opt_Result.db".
 - Clear result file
   - Deletes the optimization result file.
+  - If the value of the input changes, delete it if necessary, since optimization using a file containing the same name study will cause content conflicts and optimization will not be performed.
 - Set restore model number
   - The model with the number entered here is restored from the optimization results file and is the output of the component.
   - The model number matches the tree structure of the output.
@@ -147,7 +149,7 @@ Or [pixivFANBOX](https://hiron.fanbox.cc/)
 ## License
 
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
-Copyright© 2019-2021, hrntsm
+Copyright© 2022, hrntsm
 
 Release package is embedded Python runtime & optuna libraries.
 These depend on their own licenses.
