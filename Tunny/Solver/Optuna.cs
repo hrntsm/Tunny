@@ -146,7 +146,7 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        public ModelResult[] GetModelResult(int[] num, string studyName)
+        public ModelResult[] GetModelResult(int[] resultNum, string studyName)
         {
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             var modelResult = new List<ModelResult>();
@@ -166,27 +166,20 @@ namespace Tunny.Solver
                     return modelResult.ToArray();
                 }
 
-                if (num[0] == -1)
+                if (resultNum[0] == -1)
                 {
                     var bestTrials = (dynamic[])study.best_trials;
                     foreach (dynamic trial in bestTrials)
                     {
-                        modelResult.Add(new ModelResult()
-                        {
-                            Number = (int)trial.number,
-                            Draco = (string)trial.user_attrs["geometry"],
-                        });
+                        ParseTrial(modelResult, trial);
                     }
                 }
                 else
                 {
-                    for (var i = 0; i < num.Length; i++)
+                    for (var i = 0; i < resultNum.Length; i++)
                     {
-                        modelResult.Add(new ModelResult()
-                        {
-                            Number = num[i],
-                            Draco = (string)study.trials[num[i]].user_attrs["geometry"],
-                        });
+                        dynamic trial = study.trials[resultNum[i]];
+                        ParseTrial(modelResult, trial);
                     }
                 }
             }
@@ -194,11 +187,32 @@ namespace Tunny.Solver
 
             return modelResult.ToArray();
         }
+
+        private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
+        {
+            var values = (double[])trial.@params.values();
+            var keys = (string[])trial.@params.keys();
+            var variables = new Dictionary<string, double>();
+            for (var i = 0; i < keys.Length; i++)
+            {
+                variables.Add(keys[i], values[i]);
+            }
+
+            modelResult.Add(new ModelResult()
+            {
+                Number = (int)trial.number,
+                Draco = (string)trial.user_attrs["geometry"],
+                Variables = variables,
+                Objectives = (double[])trial.values,
+            });
+        }
     }
 
     public class ModelResult
     {
         public int Number { get; set; }
         public string Draco { get; set; }
+        public Dictionary<string, double> Variables { get; set; }
+        public double[] Objectives { get; set; }
     }
 }

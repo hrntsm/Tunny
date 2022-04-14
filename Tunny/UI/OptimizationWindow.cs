@@ -121,19 +121,51 @@ namespace Tunny.UI
 
         private void RestoreButton_Click(object sender, EventArgs e)
         {
+            var modelMesh = new GH_Structure<GH_Mesh>();
+            var variables = new GH_Structure<GH_Number>();
+            var objectives = new GH_Structure<GH_Number>();
+            IEnumerable<string> nickName = _component.GhInOut.Sliders.Select(x => x.NickName);
+
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
             string studyName = studyNameTextBox.Text;
 
             int[] num = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-            var result = new GH_Structure<GH_Mesh>();
             ModelResult[] modelResult = optuna.GetModelResult(num, studyName);
             foreach (ModelResult model in modelResult)
             {
-                var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
-                result.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
+                SetVariables(variables, model, nickName);
+                SetObjectives(objectives, model);
+                SetModelMesh(modelMesh, model);
             }
-            _component.Result = result;
+            _component.Variables = variables;
+            _component.Objectives = objectives;
+            _component.ModelMesh = modelMesh;
             _component.ExpireSolution(true);
+        }
+
+        private static void SetVariables(GH_Structure<GH_Number> objectives, ModelResult model, IEnumerable<string> nickName)
+        {
+            foreach (string name in nickName)
+            {
+                foreach (var obj in model.Variables.Where(obj => obj.Key == name))
+                {
+                    objectives.Append(new GH_Number(obj.Value), new GH_Path(0, model.Number));
+                }
+            }
+        }
+
+        private static void SetObjectives(GH_Structure<GH_Number> objectives, ModelResult model)
+        {
+            foreach (double obj in model.Objectives)
+            {
+                objectives.Append(new GH_Number(obj), new GH_Path(0, model.Number));
+            }
+        }
+
+        private static void SetModelMesh(GH_Structure<GH_Mesh> modelMesh, ModelResult model)
+        {
+            var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
+            modelMesh.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
         }
     }
 }

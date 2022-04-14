@@ -22,7 +22,7 @@ namespace Tunny.Util
         private readonly TunnyComponent _component;
         private IGH_Param _modelMesh;
         private List<IGH_Param> _objectives;
-        private List<GH_NumberSlider> _sliders;
+        public List<GH_NumberSlider> Sliders;
 
         public readonly string ComponentFolder;
         public List<Variable> Variables;
@@ -49,7 +49,7 @@ namespace Tunny.Util
 
         private bool SetVariables()
         {
-            _sliders = new List<GH_NumberSlider>();
+            Sliders = new List<GH_NumberSlider>();
 
             foreach (IGH_Param source in _component.Params.Input[0].Sources)
             {
@@ -68,7 +68,7 @@ namespace Tunny.Util
 
                 if (input is GH_NumberSlider slider)
                 {
-                    _sliders.Add(slider);
+                    Sliders.Add(slider);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace Tunny.Util
             int i = 0;
             var variables = new List<Variable>();
 
-            foreach (GH_NumberSlider slider in _sliders)
+            foreach (GH_NumberSlider slider in Sliders)
             {
                 decimal min = slider.Slider.Minimum;
                 decimal max = slider.Slider.Maximum;
@@ -152,7 +152,7 @@ namespace Tunny.Util
         {
             int i = 0;
 
-            foreach (GH_NumberSlider slider in _sliders)
+            foreach (GH_NumberSlider slider in Sliders)
             {
                 if (slider == null)
                 {
