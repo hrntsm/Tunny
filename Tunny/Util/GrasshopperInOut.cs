@@ -18,26 +18,27 @@ namespace Tunny.Util
     public class GrasshopperInOut
     {
         private readonly GH_Document _document;
-        public List<GH_NumberSlider> Sliders;
-        public List<Guid> InputGuids;
+        private readonly List<Guid> _inputGuids;
+        private readonly TunnyComponent _component;
+        private IGH_Param _modelMesh;
+        private List<IGH_Param> _objectives;
+        private List<GH_NumberSlider> _sliders;
+
+        public readonly string ComponentFolder;
         public List<Variable> Variables;
-        public List<IGH_Param> Objectives;
-        public IGH_Param ModelMesh;
-        public TunnyComponent Component;
-        public string ComponentFolder;
         public string DocumentPath;
         public string DocumentName;
 
         public GrasshopperInOut(TunnyComponent component)
         {
-            Component = component;
-            ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(Component).Location);
-            _document = Component.OnPingDocument();
-            InputGuids = new List<Guid>();
+            _component = component;
+            ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
+            _document = _component.OnPingDocument();
+            _inputGuids = new List<Guid>();
             SetInputs();
         }
 
-        public bool SetInputs()
+        private bool SetInputs()
         {
             SetVariables();
             SetObjectives();
@@ -46,28 +47,28 @@ namespace Tunny.Util
             return true;
         }
 
-        public bool SetVariables()
+        private bool SetVariables()
         {
-            Sliders = new List<GH_NumberSlider>();
+            _sliders = new List<GH_NumberSlider>();
 
-            foreach (IGH_Param source in Component.Params.Input[0].Sources)
+            foreach (IGH_Param source in _component.Params.Input[0].Sources)
             {
-                InputGuids.Add(source.InstanceGuid);
+                _inputGuids.Add(source.InstanceGuid);
             }
 
-            if (InputGuids.Count == 0)
+            if (_inputGuids.Count == 0)
             {
                 TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
                 return false;
             }
 
-            foreach (Guid guid in InputGuids)
+            foreach (Guid guid in _inputGuids)
             {
                 IGH_DocumentObject input = _document.FindObject(guid, true);
 
                 if (input is GH_NumberSlider slider)
                 {
-                    Sliders.Add(slider);
+                    _sliders.Add(slider);
                 }
             }
 
@@ -80,7 +81,7 @@ namespace Tunny.Util
             int i = 0;
             var variables = new List<Variable>();
 
-            foreach (GH_NumberSlider slider in Sliders)
+            foreach (GH_NumberSlider slider in _sliders)
             {
                 decimal min = slider.Slider.Minimum;
                 decimal max = slider.Slider.Maximum;
@@ -124,21 +125,26 @@ namespace Tunny.Util
             Variables = variables;
         }
 
-        public bool SetObjectives()
+        private bool SetObjectives()
         {
-            if (Component.Params.Input[1].SourceCount == 0)
+            if (_component.Params.Input[1].SourceCount == 0)
             {
                 TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
                 return false;
             }
 
-            Objectives = Component.Params.Input[1].Sources.ToList();
+            _objectives = _component.Params.Input[1].Sources.ToList();
             return true;
         }
 
-        public bool SetModelMesh()
+        private bool SetModelMesh()
         {
-            ModelMesh = Component.Params.Input[2].Sources[0];
+            if (_component.Params.Input[2].SourceCount == 0)
+            {
+                return false;
+            }
+
+            _modelMesh = _component.Params.Input[2].Sources[0];
             return true;
         }
 
@@ -146,7 +152,7 @@ namespace Tunny.Util
         {
             int i = 0;
 
-            foreach (GH_NumberSlider slider in Sliders)
+            foreach (GH_NumberSlider slider in _sliders)
             {
                 if (slider == null)
                 {
@@ -198,7 +204,7 @@ namespace Tunny.Util
         {
             var values = new List<double>();
 
-            foreach (IGH_Param objective in Objectives)
+            foreach (IGH_Param objective in _objectives)
             {
                 IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(true);
                 foreach (IGH_Goo goo in ghEnumerator)
@@ -215,7 +221,12 @@ namespace Tunny.Util
 
         public string GetModelDraco()
         {
-            IGH_StructureEnumerator ghEnumerator = ModelMesh.VolatileData.AllData(true);
+            if (_modelMesh == null)
+            {
+                return string.Empty;
+            }
+
+            IGH_StructureEnumerator ghEnumerator = _modelMesh.VolatileData.AllData(true);
             foreach (IGH_Goo goo in ghEnumerator)
             {
                 if (goo is GH_Mesh mesh)

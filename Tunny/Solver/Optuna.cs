@@ -84,12 +84,21 @@ namespace Tunny.Solver
             PythonEngine.Initialize();
             using (Py.GIL())
             {
-                dynamic vis;
+                dynamic study;
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
+                try
+                {
+                    study = optuna.load_study(storage: storage, study_name: studyName);
+                }
+                catch (Exception e)
+                {
+                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 try
                 {
+                    dynamic vis;
                     switch (visualize)
                     {
                         case "contour":
@@ -145,7 +154,18 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = optuna.load_study(storage: storage, study_name: studyName);
+                dynamic study;
+
+                try
+                {
+                    study = optuna.load_study(storage: storage, study_name: studyName);
+                }
+                catch (Exception e)
+                {
+                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return modelResult.ToArray();
+                }
+
                 if (num[0] == -1)
                 {
                     var bestTrials = (dynamic[])study.best_trials;
@@ -156,7 +176,6 @@ namespace Tunny.Solver
                             Number = (int)trial.number,
                             Draco = (string)trial.user_attrs["geometry"],
                         });
-
                     }
                 }
                 else

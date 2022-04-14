@@ -91,7 +91,22 @@ namespace Tunny.Solver
 
                 if (nObjective == 1)
                 {
-                    XOpt = (double[])study.best_params.values();
+                    var values = (double[])study.best_params.values();
+                    var keys = (string[])study.best_params.keys();
+                    var opt = new double[NickName.Length];
+
+                    for (int i = 0; i < NickName.Length; i++)
+                    {
+                        for (int j = 0; j < keys.Length; j++)
+                        {
+                            if (keys[j] == NickName[i])
+                            {
+                                opt[i] = values[j];
+                            }
+                        }
+                    }
+
+                    XOpt = opt;
                     FxOpt = new[] { (double)study.best_value };
                 }
                 else
