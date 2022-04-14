@@ -99,8 +99,8 @@ namespace Tunny.UI
             stopButton.Enabled = false;
 
             //Enable GUI
-            GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas.EnableUI();
+            var ghCanvas = Owner as GH_DocumentEditor;
+            ghCanvas?.EnableUI();
         }
 
         private void VisualizeButton_Click(object sender, EventArgs e)
@@ -166,6 +166,12 @@ namespace Tunny.UI
         {
             var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
             modelMesh.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
+        }
+
+        private void FormClosingXButton(object sender, FormClosingEventArgs e)
+        {
+            var ghCanvas = Owner as GH_DocumentEditor;
+            ghCanvas?.EnableUI();
         }
     }
 }

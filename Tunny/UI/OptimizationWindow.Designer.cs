@@ -319,6 +319,7 @@ namespace Tunny.UI
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "OptimizationWindow";
             this.Text = "Tunny";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosingXButton);
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).EndInit();
             this.optimizeTabControl.ResumeLayout(false);
