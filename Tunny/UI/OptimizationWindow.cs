@@ -124,7 +124,7 @@ namespace Tunny.UI
             var modelMesh = new GH_Structure<GH_Mesh>();
             var variables = new GH_Structure<GH_Number>();
             var objectives = new GH_Structure<GH_Number>();
-            IEnumerable<string> nickName = _component.GhInOut.Sliders.Select(x => x.NickName);
+            var nickName = _component.GhInOut.Sliders.Select(x => x.NickName).ToArray();
 
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
             string studyName = studyNameTextBox.Text;
@@ -164,6 +164,10 @@ namespace Tunny.UI
 
         private static void SetModelMesh(GH_Structure<GH_Mesh> modelMesh, ModelResult model)
         {
+            if (model.Draco == string.Empty)
+            {
+                return;
+            }
             var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
             modelMesh.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
         }

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
+
+## [0.1.1] -2022-04-17
+
+### Fixed
+
+- If there is no modelmesh input and use restore function, gh is crashed bug.
+
 ## [0.1.0] -2022-04-14
 
 ### Added
