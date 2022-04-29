@@ -7,11 +7,6 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
-using Grasshopper.Kernel.Data;
-using Grasshopper.Kernel.Types;
-
-using Rhino.FileIO;
-using Rhino.Geometry;
 
 using Tunny.Component;
 using Tunny.Optimization;
@@ -38,20 +33,17 @@ namespace Tunny.UI
             samplerComboBox.SelectedIndex = 0;
             visualizeTypeComboBox.SelectedIndex = 3;
 
-            backgroundWorkerSolver.DoWork += Loop.RunOptimizationLoopMultiple;
-            backgroundWorkerSolver.ProgressChanged += ProgressChangedHandler;
-            backgroundWorkerSolver.RunWorkerCompleted += ButtonStop_Click;
-            backgroundWorkerSolver.WorkerReportsProgress = true;
-            backgroundWorkerSolver.WorkerSupportsCancellation = true;
-        }
+            optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
+            optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
+            optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
+            optimizeBackgroundWorker.WorkerReportsProgress = true;
+            optimizeBackgroundWorker.WorkerSupportsCancellation = true;
 
-        private void ProgressChangedHandler(object sender, ProgressChangedEventArgs e)
-        {
-            var parameters = (IList<decimal>)e.UserState;
-            UpdateGrasshopper(parameters);
-
-            progressBar.Value = e.ProgressPercentage;
-            progressBar.Update();
+            restoreBackgroundWorker.DoWork += RestoreLoop.Run;
+            restoreBackgroundWorker.ProgressChanged += RestoreProgressChangedHandler;
+            restoreBackgroundWorker.RunWorkerCompleted += RestoreStopButton_Click;
+            restoreBackgroundWorker.WorkerReportsProgress = true;
+            restoreBackgroundWorker.WorkerSupportsCancellation = true;
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
@@ -66,41 +58,6 @@ namespace Tunny.UI
 
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private void ButtonRunOptimize_Click(object sender, EventArgs e)
-        {
-            GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas.DisableUI();
-
-            runOptimizeButton.Enabled = false;
-            Loop.NTrials = (int)nTrialNumUpDown.Value;
-            Loop.LoadIfExists = loadIfExistsCheckBox.Checked;
-            Loop.SamplerType = samplerComboBox.Text;
-            Loop.StudyName = studyNameTextBox.Text;
-
-            if (_component.GhInOut.GetObjectiveValues().Count > 1 && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random"))
-            {
-                MessageBox.Show("This sampler does not support multiple objectives optimization.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ghCanvas.EnableUI();
-                runOptimizeButton.Enabled = true;
-                return;
-            }
-
-            backgroundWorkerSolver.RunWorkerAsync(_component);
-
-            stopButton.Enabled = true;
-        }
-
-        private void ButtonStop_Click(object sender, EventArgs e)
-        {
-            runOptimizeButton.Enabled = true;
-            stopButton.Enabled = false;
-
-            //Enable GUI
-            var ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas?.EnableUI();
         }
 
         private void VisualizeButton_Click(object sender, EventArgs e)
@@ -119,63 +76,100 @@ namespace Tunny.UI
             File.Delete(_component.GhInOut.ComponentFolder + "/Tunny_Opt_Result.db");
         }
 
-        private void RestoreButton_Click(object sender, EventArgs e)
-        {
-            var modelMesh = new GH_Structure<GH_Mesh>();
-            var variables = new GH_Structure<GH_Number>();
-            var objectives = new GH_Structure<GH_Number>();
-            var nickName = _component.GhInOut.Sliders.Select(x => x.NickName).ToArray();
-
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder);
-            string studyName = studyNameTextBox.Text;
-
-            int[] num = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-            ModelResult[] modelResult = optuna.GetModelResult(num, studyName);
-            foreach (ModelResult model in modelResult)
-            {
-                SetVariables(variables, model, nickName);
-                SetObjectives(objectives, model);
-                SetModelMesh(modelMesh, model);
-            }
-            _component.Variables = variables;
-            _component.Objectives = objectives;
-            _component.ModelMesh = modelMesh;
-            _component.ExpireSolution(true);
-        }
-
-        private static void SetVariables(GH_Structure<GH_Number> objectives, ModelResult model, IEnumerable<string> nickName)
-        {
-            foreach (string name in nickName)
-            {
-                foreach (var obj in model.Variables.Where(obj => obj.Key == name))
-                {
-                    objectives.Append(new GH_Number(obj.Value), new GH_Path(0, model.Number));
-                }
-            }
-        }
-
-        private static void SetObjectives(GH_Structure<GH_Number> objectives, ModelResult model)
-        {
-            foreach (double obj in model.Objectives)
-            {
-                objectives.Append(new GH_Number(obj), new GH_Path(0, model.Number));
-            }
-        }
-
-        private static void SetModelMesh(GH_Structure<GH_Mesh> modelMesh, ModelResult model)
-        {
-            if (model.Draco == string.Empty)
-            {
-                return;
-            }
-            var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
-            modelMesh.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
-        }
-
         private void FormClosingXButton(object sender, FormClosingEventArgs e)
         {
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+
+            if (optimizeBackgroundWorker != null)
+            {
+                optimizeBackgroundWorker.CancelAsync();
+            }
+
+            if (restoreBackgroundWorker != null)
+            {
+                restoreBackgroundWorker.CancelAsync();
+            }
+        }
+
+        private void RestoreRunButton_Click(object sender, EventArgs e)
+        {
+            optimizeRunButton.Enabled = false;
+            optimizeStopButton.Enabled = true;
+
+            RestoreLoop.StudyName = studyNameTextBox.Text;
+            RestoreLoop.NickNames = _component.GhInOut.Sliders.Select(x => x.NickName).ToArray();
+            RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
+
+            restoreBackgroundWorker.RunWorkerAsync(_component);
+        }
+
+        private void RestoreStopButton_Click(object sender, EventArgs e)
+        {
+            optimizeRunButton.Enabled = true;
+            optimizeStopButton.Enabled = false;
+
+            if (restoreBackgroundWorker != null)
+            {
+                restoreBackgroundWorker.CancelAsync();
+            }
+            _component.ExpireSolution(true);
+        }
+
+        private void RestoreProgressChangedHandler(object sender, ProgressChangedEventArgs e)
+        {
+            restoreProgressBar.Value = e.ProgressPercentage;
+            restoreProgressBar.Update();
+        }
+
+        private void OptimizeRunButton_Click(object sender, EventArgs e)
+        {
+            GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
+            ghCanvas.DisableUI();
+
+            optimizeRunButton.Enabled = false;
+            OptimizeLoop.NTrials = (int)nTrialNumUpDown.Value;
+            OptimizeLoop.LoadIfExists = loadIfExistsCheckBox.Checked;
+            OptimizeLoop.SamplerType = samplerComboBox.Text;
+            OptimizeLoop.StudyName = studyNameTextBox.Text;
+
+            if (_component.GhInOut.GetObjectiveValues().Count > 1 && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random"))
+            {
+                MessageBox.Show("This sampler does not support multiple objectives optimization.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ghCanvas.EnableUI();
+                optimizeRunButton.Enabled = true;
+                return;
+            }
+
+            optimizeBackgroundWorker.RunWorkerAsync(_component);
+
+            optimizeStopButton.Enabled = true;
+
+        }
+
+        private void OptimizeStopButton_Click(object sender, EventArgs e)
+        {
+            optimizeRunButton.Enabled = true;
+            optimizeStopButton.Enabled = false;
+
+            if (optimizeBackgroundWorker != null)
+            {
+                optimizeBackgroundWorker.CancelAsync();
+            }
+
+            //Enable GUI
+            var ghCanvas = Owner as GH_DocumentEditor;
+            ghCanvas?.EnableUI();
+
+        }
+
+        private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
+        {
+            var parameters = (IList<decimal>)e.UserState;
+            UpdateGrasshopper(parameters);
+
+            optimizeProgressBar.Value = e.ProgressPercentage;
+            optimizeProgressBar.Update();
         }
     }
 }

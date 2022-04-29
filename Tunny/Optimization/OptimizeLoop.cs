@@ -10,7 +10,7 @@ using Tunny.Util;
 
 namespace Tunny.Optimization
 {
-    internal static class Loop
+    internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
@@ -19,7 +19,7 @@ namespace Tunny.Optimization
         public static string SamplerType;
         public static string StudyName;
 
-        internal static void RunOptimizationLoopMultiple(object sender, DoWorkEventArgs e)
+        internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
@@ -49,7 +49,7 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var solver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
             Dictionary<string, object> settings = new Dictionary<string, object>()
             {
                 { "nTrials", NTrials },
@@ -60,10 +60,10 @@ namespace Tunny.Optimization
                 { "nObjective", s_component.GhInOut.GetObjectiveValues().Count }
             };
 
-            bool solverStarted = solver.RunSolver(
+            bool solverStarted = optunaSolver.RunSolver(
                 variables, EvaluateFunction, "OptunaTPE", settings, "", "");
 
-            return solverStarted ? solver.XOpt : new[] { double.NaN };
+            return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
 
         public static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
