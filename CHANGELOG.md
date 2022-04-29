@@ -15,12 +15,15 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - Restore feature was made asynchronous.
+- Visualize graph axis name now use input objective's nickname.
 
 ### Fixed
 
 - Optimization does not stop when the value of Objective is null.
   - When the objective values is null, optimizer try to get another variable and resolve solution.
   - If it is 10 trial to get objectives in 1 optimize loop, optimizer throw error.
+- Enable visualize param importances function
+  - this function need sklearn, but tunny's python package doesn't include it.
 
 ## [0.1.1] -2022-04-17
 

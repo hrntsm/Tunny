@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Grasshopper.Kernel;
+
 using Tunny.Optimization;
 using Tunny.Util;
 
@@ -12,6 +14,7 @@ namespace Tunny.Solver
         double[] FxOpt { get; }
         bool RunSolver(
             List<Variable> variables,
+            List<IGH_Param> objectives,
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
             string preset,
             Dictionary<string, object> settings,

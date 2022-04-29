@@ -22,7 +22,7 @@ namespace Tunny.Util
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
         private IGH_Param _modelMesh;
-        private List<IGH_Param> _objectives;
+        public List<IGH_Param> Objectives;
         public List<GH_NumberSlider> Sliders;
 
         public readonly string ComponentFolder;
@@ -134,7 +134,7 @@ namespace Tunny.Util
                 return false;
             }
 
-            _objectives = _component.Params.Input[1].Sources.ToList();
+            Objectives = _component.Params.Input[1].Sources.ToList();
             return true;
         }
 
@@ -205,7 +205,7 @@ namespace Tunny.Util
         {
             var values = new List<double>();
 
-            foreach (IGH_Param objective in _objectives)
+            foreach (IGH_Param objective in Objectives)
             {
                 IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(false);
                 if (ghEnumerator.Count() > 1)
