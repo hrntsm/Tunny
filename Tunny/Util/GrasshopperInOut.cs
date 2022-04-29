@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
@@ -206,12 +207,26 @@ namespace Tunny.Util
 
             foreach (IGH_Param objective in _objectives)
             {
-                IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(true);
+                IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(false);
+                if (ghEnumerator.Count() > 1)
+                {
+                    TunnyMessageBox.Show(
+                        "Tunny doesn't handle list output.\n Separate each objective if you want multiple objectives",
+                        "Tunny",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    return new List<double>();
+                }
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
                     if (goo is GH_Number num)
                     {
                         values.Add(num.Value);
+                    }
+                    else if (goo == null)
+                    {
+                        values.Add(double.NaN);
                     }
                 }
             }
