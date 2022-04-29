@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+using Grasshopper.Kernel;
+
 using Python.Runtime;
 
 using Tunny.Optimization;
@@ -28,6 +30,7 @@ namespace Tunny.Solver
 
         public bool RunSolver(
             List<Variable> variables,
+            List<IGH_Param> objectives,
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
             string preset,
             Dictionary<string, object> settings, string installFolder, string documentPath)
@@ -36,14 +39,15 @@ namespace Tunny.Solver
             var lb = new double[dVar];
             var ub = new double[dVar];
             var integer = new bool[dVar];
-            var nickName = new string[dVar];
+            var varNickName = new string[dVar];
+            string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
             for (var i = 0; i < dVar; i++)
             {
                 lb[i] = Convert.ToDouble(variables[i].LowerBond);
                 ub[i] = Convert.ToDouble(variables[i].UpperBond);
                 integer[i] = variables[i].Integer;
-                nickName[i] = variables[i].NickName;
+                varNickName[i] = variables[i].NickName;
             }
 
             EvaluatedGHResult Eval(double[] x, int progress)
@@ -54,7 +58,7 @@ namespace Tunny.Solver
 
             try
             {
-                var tpe = new OptunaAlgorithm(lb, ub, nickName, settings, Eval);
+                var tpe = new OptunaAlgorithm(lb, ub, varNickName, objNickName, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.Get_XOptimum();
                 FxOpt = tpe.Get_fxOptimum();
@@ -96,17 +100,18 @@ namespace Tunny.Solver
                     return;
                 }
 
+                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
                 try
                 {
                     dynamic vis;
                     switch (visualize)
                     {
                         case "contour":
-                            vis = optuna.visualization.plot_contour(study);
+                            vis = optuna.visualization.plot_contour(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "EDF":
-                            vis = optuna.visualization.plot_edf(study);
+                            vis = optuna.visualization.plot_edf(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "intermediate values":
@@ -114,23 +119,23 @@ namespace Tunny.Solver
                             vis.show();
                             break;
                         case "optimization history":
-                            vis = optuna.visualization.plot_optimization_history(study);
+                            vis = optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "parallel coordinate":
-                            vis = optuna.visualization.plot_parallel_coordinate(study);
+                            vis = optuna.visualization.plot_parallel_coordinate(study, targat_name: nickNames[0]);
                             vis.show();
                             break;
                         case "param importances":
-                            vis = optuna.visualization.plot_param_importances(study);
+                            vis = optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "pareto front":
-                            vis = optuna.visualization.plot_pareto_front(study);
+                            vis = optuna.visualization.plot_pareto_front(study, target_names: nickNames);
                             vis.show();
                             break;
                         case "slice":
-                            vis = optuna.visualization.plot_slice(study);
+                            vis = optuna.visualization.plot_slice(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         default:

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 using Python.Runtime;
 
@@ -11,20 +12,22 @@ namespace Tunny.Solver
     {
         private double[] Lb { get; set; }
         private double[] Ub { get; set; }
-        private string[] NickName { get; set; }
+        private string[] VarNickName { get; set; }
+        private string[] ObjNickName { get; set; }
         private Dictionary<string, object> Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
         public OptunaAlgorithm(
-            double[] lb, double[] ub, string[] nickName,
+            double[] lb, double[] ub, string[] varNickName, string[] objNickName,
             Dictionary<string, object> settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
             Lb = lb;
             Ub = ub;
-            NickName = nickName;
+            VarNickName = varNickName;
+            ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
         }
@@ -74,6 +77,14 @@ namespace Tunny.Solver
                     directions: directions
                 );
 
+                var name = new StringBuilder();
+                foreach (var objName in ObjNickName)
+                {
+                    name.Append(objName + ",");
+                }
+                name.Remove(name.Length - 1, 1);
+                study.set_user_attr("objective_names", name.ToString());
+
                 var xTest = new double[n];
                 var result = new EvaluatedGHResult();
                 for (int i = 0; i < nTrials; i++)
@@ -90,7 +101,7 @@ namespace Tunny.Solver
                     {
                         for (int j = 0; j < n; j++)
                         {
-                            xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
+                            xTest[j] = trial.suggest_uniform(VarNickName[j], Lb[j], Ub[j]);
                         }
                         result = EvalFunc(xTest, progress);
 
@@ -112,13 +123,13 @@ namespace Tunny.Solver
                 {
                     var values = (double[])study.best_params.values();
                     var keys = (string[])study.best_params.keys();
-                    var opt = new double[NickName.Length];
+                    var opt = new double[VarNickName.Length];
 
-                    for (int i = 0; i < NickName.Length; i++)
+                    for (int i = 0; i < VarNickName.Length; i++)
                     {
                         for (int j = 0; j < keys.Length; j++)
                         {
-                            if (keys[j] == NickName[i])
+                            if (keys[j] == VarNickName[i])
                             {
                                 opt[i] = values[j];
                             }

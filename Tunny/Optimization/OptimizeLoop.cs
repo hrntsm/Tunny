@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
+using Grasshopper.Kernel;
+
 using Tunny.Component;
 using Tunny.Solver;
 using Tunny.UI;
@@ -43,6 +45,7 @@ namespace Tunny.Optimization
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
+            List<IGH_Param> objectives = s_component.GhInOut.Objectives;
 
             if (worker.CancellationPending)
             {
@@ -61,7 +64,7 @@ namespace Tunny.Optimization
             };
 
             bool solverStarted = optunaSolver.RunSolver(
-                variables, EvaluateFunction, "OptunaTPE", settings, "", "");
+                variables, objectives, EvaluateFunction, "OptunaTPE", settings, "", "");
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
