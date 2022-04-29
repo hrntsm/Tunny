@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED]
+
+### Added
+
+- Restore progressbar
+
+### Changed
+
+- Restore feature was made asynchronous.
+
+
 ## [0.1.1] -2022-04-17
 
 ### Fixed
