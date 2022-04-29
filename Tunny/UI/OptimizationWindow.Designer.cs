@@ -381,7 +381,6 @@ namespace Tunny.UI
         private System.Windows.Forms.TextBox restoreModelNumTextBox;
         private System.Windows.Forms.Label restoreModelLabel;
         private System.Windows.Forms.ProgressBar restoreProgressBar;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.ComponentModel.BackgroundWorker restoreBackgroundWorker;
         private System.Windows.Forms.Button restoreStopButton;
     }

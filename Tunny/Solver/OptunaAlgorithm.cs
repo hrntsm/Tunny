@@ -80,11 +80,30 @@ namespace Tunny.Solver
                 {
                     int progress = i * 100 / nTrials;
                     dynamic trial = study.ask();
-                    for (int j = 0; j < n; j++)
+
+                    //TODO: Is this the correct way to handle the case of null?
+                    //Other than TPE, the value is returned at random when retrying, so the value will be anything but null.
+                    //TPEs, on the other hand, search for a specific location determined by GP,
+                    //so the value tends to remain the same even after retries and there is no way to get out.
+                    int nullCount = 0;
+                    while (nullCount < 10)
                     {
-                        xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
+                        for (int j = 0; j < n; j++)
+                        {
+                            xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
+                        }
+                        result = EvalFunc(xTest, progress);
+
+                        if (result.ObjectiveValues.Contains(double.NaN))
+                        {
+                            trial = study.ask();
+                            nullCount++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    result = EvalFunc(xTest, progress);
                     trial.set_user_attr("geometry", result.ModelDraco);
                     study.tell(trial, result.ObjectiveValues.ToArray());
                 }

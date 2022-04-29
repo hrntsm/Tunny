@@ -133,7 +133,14 @@ namespace Tunny.UI
             OptimizeLoop.SamplerType = samplerComboBox.Text;
             OptimizeLoop.StudyName = studyNameTextBox.Text;
 
-            if (_component.GhInOut.GetObjectiveValues().Count > 1 && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random"))
+            var objectiveValues = _component.GhInOut.GetObjectiveValues();
+            if (objectiveValues.Count == 0)
+            {
+                ghCanvas.EnableUI();
+                optimizeRunButton.Enabled = true;
+                return;
+            }
+            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random"))
             {
                 MessageBox.Show("This sampler does not support multiple objectives optimization.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ghCanvas.EnableUI();
