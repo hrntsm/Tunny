@@ -13,9 +13,13 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Grasshopper" Version="7.4.21078.1001" IncludeAssets="compile;build" />
+    <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="pythonnet" Version="3.0.0-preview2022-03-03" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <Reference Include="GalapagosComponents">
+      <HintPath>Lib\GalapagosComponents.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
@@ -41,7 +45,7 @@
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy $(ProjectDir)Python $(OutDir)Python /I /S /D" />
+    <Exec Command="xcopy $(ProjectDir)Lib\Python $(OutDir)Python /I /S /D" />
   </Target>
 
 </Project>

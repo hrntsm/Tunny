@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using GalapagosComponents;
+
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
@@ -21,6 +23,7 @@ namespace Tunny.Util
         private readonly GH_Document _document;
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
+        private List<GalapagosGeneListObject> _genePool;
         private IGH_Param _modelMesh;
         public List<IGH_Param> Objectives;
         public List<GH_NumberSlider> Sliders;
@@ -51,6 +54,7 @@ namespace Tunny.Util
         private bool SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
+            _genePool = new List<GalapagosGeneListObject>();
 
             foreach (IGH_Param source in _component.Params.Input[0].Sources)
             {
@@ -63,24 +67,29 @@ namespace Tunny.Util
                 return false;
             }
 
-            foreach (Guid guid in _inputGuids)
+            foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
             {
-                IGH_DocumentObject input = _document.FindObject(guid, true);
-
-                if (input is GH_NumberSlider slider)
+                switch (input)
                 {
-                    Sliders.Add(slider);
+                    case GH_NumberSlider slider:
+                        Sliders.Add(slider);
+                        break;
+                    case GalapagosGeneListObject genePool:
+                        _genePool.Add(genePool);
+                        break;
                 }
             }
 
-            SetSliderValues();
+            var variables = new List<Variable>();
+            SetInputSliderValues(variables);
+            SetInputGenePoolValues(variables);
+            Variables = variables;
             return true;
         }
 
-        private void SetSliderValues()
+        private void SetInputSliderValues(ICollection<Variable> variables)
         {
             int i = 0;
-            var variables = new List<Variable>();
 
             foreach (GH_NumberSlider slider in Sliders)
             {
@@ -122,9 +131,26 @@ namespace Tunny.Util
 
                 variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
             }
-
-            Variables = variables;
         }
+
+        private void SetInputGenePoolValues(ICollection<Variable> variables)
+        {
+            int count = 0;
+
+            foreach (GalapagosGeneListObject genePool in _genePool)
+            {
+                bool isInteger = genePool.Decimals == 0;
+                decimal lowerBond = genePool.Minimum;
+                decimal upperBond = genePool.Maximum;
+
+                for (int j = 0; j < genePool.Count; j++)
+                {
+                    string nickName = "genepool" + count++;
+                    variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
+                }
+            }
+        }
+
 
         private bool SetObjectives()
         {
@@ -183,7 +209,21 @@ namespace Tunny.Util
                 slider.Slider.RaiseEvents = true;
             }
 
+            foreach (GalapagosGeneListObject genePool in _genePool)
+            {
+                for (int j = 0; j < genePool.Count; j++)
+                {
+                    genePool.set_NormalisedValue(j, GetNormalisedGenePoolValue(parameters[i++], genePool));
+                    genePool.ExpireSolution(false);
+                }
+            }
+
             return true;
+        }
+
+        private decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
+        {
+            return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
 
         private void Recalculate()
