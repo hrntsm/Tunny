@@ -44,6 +44,7 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
+            this.restoreStopButton = new System.Windows.Forms.Button();
             this.restoreProgressBar = new System.Windows.Forms.ProgressBar();
             this.restoreRunButton = new System.Windows.Forms.Button();
             this.restoreModelNumTextBox = new System.Windows.Forms.TextBox();
@@ -54,7 +55,7 @@ namespace Tunny.UI
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.restoreStopButton = new System.Windows.Forms.Button();
+            this.restoreReflectButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -127,10 +128,10 @@ namespace Tunny.UI
             // 
             // optimizeProgressBar
             // 
-            this.optimizeProgressBar.Location = new System.Drawing.Point(13, 204);
+            this.optimizeProgressBar.Location = new System.Drawing.Point(13, 205);
             this.optimizeProgressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optimizeProgressBar.Name = "optimizeProgressBar";
-            this.optimizeProgressBar.Size = new System.Drawing.Size(227, 29);
+            this.optimizeProgressBar.Size = new System.Drawing.Size(227, 28);
             this.optimizeProgressBar.TabIndex = 6;
             // 
             // samplerComboBox
@@ -208,6 +209,7 @@ namespace Tunny.UI
             // 
             // resultTabPage
             // 
+            this.resultTabPage.Controls.Add(this.restoreReflectButton);
             this.resultTabPage.Controls.Add(this.restoreStopButton);
             this.resultTabPage.Controls.Add(this.restoreProgressBar);
             this.resultTabPage.Controls.Add(this.restoreRunButton);
@@ -227,19 +229,30 @@ namespace Tunny.UI
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
+            // restoreStopButton
+            // 
+            this.restoreStopButton.Enabled = false;
+            this.restoreStopButton.Location = new System.Drawing.Point(96, 177);
+            this.restoreStopButton.Name = "restoreStopButton";
+            this.restoreStopButton.Size = new System.Drawing.Size(50, 23);
+            this.restoreStopButton.TabIndex = 9;
+            this.restoreStopButton.Text = "Stop";
+            this.restoreStopButton.UseVisualStyleBackColor = true;
+            this.restoreStopButton.Click += new System.EventHandler(this.RestoreStopButton_Click);
+            // 
             // restoreProgressBar
             // 
-            this.restoreProgressBar.Location = new System.Drawing.Point(17, 205);
+            this.restoreProgressBar.Location = new System.Drawing.Point(9, 207);
             this.restoreProgressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.restoreProgressBar.Name = "restoreProgressBar";
-            this.restoreProgressBar.Size = new System.Drawing.Size(227, 29);
+            this.restoreProgressBar.Size = new System.Drawing.Size(235, 27);
             this.restoreProgressBar.TabIndex = 8;
             // 
             // restoreRunButton
             // 
-            this.restoreRunButton.Location = new System.Drawing.Point(111, 172);
+            this.restoreRunButton.Location = new System.Drawing.Point(21, 177);
             this.restoreRunButton.Name = "restoreRunButton";
-            this.restoreRunButton.Size = new System.Drawing.Size(75, 23);
+            this.restoreRunButton.Size = new System.Drawing.Size(69, 23);
             this.restoreRunButton.TabIndex = 7;
             this.restoreRunButton.Text = "Restore";
             this.restoreRunButton.UseVisualStyleBackColor = true;
@@ -247,16 +260,16 @@ namespace Tunny.UI
             // 
             // restoreModelNumTextBox
             // 
-            this.restoreModelNumTextBox.Location = new System.Drawing.Point(17, 172);
+            this.restoreModelNumTextBox.Location = new System.Drawing.Point(9, 148);
             this.restoreModelNumTextBox.Name = "restoreModelNumTextBox";
-            this.restoreModelNumTextBox.Size = new System.Drawing.Size(88, 23);
+            this.restoreModelNumTextBox.Size = new System.Drawing.Size(172, 23);
             this.restoreModelNumTextBox.TabIndex = 6;
             this.restoreModelNumTextBox.Text = "-1";
             // 
             // restoreModelLabel
             // 
             this.restoreModelLabel.AutoSize = true;
-            this.restoreModelLabel.Location = new System.Drawing.Point(6, 146);
+            this.restoreModelLabel.Location = new System.Drawing.Point(3, 130);
             this.restoreModelLabel.Name = "restoreModelLabel";
             this.restoreModelLabel.Size = new System.Drawing.Size(162, 15);
             this.restoreModelLabel.TabIndex = 5;
@@ -322,16 +335,15 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
-            // restoreStopButton
+            // restoreReflectButton
             // 
-            this.restoreStopButton.Enabled = false;
-            this.restoreStopButton.Location = new System.Drawing.Point(194, 172);
-            this.restoreStopButton.Name = "restoreStopButton";
-            this.restoreStopButton.Size = new System.Drawing.Size(50, 23);
-            this.restoreStopButton.TabIndex = 9;
-            this.restoreStopButton.Text = "Stop";
-            this.restoreStopButton.UseVisualStyleBackColor = true;
-            this.restoreStopButton.Click += new System.EventHandler(this.RestoreStopButton_Click);
+            this.restoreReflectButton.Location = new System.Drawing.Point(152, 177);
+            this.restoreReflectButton.Name = "restoreReflectButton";
+            this.restoreReflectButton.Size = new System.Drawing.Size(62, 23);
+            this.restoreReflectButton.TabIndex = 10;
+            this.restoreReflectButton.Text = "Reflect";
+            this.restoreReflectButton.UseVisualStyleBackColor = true;
+            this.restoreReflectButton.Click += new System.EventHandler(this.RestoreReflectButton_Click);
             // 
             // OptimizationWindow
             // 
@@ -383,6 +395,7 @@ namespace Tunny.UI
         private System.Windows.Forms.ProgressBar restoreProgressBar;
         private System.ComponentModel.BackgroundWorker restoreBackgroundWorker;
         private System.Windows.Forms.Button restoreStopButton;
+        private System.Windows.Forms.Button restoreReflectButton;
     }
 }
 
