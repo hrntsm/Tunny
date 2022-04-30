@@ -11,11 +11,13 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Restore progressbar
+- Support Galapagos genepool input
 
 ### Changed
 
 - Restore feature was made asynchronous.
 - Visualize graph axis name now use input objective's nickname.
+- Update supported Rhino version to 7.13.
 
 ### Fixed
 
