@@ -24,6 +24,7 @@ namespace Tunny.Optimization
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;
+        public static string Mode;
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
@@ -42,13 +43,34 @@ namespace Tunny.Optimization
                 return;
             }
 
-            for (int i = 0; i < modelResult.Length; i++)
+            switch (Mode)
             {
-                SetVariables(variables, modelResult[i], NickNames);
-                SetObjectives(objectives, modelResult[i]);
-                SetModelMesh(modelMesh, modelResult[i]);
-                s_worker.ReportProgress(i * 100 / modelResult.Length);
+                case "Restore":
+                    for (int i = 0; i < modelResult.Length; i++)
+                    {
+                        SetVariables(variables, modelResult[i], NickNames);
+                        SetObjectives(objectives, modelResult[i]);
+                        SetModelMesh(modelMesh, modelResult[i]);
+                        s_worker.ReportProgress(i * 100 / modelResult.Length);
+                    }
+                    break;
+                case "Reflect":
+                    if (modelResult.Length > 1)
+                    {
+                        TunnyMessageBox.Show(
+                            "You input multi restore model numbers, but this function only reflect variables to slider or genepool to first one.",
+                            "Tunny",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                    }
+                    SetVariables(variables, modelResult[0], NickNames);
+                    SetObjectives(objectives, modelResult[0]);
+                    SetModelMesh(modelMesh, modelResult[0]);
+                    s_worker.ReportProgress(100);
+                    break;
             }
+
             s_component.Variables = variables;
             s_component.Objectives = objectives;
             s_component.ModelMesh = modelMesh;

@@ -98,7 +98,8 @@ namespace Tunny.UI
             optimizeStopButton.Enabled = true;
 
             RestoreLoop.StudyName = studyNameTextBox.Text;
-            RestoreLoop.NickNames = _component.GhInOut.Sliders.Select(x => x.NickName).ToArray();
+            RestoreLoop.Mode = "Restore";
+            RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
 
             restoreBackgroundWorker.RunWorkerAsync(_component);
@@ -113,7 +114,31 @@ namespace Tunny.UI
             {
                 restoreBackgroundWorker.CancelAsync();
             }
-            _component.ExpireSolution(true);
+            switch (RestoreLoop.Mode)
+            {
+                case "Restore":
+                    _component.ExpireSolution(true);
+                    break;
+                case "Reflect":
+                    var decimalVar = _component.Variables.FlattenData()
+                            .Select(x => (decimal)x.Value).ToList();
+                    _component.GhInOut.NewSolution(decimalVar);
+                    break;
+            }
+        }
+
+        private void RestoreReflectButton_Click(object sender, EventArgs e)
+        {
+            optimizeRunButton.Enabled = false;
+            optimizeStopButton.Enabled = true;
+
+            RestoreLoop.StudyName = studyNameTextBox.Text;
+            RestoreLoop.Mode = "Reflect";
+            RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
+            RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
+
+            restoreBackgroundWorker.RunWorkerAsync(_component);
+
         }
 
         private void RestoreProgressChangedHandler(object sender, ProgressChangedEventArgs e)
