@@ -6,7 +6,7 @@ namespace Tunny.UI
     {
         public static void Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
         {
-            using (Form f = new Form())
+            using (var f = new Form())
             {
                 f.Owner = Grasshopper.Instances.DocumentEditor;
                 f.TopMost = true;

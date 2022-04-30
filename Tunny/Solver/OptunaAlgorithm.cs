@@ -78,14 +78,14 @@ namespace Tunny.Solver
                 );
 
                 var name = new StringBuilder();
-                foreach (var objName in ObjNickName)
+                foreach (string objName in ObjNickName)
                 {
                     name.Append(objName + ",");
                 }
                 name.Remove(name.Length - 1, 1);
                 study.set_user_attr("objective_names", name.ToString());
 
-                var xTest = new double[n];
+                double[] xTest = new double[n];
                 var result = new EvaluatedGHResult();
                 for (int i = 0; i < nTrials; i++)
                 {
@@ -121,9 +121,9 @@ namespace Tunny.Solver
 
                 if (nObjective == 1)
                 {
-                    var values = (double[])study.best_params.values();
-                    var keys = (string[])study.best_params.keys();
-                    var opt = new double[VarNickName.Length];
+                    double[] values = (double[])study.best_params.values();
+                    string[] keys = (string[])study.best_params.keys();
+                    double[] opt = new double[VarNickName.Length];
 
                     for (int i = 0; i < VarNickName.Length; i++)
                     {

@@ -53,7 +53,7 @@ namespace Tunny.Component
                 PointF p1 = param.Attributes.InputGrip;
 
                 int wireWidth = 1;
-                Color wireColor = Color.FromArgb(Convert.ToInt32("3300008B", 16));
+                var wireColor = Color.FromArgb(Convert.ToInt32("3300008B", 16));
                 if (Owner.Attributes.Selected)
                 {
                     wireWidth = 3;
@@ -88,7 +88,7 @@ namespace Tunny.Component
                 PointF p1 = param.Attributes.InputGrip;
 
                 int wireWidth = 2;
-                Color wireColor = Color.FromArgb(Convert.ToInt32("33008000", 16));
+                var wireColor = Color.FromArgb(Convert.ToInt32("33008000", 16));
                 if (Owner.Attributes.Selected)
                 {
                     wireWidth = 3;
@@ -122,7 +122,7 @@ namespace Tunny.Component
                 PointF p1 = param.Attributes.InputGrip;
 
                 int wireWidth = 2;
-                Color wireColor = Color.FromArgb(Convert.ToInt32("338B008B", 16));
+                var wireColor = Color.FromArgb(Convert.ToInt32("338B008B", 16));
                 if (Owner.Attributes.Selected)
                 {
                     wireWidth = 3;

@@ -36,13 +36,13 @@ namespace Tunny.Solver
             Dictionary<string, object> settings, string installFolder, string documentPath)
         {
             int dVar = variables.Count;
-            var lb = new double[dVar];
-            var ub = new double[dVar];
-            var integer = new bool[dVar];
-            var varNickName = new string[dVar];
+            double[] lb = new double[dVar];
+            double[] ub = new double[dVar];
+            bool[] integer = new bool[dVar];
+            string[] varNickName = new string[dVar];
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
-            for (var i = 0; i < dVar; i++)
+            for (int i = 0; i < dVar; i++)
             {
                 lb[i] = Convert.ToDouble(variables[i].LowerBond);
                 ub[i] = Convert.ToDouble(variables[i].UpperBond);
@@ -52,7 +52,7 @@ namespace Tunny.Solver
 
             EvaluatedGHResult Eval(double[] x, int progress)
             {
-                List<decimal> decimals = x.Select(Convert.ToDecimal).ToList();
+                var decimals = x.Select(Convert.ToDecimal).ToList();
                 return evaluate(decimals, progress);
             }
 
@@ -181,7 +181,7 @@ namespace Tunny.Solver
                 }
                 else
                 {
-                    for (var i = 0; i < resultNum.Length; i++)
+                    for (int i = 0; i < resultNum.Length; i++)
                     {
                         dynamic trial = study.trials[resultNum[i]];
                         ParseTrial(modelResult, trial);
@@ -195,10 +195,10 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
-            var values = (double[])trial.@params.values();
-            var keys = (string[])trial.@params.keys();
+            double[] values = (double[])trial.@params.values();
+            string[] keys = (string[])trial.@params.keys();
             var variables = new Dictionary<string, double>();
-            for (var i = 0; i < keys.Length; i++)
+            for (int i = 0; i < keys.Length; i++)
             {
                 variables.Add(keys[i], values[i]);
             }

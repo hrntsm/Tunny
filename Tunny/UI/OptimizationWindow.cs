@@ -124,7 +124,7 @@ namespace Tunny.UI
 
         private void OptimizeRunButton_Click(object sender, EventArgs e)
         {
-            GH_DocumentEditor ghCanvas = Owner as GH_DocumentEditor;
+            var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas.DisableUI();
 
             optimizeRunButton.Enabled = false;
@@ -133,7 +133,7 @@ namespace Tunny.UI
             OptimizeLoop.SamplerType = samplerComboBox.Text;
             OptimizeLoop.StudyName = studyNameTextBox.Text;
 
-            var objectiveValues = _component.GhInOut.GetObjectiveValues();
+            List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
             if (objectiveValues.Count == 0)
             {
                 ghCanvas.EnableUI();
