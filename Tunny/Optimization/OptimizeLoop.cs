@@ -29,7 +29,7 @@ namespace Tunny.Optimization
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
-            List<decimal> decimalResults = result.Select(Convert.ToDecimal).ToList();
+            var decimalResults = result.Select(Convert.ToDecimal).ToList();
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
             s_worker.ReportProgress(100, decimalResults);
@@ -53,7 +53,7 @@ namespace Tunny.Optimization
             }
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
-            Dictionary<string, object> settings = new Dictionary<string, object>()
+            var settings = new Dictionary<string, object>()
             {
                 { "nTrials", NTrials },
                 { "loadIfExists", LoadIfExists },
@@ -69,7 +69,7 @@ namespace Tunny.Optimization
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
 
-        public static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
+        private static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
         {
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
 

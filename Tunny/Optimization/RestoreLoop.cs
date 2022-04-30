@@ -65,7 +65,7 @@ namespace Tunny.Optimization
         {
             foreach (string name in nickName)
             {
-                foreach (var obj in model.Variables.Where(obj => obj.Key == name))
+                foreach (KeyValuePair<string, double> obj in model.Variables.Where(obj => obj.Key == name))
                 {
                     objectives.Append(new GH_Number(obj.Value), new GH_Path(0, model.Number));
                 }
