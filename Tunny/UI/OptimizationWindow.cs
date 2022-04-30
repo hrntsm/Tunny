@@ -98,7 +98,7 @@ namespace Tunny.UI
             optimizeStopButton.Enabled = true;
 
             RestoreLoop.StudyName = studyNameTextBox.Text;
-            RestoreLoop.NickNames = _component.GhInOut.Sliders.Select(x => x.NickName).ToArray();
+            RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
 
             restoreBackgroundWorker.RunWorkerAsync(_component);
