@@ -9,7 +9,9 @@
     <Authors>hrntsm</Authors>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <AssemblyName>Tunny</AssemblyName>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <ApplicationIcon>Resources\TunnyIcon.ico</ApplicationIcon>
+    <Win32Resource />
   </PropertyGroup>
   
   <ItemGroup>

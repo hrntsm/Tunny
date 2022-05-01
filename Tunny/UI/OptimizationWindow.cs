@@ -58,6 +58,9 @@ namespace Tunny.UI
 
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
         }
 
         private void VisualizeButton_Click(object sender, EventArgs e)
