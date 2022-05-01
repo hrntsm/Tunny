@@ -44,6 +44,7 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
+            this.restoreReflectButton = new System.Windows.Forms.Button();
             this.restoreStopButton = new System.Windows.Forms.Button();
             this.restoreProgressBar = new System.Windows.Forms.ProgressBar();
             this.restoreRunButton = new System.Windows.Forms.Button();
@@ -55,7 +56,6 @@ namespace Tunny.UI
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.restoreReflectButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -229,6 +229,16 @@ namespace Tunny.UI
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
+            // restoreReflectButton
+            // 
+            this.restoreReflectButton.Location = new System.Drawing.Point(152, 177);
+            this.restoreReflectButton.Name = "restoreReflectButton";
+            this.restoreReflectButton.Size = new System.Drawing.Size(62, 23);
+            this.restoreReflectButton.TabIndex = 10;
+            this.restoreReflectButton.Text = "Reflect";
+            this.restoreReflectButton.UseVisualStyleBackColor = true;
+            this.restoreReflectButton.Click += new System.EventHandler(this.RestoreReflectButton_Click);
+            // 
             // restoreStopButton
             // 
             this.restoreStopButton.Enabled = false;
@@ -335,20 +345,10 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
-            // restoreReflectButton
-            // 
-            this.restoreReflectButton.Location = new System.Drawing.Point(152, 177);
-            this.restoreReflectButton.Name = "restoreReflectButton";
-            this.restoreReflectButton.Size = new System.Drawing.Size(62, 23);
-            this.restoreReflectButton.TabIndex = 10;
-            this.restoreReflectButton.Text = "Reflect";
-            this.restoreReflectButton.UseVisualStyleBackColor = true;
-            this.restoreReflectButton.Click += new System.EventHandler(this.RestoreReflectButton_Click);
-            // 
             // OptimizationWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(285, 298);
             this.Controls.Add(this.optimizeTabControl);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
