@@ -12,9 +12,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Restore progressbar
 - Support Galapagos genepool input
-- Reflect button
+- Result reflect button
   - This feature reflecting multi objective optimization result to slider & genepool to use input model number.
   - if input multi model number, the first one is reflect and popup notification about this.
+- Support grid sampler
 
 ### Changed
 
