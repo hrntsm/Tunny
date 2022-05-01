@@ -21,6 +21,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Restore feature was made asynchronous.
 - Visualize graph axis name now use input objective's nickname.
 - Update supported Rhino version to 7.13.
+- Disable optimize window resize.
 
 ### Fixed
 
@@ -29,6 +30,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - If it is 10 trial to get objectives in 1 optimize loop, optimizer throw error.
 - Enable visualize param importances function
   - this function need sklearn, but tunny's python package doesn't include it.
+- Optimize window UI is broken when using Hi-DPI environment.
+  - Support multi DPI
 
 ## [0.1.1] -2022-04-17
 
