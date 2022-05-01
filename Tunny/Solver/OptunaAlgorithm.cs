@@ -64,6 +64,20 @@ namespace Tunny.Solver
                     case "NSGA-II":
                         sampler = optuna.samplers.NSGAIISampler();
                         break;
+                    case "Grid":
+                        var searchSpace = new Dictionary<string, List<double>>();
+                        for (int i = 0; i < n; i++)
+                        {
+                            var numSpace = new List<double>();
+                            for (int j = 0; j < nTrials; j++)
+                            {
+                                numSpace.Add(Lb[i] + (Ub[i] - Lb[i]) * j / (nTrials - 1));
+                            }
+                            searchSpace.Add(VarNickName[i], numSpace);
+                        }
+                        nTrials = (int)Math.Pow(nTrials, n);
+                        sampler = optuna.samplers.GridSampler(searchSpace);
+                        break;
                     default:
                         sampler = optuna.samplers.TPESampler();
                         break;
@@ -116,7 +130,14 @@ namespace Tunny.Solver
                         }
                     }
                     trial.set_user_attr("geometry", result.ModelDraco);
-                    study.tell(trial, result.ObjectiveValues.ToArray());
+                    try
+                    {
+                        study.tell(trial, result.ObjectiveValues.ToArray());
+                    }
+                    catch
+                    {
+                        break;
+                    }
                 }
 
                 if (nObjective == 1)

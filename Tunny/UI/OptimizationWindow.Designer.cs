@@ -141,7 +141,8 @@ namespace Tunny.UI
             "TPE",
             "NSGA-II",
             "CMA-ES",
-            "Random"});
+            "Random",
+            "Grid"});
             this.samplerComboBox.Location = new System.Drawing.Point(99, 8);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.samplerComboBox.Name = "samplerComboBox";

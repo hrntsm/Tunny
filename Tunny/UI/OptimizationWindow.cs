@@ -168,9 +168,15 @@ namespace Tunny.UI
                 optimizeRunButton.Enabled = true;
                 return;
             }
-            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random"))
+            else if (objectiveValues.Count > 1
+                     && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random" || samplerComboBox.Text == "Grid"))
             {
-                MessageBox.Show("This sampler does not support multiple objectives optimization.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TunnyMessageBox.Show(
+                    "CMA-ES, Random and Grid samplers only support single objective optimization.",
+                    "Tunny",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
                 return;
