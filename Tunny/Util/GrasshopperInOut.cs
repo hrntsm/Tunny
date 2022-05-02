@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
+
+using GalapagosComponents;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
@@ -20,8 +23,9 @@ namespace Tunny.Util
         private readonly GH_Document _document;
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
+        private List<GalapagosGeneListObject> _genePool;
         private IGH_Param _modelMesh;
-        private List<IGH_Param> _objectives;
+        public List<IGH_Param> Objectives;
         public List<GH_NumberSlider> Sliders;
 
         public readonly string ComponentFolder;
@@ -50,6 +54,7 @@ namespace Tunny.Util
         private bool SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
+            _genePool = new List<GalapagosGeneListObject>();
 
             foreach (IGH_Param source in _component.Params.Input[0].Sources)
             {
@@ -62,24 +67,29 @@ namespace Tunny.Util
                 return false;
             }
 
-            foreach (Guid guid in _inputGuids)
+            foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
             {
-                IGH_DocumentObject input = _document.FindObject(guid, true);
-
-                if (input is GH_NumberSlider slider)
+                switch (input)
                 {
-                    Sliders.Add(slider);
+                    case GH_NumberSlider slider:
+                        Sliders.Add(slider);
+                        break;
+                    case GalapagosGeneListObject genePool:
+                        _genePool.Add(genePool);
+                        break;
                 }
             }
 
-            SetSliderValues();
+            var variables = new List<Variable>();
+            SetInputSliderValues(variables);
+            SetInputGenePoolValues(variables);
+            Variables = variables;
             return true;
         }
 
-        private void SetSliderValues()
+        private void SetInputSliderValues(ICollection<Variable> variables)
         {
             int i = 0;
-            var variables = new List<Variable>();
 
             foreach (GH_NumberSlider slider in Sliders)
             {
@@ -121,9 +131,26 @@ namespace Tunny.Util
 
                 variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
             }
-
-            Variables = variables;
         }
+
+        private void SetInputGenePoolValues(ICollection<Variable> variables)
+        {
+            int count = 0;
+
+            foreach (GalapagosGeneListObject genePool in _genePool)
+            {
+                bool isInteger = genePool.Decimals == 0;
+                decimal lowerBond = genePool.Minimum;
+                decimal upperBond = genePool.Maximum;
+
+                for (int j = 0; j < genePool.Count; j++)
+                {
+                    string nickName = "genepool" + count++;
+                    variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
+                }
+            }
+        }
+
 
         private bool SetObjectives()
         {
@@ -133,7 +160,7 @@ namespace Tunny.Util
                 return false;
             }
 
-            _objectives = _component.Params.Input[1].Sources.ToList();
+            Objectives = _component.Params.Input[1].Sources.ToList();
             return true;
         }
 
@@ -182,7 +209,21 @@ namespace Tunny.Util
                 slider.Slider.RaiseEvents = true;
             }
 
+            foreach (GalapagosGeneListObject genePool in _genePool)
+            {
+                for (int j = 0; j < genePool.Count; j++)
+                {
+                    genePool.set_NormalisedValue(j, GetNormalisedGenePoolValue(parameters[i++], genePool));
+                    genePool.ExpireSolution(false);
+                }
+            }
+
             return true;
+        }
+
+        private decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
+        {
+            return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
 
         private void Recalculate()
@@ -204,14 +245,28 @@ namespace Tunny.Util
         {
             var values = new List<double>();
 
-            foreach (IGH_Param objective in _objectives)
+            foreach (IGH_Param objective in Objectives)
             {
-                IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(true);
+                IGH_StructureEnumerator ghEnumerator = objective.VolatileData.AllData(false);
+                if (ghEnumerator.Count() > 1)
+                {
+                    TunnyMessageBox.Show(
+                        "Tunny doesn't handle list output.\n Separate each objective if you want multiple objectives",
+                        "Tunny",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    return new List<double>();
+                }
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
                     if (goo is GH_Number num)
                     {
                         values.Add(num.Value);
+                    }
+                    else if (goo == null)
+                    {
+                        values.Add(double.NaN);
                     }
                 }
             }

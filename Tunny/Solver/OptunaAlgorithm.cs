@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 using Python.Runtime;
 
@@ -11,20 +12,22 @@ namespace Tunny.Solver
     {
         private double[] Lb { get; set; }
         private double[] Ub { get; set; }
-        private string[] NickName { get; set; }
+        private string[] VarNickName { get; set; }
+        private string[] ObjNickName { get; set; }
         private Dictionary<string, object> Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
         public OptunaAlgorithm(
-            double[] lb, double[] ub, string[] nickName,
+            double[] lb, double[] ub, string[] varNickName, string[] objNickName,
             Dictionary<string, object> settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
             Lb = lb;
             Ub = ub;
-            NickName = nickName;
+            VarNickName = varNickName;
+            ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
         }
@@ -61,6 +64,20 @@ namespace Tunny.Solver
                     case "NSGA-II":
                         sampler = optuna.samplers.NSGAIISampler();
                         break;
+                    case "Grid":
+                        var searchSpace = new Dictionary<string, List<double>>();
+                        for (int i = 0; i < n; i++)
+                        {
+                            var numSpace = new List<double>();
+                            for (int j = 0; j < nTrials; j++)
+                            {
+                                numSpace.Add(Lb[i] + (Ub[i] - Lb[i]) * j / (nTrials - 1));
+                            }
+                            searchSpace.Add(VarNickName[i], numSpace);
+                        }
+                        nTrials = (int)Math.Pow(nTrials, n);
+                        sampler = optuna.samplers.GridSampler(searchSpace);
+                        break;
                     default:
                         sampler = optuna.samplers.TPESampler();
                         break;
@@ -74,32 +91,66 @@ namespace Tunny.Solver
                     directions: directions
                 );
 
-                var xTest = new double[n];
+                var name = new StringBuilder();
+                foreach (string objName in ObjNickName)
+                {
+                    name.Append(objName + ",");
+                }
+                name.Remove(name.Length - 1, 1);
+                study.set_user_attr("objective_names", name.ToString());
+
+                double[] xTest = new double[n];
                 var result = new EvaluatedGHResult();
                 for (int i = 0; i < nTrials; i++)
                 {
                     int progress = i * 100 / nTrials;
                     dynamic trial = study.ask();
-                    for (int j = 0; j < n; j++)
+
+                    //TODO: Is this the correct way to handle the case of null?
+                    //Other than TPE, the value is returned at random when retrying, so the value will be anything but null.
+                    //TPEs, on the other hand, search for a specific location determined by GP,
+                    //so the value tends to remain the same even after retries and there is no way to get out.
+                    int nullCount = 0;
+                    while (nullCount < 10)
                     {
-                        xTest[j] = trial.suggest_uniform(NickName[j], Lb[j], Ub[j]);
+                        for (int j = 0; j < n; j++)
+                        {
+                            xTest[j] = trial.suggest_uniform(VarNickName[j], Lb[j], Ub[j]);
+                        }
+                        result = EvalFunc(xTest, progress);
+
+                        if (result.ObjectiveValues.Contains(double.NaN))
+                        {
+                            trial = study.ask();
+                            nullCount++;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    result = EvalFunc(xTest, progress);
                     trial.set_user_attr("geometry", result.ModelDraco);
-                    study.tell(trial, result.ObjectiveValues.ToArray());
+                    try
+                    {
+                        study.tell(trial, result.ObjectiveValues.ToArray());
+                    }
+                    catch
+                    {
+                        break;
+                    }
                 }
 
                 if (nObjective == 1)
                 {
-                    var values = (double[])study.best_params.values();
-                    var keys = (string[])study.best_params.keys();
-                    var opt = new double[NickName.Length];
+                    double[] values = (double[])study.best_params.values();
+                    string[] keys = (string[])study.best_params.keys();
+                    double[] opt = new double[VarNickName.Length];
 
-                    for (int i = 0; i < NickName.Length; i++)
+                    for (int i = 0; i < VarNickName.Length; i++)
                     {
                         for (int j = 0; j < keys.Length; j++)
                         {
-                            if (keys[j] == NickName[i])
+                            if (keys[j] == VarNickName[i])
                             {
                                 opt[i] = values[j];
                             }

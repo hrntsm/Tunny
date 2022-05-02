@@ -30,13 +30,13 @@ namespace Tunny.UI
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizationWindow));
-            this.runOptimizeButton = new System.Windows.Forms.Button();
-            this.backgroundWorkerSolver = new System.ComponentModel.BackgroundWorker();
-            this.stopButton = new System.Windows.Forms.Button();
+            this.optimizeRunButton = new System.Windows.Forms.Button();
+            this.optimizeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.optimizeStopButton = new System.Windows.Forms.Button();
             this.nTrialNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.nTrialText = new System.Windows.Forms.Label();
             this.loadIfExistsCheckBox = new System.Windows.Forms.CheckBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.optimizeProgressBar = new System.Windows.Forms.ProgressBar();
             this.samplerComboBox = new System.Windows.Forms.ComboBox();
             this.SamplerTypeText = new System.Windows.Forms.Label();
             this.studyNameLabel = new System.Windows.Forms.Label();
@@ -44,7 +44,10 @@ namespace Tunny.UI
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
             this.resultTabPage = new System.Windows.Forms.TabPage();
-            this.RestoreButton = new System.Windows.Forms.Button();
+            this.restoreReflectButton = new System.Windows.Forms.Button();
+            this.restoreStopButton = new System.Windows.Forms.Button();
+            this.restoreProgressBar = new System.Windows.Forms.ProgressBar();
+            this.restoreRunButton = new System.Windows.Forms.Button();
             this.restoreModelNumTextBox = new System.Windows.Forms.TextBox();
             this.restoreModelLabel = new System.Windows.Forms.Label();
             this.openResultFolderButton = new System.Windows.Forms.Button();
@@ -52,33 +55,35 @@ namespace Tunny.UI
             this.VisualizeButton = new System.Windows.Forms.Button();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
             this.resultTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
-            // runOptimizeButton
+            // optimizeRunButton
             // 
-            this.runOptimizeButton.Location = new System.Drawing.Point(13, 168);
-            this.runOptimizeButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.runOptimizeButton.Name = "runOptimizeButton";
-            this.runOptimizeButton.Size = new System.Drawing.Size(120, 29);
-            this.runOptimizeButton.TabIndex = 0;
-            this.runOptimizeButton.Text = "RunOptimize";
-            this.runOptimizeButton.UseVisualStyleBackColor = true;
-            this.runOptimizeButton.Click += new System.EventHandler(this.ButtonRunOptimize_Click);
+            this.optimizeRunButton.Location = new System.Drawing.Point(13, 168);
+            this.optimizeRunButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.optimizeRunButton.Name = "optimizeRunButton";
+            this.optimizeRunButton.Size = new System.Drawing.Size(120, 29);
+            this.optimizeRunButton.TabIndex = 0;
+            this.optimizeRunButton.Text = "RunOptimize";
+            this.optimizeRunButton.UseVisualStyleBackColor = true;
+            this.optimizeRunButton.Click += new System.EventHandler(this.OptimizeRunButton_Click);
             // 
-            // stopButton
+            // optimizeStopButton
             // 
-            this.stopButton.Location = new System.Drawing.Point(155, 168);
-            this.stopButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(87, 29);
-            this.stopButton.TabIndex = 1;
-            this.stopButton.Text = "Stop";
-            this.stopButton.UseVisualStyleBackColor = true;
-            this.stopButton.Click += new System.EventHandler(this.ButtonStop_Click);
+            this.optimizeStopButton.Enabled = false;
+            this.optimizeStopButton.Location = new System.Drawing.Point(155, 168);
+            this.optimizeStopButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.optimizeStopButton.Name = "optimizeStopButton";
+            this.optimizeStopButton.Size = new System.Drawing.Size(87, 29);
+            this.optimizeStopButton.TabIndex = 1;
+            this.optimizeStopButton.Text = "Stop";
+            this.optimizeStopButton.UseVisualStyleBackColor = true;
+            this.optimizeStopButton.Click += new System.EventHandler(this.OptimizeStopButton_Click);
             // 
             // nTrialNumUpDown
             // 
@@ -121,13 +126,13 @@ namespace Tunny.UI
             this.loadIfExistsCheckBox.Text = "Load if study file exists";
             this.loadIfExistsCheckBox.UseVisualStyleBackColor = true;
             // 
-            // progressBar
+            // optimizeProgressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(13, 204);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(227, 29);
-            this.progressBar.TabIndex = 6;
+            this.optimizeProgressBar.Location = new System.Drawing.Point(13, 205);
+            this.optimizeProgressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.optimizeProgressBar.Name = "optimizeProgressBar";
+            this.optimizeProgressBar.Size = new System.Drawing.Size(227, 28);
+            this.optimizeProgressBar.TabIndex = 6;
             // 
             // samplerComboBox
             // 
@@ -136,7 +141,8 @@ namespace Tunny.UI
             "TPE",
             "NSGA-II",
             "CMA-ES",
-            "Random"});
+            "Random",
+            "Grid"});
             this.samplerComboBox.Location = new System.Drawing.Point(99, 8);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.samplerComboBox.Name = "samplerComboBox";
@@ -186,11 +192,11 @@ namespace Tunny.UI
             this.optimizeTabPage.Controls.Add(this.studyNameTextBox);
             this.optimizeTabPage.Controls.Add(this.samplerComboBox);
             this.optimizeTabPage.Controls.Add(this.studyNameLabel);
-            this.optimizeTabPage.Controls.Add(this.runOptimizeButton);
+            this.optimizeTabPage.Controls.Add(this.optimizeRunButton);
             this.optimizeTabPage.Controls.Add(this.SamplerTypeText);
-            this.optimizeTabPage.Controls.Add(this.stopButton);
+            this.optimizeTabPage.Controls.Add(this.optimizeStopButton);
             this.optimizeTabPage.Controls.Add(this.nTrialNumUpDown);
-            this.optimizeTabPage.Controls.Add(this.progressBar);
+            this.optimizeTabPage.Controls.Add(this.optimizeProgressBar);
             this.optimizeTabPage.Controls.Add(this.nTrialText);
             this.optimizeTabPage.Controls.Add(this.loadIfExistsCheckBox);
             this.optimizeTabPage.Location = new System.Drawing.Point(4, 24);
@@ -204,7 +210,10 @@ namespace Tunny.UI
             // 
             // resultTabPage
             // 
-            this.resultTabPage.Controls.Add(this.RestoreButton);
+            this.resultTabPage.Controls.Add(this.restoreReflectButton);
+            this.resultTabPage.Controls.Add(this.restoreStopButton);
+            this.resultTabPage.Controls.Add(this.restoreProgressBar);
+            this.resultTabPage.Controls.Add(this.restoreRunButton);
             this.resultTabPage.Controls.Add(this.restoreModelNumTextBox);
             this.resultTabPage.Controls.Add(this.restoreModelLabel);
             this.resultTabPage.Controls.Add(this.openResultFolderButton);
@@ -221,28 +230,57 @@ namespace Tunny.UI
             this.resultTabPage.Text = "Result";
             this.resultTabPage.UseVisualStyleBackColor = true;
             // 
-            // RestoreButton
+            // restoreReflectButton
             // 
-            this.RestoreButton.Location = new System.Drawing.Point(172, 173);
-            this.RestoreButton.Name = "RestoreButton";
-            this.RestoreButton.Size = new System.Drawing.Size(75, 23);
-            this.RestoreButton.TabIndex = 7;
-            this.RestoreButton.Text = "Restore";
-            this.RestoreButton.UseVisualStyleBackColor = true;
-            this.RestoreButton.Click += new System.EventHandler(this.RestoreButton_Click);
+            this.restoreReflectButton.Location = new System.Drawing.Point(152, 177);
+            this.restoreReflectButton.Name = "restoreReflectButton";
+            this.restoreReflectButton.Size = new System.Drawing.Size(62, 23);
+            this.restoreReflectButton.TabIndex = 10;
+            this.restoreReflectButton.Text = "Reflect";
+            this.restoreReflectButton.UseVisualStyleBackColor = true;
+            this.restoreReflectButton.Click += new System.EventHandler(this.RestoreReflectButton_Click);
+            // 
+            // restoreStopButton
+            // 
+            this.restoreStopButton.Enabled = false;
+            this.restoreStopButton.Location = new System.Drawing.Point(96, 177);
+            this.restoreStopButton.Name = "restoreStopButton";
+            this.restoreStopButton.Size = new System.Drawing.Size(50, 23);
+            this.restoreStopButton.TabIndex = 9;
+            this.restoreStopButton.Text = "Stop";
+            this.restoreStopButton.UseVisualStyleBackColor = true;
+            this.restoreStopButton.Click += new System.EventHandler(this.RestoreStopButton_Click);
+            // 
+            // restoreProgressBar
+            // 
+            this.restoreProgressBar.Location = new System.Drawing.Point(9, 207);
+            this.restoreProgressBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.restoreProgressBar.Name = "restoreProgressBar";
+            this.restoreProgressBar.Size = new System.Drawing.Size(235, 27);
+            this.restoreProgressBar.TabIndex = 8;
+            // 
+            // restoreRunButton
+            // 
+            this.restoreRunButton.Location = new System.Drawing.Point(21, 177);
+            this.restoreRunButton.Name = "restoreRunButton";
+            this.restoreRunButton.Size = new System.Drawing.Size(69, 23);
+            this.restoreRunButton.TabIndex = 7;
+            this.restoreRunButton.Text = "Restore";
+            this.restoreRunButton.UseVisualStyleBackColor = true;
+            this.restoreRunButton.Click += new System.EventHandler(this.RestoreRunButton_Click);
             // 
             // restoreModelNumTextBox
             // 
-            this.restoreModelNumTextBox.Location = new System.Drawing.Point(6, 174);
+            this.restoreModelNumTextBox.Location = new System.Drawing.Point(9, 148);
             this.restoreModelNumTextBox.Name = "restoreModelNumTextBox";
-            this.restoreModelNumTextBox.Size = new System.Drawing.Size(158, 23);
+            this.restoreModelNumTextBox.Size = new System.Drawing.Size(172, 23);
             this.restoreModelNumTextBox.TabIndex = 6;
             this.restoreModelNumTextBox.Text = "-1";
             // 
             // restoreModelLabel
             // 
             this.restoreModelLabel.AutoSize = true;
-            this.restoreModelLabel.Location = new System.Drawing.Point(7, 156);
+            this.restoreModelLabel.Location = new System.Drawing.Point(3, 130);
             this.restoreModelLabel.Name = "restoreModelLabel";
             this.restoreModelLabel.Size = new System.Drawing.Size(162, 15);
             this.restoreModelLabel.TabIndex = 5;
@@ -310,8 +348,8 @@ namespace Tunny.UI
             // 
             // OptimizationWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(285, 298);
             this.Controls.Add(this.optimizeTabControl);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -333,12 +371,12 @@ namespace Tunny.UI
 
         #endregion
 
-        private System.Windows.Forms.Button runOptimizeButton;
-        private System.ComponentModel.BackgroundWorker backgroundWorkerSolver;
-        private System.Windows.Forms.Button stopButton;
+        private System.Windows.Forms.Button optimizeRunButton;
+        private System.ComponentModel.BackgroundWorker optimizeBackgroundWorker;
+        private System.Windows.Forms.Button optimizeStopButton;
         private System.Windows.Forms.NumericUpDown nTrialNumUpDown;
         private System.Windows.Forms.CheckBox loadIfExistsCheckBox;
-        private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.ProgressBar optimizeProgressBar;
         private System.Windows.Forms.ComboBox samplerComboBox;
         private System.Windows.Forms.Label SamplerTypeText;
         private System.Windows.Forms.Label nTrialText;
@@ -352,9 +390,13 @@ namespace Tunny.UI
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.Windows.Forms.Button clearResultButton;
         private System.Windows.Forms.Button openResultFolderButton;
-        private System.Windows.Forms.Button RestoreButton;
+        private System.Windows.Forms.Button restoreRunButton;
         private System.Windows.Forms.TextBox restoreModelNumTextBox;
         private System.Windows.Forms.Label restoreModelLabel;
+        private System.Windows.Forms.ProgressBar restoreProgressBar;
+        private System.ComponentModel.BackgroundWorker restoreBackgroundWorker;
+        private System.Windows.Forms.Button restoreStopButton;
+        private System.Windows.Forms.Button restoreReflectButton;
     }
 }
 

@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [0.2.0] -2022-05-02
+
+### Added
+
+- Restore progressbar
+- Support Galapagos genepool input
+- Result reflect button
+  - This feature reflecting multi objective optimization result to slider & genepool to use input model number.
+  - if input multi model number, the first one is reflect and popup notification about this.
+- Support grid sampler
+
+### Changed
+
+- Restore feature was made asynchronous.
+- Visualize graph axis name now use input objective's nickname.
+- Update supported Rhino version to 7.13.
+- Disable optimize window resize.
+
+### Fixed
+
+- Optimization does not stop when the value of Objective is null.
+  - When the objective values is null, optimizer try to get another variable and resolve solution.
+  - If it is 10 trial to get objectives in 1 optimize loop, optimizer throw error.
+- Enable visualize param importances function
+  - this function need sklearn, but tunny's python package doesn't include it.
+- Optimize window UI is broken when using Hi-DPI environment.
+  - Support multi DPI
+
 ## [0.1.1] -2022-04-17
 
 ### Fixed

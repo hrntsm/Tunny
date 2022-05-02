@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
+using Grasshopper.Kernel;
+
 using Tunny.Component;
 using Tunny.Solver;
 using Tunny.UI;
@@ -10,7 +12,7 @@ using Tunny.Util;
 
 namespace Tunny.Optimization
 {
-    internal static class Loop
+    internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
@@ -19,7 +21,7 @@ namespace Tunny.Optimization
         public static string SamplerType;
         public static string StudyName;
 
-        internal static void RunOptimizationLoopMultiple(object sender, DoWorkEventArgs e)
+        internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
@@ -27,7 +29,7 @@ namespace Tunny.Optimization
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
-            List<decimal> decimalResults = result.Select(Convert.ToDecimal).ToList();
+            var decimalResults = result.Select(Convert.ToDecimal).ToList();
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
             s_worker.ReportProgress(100, decimalResults);
@@ -43,14 +45,15 @@ namespace Tunny.Optimization
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
+            List<IGH_Param> objectives = s_component.GhInOut.Objectives;
 
             if (worker.CancellationPending)
             {
                 return new[] { double.NaN };
             }
 
-            var solver = new Optuna(s_component.GhInOut.ComponentFolder);
-            Dictionary<string, object> settings = new Dictionary<string, object>()
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var settings = new Dictionary<string, object>()
             {
                 { "nTrials", NTrials },
                 { "loadIfExists", LoadIfExists },
@@ -60,13 +63,13 @@ namespace Tunny.Optimization
                 { "nObjective", s_component.GhInOut.GetObjectiveValues().Count }
             };
 
-            bool solverStarted = solver.RunSolver(
-                variables, EvaluateFunction, "OptunaTPE", settings, "", "");
+            bool solverStarted = optunaSolver.RunSolver(
+                variables, objectives, EvaluateFunction, "OptunaTPE", settings, "", "");
 
-            return solverStarted ? solver.XOpt : new[] { double.NaN };
+            return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
 
-        public static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
+        private static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
         {
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
 
