@@ -34,7 +34,7 @@ Tunny also support yak. So you can find Tunny in Rhinoceros package manager.
 
 ### Quick usage
 
-![tunny](https://user-images.githubusercontent.com/23289252/163386009-c60e529e-20d1-4314-b9f5-df8bed3c791e.gif)
+![tunny](https://user-images.githubusercontent.com/23289252/166186417-7541ccb9-efa0-4569-a068-373ebde1c0ed.gif)
 
 ### Component location
 
@@ -46,31 +46,31 @@ Tunny can be found in the same Params tab as Galapagos under Util if it has been
 
 #### Variables
 
-Connect a NumberSlider to Variables. No other components are supported.
+This component support Number slider & GenePool.
 Optimization is performed when this value is changed by Tunny.
 
 It is recommended that components be given nicknames, as this makes it easier to understand the resulting process. Here it is named x, y, z.
 
-![image](https://user-images.githubusercontent.com/23289252/163378057-3c0a6a84-4dd2-4d2a-a55d-3202f9abc8bf.png)
+![image](https://user-images.githubusercontent.com/23289252/166185821-4b3da178-068b-444a-9d3f-9ee791c533b1.png)
 
 #### Objectives
 
-Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.
+Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.  
 
-For multi-objective optimization, put the target values as a list in one Number component. Multiple Number components are not supported.
+Each objective value have to be separated to a number component.
+It is recommended to set nickname like input variables.
 
-![image](https://user-images.githubusercontent.com/23289252/163378644-e066dfa8-c36d-4a56-92dd-206dff5eed92.png)
+![image](https://user-images.githubusercontent.com/23289252/166185782-3d5ddb69-5912-4b65-8b59-c20f0f1cd6b2.png)
 
 #### ModelMesh
 
 This input is optional.
 
 Mesh input is supported as a function to save the model during optimization.
-If multiple meshes are entered as a list, only the first one will be saved.
-
+If multiple meshes are entered as a list, only the first one will be saved.  
 Input of large size meshes is deprecated because it makes the analysis heavier.
 
-![image](https://user-images.githubusercontent.com/23289252/163379419-40368cc4-8abd-40d0-94ca-d0a468796c57.png)
+![image](https://user-images.githubusercontent.com/23289252/166185101-c82d1610-03a5-4906-920c-4ef33508716c.png)
 
 ### Optimization Window
 
@@ -94,8 +94,11 @@ Values that can be set and their meanings are as follows.
     1. NSGA-II (Genetic algorithm)
     1. CMA-ES (Evolution strategy)
     1. Random
+    1. Grid
 - Number of trial
   - This number of trials will be performed.
+  - If the grid sampler is selected, the calculation is performed by dividing each entered Variable by this number.
+    - **Note** that the number of calculations is (Number of trial) to the power of (Number of Variable).
 - Load if study file exists
   - If the checkbox is checked and a file of optimization results is available, the results of the training will be used to perform ongoing optimization.
 - Study Name
@@ -105,7 +108,7 @@ Values that can be set and their meanings are as follows.
 
 #### Result Tab
 
-![image](https://user-images.githubusercontent.com/23289252/163382006-3cb37a7e-ff38-4ced-8227-7c06a0621cd3.png)
+![image](https://user-images.githubusercontent.com/23289252/166185559-a5e64659-df48-4777-85dc-7ed01f3752b7.png)
 
 Values that can be set and their meanings are as follows.
 
@@ -128,6 +131,7 @@ Values that can be set and their meanings are as follows.
   - The model with the number entered here is restored from the optimization results file and is the output of the component.
   - The model number matches the tree structure of the output.
   - -1 is input, the results of all models on the Pareto front will be the main focus.
+  - Clicking the Reflect button will cause Grasshopper to reflect the results of the model number inputted.
 
 ## Contact information
 
