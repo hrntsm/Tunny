@@ -10,6 +10,7 @@ using Grasshopper.GUI;
 
 using Tunny.Component;
 using Tunny.Optimization;
+using Tunny.Settings;
 using Tunny.Solver;
 
 namespace Tunny.UI
@@ -17,6 +18,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow : Form
     {
         private readonly TunnyComponent _component;
+        private readonly TunnySettings _settings;
         internal enum GrasshopperStates
         {
             RequestSent,
@@ -30,6 +32,17 @@ namespace Tunny.UI
             InitializeComponent();
             _component = component;
             _component.GhInOutInstantiate();
+            string settingsPath = _component.GhInOut.ComponentFolder + @"\TunnySettings.json";
+            if (File.Exists(settingsPath))
+            {
+                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+            }
+            else
+            {
+                _settings = new TunnySettings();
+                _settings.CreateNewSettingsFile(settingsPath);
+            }
+
             samplerComboBox.SelectedIndex = 0;
             visualizeTypeComboBox.SelectedIndex = 3;
 
