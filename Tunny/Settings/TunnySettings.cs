@@ -34,10 +34,12 @@ namespace Tunny.Settings
         public int NumberOfTrials { get; set; } = 100;
         public bool LoadExistStudy { get; set; } = true;
         public string StudyName { get; set; } = "study1";
+        public int SelectSampler { get; set; } = 0;
     }
 
     class Result
     {
-        public int RestoreNumber { get; set; } = -1;
+        public string RestoreNumberString { get; set; } = "-1";
+        public int SelectVisualizeType { get; set; } = 3;
     }
 }
