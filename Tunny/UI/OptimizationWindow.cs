@@ -50,14 +50,17 @@ namespace Tunny.UI
 
         private void LoadSettingJson()
         {
-            string settingsPath = _component.GhInOut.ComponentFolder + @"\TunnySettings.json";
+            string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
             if (File.Exists(settingsPath))
             {
                 _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
             }
             else
             {
-                _settings = new TunnySettings();
+                _settings = new TunnySettings
+                {
+                    Storage = _component.GhInOut.ComponentFolder + @"\Tunny_Opt_Result.db"
+                };
                 _settings.CreateNewSettingsFile(settingsPath);
             }
         }
@@ -66,7 +69,7 @@ namespace Tunny.UI
             samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
             nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
             loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
-            studyNameTextBox.Text = _settings.Optimize.StudyName;
+            studyNameTextBox.Text = _settings.StudyName;
             restoreModelNumTextBox.Text = _settings.Result.RestoreNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
         }
@@ -126,10 +129,10 @@ namespace Tunny.UI
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
-            _settings.Optimize.StudyName = studyNameTextBox.Text;
+            _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.RestoreNumberString = restoreModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
-            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\TunnySettings.json");
+            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
         }
 
         private void RestoreRunButton_Click(object sender, EventArgs e)
@@ -193,10 +196,10 @@ namespace Tunny.UI
             ghCanvas.DisableUI();
 
             optimizeRunButton.Enabled = false;
-            OptimizeLoop.NTrials = (int)nTrialNumUpDown.Value;
-            OptimizeLoop.LoadIfExists = loadIfExistsCheckBox.Checked;
-            OptimizeLoop.SamplerType = samplerComboBox.Text;
-            OptimizeLoop.StudyName = studyNameTextBox.Text;
+            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
+            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.StudyName = studyNameTextBox.Text;
+            OptimizeLoop.Settings = _settings;
 
             List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
             if (objectiveValues.Count == 0)
@@ -220,9 +223,7 @@ namespace Tunny.UI
             }
 
             optimizeBackgroundWorker.RunWorkerAsync(_component);
-
             optimizeStopButton.Enabled = true;
-
         }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)

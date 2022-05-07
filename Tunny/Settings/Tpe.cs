@@ -1,9 +1,11 @@
 namespace Tunny.Settings
 {
-
-    class Tpe
+    /// <summary>
+    /// https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.TPESampler.html
+    /// </summary>
+    public class Tpe
     {
-        public int Seed { get; set; }
+        public int? Seed { get; set; }
         public bool ConsiderPrior { get; set; } = true;
         public double PriorWeight { get; set; } = 1.0;
         public bool ConsiderMagicClip { get; set; } = true;
