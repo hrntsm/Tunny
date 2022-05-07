@@ -10,6 +10,7 @@ using Grasshopper.GUI;
 
 using Tunny.Component;
 using Tunny.Optimization;
+using Tunny.Settings;
 using Tunny.Solver;
 
 namespace Tunny.UI
@@ -17,6 +18,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow : Form
     {
         private readonly TunnyComponent _component;
+        private TunnySettings _settings;
         internal enum GrasshopperStates
         {
             RequestSent,
@@ -30,8 +32,8 @@ namespace Tunny.UI
             InitializeComponent();
             _component = component;
             _component.GhInOutInstantiate();
-            samplerComboBox.SelectedIndex = 0;
-            visualizeTypeComboBox.SelectedIndex = 3;
+            LoadSettingJson();
+            InitializeUIValues();
 
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
@@ -44,6 +46,32 @@ namespace Tunny.UI
             restoreBackgroundWorker.RunWorkerCompleted += RestoreStopButton_Click;
             restoreBackgroundWorker.WorkerReportsProgress = true;
             restoreBackgroundWorker.WorkerSupportsCancellation = true;
+        }
+
+        private void LoadSettingJson()
+        {
+            string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
+            if (File.Exists(settingsPath))
+            {
+                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+            }
+            else
+            {
+                _settings = new TunnySettings
+                {
+                    Storage = _component.GhInOut.ComponentFolder + @"\Tunny_Opt_Result.db"
+                };
+                _settings.CreateNewSettingsFile(settingsPath);
+            }
+        }
+        private void InitializeUIValues()
+        {
+            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+            loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
+            studyNameTextBox.Text = _settings.StudyName;
+            restoreModelNumTextBox.Text = _settings.Result.RestoreNumberString;
+            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
@@ -83,6 +111,7 @@ namespace Tunny.UI
         {
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+            SaveUIValues();
 
             if (optimizeBackgroundWorker != null)
             {
@@ -93,6 +122,17 @@ namespace Tunny.UI
             {
                 restoreBackgroundWorker.CancelAsync();
             }
+        }
+
+        private void SaveUIValues()
+        {
+            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
+            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            _settings.StudyName = studyNameTextBox.Text;
+            _settings.Result.RestoreNumberString = restoreModelNumTextBox.Text;
+            _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
+            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
         }
 
         private void RestoreRunButton_Click(object sender, EventArgs e)
@@ -156,10 +196,10 @@ namespace Tunny.UI
             ghCanvas.DisableUI();
 
             optimizeRunButton.Enabled = false;
-            OptimizeLoop.NTrials = (int)nTrialNumUpDown.Value;
-            OptimizeLoop.LoadIfExists = loadIfExistsCheckBox.Checked;
-            OptimizeLoop.SamplerType = samplerComboBox.Text;
-            OptimizeLoop.StudyName = studyNameTextBox.Text;
+            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
+            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.StudyName = studyNameTextBox.Text;
+            OptimizeLoop.Settings = _settings;
 
             List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
             if (objectiveValues.Count == 0)
@@ -183,9 +223,7 @@ namespace Tunny.UI
             }
 
             optimizeBackgroundWorker.RunWorkerAsync(_component);
-
             optimizeStopButton.Enabled = true;
-
         }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)

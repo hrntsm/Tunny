@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED]
+
+### Added
+
+- Use json to set sampler detail settings
+
 ## [0.2.0] -2022-05-02
 
 ### Added

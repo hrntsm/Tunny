@@ -8,12 +8,13 @@ using Grasshopper.Kernel;
 using Python.Runtime;
 
 using Tunny.Optimization;
+using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class Optuna : ISolver
+    public class Optuna
     {
         public double[] XOpt { get; private set; }
         public double[] FxOpt { get; private set; }
@@ -32,8 +33,7 @@ namespace Tunny.Solver
             List<Variable> variables,
             List<IGH_Param> objectives,
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
-            string preset,
-            Dictionary<string, object> settings, string installFolder, string documentPath)
+            TunnySettings settings)
         {
             int dVar = variables.Count;
             double[] lb = new double[dVar];
