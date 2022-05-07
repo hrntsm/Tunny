@@ -11,6 +11,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Use json to set sampler detail settings
+  - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
 
 ## [0.2.0] -2022-05-02
 
