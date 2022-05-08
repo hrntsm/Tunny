@@ -6,6 +6,12 @@
 [![Release](https://img.shields.io/github/v/release/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/releases)
 [![download](https://img.shields.io/github/downloads/hrntsm/Tunny/total)](https://github.com/hrntsm/Tunny/releases)
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284)](https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/Tunny&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/63a5b0a923062d25ad23/maintainability)](https://codeclimate.com/github/hrntsm/Tunny/maintainability)
+![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/hrntsm/Tunny)
+
+[![GitHub Repo stars](https://img.shields.io/github/stars/hrntsm/Tunny?style=social)](https://github.com/hrntsm/Tunny)
+
 **Tunny** is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.
 
 The following is taken from the official website
