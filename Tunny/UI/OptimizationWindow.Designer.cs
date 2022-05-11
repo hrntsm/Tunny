@@ -38,7 +38,7 @@ namespace Tunny.UI
             this.loadIfExistsCheckBox = new System.Windows.Forms.CheckBox();
             this.optimizeProgressBar = new System.Windows.Forms.ProgressBar();
             this.samplerComboBox = new System.Windows.Forms.ComboBox();
-            this.SamplerTypeText = new System.Windows.Forms.Label();
+            this.samplerTypeText = new System.Windows.Forms.Label();
             this.studyNameLabel = new System.Windows.Forms.Label();
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
@@ -52,14 +52,21 @@ namespace Tunny.UI
             this.restoreModelLabel = new System.Windows.Forms.Label();
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
-            this.VisualizeButton = new System.Windows.Forms.Button();
+            this.visualizeButton = new System.Windows.Forms.Button();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.settingTabPage = new System.Windows.Forms.TabPage();
+            this.settingReloadJson = new System.Windows.Forms.Button();
+            this.settingLabel = new System.Windows.Forms.Label();
+            this.settingFolderOpen = new System.Windows.Forms.Button();
+            this.settingAPIComboBox = new System.Windows.Forms.ComboBox();
+            this.settingOpenAPIPage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
             this.resultTabPage.SuspendLayout();
+            this.settingTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -149,14 +156,14 @@ namespace Tunny.UI
             this.samplerComboBox.Size = new System.Drawing.Size(140, 23);
             this.samplerComboBox.TabIndex = 7;
             // 
-            // SamplerTypeText
+            // samplerTypeText
             // 
-            this.SamplerTypeText.AutoSize = true;
-            this.SamplerTypeText.Location = new System.Drawing.Point(10, 11);
-            this.SamplerTypeText.Name = "SamplerTypeText";
-            this.SamplerTypeText.Size = new System.Drawing.Size(56, 15);
-            this.SamplerTypeText.TabIndex = 8;
-            this.SamplerTypeText.Text = "Sampler";
+            this.samplerTypeText.AutoSize = true;
+            this.samplerTypeText.Location = new System.Drawing.Point(10, 11);
+            this.samplerTypeText.Name = "samplerTypeText";
+            this.samplerTypeText.Size = new System.Drawing.Size(56, 15);
+            this.samplerTypeText.TabIndex = 8;
+            this.samplerTypeText.Text = "Sampler";
             // 
             // studyNameLabel
             // 
@@ -179,6 +186,7 @@ namespace Tunny.UI
             // optimizeTabControl
             // 
             this.optimizeTabControl.Controls.Add(this.optimizeTabPage);
+            this.optimizeTabControl.Controls.Add(this.settingTabPage);
             this.optimizeTabControl.Controls.Add(this.resultTabPage);
             this.optimizeTabControl.Location = new System.Drawing.Point(14, 15);
             this.optimizeTabControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -193,7 +201,7 @@ namespace Tunny.UI
             this.optimizeTabPage.Controls.Add(this.samplerComboBox);
             this.optimizeTabPage.Controls.Add(this.studyNameLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeRunButton);
-            this.optimizeTabPage.Controls.Add(this.SamplerTypeText);
+            this.optimizeTabPage.Controls.Add(this.samplerTypeText);
             this.optimizeTabPage.Controls.Add(this.optimizeStopButton);
             this.optimizeTabPage.Controls.Add(this.nTrialNumUpDown);
             this.optimizeTabPage.Controls.Add(this.optimizeProgressBar);
@@ -218,7 +226,7 @@ namespace Tunny.UI
             this.resultTabPage.Controls.Add(this.restoreModelLabel);
             this.resultTabPage.Controls.Add(this.openResultFolderButton);
             this.resultTabPage.Controls.Add(this.clearResultButton);
-            this.resultTabPage.Controls.Add(this.VisualizeButton);
+            this.resultTabPage.Controls.Add(this.visualizeButton);
             this.resultTabPage.Controls.Add(this.visualizeTypeLabel);
             this.resultTabPage.Controls.Add(this.visualizeTypeComboBox);
             this.resultTabPage.Location = new System.Drawing.Point(4, 24);
@@ -308,16 +316,16 @@ namespace Tunny.UI
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
-            // VisualizeButton
+            // visualizeButton
             // 
-            this.VisualizeButton.Location = new System.Drawing.Point(187, 30);
-            this.VisualizeButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.VisualizeButton.Name = "VisualizeButton";
-            this.VisualizeButton.Size = new System.Drawing.Size(57, 23);
-            this.VisualizeButton.TabIndex = 2;
-            this.VisualizeButton.Text = "Show";
-            this.VisualizeButton.UseVisualStyleBackColor = true;
-            this.VisualizeButton.Click += new System.EventHandler(this.VisualizeButton_Click);
+            this.visualizeButton.Location = new System.Drawing.Point(187, 30);
+            this.visualizeButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.visualizeButton.Name = "visualizeButton";
+            this.visualizeButton.Size = new System.Drawing.Size(57, 23);
+            this.visualizeButton.TabIndex = 2;
+            this.visualizeButton.Text = "Show";
+            this.visualizeButton.UseVisualStyleBackColor = true;
+            this.visualizeButton.Click += new System.EventHandler(this.VisualizeButton_Click);
             // 
             // visualizeTypeLabel
             // 
@@ -346,6 +354,72 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
+            // settingTabPage
+            // 
+            this.settingTabPage.Controls.Add(this.settingOpenAPIPage);
+            this.settingTabPage.Controls.Add(this.settingAPIComboBox);
+            this.settingTabPage.Controls.Add(this.settingFolderOpen);
+            this.settingTabPage.Controls.Add(this.settingLabel);
+            this.settingTabPage.Controls.Add(this.settingReloadJson);
+            this.settingTabPage.Location = new System.Drawing.Point(4, 24);
+            this.settingTabPage.Name = "settingTabPage";
+            this.settingTabPage.Size = new System.Drawing.Size(250, 242);
+            this.settingTabPage.TabIndex = 2;
+            this.settingTabPage.Text = "Settings";
+            this.settingTabPage.UseVisualStyleBackColor = true;
+            // 
+            // settingReloadJson
+            // 
+            this.settingReloadJson.Location = new System.Drawing.Point(36, 178);
+            this.settingReloadJson.Name = "settingReloadJson";
+            this.settingReloadJson.Size = new System.Drawing.Size(164, 23);
+            this.settingReloadJson.TabIndex = 0;
+            this.settingReloadJson.Text = "Reload Setting.json";
+            this.settingReloadJson.UseVisualStyleBackColor = true;
+            this.settingReloadJson.Click += new System.EventHandler(this.SettingReloadJson_Click);
+            // 
+            // settingLabel
+            // 
+            this.settingLabel.Location = new System.Drawing.Point(14, 12);
+            this.settingLabel.Name = "settingLabel";
+            this.settingLabel.Size = new System.Drawing.Size(218, 73);
+            this.settingLabel.TabIndex = 1;
+            this.settingLabel.Text = "Detailed optimization settings can be configured in the \"Settings.json\" file in t" +
+    "he following folder.";
+            // 
+            // settingFolderOpen
+            // 
+            this.settingFolderOpen.Location = new System.Drawing.Point(36, 88);
+            this.settingFolderOpen.Name = "settingFolderOpen";
+            this.settingFolderOpen.Size = new System.Drawing.Size(164, 23);
+            this.settingFolderOpen.TabIndex = 2;
+            this.settingFolderOpen.Text = "Open Setting.json folder";
+            this.settingFolderOpen.UseVisualStyleBackColor = true;
+            this.settingFolderOpen.Click += new System.EventHandler(this.SettingFolderOpen_Click);
+            // 
+            // settingAPIComboBox
+            // 
+            this.settingAPIComboBox.FormattingEnabled = true;
+            this.settingAPIComboBox.Items.AddRange(new object[] {
+            "TPE",
+            "NSGA-II",
+            "CMA-ES",
+            "Random"});
+            this.settingAPIComboBox.Location = new System.Drawing.Point(17, 131);
+            this.settingAPIComboBox.Name = "settingAPIComboBox";
+            this.settingAPIComboBox.Size = new System.Drawing.Size(96, 23);
+            this.settingAPIComboBox.TabIndex = 3;
+            // 
+            // settingOpenAPIPage
+            // 
+            this.settingOpenAPIPage.Location = new System.Drawing.Point(122, 131);
+            this.settingOpenAPIPage.Name = "settingOpenAPIPage";
+            this.settingOpenAPIPage.Size = new System.Drawing.Size(110, 23);
+            this.settingOpenAPIPage.TabIndex = 4;
+            this.settingOpenAPIPage.Text = "Open API page";
+            this.settingOpenAPIPage.UseVisualStyleBackColor = true;
+            this.settingOpenAPIPage.Click += new System.EventHandler(this.SettingOpenAPIPage_Click);
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -365,6 +439,7 @@ namespace Tunny.UI
             this.optimizeTabPage.PerformLayout();
             this.resultTabPage.ResumeLayout(false);
             this.resultTabPage.PerformLayout();
+            this.settingTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -378,14 +453,14 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckBox loadIfExistsCheckBox;
         private System.Windows.Forms.ProgressBar optimizeProgressBar;
         private System.Windows.Forms.ComboBox samplerComboBox;
-        private System.Windows.Forms.Label SamplerTypeText;
+        private System.Windows.Forms.Label samplerTypeText;
         private System.Windows.Forms.Label nTrialText;
         private System.Windows.Forms.Label studyNameLabel;
         private System.Windows.Forms.TextBox studyNameTextBox;
         private System.Windows.Forms.TabControl optimizeTabControl;
         private System.Windows.Forms.TabPage optimizeTabPage;
         private System.Windows.Forms.TabPage resultTabPage;
-        private System.Windows.Forms.Button VisualizeButton;
+        private System.Windows.Forms.Button visualizeButton;
         private System.Windows.Forms.Label visualizeTypeLabel;
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.Windows.Forms.Button clearResultButton;
@@ -397,6 +472,12 @@ namespace Tunny.UI
         private System.ComponentModel.BackgroundWorker restoreBackgroundWorker;
         private System.Windows.Forms.Button restoreStopButton;
         private System.Windows.Forms.Button restoreReflectButton;
+        private System.Windows.Forms.TabPage settingTabPage;
+        private System.Windows.Forms.Button settingOpenAPIPage;
+        private System.Windows.Forms.ComboBox settingAPIComboBox;
+        private System.Windows.Forms.Button settingFolderOpen;
+        private System.Windows.Forms.Label settingLabel;
+        private System.Windows.Forms.Button settingReloadJson;
     }
 }
 
