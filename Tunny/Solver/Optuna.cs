@@ -17,10 +17,9 @@ namespace Tunny.Solver
     public class Optuna
     {
         public double[] XOpt { get; private set; }
-        public double[] FxOpt { get; private set; }
+        private double[] FxOpt { get; set; }
 
         private readonly string _componentFolder;
-        private readonly Dictionary<string, Dictionary<string, double>> _presets = new Dictionary<string, Dictionary<string, double>>();
 
         public Optuna(string componentFolder)
         {
@@ -31,7 +30,7 @@ namespace Tunny.Solver
 
         public bool RunSolver(
             List<Variable> variables,
-            List<IGH_Param> objectives,
+            IEnumerable<IGH_Param> objectives,
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
             TunnySettings settings)
         {
@@ -77,10 +76,6 @@ namespace Tunny.Solver
                 return false;
             }
         }
-
-        public string GetErrorMessage() => "";
-        public double[] Get_XOptimum => XOpt;
-        public IEnumerable<string> GetPresetNames() => _presets.Keys;
 
         public void ShowResultVisualize(string visualize, string studyName)
         {
@@ -179,11 +174,19 @@ namespace Tunny.Solver
                         ParseTrial(modelResult, trial);
                     }
                 }
+                else if (resultNum[0] == -10)
+                {
+                    var trials = (dynamic[])study.trials;
+                    foreach (dynamic trial in trials)
+                    {
+                        ParseTrial(modelResult, trial);
+                    }
+                }
                 else
                 {
-                    for (int i = 0; i < resultNum.Length; i++)
+                    foreach (int res in resultNum)
                     {
-                        dynamic trial = study.trials[resultNum[i]];
+                        dynamic trial = study.trials[res];
                         ParseTrial(modelResult, trial);
                     }
                 }

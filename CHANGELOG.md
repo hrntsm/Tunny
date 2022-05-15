@@ -13,6 +13,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Use json to set sampler detail settings
   - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
 - UI for above detail settings 
+- If input "-10" in restore model number, Tunny output all result
 
 ## [0.2.0] -2022-05-02
 
