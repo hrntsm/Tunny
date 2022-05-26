@@ -283,6 +283,7 @@ namespace Tunny.UI
 
         private void SettingsFolderOpen_Click(object sender, EventArgs e)
         {
+            SaveUIValues();
             Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
         }
     }
