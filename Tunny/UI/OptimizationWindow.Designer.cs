@@ -43,6 +43,13 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.settingsTabPage = new System.Windows.Forms.TabPage();
+            this.settingsToJson = new System.Windows.Forms.Button();
+            this.settingsOpenAPIPage = new System.Windows.Forms.Button();
+            this.settingsAPIComboBox = new System.Windows.Forms.ComboBox();
+            this.settingsFolderOpen = new System.Windows.Forms.Button();
+            this.settingLabel = new System.Windows.Forms.Label();
+            this.settingsFromJson = new System.Windows.Forms.Button();
             this.resultTabPage = new System.Windows.Forms.TabPage();
             this.restoreReflectButton = new System.Windows.Forms.Button();
             this.restoreStopButton = new System.Windows.Forms.Button();
@@ -56,17 +63,11 @@ namespace Tunny.UI
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.settingTabPage = new System.Windows.Forms.TabPage();
-            this.settingReloadJson = new System.Windows.Forms.Button();
-            this.settingLabel = new System.Windows.Forms.Label();
-            this.settingFolderOpen = new System.Windows.Forms.Button();
-            this.settingAPIComboBox = new System.Windows.Forms.ComboBox();
-            this.settingOpenAPIPage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
+            this.settingsTabPage.SuspendLayout();
             this.resultTabPage.SuspendLayout();
-            this.settingTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -186,7 +187,7 @@ namespace Tunny.UI
             // optimizeTabControl
             // 
             this.optimizeTabControl.Controls.Add(this.optimizeTabPage);
-            this.optimizeTabControl.Controls.Add(this.settingTabPage);
+            this.optimizeTabControl.Controls.Add(this.settingsTabPage);
             this.optimizeTabControl.Controls.Add(this.resultTabPage);
             this.optimizeTabControl.Location = new System.Drawing.Point(14, 15);
             this.optimizeTabControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -215,6 +216,83 @@ namespace Tunny.UI
             this.optimizeTabPage.TabIndex = 0;
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // settingsTabPage
+            // 
+            this.settingsTabPage.Controls.Add(this.settingsToJson);
+            this.settingsTabPage.Controls.Add(this.settingsOpenAPIPage);
+            this.settingsTabPage.Controls.Add(this.settingsAPIComboBox);
+            this.settingsTabPage.Controls.Add(this.settingsFolderOpen);
+            this.settingsTabPage.Controls.Add(this.settingLabel);
+            this.settingsTabPage.Controls.Add(this.settingsFromJson);
+            this.settingsTabPage.Location = new System.Drawing.Point(4, 24);
+            this.settingsTabPage.Name = "settingsTabPage";
+            this.settingsTabPage.Size = new System.Drawing.Size(250, 242);
+            this.settingsTabPage.TabIndex = 2;
+            this.settingsTabPage.Text = "Settings";
+            this.settingsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // settingsToJson
+            // 
+            this.settingsToJson.Location = new System.Drawing.Point(33, 136);
+            this.settingsToJson.Name = "settingsToJson";
+            this.settingsToJson.Size = new System.Drawing.Size(185, 23);
+            this.settingsToJson.TabIndex = 5;
+            this.settingsToJson.Text = "Save settings to json";
+            this.settingsToJson.UseVisualStyleBackColor = true;
+            this.settingsToJson.Click += new System.EventHandler(this.SettingsToJson_Click);
+            // 
+            // settingsOpenAPIPage
+            // 
+            this.settingsOpenAPIPage.Location = new System.Drawing.Point(122, 88);
+            this.settingsOpenAPIPage.Name = "settingsOpenAPIPage";
+            this.settingsOpenAPIPage.Size = new System.Drawing.Size(110, 23);
+            this.settingsOpenAPIPage.TabIndex = 4;
+            this.settingsOpenAPIPage.Text = "Open API page";
+            this.settingsOpenAPIPage.UseVisualStyleBackColor = true;
+            this.settingsOpenAPIPage.Click += new System.EventHandler(this.SettingsOpenAPIPage_Click);
+            // 
+            // settingsAPIComboBox
+            // 
+            this.settingsAPIComboBox.FormattingEnabled = true;
+            this.settingsAPIComboBox.Items.AddRange(new object[] {
+            "TPE",
+            "NSGA-II",
+            "CMA-ES",
+            "Random"});
+            this.settingsAPIComboBox.Location = new System.Drawing.Point(17, 88);
+            this.settingsAPIComboBox.Name = "settingsAPIComboBox";
+            this.settingsAPIComboBox.Size = new System.Drawing.Size(96, 23);
+            this.settingsAPIComboBox.TabIndex = 3;
+            // 
+            // settingsFolderOpen
+            // 
+            this.settingsFolderOpen.Location = new System.Drawing.Point(33, 194);
+            this.settingsFolderOpen.Name = "settingsFolderOpen";
+            this.settingsFolderOpen.Size = new System.Drawing.Size(185, 23);
+            this.settingsFolderOpen.TabIndex = 2;
+            this.settingsFolderOpen.Text = "Open Settings.json folder";
+            this.settingsFolderOpen.UseVisualStyleBackColor = true;
+            this.settingsFolderOpen.Click += new System.EventHandler(this.SettingsFolderOpen_Click);
+            // 
+            // settingLabel
+            // 
+            this.settingLabel.Location = new System.Drawing.Point(14, 12);
+            this.settingLabel.Name = "settingLabel";
+            this.settingLabel.Size = new System.Drawing.Size(218, 73);
+            this.settingLabel.TabIndex = 1;
+            this.settingLabel.Text = "Detailed optimization settings can be configured in the \"Settings.json\" file in t" +
+    "he following folder.";
+            // 
+            // settingsFromJson
+            // 
+            this.settingsFromJson.Location = new System.Drawing.Point(33, 165);
+            this.settingsFromJson.Name = "settingsFromJson";
+            this.settingsFromJson.Size = new System.Drawing.Size(185, 23);
+            this.settingsFromJson.TabIndex = 0;
+            this.settingsFromJson.Text = "Load settings from json";
+            this.settingsFromJson.UseVisualStyleBackColor = true;
+            this.settingsFromJson.Click += new System.EventHandler(this.SettingsFromJson_Click);
             // 
             // resultTabPage
             // 
@@ -354,72 +432,6 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
-            // settingTabPage
-            // 
-            this.settingTabPage.Controls.Add(this.settingOpenAPIPage);
-            this.settingTabPage.Controls.Add(this.settingAPIComboBox);
-            this.settingTabPage.Controls.Add(this.settingFolderOpen);
-            this.settingTabPage.Controls.Add(this.settingLabel);
-            this.settingTabPage.Controls.Add(this.settingReloadJson);
-            this.settingTabPage.Location = new System.Drawing.Point(4, 24);
-            this.settingTabPage.Name = "settingTabPage";
-            this.settingTabPage.Size = new System.Drawing.Size(250, 242);
-            this.settingTabPage.TabIndex = 2;
-            this.settingTabPage.Text = "Settings";
-            this.settingTabPage.UseVisualStyleBackColor = true;
-            // 
-            // settingReloadJson
-            // 
-            this.settingReloadJson.Location = new System.Drawing.Point(36, 178);
-            this.settingReloadJson.Name = "settingReloadJson";
-            this.settingReloadJson.Size = new System.Drawing.Size(164, 23);
-            this.settingReloadJson.TabIndex = 0;
-            this.settingReloadJson.Text = "Reload Setting.json";
-            this.settingReloadJson.UseVisualStyleBackColor = true;
-            this.settingReloadJson.Click += new System.EventHandler(this.SettingReloadJson_Click);
-            // 
-            // settingLabel
-            // 
-            this.settingLabel.Location = new System.Drawing.Point(14, 12);
-            this.settingLabel.Name = "settingLabel";
-            this.settingLabel.Size = new System.Drawing.Size(218, 73);
-            this.settingLabel.TabIndex = 1;
-            this.settingLabel.Text = "Detailed optimization settings can be configured in the \"Settings.json\" file in t" +
-    "he following folder.";
-            // 
-            // settingFolderOpen
-            // 
-            this.settingFolderOpen.Location = new System.Drawing.Point(36, 88);
-            this.settingFolderOpen.Name = "settingFolderOpen";
-            this.settingFolderOpen.Size = new System.Drawing.Size(164, 23);
-            this.settingFolderOpen.TabIndex = 2;
-            this.settingFolderOpen.Text = "Open Setting.json folder";
-            this.settingFolderOpen.UseVisualStyleBackColor = true;
-            this.settingFolderOpen.Click += new System.EventHandler(this.SettingFolderOpen_Click);
-            // 
-            // settingAPIComboBox
-            // 
-            this.settingAPIComboBox.FormattingEnabled = true;
-            this.settingAPIComboBox.Items.AddRange(new object[] {
-            "TPE",
-            "NSGA-II",
-            "CMA-ES",
-            "Random"});
-            this.settingAPIComboBox.Location = new System.Drawing.Point(17, 131);
-            this.settingAPIComboBox.Name = "settingAPIComboBox";
-            this.settingAPIComboBox.Size = new System.Drawing.Size(96, 23);
-            this.settingAPIComboBox.TabIndex = 3;
-            // 
-            // settingOpenAPIPage
-            // 
-            this.settingOpenAPIPage.Location = new System.Drawing.Point(122, 131);
-            this.settingOpenAPIPage.Name = "settingOpenAPIPage";
-            this.settingOpenAPIPage.Size = new System.Drawing.Size(110, 23);
-            this.settingOpenAPIPage.TabIndex = 4;
-            this.settingOpenAPIPage.Text = "Open API page";
-            this.settingOpenAPIPage.UseVisualStyleBackColor = true;
-            this.settingOpenAPIPage.Click += new System.EventHandler(this.SettingOpenAPIPage_Click);
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -437,9 +449,9 @@ namespace Tunny.UI
             this.optimizeTabControl.ResumeLayout(false);
             this.optimizeTabPage.ResumeLayout(false);
             this.optimizeTabPage.PerformLayout();
+            this.settingsTabPage.ResumeLayout(false);
             this.resultTabPage.ResumeLayout(false);
             this.resultTabPage.PerformLayout();
-            this.settingTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -472,12 +484,13 @@ namespace Tunny.UI
         private System.ComponentModel.BackgroundWorker restoreBackgroundWorker;
         private System.Windows.Forms.Button restoreStopButton;
         private System.Windows.Forms.Button restoreReflectButton;
-        private System.Windows.Forms.TabPage settingTabPage;
-        private System.Windows.Forms.Button settingOpenAPIPage;
-        private System.Windows.Forms.ComboBox settingAPIComboBox;
-        private System.Windows.Forms.Button settingFolderOpen;
+        private System.Windows.Forms.TabPage settingsTabPage;
+        private System.Windows.Forms.Button settingsOpenAPIPage;
+        private System.Windows.Forms.ComboBox settingsAPIComboBox;
+        private System.Windows.Forms.Button settingsFolderOpen;
         private System.Windows.Forms.Label settingLabel;
-        private System.Windows.Forms.Button settingReloadJson;
+        private System.Windows.Forms.Button settingsFromJson;
+        private System.Windows.Forms.Button settingsToJson;
     }
 }
 

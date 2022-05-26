@@ -239,7 +239,6 @@ namespace Tunny.UI
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
-
         }
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
@@ -251,10 +250,9 @@ namespace Tunny.UI
             optimizeProgressBar.Update();
         }
 
-        private void SettingOpenAPIPage_Click(object sender, EventArgs e)
+        private void SettingsOpenAPIPage_Click(object sender, EventArgs e)
         {
-
-            int apiIndex = settingAPIComboBox.SelectedIndex;
+            int apiIndex = settingsAPIComboBox.SelectedIndex;
             switch (apiIndex)
             {
                 case 0: // TPE
@@ -272,15 +270,20 @@ namespace Tunny.UI
             }
         }
 
-        private void SettingFolderOpen_Click(object sender, EventArgs e)
-        {
-            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
-        }
-
-        private void SettingReloadJson_Click(object sender, EventArgs e)
+        private void SettingsFromJson_Click(object sender, EventArgs e)
         {
             LoadSettingJson();
             InitializeUIValues();
+        }
+
+        private void SettingsToJson_Click(object sender, EventArgs e)
+        {
+            SaveUIValues();
+        }
+
+        private void SettingsFolderOpen_Click(object sender, EventArgs e)
+        {
+            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
         }
     }
 }
