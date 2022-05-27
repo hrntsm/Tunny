@@ -22,12 +22,12 @@ namespace Tunny.Component
         internal GH_Structure<GH_Number> Objectives = new GH_Structure<GH_Number>();
         internal GH_Structure<GH_Number> Variables = new GH_Structure<GH_Number>();
 
-        public override GH_Exposure Exposure => GH_Exposure.senary;
+        public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public TunnyComponent()
           : base("Tunny", "Tunny",
               "Tunny is an optimization component wrapped in optuna.",
-              "Params", "Util")
+              "Params", "Optimize")
         {
         }
 
@@ -83,6 +83,7 @@ namespace Tunny.Component
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;
+
         public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }
