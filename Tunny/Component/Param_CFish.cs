@@ -4,7 +4,7 @@ using System.Drawing;
 
 using Grasshopper.Kernel;
 
-using Tunny.Params;
+using Tunny.GHType;
 
 namespace Tunny.Component
 {
@@ -19,7 +19,7 @@ namespace Tunny.Component
         }
 
         protected override GH_CFish InstantiateT() => new GH_CFish();
-        protected override GH_CFish PreferredCast(object data) => data is GH_CFish ? data as GH_CFish : null;
+        protected override GH_CFish PreferredCast(object data) => data is CFish cFish ? new GH_CFish(cFish) : (GH_CFish)null;
         protected override GH_GetterResult Prompt_Singular(ref GH_CFish value) => GH_GetterResult.success;
         protected override GH_GetterResult Prompt_Plural(ref List<GH_CFish> values) => GH_GetterResult.success;
 

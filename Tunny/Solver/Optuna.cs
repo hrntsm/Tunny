@@ -118,7 +118,7 @@ namespace Tunny.Solver
                             vis.show();
                             break;
                         case "parallel coordinate":
-                            vis = optuna.visualization.plot_parallel_coordinate(study, targat_name: nickNames[0]);
+                            vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "param importances":
