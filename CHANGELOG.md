@@ -14,6 +14,12 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
 - UI for above detail settings 
 - If input "-10" in restore model number, Tunny output all result
+- Caught Fish component
+  - Special GH_Param component for Tunny result to handle its result easier.
+
+### Change
+
+- Combine Tunny component output into one called CaughtFish.
 
 ## [0.2.0] -2022-05-02
 
