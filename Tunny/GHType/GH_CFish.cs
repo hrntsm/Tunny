@@ -16,18 +16,26 @@ namespace Tunny.GHType
 {
     public class GH_CFish : GH_Goo<CFish>
     {
-        public GH_CFish() => m_value = new CFish();
+        public GH_CFish()
+        {
+        }
 
-        public GH_CFish(CFish cFish) => m_value = cFish;
-        public GH_CFish(GH_CFish other) => m_value = other.m_value;
+        public GH_CFish(CFish cFish)
+            : base(cFish)
+        {
+        }
+
+        public GH_CFish(GH_CFish other)
+            : base(other.Value)
+        {
+        }
+
         public override bool IsValid => true;
-
         public override string TypeName => "CFish";
-
         public override string TypeDescription => "Tunny optimizer result.";
-
+        public override bool CastFrom(object source) => false;
+        public override IGH_GooProxy EmitProxy() => new GH_CFishProxy(this);
         public override IGH_Goo Duplicate() => new GH_CFish(this);
-
         public override bool Read(GH_IReader reader)
         {
             string base64 = string.Empty;
@@ -65,6 +73,14 @@ namespace Tunny.GHType
             sb.Append("  Include Geometry: " + hasGeometry);
 
             return sb.ToString();
+        }
+
+        public class GH_CFishProxy : GH_GooProxy<GH_CFish>
+        {
+            public GH_CFishProxy(GH_CFish value)
+                : base(value)
+            {
+            }
         }
     }
 

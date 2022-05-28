@@ -40,7 +40,7 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Param_CFish(), "CaughtFish", "CaughtFish", "Fish caught by the optimization nets.", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_CFish(), "CaughtFishes", "CaughtFishes", "Fishes caught by the optimization nets.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
