@@ -11,6 +11,7 @@ using Rhino.Display;
 using Rhino.Geometry;
 
 using Tunny.GHType;
+using Tunny.Resources;
 
 namespace Tunny.Component
 {
@@ -118,7 +119,7 @@ namespace Tunny.Component
             }
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.FishMarket;
         public override Guid ComponentGuid => new Guid("46E05DFF-8EFD-418A-AC5B-7C9F24559B2E");
     }
 }
