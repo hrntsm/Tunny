@@ -19,12 +19,12 @@ namespace Tunny.Component
         internal GrasshopperInOut GhInOut;
         internal Fish[] Fishes;
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public TunnyComponent()
           : base("Tunny", "Tunny",
               "Tunny is an optimization component wrapped in optuna.",
-              "Params", "Optimize")
+              "Params", "Tunny")
         {
         }
 

@@ -23,6 +23,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Change
 
 - Combine Tunny component output into one called CaughtFish.
+- Component subcategory changed from Util to Tunny
 
 ## [0.2.0] -2022-05-02
 

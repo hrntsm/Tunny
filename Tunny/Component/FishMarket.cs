@@ -21,10 +21,12 @@ namespace Tunny.Component
         private List<GH_Fish> _cFishes = new List<GH_Fish>();
         private double _size = 1;
 
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         public FishMarket()
           : base("FishMarket", "FMarket",
                  "A place to lay out the solutions we caught.",
-                 "Params", "Optimize")
+                 "Params", "Tunny")
         {
         }
 
