@@ -14,12 +14,16 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
 - UI for above detail settings 
 - If input "-10" in restore model number, Tunny output all result
-- Caught Fish component
+- Fish component
   - Special GH_Param component for Tunny result to handle its result easier.
+  - This is the result of your catching Tunny in a fishery called Optimization.
+- FishMarket component
+  - Feature to display results side by side in a viewport like a fish market.
 
 ### Change
 
 - Combine Tunny component output into one called CaughtFish.
+- Component subcategory changed from Util to Tunny
 
 ## [0.2.0] -2022-05-02
 

@@ -63,9 +63,19 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap ParamCFishIcon {
+        internal static System.Drawing.Bitmap FishMarket {
             get {
-                object obj = ResourceManager.GetObject("ParamCFishIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("FishMarket", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ParamFishIcon {
+            get {
+                object obj = ResourceManager.GetObject("ParamFishIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

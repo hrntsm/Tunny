@@ -14,10 +14,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
-   sodipodi:docname="ParamCFishIcon.svg"
-   inkscape:export-filename="C:\Users\hiroa\Desktop\ParamCFishIcon.png"
-   inkscape:export-xdpi="6.0959997"
-   inkscape:export-ydpi="6.0959997">
+   sodipodi:docname="ParamFishIcon.svg"
+   inkscape:export-filename="C:\Users\hiroa\Desktop\ParamFishIcon.png"
+   inkscape:export-xdpi="6.1999998"
+   inkscape:export-ydpi="6.1999998">
   <defs
      id="defs2">
     <linearGradient
@@ -165,17 +165,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.9627841"
-     inkscape:cx="111.95498"
-     inkscape:cy="113.31689"
+     inkscape:zoom="0.98139205"
+     inkscape:cx="33.799412"
+     inkscape:cy="254.68777"
      inkscape:document-units="mm"
-     inkscape:current-layer="g1047"
+     inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:window-width="1662"
      inkscape:window-height="1041"
-     inkscape:window-x="200"
-     inkscape:window-y="0"
+     inkscape:window-x="2008"
+     inkscape:window-y="92"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata5">
@@ -185,7 +185,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -209,7 +209,7 @@
        inkscape:rounded="-3.46945e-18"
        inkscape:randomized="0"
        d="m 74.903356,92.61365 -49.569305,-2e-6 L 0.54940033,49.685369 25.334055,6.7570924 l 49.569306,2.5e-6 24.78465,42.9282791 z"
-       transform="matrix(1,0,0,0.88453913,0,5.7367161)" />
+       transform="matrix(0.90210069,0,0,0.8659283,4.9065866,6.6614019)" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.08949;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        d=""
@@ -241,20 +241,19 @@
     <g
        style="opacity:1"
        id="g1059"
-       transform="matrix(0.14171206,0,0,0.14171206,12.163673,11.700835)">
+       transform="matrix(0.11966714,0,0,0.11966714,17.882036,17.344324)">
       <g
          id="g1047">
-	<path
-   class="st0"
-   d="m 515.6804,271.61732 c -0.055,-42.822 1.55307,-87.06432 -1.40293,-88.53732 -36.906,6.688 -55.308,54.699 -62.674,70.217 -1.613,3.398 -6.644,3.697 -16.246,-2.196 -6.07,-3.723 -56.638,-35.067 -117.067,-57.084 3.145,-8.144 8.876,-20.363 18.754,-33.984 -26.251,0.831 -45.629,14.778 -54.464,22.586 -10.629,-2.883 -21.348,-5.296 -32,-7.059 -40.667,-26.382 -54.31,-48.878 -55.345,-53.018 -30.739,13.223 -47.504,45.218 -53.131,57.907 -86.73,19.297 -134.6470001,67.137 -139.4140001,81.507 L 2.5748594,279.30788 7.8914699,290.01 c 0,0 33.7710001,56.48 140.8280001,72.414 28.154,24.538 52.367,27.033 52.367,27.033 l -3.86,-23.03 c 3.561,0.082 7.163,0.135 10.85,0.135 28.443,-0.036 57.578,-5.531 85.113,-13.557 28.606,13.223 76.458,13.376 70.674,8.568 -10.412,-5.396 -18.65,-13.983 -25.176,-24.422 51.952,-20.86 91.164,-45.516 96.708,-47.649 9.599,-5.93 14.624,-5.64 16.246,-2.233 7.402,15.492 25.917,63.467 62.842,70.056 2.957,-1.481 1.24593,-42.87568 1.19693,-85.70768 z"
-   style="fill:#ffffff"
-   id="path1045"
-   sodipodi:nodetypes="ccsccccccccccccccccccccc"
-   inkscape:export-filename="C:\Users\hiroa\Desktop\path1045.png"
-   inkscape:export-xdpi="6.0959997"
-   inkscape:export-ydpi="6.0959997" />
-
-</g>
+        <path
+           class="st0"
+           d="m 515.6804,271.61732 c -0.055,-42.822 1.55307,-87.06432 -1.40293,-88.53732 -36.906,6.688 -55.308,54.699 -62.674,70.217 -1.613,3.398 -6.644,3.697 -16.246,-2.196 -6.07,-3.723 -56.638,-35.067 -117.067,-57.084 3.145,-8.144 8.876,-20.363 18.754,-33.984 -26.251,0.831 -45.629,14.778 -54.464,22.586 -10.629,-2.883 -21.348,-5.296 -32,-7.059 -40.667,-26.382 -54.31,-48.878 -55.345,-53.018 -30.739,13.223 -47.504,45.218 -53.131,57.907 -86.73,19.297 -134.6470001,67.137 -139.4140001,81.507 L 2.5748594,279.30788 7.8914699,290.01 c 0,0 33.7710001,56.48 140.8280001,72.414 28.154,24.538 52.367,27.033 52.367,27.033 l -3.86,-23.03 c 3.561,0.082 7.163,0.135 10.85,0.135 28.443,-0.036 57.578,-5.531 85.113,-13.557 28.606,13.223 76.458,13.376 70.674,8.568 -10.412,-5.396 -18.65,-13.983 -25.176,-24.422 51.952,-20.86 91.164,-45.516 96.708,-47.649 9.599,-5.93 14.624,-5.64 16.246,-2.233 7.402,15.492 25.917,63.467 62.842,70.056 2.957,-1.481 1.24593,-42.87568 1.19693,-85.70768 z"
+           style="fill:#ffffff"
+           id="path1045"
+           sodipodi:nodetypes="ccsccccccccccccccccccccc"
+           inkscape:export-filename="C:\Users\hiroa\Desktop\path1045.png"
+           inkscape:export-xdpi="6.0959997"
+           inkscape:export-ydpi="6.0959997" />
+      </g>
     </g>
   </g>
   <style

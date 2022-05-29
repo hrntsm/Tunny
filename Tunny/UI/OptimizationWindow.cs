@@ -163,7 +163,7 @@ namespace Tunny.UI
                     _component.ExpireSolution(true);
                     break;
                 case "Reflect":
-                    var decimalVar = _component.CFishes[0].Variables
+                    var decimalVar = _component.Fishes[0].Variables
                             .Select(x => (decimal)x.Value).ToList();
                     _component.GhInOut.NewSolution(decimalVar);
                     break;
