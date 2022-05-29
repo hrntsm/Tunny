@@ -28,7 +28,7 @@ namespace Tunny.Optimization
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
 
-            var cFishes = new List<CFish>();
+            var cFishes = new List<Fish>();
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
@@ -60,7 +60,7 @@ namespace Tunny.Optimization
                     break;
             }
 
-            s_component.CFishes = cFishes.ToArray();
+            s_component.Fishes = cFishes.ToArray();
             s_worker.ReportProgress(100);
 
             if (s_worker != null)
@@ -70,9 +70,9 @@ namespace Tunny.Optimization
             TunnyMessageBox.Show("Restore completed successfully.", "Tunny");
         }
 
-        private static void SetResultToCFish(ICollection<CFish> cFishes, ModelResult model, IEnumerable<string> nickname)
+        private static void SetResultToCFish(ICollection<Fish> cFishes, ModelResult model, IEnumerable<string> nickname)
         {
-            cFishes.Add(new CFish
+            cFishes.Add(new Fish
             {
                 ModelNumber = model.Number,
                 Variables = SetVariables(model, nickname),

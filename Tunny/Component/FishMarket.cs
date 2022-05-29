@@ -17,7 +17,7 @@ namespace Tunny.Component
     public class FishMarket : GH_Component
     {
         private readonly List<Plane> _tagPlanes = new List<Plane>();
-        private List<GH_CFish> _cFishes = new List<GH_CFish>();
+        private List<GH_Fish> _cFishes = new List<GH_Fish>();
         private double _size = 1;
 
         public FishMarket()
@@ -73,7 +73,7 @@ namespace Tunny.Component
             int countY = 0;
             bool remainMesh = true;
             var translatedMeshes = new GH_Structure<GH_Mesh>();
-            _cFishes = cFishObjects.Select(x => (GH_CFish)x).ToList();
+            _cFishes = cFishObjects.Select(x => (GH_Fish)x).ToList();
             var modelMeshes = _cFishes.Select(x => x.Value.ModelMesh).ToList();
             while (true)
             {

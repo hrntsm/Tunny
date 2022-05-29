@@ -17,7 +17,7 @@ namespace Tunny.Component
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
-        internal CFish[] CFishes;
+        internal Fish[] Fishes;
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
@@ -40,12 +40,12 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Param_CFish(), "CaughtFishes", "CaughtFishes", "Fishes caught by the optimization nets.", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_Fish(), "Fishes", "Fishes", "Fishes caught by the optimization nets.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            DA.SetDataList(0, CFishes);
+            DA.SetDataList(0, Fishes);
         }
 
         public void GhInOutInstantiate()
