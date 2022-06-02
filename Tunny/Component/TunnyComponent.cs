@@ -32,7 +32,7 @@ namespace Tunny.Component
         {
             pManager.AddNumberParameter("Variables", "Variables", "Connect variable number slider here.", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Objectives", "Objectives", "Connect objective number component here.", GH_ParamAccess.tree);
-            pManager.AddMeshParameter("ModelMesh", "ModelMesh", "Connect model mesh here. Not required. Large size models are not recommended as it affects the speed of analysis.", GH_ParamAccess.tree);
+            pManager.AddGeometryParameter("Geometries", "Geometries", "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.", GH_ParamAccess.tree);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;

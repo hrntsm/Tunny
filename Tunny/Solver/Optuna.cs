@@ -209,7 +209,7 @@ namespace Tunny.Solver
             modelResult.Add(new ModelResult()
             {
                 Number = (int)trial.number,
-                Draco = (string)trial.user_attrs["geometry"],
+                ModelJson = (string)trial.user_attrs["geometry"],
                 Variables = variables,
                 Objectives = (double[])trial.values,
             });

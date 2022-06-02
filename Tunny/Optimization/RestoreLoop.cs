@@ -107,8 +107,8 @@ namespace Tunny.Optimization
 
         private static Mesh SetModelMesh(ModelResult model)
         {
-            return model.Draco != string.Empty
-                ? (Mesh)DracoCompression.DecompressBase64String(model.Draco)
+            return model.ModelJson != string.Empty
+                ? (Mesh)DracoCompression.DecompressBase64String(model.ModelJson)
                 : null;
         }
     }

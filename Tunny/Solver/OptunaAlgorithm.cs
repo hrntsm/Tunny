@@ -97,7 +97,7 @@ namespace Tunny.Solver
                             break;
                         }
                     }
-                    trial.set_user_attr("geometry", result.ModelDraco);
+                    trial.set_user_attr("geometry", result.GeometryJson);
                     try
                     {
                         study.tell(trial, result.ObjectiveValues.ToArray());

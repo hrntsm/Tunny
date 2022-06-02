@@ -24,7 +24,7 @@ namespace Tunny.Util
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
         private List<GalapagosGeneListObject> _genePool;
-        private IGH_Param _modelMesh;
+        private List<IGH_Param> _geometries;
         public List<IGH_Param> Objectives;
         public List<GH_NumberSlider> Sliders;
 
@@ -46,7 +46,7 @@ namespace Tunny.Util
         {
             SetVariables();
             SetObjectives();
-            SetModelMesh();
+            SetModelGeometries();
 
             return true;
         }
@@ -164,14 +164,14 @@ namespace Tunny.Util
             return true;
         }
 
-        private bool SetModelMesh()
+        private bool SetModelGeometries()
         {
             if (_component.Params.Input[2].SourceCount == 0)
             {
                 return false;
             }
 
-            _modelMesh = _component.Params.Input[2].Sources[0];
+            _geometries = _component.Params.Input[2].Sources.ToList();
             return true;
         }
 
@@ -274,27 +274,46 @@ namespace Tunny.Util
             return values;
         }
 
-        public string GetModelDraco()
+        public List<string> GetGeometryJson()
         {
-            if (_modelMesh == null)
+            var json = new List<string>();
+            var option = new SerializationOptions();
+
+            if (_geometries.Count == 0)
             {
-                return string.Empty;
+                return json;
             }
 
-            IGH_StructureEnumerator ghEnumerator = _modelMesh.VolatileData.AllData(true);
-            foreach (IGH_Goo goo in ghEnumerator)
+            foreach (IGH_Param param in _geometries)
             {
-                if (goo is GH_Mesh mesh)
+                IGH_StructureEnumerator ghEnumerator = param.VolatileData.AllData(true);
+
+                foreach (IGH_Goo goo in ghEnumerator)
                 {
-                    var option = new DracoCompressionOptions
+                    switch (goo)
                     {
-                        CompressionLevel = 10
-                    };
-                    return DracoCompression.Compress(mesh.Value, option).ToBase64String();
+                        case GH_Mesh mesh:
+                            json.Add(mesh.Value.ToJSON(option));
+                            break;
+                        case GH_Brep brep:
+                            json.Add(brep.Value.ToJSON(option));
+                            break;
+                        case GH_Curve curve:
+                            json.Add(curve.Value.ToJSON(option));
+                            break;
+                        case GH_Surface surface:
+                            json.Add(surface.Value.ToJSON(option));
+                            break;
+                        case GH_SubD subd:
+                            json.Add(subd.Value.ToJSON(option));
+                            break;
+                        default:
+                            throw new Exception("Tunny doesn't handle this type of geometry");
+                    }
                 }
             }
 
-            return string.Empty;
+            return json;
         }
     }
 }
