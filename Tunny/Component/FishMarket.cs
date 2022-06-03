@@ -89,9 +89,10 @@ namespace Tunny.Component
             var arrayedGeometries = new GH_Structure<IGH_GeometricGoo>();
             _fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
             var fishGeometries = _fishes.Select(x => x.Value.Geometries).ToList();
+
             while (true)
             {
-                remainGeometry = NewMethod(countY, remainGeometry, arrayedGeometries, fishGeometries);
+                remainGeometry = SetGeometryToResultArray(countY, remainGeometry, arrayedGeometries, fishGeometries);
                 if (!remainGeometry)
                 {
                     break;
@@ -102,7 +103,7 @@ namespace Tunny.Component
             return arrayedGeometries;
         }
 
-        private bool NewMethod(int countY, bool remainGeometry, GH_Structure<IGH_GeometricGoo> arrayedGeometries, List<List<GeometryBase>> fishGeometries)
+        private bool SetGeometryToResultArray(int countY, bool remainGeometry, GH_Structure<IGH_GeometricGoo> arrayedGeometries, List<List<GeometryBase>> fishGeometries)
         {
             Vector3d yVec = _settings.Plane.YAxis * (_settings.YInterval * countY);
             for (int countX = 0; countX < _settings.XNum; countX++)
@@ -121,8 +122,7 @@ namespace Tunny.Component
                     {
                         geometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
                         geometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                        IGH_GeometricGoo geometricGoo = CreateGeometricGoo(geometry);
-                        arrayedGeometries.Append(geometricGoo, new GH_Path(0, _fishes[index].Value.ModelNumber));
+                        arrayedGeometries.Append(CreateGeometricGoo(geometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
                     }
                     _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
                 }
