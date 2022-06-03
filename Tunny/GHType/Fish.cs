@@ -13,7 +13,7 @@ namespace Tunny.GHType
     public class Fish
     {
         public int ModelNumber;
-        public Mesh ModelMesh;
+        public List<GeometryBase> Geometries;
         public Dictionary<string, double> Variables;
         public Dictionary<string, double> Objectives;
 
@@ -26,11 +26,11 @@ namespace Tunny.GHType
         {
             return JsonConvert.DeserializeObject<Fish>(json);
         }
-        public static string ToBase64(Fish cFish)
+        public static string ToBase64(Fish fish)
         {
             using (var ms = new MemoryStream())
             {
-                new BinaryFormatter().Serialize(ms, cFish);
+                new BinaryFormatter().Serialize(ms, fish);
                 return Convert.ToBase64String(ms.ToArray());
             }
         }

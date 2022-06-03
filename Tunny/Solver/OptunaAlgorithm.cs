@@ -97,7 +97,12 @@ namespace Tunny.Solver
                             break;
                         }
                     }
-                    trial.set_user_attr("geometry", result.GeometryJson);
+                    var pyJson = new PyList();
+                    foreach (string json in result.GeometryJson)
+                    {
+                        pyJson.Append(new PyString(json));
+                    }
+                    trial.set_user_attr("geometry", pyJson);
                     try
                     {
                         study.tell(trial, result.ObjectiveValues.ToArray());
