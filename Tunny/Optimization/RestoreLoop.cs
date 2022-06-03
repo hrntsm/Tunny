@@ -43,7 +43,7 @@ namespace Tunny.Optimization
                 case "Restore":
                     for (int i = 0; i < modelResult.Length; i++)
                     {
-                        SetResultToCFish(cFishes, modelResult[i], NickNames);
+                        SetResultToFish(cFishes, modelResult[i], NickNames);
                         s_worker.ReportProgress(i * 100 / modelResult.Length);
                     }
                     break;
@@ -55,7 +55,7 @@ namespace Tunny.Optimization
                             "Tunny"
                         );
                     }
-                    SetResultToCFish(cFishes, modelResult[0], NickNames);
+                    SetResultToFish(cFishes, modelResult[0], NickNames);
                     s_worker.ReportProgress(100);
                     break;
             }
@@ -70,14 +70,14 @@ namespace Tunny.Optimization
             TunnyMessageBox.Show("Restore completed successfully.", "Tunny");
         }
 
-        private static void SetResultToCFish(ICollection<Fish> cFishes, ModelResult model, IEnumerable<string> nickname)
+        private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
-            cFishes.Add(new Fish
+            fishes.Add(new Fish
             {
                 ModelNumber = model.Number,
                 Variables = SetVariables(model, nickname),
                 Objectives = SetObjectives(model),
-                ModelMesh = SetModelMesh(model)
+                Geometries = SetGeometries(model)
             });
         }
 
@@ -105,11 +105,20 @@ namespace Tunny.Optimization
             return objectives;
         }
 
-        private static Mesh SetModelMesh(ModelResult model)
+        private static List<GeometryBase> SetGeometries(ModelResult model)
         {
-            return model.Draco != string.Empty
-                ? (Mesh)DracoCompression.DecompressBase64String(model.Draco)
-                : null;
+            var geometries = new List<GeometryBase>();
+            if (model.GeometryJson.Length == 0)
+            {
+                return geometries;
+            }
+
+            foreach (string json in model.GeometryJson)
+            {
+                var geometry = Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase;
+                geometries.Add(geometry);
+            }
+            return geometries;
         }
     }
 }

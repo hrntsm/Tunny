@@ -69,7 +69,7 @@ namespace Tunny.Optimization
             var result = new EvaluatedGHResult
             {
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
-                ModelDraco = s_component.GhInOut.GetModelDraco()
+                GeometryJson = s_component.GhInOut.GetGeometryJson()
             };
             return result;
         }
