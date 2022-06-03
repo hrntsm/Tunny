@@ -48,21 +48,28 @@ namespace Tunny.GHType
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("Model Number:\n  " + m_value.ModelNumber + "\n");
+            sb.Append("====================================\n");
+            sb.Append("Model Number: " + m_value.ModelNumber + "\n");
+            sb.Append("====================================\n");
             sb.Append("Variables:\n");
+            sb.Append("------------------------------------\n");
             foreach (KeyValuePair<string, double> variable in m_value.Variables)
             {
                 sb.Append("  \"" + variable.Key + "\": " + variable.Value + "\n");
             }
 
+            sb.Append("------------------------------------\n");
             sb.Append("Objectives:\n");
+            sb.Append("------------------------------------\n");
             foreach (KeyValuePair<string, double> objective in m_value.Objectives)
             {
                 sb.Append("  \"" + objective.Key + "\": " + objective.Value + "\n");
             }
 
+            sb.Append("------------------------------------\n");
             sb.Append("Attributes:\n");
-            bool hasGeometry = m_value.ModelMesh != null;
+            sb.Append("------------------------------------\n");
+            bool hasGeometry = m_value.Geometries != null;
             sb.Append("  Include Geometry: " + hasGeometry);
 
             return sb.ToString();
