@@ -290,30 +290,35 @@ namespace Tunny.Util
 
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
-                    switch (goo)
-                    {
-                        case GH_Mesh mesh:
-                            json.Add(mesh.Value.ToJSON(option));
-                            break;
-                        case GH_Brep brep:
-                            json.Add(brep.Value.ToJSON(option));
-                            break;
-                        case GH_Curve curve:
-                            json.Add(curve.Value.ToJSON(option));
-                            break;
-                        case GH_Surface surface:
-                            json.Add(surface.Value.ToJSON(option));
-                            break;
-                        case GH_SubD subd:
-                            json.Add(subd.Value.ToJSON(option));
-                            break;
-                        default:
-                            throw new Exception("Tunny doesn't handle this type of geometry");
-                    }
+                    AddEachGHParamToJson(json, option, goo);
                 }
             }
 
             return json;
+        }
+
+        private static void AddEachGHParamToJson(List<string> json, SerializationOptions option, IGH_Goo goo)
+        {
+            switch (goo)
+            {
+                case GH_Mesh mesh:
+                    json.Add(mesh.Value.ToJSON(option));
+                    break;
+                case GH_Brep brep:
+                    json.Add(brep.Value.ToJSON(option));
+                    break;
+                case GH_Curve curve:
+                    json.Add(curve.Value.ToJSON(option));
+                    break;
+                case GH_Surface surface:
+                    json.Add(surface.Value.ToJSON(option));
+                    break;
+                case GH_SubD subd:
+                    json.Add(subd.Value.ToJSON(option));
+                    break;
+                default:
+                    throw new Exception("Tunny doesn't handle this type of geometry");
+            }
         }
     }
 }
