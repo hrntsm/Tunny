@@ -24,6 +24,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Combine Tunny component output into one called CaughtFish.
 - Component subcategory changed from Util to Tunny
+- Model shape data recorded during optimization from a single mesh to multiple GeometryBases.
 
 ## [0.2.0] -2022-05-02
 
