@@ -12,6 +12,7 @@ using Tunny.Component;
 using Tunny.Optimization;
 using Tunny.Settings;
 using Tunny.Solver;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -30,10 +31,21 @@ namespace Tunny.UI
         public OptimizationWindow(TunnyComponent component)
         {
             InitializeComponent();
+
             _component = component;
             _component.GhInOutInstantiate();
             LoadSettingJson();
             InitializeUIValues();
+
+            PythonInstaller.Path = _component.GhInOut.ComponentFolder;
+            if (!PythonInstaller.CheckPackagesIsInstalled())
+            {
+                var installer = new PythonInstallDialog()
+                {
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+                installer.Show(Owner);
+            }
 
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;

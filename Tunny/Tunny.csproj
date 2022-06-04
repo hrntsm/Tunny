@@ -46,9 +46,5 @@
     <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
-  
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy $(ProjectDir)Lib\Python $(OutDir)Python /I /S /D" />
-  </Target>
 
 </Project>

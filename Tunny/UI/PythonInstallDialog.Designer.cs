@@ -30,49 +30,60 @@ namespace Tunny.UI
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PythonInstallDialog));
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.installProgressBar = new System.Windows.Forms.ProgressBar();
+            this.installerTitleLabel = new System.Windows.Forms.Label();
+            this.installItemLabel = new System.Windows.Forms.Label();
+            this.notificationLabel = new System.Windows.Forms.Label();
+            this.installBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
-            // progressBar1
+            // installProgressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 69);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(261, 23);
-            this.progressBar1.TabIndex = 0;
+            this.installProgressBar.Location = new System.Drawing.Point(12, 72);
+            this.installProgressBar.Name = "installProgressBar";
+            this.installProgressBar.Size = new System.Drawing.Size(334, 23);
+            this.installProgressBar.TabIndex = 0;
             // 
-            // label1
+            // installerTitleLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(264, 15);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Installing Tunny depending Python Packages";
+            this.installerTitleLabel.AutoSize = true;
+            this.installerTitleLabel.Location = new System.Drawing.Point(12, 9);
+            this.installerTitleLabel.Name = "installerTitleLabel";
+            this.installerTitleLabel.Size = new System.Drawing.Size(282, 15);
+            this.installerTitleLabel.TabIndex = 1;
+            this.installerTitleLabel.Text = "Installing Python packages depending on Tunny";
             // 
-            // label2
+            // installItemLabel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(35, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Now Installing: ";
+            this.installItemLabel.Location = new System.Drawing.Point(35, 39);
+            this.installItemLabel.Name = "installItemLabel";
+            this.installItemLabel.Size = new System.Drawing.Size(288, 30);
+            this.installItemLabel.TabIndex = 2;
+            this.installItemLabel.Text = "Now Installing: ";
+            // 
+            // notificationLabel
+            // 
+            this.notificationLabel.Location = new System.Drawing.Point(12, 109);
+            this.notificationLabel.Name = "notificationLabel";
+            this.notificationLabel.Size = new System.Drawing.Size(334, 53);
+            this.notificationLabel.TabIndex = 3;
+            this.notificationLabel.Text = "**This process runs only when Tunny is launched for the first time.**";
             // 
             // PythonInstallDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(285, 104);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.progressBar1);
+            this.ClientSize = new System.Drawing.Size(358, 161);
+            this.Controls.Add(this.notificationLabel);
+            this.Controls.Add(this.installItemLabel);
+            this.Controls.Add(this.installerTitleLabel);
+            this.Controls.Add(this.installProgressBar);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "PythonInstallDialog";
             this.Text = "PythonInstaller";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosingXButton);
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
             this.ResumeLayout(false);
@@ -82,9 +93,11 @@ namespace Tunny.UI
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ProgressBar installProgressBar;
+        private System.Windows.Forms.Label installerTitleLabel;
+        private System.Windows.Forms.Label installItemLabel;
+        private System.Windows.Forms.Label notificationLabel;
+        private System.ComponentModel.BackgroundWorker installBackgroundWorker;
     }
 }
 

@@ -24,7 +24,7 @@ namespace Tunny.Solver
         public Optuna(string componentFolder)
         {
             _componentFolder = componentFolder;
-            string envPath = componentFolder + @"\Python\python310.dll";
+            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
