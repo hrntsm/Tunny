@@ -21,6 +21,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Feature to display results side by side in a viewport like a fish market.
 - Version info to result rdb file
   - To avoid problems with different versions in the future
+- Support Optuna-Dashboard
+  - Real-time Web Dashboard for Optuna.
+  - https://github.com/optuna/optuna-dashboard#features
 
 ### Change
 

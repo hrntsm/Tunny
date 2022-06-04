@@ -7,11 +7,27 @@ using System.Windows.Forms;
 
 using Tunny.Optimization;
 using Tunny.Solver;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
+        private void DashboardButton_Click(object sender, EventArgs e)
+        {
+            var dashboard = new Process();
+            dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
+            dashboard.StartInfo.Arguments = @"sqlite:///" + _component.GhInOut.ComponentFolder + @"\Tunny_Opt_Result.db";
+            dashboard.StartInfo.UseShellExecute = false;
+            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            dashboard.Start();
+
+            var browser = new Process();
+            browser.StartInfo.FileName = @"http://127.0.0.1:8080/";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
+        }
+
         private void VisualizeButton_Click(object sender, EventArgs e)
         {
             var optuna = new Optuna(_component.GhInOut.ComponentFolder);
