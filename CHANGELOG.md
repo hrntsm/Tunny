@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED]
+## [0.3.0] -2022-05-03
 
 ### Added
 
@@ -27,7 +27,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Change
 
-- Combine Tunny component output into one called CaughtFish.
+- Combine Tunny component output into one called Fish.
 - Component subcategory changed from Util to Tunny
 - Model shape data recorded during optimization from a single mesh to multiple GeometryBases.
 - Reduced size of distribution package
