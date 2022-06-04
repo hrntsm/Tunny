@@ -44,9 +44,9 @@ Tunny also support yak. So you can find Tunny in Rhinoceros package manager.
 
 ### Component location
 
-Tunny can be found in the same Params tab as Galapagos under Util if it has been installed.
+Tunny can be found in the Params tab if it has been installed.
 
-![image](https://user-images.githubusercontent.com/23289252/163377645-6c397380-8896-4e33-8b74-8305e9a2ef04.png)
+![image](https://user-images.githubusercontent.com/23289252/172011237-583835a5-3ecc-4ca9-a77d-29c1f5a1687a.png)
 
 ### Inputs
 
@@ -55,9 +55,9 @@ Tunny can be found in the same Params tab as Galapagos under Util if it has been
 This component support Number slider & GenePool.
 Optimization is performed when this value is changed by Tunny.
 
-It is recommended that components be given nicknames, as this makes it easier to understand the resulting process. Here it is named x, y, z.
+It is recommended that components be given nicknames, as this makes it easier to understand the resulting process. Here it is named x1, x2, x3.
 
-![image](https://user-images.githubusercontent.com/23289252/166185821-4b3da178-068b-444a-9d3f-9ee791c533b1.png)
+![image](https://user-images.githubusercontent.com/23289252/172011316-b8e812bd-0362-443f-8841-a2157032b7d1.png)
 
 #### Objectives
 
@@ -66,17 +66,24 @@ Optimization is performed to minimize the value input here. Multi-objective opti
 Each objective value have to be separated to a number component.
 It is recommended to set nickname like input variables.
 
-![image](https://user-images.githubusercontent.com/23289252/166185782-3d5ddb69-5912-4b65-8b59-c20f0f1cd6b2.png)
+![image](https://user-images.githubusercontent.com/23289252/172011407-e1c8a0ea-f5bc-466a-9670-d005f35af89c.png)
 
-#### ModelMesh
+#### Geometries 
 
 This input is optional.
 
-Mesh input is supported as a function to save the model during optimization.
-If multiple meshes are entered as a list, only the first one will be saved.  
-Input of large size meshes is deprecated because it makes the analysis heavier.
+GeometryBase input is supported as a function to save the model during optimization.
+Input of large date size geometries are deprecated because it makes the analysis heavier.
 
-![image](https://user-images.githubusercontent.com/23289252/166185101-c82d1610-03a5-4906-920c-4ef33508716c.png)
+![image](https://user-images.githubusercontent.com/23289252/172012910-d49e526b-db3f-43cd-af45-1f24a9f0e221.png)
+
+### Other components
+
+![image](https://user-images.githubusercontent.com/23289252/172013084-a74e08d7-9b8d-47a5-8eef-f6840a369ee1.png)
+
+- The Fish component, a Param component dedicated to Tunny, was created to facilitate data handling.
+- You can internalize and save the results to an gh file.
+- The FishMarket comport allows the results obtained from optimization to be viewed side by side just like a fish market.
 
 ### Optimization Window
 
@@ -89,7 +96,7 @@ It is recommended that optimization be performed a small number of times, and af
 
 #### Optimize Tab
 
-![image](https://user-images.githubusercontent.com/23289252/163382306-b44f5e7c-4c62-4887-8766-f399c23c33b4.png)
+![image](https://user-images.githubusercontent.com/23289252/172011516-a0d170f9-f118-4f62-a1aa-b76f4cbb9218.png)
 
 Values that can be set and their meanings are as follows.
 
@@ -112,22 +119,44 @@ Values that can be set and their meanings are as follows.
 - RunOptimize
   - Push the button to perform the optimization.
 
+#### Settings Tab
+
+![image](https://user-images.githubusercontent.com/23289252/172011625-3b5476f8-c143-40a1-809b-e6e066379d1e.png)
+
+Tunny stores the settings in this window in json.
+Detailed settings in optimization can now also be configured in Json.
+
+- Open API page
+  - Open Optuna's API page with the meaning of each value in the advanced optimization settings.
+- Save settings to json
+  - Save the settings to Json.
+  - Settings are also saved when the window is closed with the X button.
+- Load settings from json
+  - Loads a settings file.
+- Open Settings.Json folder
+  - Open the folder where the settings files are stored.
+  - The file Settings.json is Tunny's settings file. Edit it with any text editor.
+
 #### Result Tab
 
-![image](https://user-images.githubusercontent.com/23289252/166185559-a5e64659-df48-4777-85dc-7ed01f3752b7.png)
+![image](https://user-images.githubusercontent.com/23289252/172011663-e60c9e10-f8fc-48bd-b909-2c15b0b23ca9.png)
 
 Values that can be set and their meanings are as follows.
 
+- Dashboard
+  -  Run Real-time Web Dashboard for Optuna.
+  - https://github.com/optuna/optuna-dashboard#features
+  - You can now more easily check results or even see results in real time.
 - Visualize type
   - The following types of graphing are supported. See the [Optuna.visualization](https://optuna.readthedocs.io/en/stable/reference/visualization/index.html) page below for more information.
     1. contour
-    1. EDF
-    1. intermediate values
-    1. optimization history
-    1. parallel coordinate
-    1. param importance
-    1. pareto front
-    1. slice
+    2. EDF
+    3. intermediate values
+    4. optimization history
+    5. parallel coordinate
+    6. param importance
+    7. pareto front
+    8. slice
 - Open result file folder
   - Open the folder where the file containing the optimization results is located. The results are stored under the name "Tunny_Opt_Result.db".
 - Clear result file
@@ -136,7 +165,8 @@ Values that can be set and their meanings are as follows.
 - Set restore model number
   - The model with the number entered here is restored from the optimization results file and is the output of the component.
   - The model number matches the tree structure of the output.
-  - -1 is input, the results of all models on the Pareto front will be the main focus.
+  - -1 is input, the results of all models on the Pareto front will output.
+  - -10 is input, the results of all models will output
   - Clicking the Reflect button will cause Grasshopper to reflect the results of the model number inputted.
 
 ## Contact information
