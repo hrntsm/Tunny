@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
 using Tunny.Component;
 using Tunny.Optimization;
-using Tunny.Solver;
+using Tunny.Settings;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
         private readonly TunnyComponent _component;
+        private TunnySettings _settings;
         internal enum GrasshopperStates
         {
             RequestSent,
@@ -28,10 +27,21 @@ namespace Tunny.UI
         public OptimizationWindow(TunnyComponent component)
         {
             InitializeComponent();
+
             _component = component;
             _component.GhInOutInstantiate();
-            samplerComboBox.SelectedIndex = 0;
-            visualizeTypeComboBox.SelectedIndex = 3;
+            LoadSettingJson();
+            InitializeUIValues();
+
+            PythonInstaller.Path = _component.GhInOut.ComponentFolder;
+            if (!PythonInstaller.CheckPackagesIsInstalled())
+            {
+                var installer = new PythonInstallDialog()
+                {
+                    StartPosition = FormStartPosition.CenterScreen
+                };
+                installer.Show(Owner);
+            }
 
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
@@ -44,6 +54,33 @@ namespace Tunny.UI
             restoreBackgroundWorker.RunWorkerCompleted += RestoreStopButton_Click;
             restoreBackgroundWorker.WorkerReportsProgress = true;
             restoreBackgroundWorker.WorkerSupportsCancellation = true;
+        }
+
+        private void LoadSettingJson()
+        {
+            string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
+            if (File.Exists(settingsPath))
+            {
+                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+            }
+            else
+            {
+                _settings = new TunnySettings
+                {
+                    Storage = _component.GhInOut.ComponentFolder + @"\Tunny_Opt_Result.db"
+                };
+                _settings.CreateNewSettingsFile(settingsPath);
+            }
+        }
+
+        private void InitializeUIValues()
+        {
+            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+            loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
+            studyNameTextBox.Text = _settings.StudyName;
+            restoreModelNumTextBox.Text = _settings.Result.RestoreNumberString;
+            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
@@ -63,26 +100,11 @@ namespace Tunny.UI
             MinimizeBox = false;
         }
 
-        private void VisualizeButton_Click(object sender, EventArgs e)
-        {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder);
-            optuna.ShowResultVisualize(visualizeTypeComboBox.Text, studyNameTextBox.Text);
-        }
-
-        private void OpenResultFolderButton_Click(object sender, EventArgs e)
-        {
-            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
-        }
-
-        private void ClearResultButton_Click(object sender, EventArgs e)
-        {
-            File.Delete(_component.GhInOut.ComponentFolder + "/Tunny_Opt_Result.db");
-        }
-
         private void FormClosingXButton(object sender, FormClosingEventArgs e)
         {
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+            SaveUIValues();
 
             if (optimizeBackgroundWorker != null)
             {
@@ -95,122 +117,15 @@ namespace Tunny.UI
             }
         }
 
-        private void RestoreRunButton_Click(object sender, EventArgs e)
+        private void SaveUIValues()
         {
-            optimizeRunButton.Enabled = false;
-            optimizeStopButton.Enabled = true;
-
-            RestoreLoop.StudyName = studyNameTextBox.Text;
-            RestoreLoop.Mode = "Restore";
-            RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
-            RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-
-            restoreBackgroundWorker.RunWorkerAsync(_component);
-        }
-
-        private void RestoreStopButton_Click(object sender, EventArgs e)
-        {
-            optimizeRunButton.Enabled = true;
-            optimizeStopButton.Enabled = false;
-
-            if (restoreBackgroundWorker != null)
-            {
-                restoreBackgroundWorker.CancelAsync();
-            }
-            switch (RestoreLoop.Mode)
-            {
-                case "Restore":
-                    _component.ExpireSolution(true);
-                    break;
-                case "Reflect":
-                    var decimalVar = _component.Variables.FlattenData()
-                            .Select(x => (decimal)x.Value).ToList();
-                    _component.GhInOut.NewSolution(decimalVar);
-                    break;
-            }
-        }
-
-        private void RestoreReflectButton_Click(object sender, EventArgs e)
-        {
-            optimizeRunButton.Enabled = false;
-            optimizeStopButton.Enabled = true;
-
-            RestoreLoop.StudyName = studyNameTextBox.Text;
-            RestoreLoop.Mode = "Reflect";
-            RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
-            RestoreLoop.Indices = restoreModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-
-            restoreBackgroundWorker.RunWorkerAsync(_component);
-
-        }
-
-        private void RestoreProgressChangedHandler(object sender, ProgressChangedEventArgs e)
-        {
-            restoreProgressBar.Value = e.ProgressPercentage;
-            restoreProgressBar.Update();
-        }
-
-        private void OptimizeRunButton_Click(object sender, EventArgs e)
-        {
-            var ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas.DisableUI();
-
-            optimizeRunButton.Enabled = false;
-            OptimizeLoop.NTrials = (int)nTrialNumUpDown.Value;
-            OptimizeLoop.LoadIfExists = loadIfExistsCheckBox.Checked;
-            OptimizeLoop.SamplerType = samplerComboBox.Text;
-            OptimizeLoop.StudyName = studyNameTextBox.Text;
-
-            List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
-            if (objectiveValues.Count == 0)
-            {
-                ghCanvas.EnableUI();
-                optimizeRunButton.Enabled = true;
-                return;
-            }
-            else if (objectiveValues.Count > 1
-                     && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random" || samplerComboBox.Text == "Grid"))
-            {
-                TunnyMessageBox.Show(
-                    "CMA-ES, Random and Grid samplers only support single objective optimization.",
-                    "Tunny",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-                ghCanvas.EnableUI();
-                optimizeRunButton.Enabled = true;
-                return;
-            }
-
-            optimizeBackgroundWorker.RunWorkerAsync(_component);
-
-            optimizeStopButton.Enabled = true;
-
-        }
-
-        private void OptimizeStopButton_Click(object sender, EventArgs e)
-        {
-            optimizeRunButton.Enabled = true;
-            optimizeStopButton.Enabled = false;
-
-            if (optimizeBackgroundWorker != null)
-            {
-                optimizeBackgroundWorker.CancelAsync();
-            }
-
-            //Enable GUI
-            var ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas?.EnableUI();
-
-        }
-
-        private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
-        {
-            var parameters = (IList<decimal>)e.UserState;
-            UpdateGrasshopper(parameters);
-
-            optimizeProgressBar.Value = e.ProgressPercentage;
-            optimizeProgressBar.Update();
+            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
+            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            _settings.StudyName = studyNameTextBox.Text;
+            _settings.Result.RestoreNumberString = restoreModelNumTextBox.Text;
+            _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
+            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
         }
     }
 }

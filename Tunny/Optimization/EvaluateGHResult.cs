@@ -5,6 +5,6 @@ namespace Tunny.Optimization
     public class EvaluatedGHResult
     {
         public List<double> ObjectiveValues { get; set; }
-        public string ModelDraco { get; set; }
+        public List<string> GeometryJson { get; set; }
     }
 }

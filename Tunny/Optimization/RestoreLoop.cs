@@ -1,16 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Grasshopper.Kernel.Data;
-using Grasshopper.Kernel.Types;
-
 using Rhino.FileIO;
 using Rhino.Geometry;
 
 using Tunny.Component;
+using Tunny.GHType;
 using Tunny.Solver;
 using Tunny.UI;
 using Tunny.Util;
@@ -31,9 +28,7 @@ namespace Tunny.Optimization
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
 
-            var modelMesh = new GH_Structure<GH_Mesh>();
-            var variables = new GH_Structure<GH_Number>();
-            var objectives = new GH_Structure<GH_Number>();
+            var cFishes = new List<Fish>();
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
@@ -48,9 +43,7 @@ namespace Tunny.Optimization
                 case "Restore":
                     for (int i = 0; i < modelResult.Length; i++)
                     {
-                        SetVariables(variables, modelResult[i], NickNames);
-                        SetObjectives(objectives, modelResult[i]);
-                        SetModelMesh(modelMesh, modelResult[i]);
+                        SetResultToFish(cFishes, modelResult[i], NickNames);
                         s_worker.ReportProgress(i * 100 / modelResult.Length);
                     }
                     break;
@@ -59,21 +52,15 @@ namespace Tunny.Optimization
                     {
                         TunnyMessageBox.Show(
                             "You input multi restore model numbers, but this function only reflect variables to slider or genepool to first one.",
-                            "Tunny",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information
+                            "Tunny"
                         );
                     }
-                    SetVariables(variables, modelResult[0], NickNames);
-                    SetObjectives(objectives, modelResult[0]);
-                    SetModelMesh(modelMesh, modelResult[0]);
+                    SetResultToFish(cFishes, modelResult[0], NickNames);
                     s_worker.ReportProgress(100);
                     break;
             }
 
-            s_component.Variables = variables;
-            s_component.Objectives = objectives;
-            s_component.ModelMesh = modelMesh;
+            s_component.Fishes = cFishes.ToArray();
             s_worker.ReportProgress(100);
 
             if (s_worker != null)
@@ -83,33 +70,55 @@ namespace Tunny.Optimization
             TunnyMessageBox.Show("Restore completed successfully.", "Tunny");
         }
 
-        private static void SetVariables(GH_Structure<GH_Number> objectives, ModelResult model, IEnumerable<string> nickName)
+        private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
-            foreach (string name in nickName)
+            fishes.Add(new Fish
             {
-                foreach (KeyValuePair<string, double> obj in model.Variables.Where(obj => obj.Key == name))
+                ModelNumber = model.Number,
+                Variables = SetVariables(model, nickname),
+                Objectives = SetObjectives(model),
+                Geometries = SetGeometries(model)
+            });
+        }
+
+        private static Dictionary<string, double> SetVariables(ModelResult model, IEnumerable<string> nickNames)
+        {
+            var variables = new Dictionary<string, double>();
+            foreach (string name in nickNames)
+            {
+                foreach (KeyValuePair<string, double> variable in model.Variables.Where(obj => obj.Key == name))
                 {
-                    objectives.Append(new GH_Number(obj.Value), new GH_Path(0, model.Number));
+                    variables.Add(variable.Key, variable.Value);
                 }
             }
+            return variables;
         }
 
-        private static void SetObjectives(GH_Structure<GH_Number> objectives, ModelResult model)
+        private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
-            foreach (double obj in model.Objectives)
+            string[] nickNames = s_component.GhInOut.Objectives.Select(x => x.NickName).ToArray();
+            var objectives = new Dictionary<string, double>();
+            for (int i = 0; i < model.Objectives.Length; i++)
             {
-                objectives.Append(new GH_Number(obj), new GH_Path(0, model.Number));
+                objectives.Add(nickNames[i], model.Objectives[i]);
             }
+            return objectives;
         }
 
-        private static void SetModelMesh(GH_Structure<GH_Mesh> modelMesh, ModelResult model)
+        private static List<GeometryBase> SetGeometries(ModelResult model)
         {
-            if (model.Draco == string.Empty)
+            var geometries = new List<GeometryBase>();
+            if (model.GeometryJson.Length == 0)
             {
-                return;
+                return geometries;
             }
-            var mesh = (Mesh)DracoCompression.DecompressBase64String(model.Draco);
-            modelMesh.Append(new GH_Mesh(mesh), new GH_Path(0, model.Number));
+
+            foreach (string json in model.GeometryJson)
+            {
+                var geometry = Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase;
+                geometries.Add(geometry);
+            }
+            return geometries;
         }
     }
 }

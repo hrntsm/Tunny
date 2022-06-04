@@ -5,9 +5,8 @@ using System.Windows.Forms;
 using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
-using Grasshopper.Kernel.Types;
 
+using Tunny.GHType;
 using Tunny.Resources;
 using Tunny.UI;
 using Tunny.Util;
@@ -18,16 +17,14 @@ namespace Tunny.Component
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
-        internal GH_Structure<GH_Mesh> ModelMesh = new GH_Structure<GH_Mesh>();
-        internal GH_Structure<GH_Number> Objectives = new GH_Structure<GH_Number>();
-        internal GH_Structure<GH_Number> Variables = new GH_Structure<GH_Number>();
+        internal Fish[] Fishes;
 
-        public override GH_Exposure Exposure => GH_Exposure.senary;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public TunnyComponent()
           : base("Tunny", "Tunny",
               "Tunny is an optimization component wrapped in optuna.",
-              "Params", "Util")
+              "Params", "Tunny")
         {
         }
 
@@ -35,7 +32,7 @@ namespace Tunny.Component
         {
             pManager.AddNumberParameter("Variables", "Variables", "Connect variable number slider here.", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Objectives", "Objectives", "Connect objective number component here.", GH_ParamAccess.tree);
-            pManager.AddMeshParameter("ModelMesh", "ModelMesh", "Connect model mesh here. Not required. Large size models are not recommended as it affects the speed of analysis.", GH_ParamAccess.tree);
+            pManager.AddGeometryParameter("Geometries", "Geometries", "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.", GH_ParamAccess.tree);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
@@ -43,16 +40,12 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("ResultVariables", "ResVar", "Result variables.", GH_ParamAccess.tree);
-            pManager.AddNumberParameter("ResultObjectives", "ResObj", "Result objectives.", GH_ParamAccess.tree);
-            pManager.AddMeshParameter("ResultMesh", "ResMesh", "Result model mesh.", GH_ParamAccess.tree);
+            pManager.AddParameter(new Param_Fish(), "Fishes", "Fishes", "Fishes caught by the optimization nets.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            DA.SetDataTree(0, Variables);
-            DA.SetDataTree(1, Objectives);
-            DA.SetDataTree(2, ModelMesh);
+            DA.SetDataList(0, Fishes);
         }
 
         public void GhInOutInstantiate()
@@ -83,6 +76,7 @@ namespace Tunny.Component
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;
+
         public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }

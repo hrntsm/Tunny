@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [0.3.0] -2022-05-03
+
+### Added
+
+- Use json to set sampler detail settings
+  - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
+- UI for above detail settings 
+- If input "-10" in restore model number, Tunny output all result
+- Fish component
+  - Special GH_Param component for Tunny result to handle its result easier.
+  - This is the result of your catching Tunny in a fishery called Optimization.
+- FishMarket component
+  - Feature to display results side by side in a viewport like a fish market.
+- Version info to result rdb file
+  - To avoid problems with different versions in the future
+- Support Optuna-Dashboard
+  - Real-time Web Dashboard for Optuna.
+  - https://github.com/optuna/optuna-dashboard#features
+
+### Change
+
+- Combine Tunny component output into one called Fish.
+- Component subcategory changed from Util to Tunny
+- Model shape data recorded during optimization from a single mesh to multiple GeometryBases.
+- Reduced size of distribution package
+  - It used to include the dependent PythonPackage from the beginning, but it is now downloaded when it is started on Grasshopper.
+
 ## [0.2.0] -2022-05-02
 
 ### Added

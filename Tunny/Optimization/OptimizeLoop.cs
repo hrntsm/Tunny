@@ -6,6 +6,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 
 using Tunny.Component;
+using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.UI;
 using Tunny.Util;
@@ -16,10 +17,7 @@ namespace Tunny.Optimization
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
-        public static int NTrials;
-        public static bool LoadIfExists;
-        public static string SamplerType;
-        public static string StudyName;
+        public static TunnySettings Settings;
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
@@ -53,18 +51,9 @@ namespace Tunny.Optimization
             }
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
-            var settings = new Dictionary<string, object>()
-            {
-                { "nTrials", NTrials },
-                { "loadIfExists", LoadIfExists },
-                { "samplerType", SamplerType },
-                { "studyName", StudyName },
-                { "storage", s_component.GhInOut.ComponentFolder },
-                { "nObjective", s_component.GhInOut.GetObjectiveValues().Count }
-            };
 
             bool solverStarted = optunaSolver.RunSolver(
-                variables, objectives, EvaluateFunction, "OptunaTPE", settings, "", "");
+                variables, objectives, EvaluateFunction, Settings);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
@@ -80,7 +69,7 @@ namespace Tunny.Optimization
             var result = new EvaluatedGHResult
             {
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
-                ModelDraco = s_component.GhInOut.GetModelDraco()
+                GeometryJson = s_component.GhInOut.GetGeometryJson()
             };
             return result;
         }

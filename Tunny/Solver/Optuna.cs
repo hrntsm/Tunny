@@ -8,32 +8,31 @@ using Grasshopper.Kernel;
 using Python.Runtime;
 
 using Tunny.Optimization;
+using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class Optuna : ISolver
+    public class Optuna
     {
         public double[] XOpt { get; private set; }
-        public double[] FxOpt { get; private set; }
+        private double[] FxOpt { get; set; }
 
         private readonly string _componentFolder;
-        private readonly Dictionary<string, Dictionary<string, double>> _presets = new Dictionary<string, Dictionary<string, double>>();
 
         public Optuna(string componentFolder)
         {
             _componentFolder = componentFolder;
-            string envPath = componentFolder + @"\Python\python310.dll";
+            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         public bool RunSolver(
             List<Variable> variables,
-            List<IGH_Param> objectives,
+            IEnumerable<IGH_Param> objectives,
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
-            string preset,
-            Dictionary<string, object> settings, string installFolder, string documentPath)
+            TunnySettings settings)
         {
             int dVar = variables.Count;
             double[] lb = new double[dVar];
@@ -78,10 +77,6 @@ namespace Tunny.Solver
             }
         }
 
-        public string GetErrorMessage() => "";
-        public double[] Get_XOptimum => XOpt;
-        public IEnumerable<string> GetPresetNames() => _presets.Keys;
-
         public void ShowResultVisualize(string visualize, string studyName)
         {
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
@@ -123,7 +118,7 @@ namespace Tunny.Solver
                             vis.show();
                             break;
                         case "parallel coordinate":
-                            vis = optuna.visualization.plot_parallel_coordinate(study, targat_name: nickNames[0]);
+                            vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
                             vis.show();
                             break;
                         case "param importances":
@@ -179,11 +174,19 @@ namespace Tunny.Solver
                         ParseTrial(modelResult, trial);
                     }
                 }
+                else if (resultNum[0] == -10)
+                {
+                    var trials = (dynamic[])study.trials;
+                    foreach (dynamic trial in trials)
+                    {
+                        ParseTrial(modelResult, trial);
+                    }
+                }
                 else
                 {
-                    for (int i = 0; i < resultNum.Length; i++)
+                    foreach (int res in resultNum)
                     {
-                        dynamic trial = study.trials[resultNum[i]];
+                        dynamic trial = study.trials[res];
                         ParseTrial(modelResult, trial);
                     }
                 }
@@ -206,7 +209,7 @@ namespace Tunny.Solver
             modelResult.Add(new ModelResult()
             {
                 Number = (int)trial.number,
-                Draco = (string)trial.user_attrs["geometry"],
+                GeometryJson = (string[])trial.user_attrs["geometry"],
                 Variables = variables,
                 Objectives = (double[])trial.values,
             });
