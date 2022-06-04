@@ -63,6 +63,7 @@ namespace Tunny.UI
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.restoreBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.dashboardButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -296,6 +297,7 @@ namespace Tunny.UI
             // 
             // resultTabPage
             // 
+            this.resultTabPage.Controls.Add(this.dashboardButton);
             this.resultTabPage.Controls.Add(this.restoreReflectButton);
             this.resultTabPage.Controls.Add(this.restoreStopButton);
             this.resultTabPage.Controls.Add(this.restoreProgressBar);
@@ -432,6 +434,16 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(175, 23);
             this.visualizeTypeComboBox.TabIndex = 0;
             // 
+            // dashboardButton
+            // 
+            this.dashboardButton.Location = new System.Drawing.Point(136, 3);
+            this.dashboardButton.Name = "dashboardButton";
+            this.dashboardButton.Size = new System.Drawing.Size(108, 23);
+            this.dashboardButton.TabIndex = 11;
+            this.dashboardButton.Text = "Dashboard";
+            this.dashboardButton.UseVisualStyleBackColor = true;
+            this.dashboardButton.Click += new System.EventHandler(this.DashboardButton_Click);
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -491,6 +503,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Label settingLabel;
         private System.Windows.Forms.Button settingsFromJson;
         private System.Windows.Forms.Button settingsToJson;
+        private System.Windows.Forms.Button dashboardButton;
     }
 }
 
