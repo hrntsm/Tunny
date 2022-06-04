@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="pythonnet" Version="3.0.0-preview2022-03-03" />
+    <PackageReference Include="Python.Included" Version="3.10.0-preview2" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     <Reference Include="GalapagosComponents">
       <HintPath>Lib\GalapagosComponents.dll</HintPath>
