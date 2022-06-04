@@ -27,6 +27,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Combine Tunny component output into one called CaughtFish.
 - Component subcategory changed from Util to Tunny
 - Model shape data recorded during optimization from a single mesh to multiple GeometryBases.
+- Reduced size of distribution package
+  - It used to include the dependent PythonPackage from the beginning, but it is now downloaded when it is started on Grasshopper.
 
 ## [0.2.0] -2022-05-02
 
