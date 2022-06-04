@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 using Python.Runtime;
@@ -66,6 +67,7 @@ namespace Tunny.Solver
                 }
                 name.Remove(name.Length - 1, 1);
                 study.set_user_attr("objective_names", name.ToString());
+                study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
 
                 double[] xTest = new double[variableCount];
                 var result = new EvaluatedGHResult();
