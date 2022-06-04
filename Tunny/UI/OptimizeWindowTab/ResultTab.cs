@@ -30,9 +30,6 @@ namespace Tunny.UI
 
         private void RestoreRunButton_Click(object sender, EventArgs e)
         {
-            optimizeRunButton.Enabled = false;
-            optimizeStopButton.Enabled = true;
-
             RestoreLoop.StudyName = studyNameTextBox.Text;
             RestoreLoop.Mode = "Restore";
             RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
@@ -43,9 +40,6 @@ namespace Tunny.UI
 
         private void RestoreStopButton_Click(object sender, EventArgs e)
         {
-            optimizeRunButton.Enabled = true;
-            optimizeStopButton.Enabled = false;
-
             if (restoreBackgroundWorker != null)
             {
                 restoreBackgroundWorker.CancelAsync();
@@ -65,9 +59,6 @@ namespace Tunny.UI
 
         private void RestoreReflectButton_Click(object sender, EventArgs e)
         {
-            optimizeRunButton.Enabled = false;
-            optimizeStopButton.Enabled = true;
-
             RestoreLoop.StudyName = studyNameTextBox.Text;
             RestoreLoop.Mode = "Reflect";
             RestoreLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();

@@ -22,12 +22,23 @@ namespace Tunny.UI
             _settings.StudyName = studyNameTextBox.Text;
             OptimizeLoop.Settings = _settings;
 
+            if (!CheckInputValue(ghCanvas))
+            {
+                return;
+            }
+
+            optimizeBackgroundWorker.RunWorkerAsync(_component);
+            optimizeStopButton.Enabled = true;
+        }
+
+        private bool CheckInputValue(GH_DocumentEditor ghCanvas)
+        {
             List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
             if (objectiveValues.Count == 0)
             {
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
-                return;
+                return false;
             }
             else if (objectiveValues.Count > 1
                      && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random" || samplerComboBox.Text == "Grid"))
@@ -40,11 +51,10 @@ namespace Tunny.UI
                 );
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
-                return;
+                return false;
             }
 
-            optimizeBackgroundWorker.RunWorkerAsync(_component);
-            optimizeStopButton.Enabled = true;
+            return true;
         }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)
