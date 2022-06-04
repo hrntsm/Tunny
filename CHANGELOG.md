@@ -19,6 +19,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - This is the result of your catching Tunny in a fishery called Optimization.
 - FishMarket component
   - Feature to display results side by side in a viewport like a fish market.
+- Version info to result rdb file
+  - To avoid problems with different versions in the future
 
 ### Change
 
