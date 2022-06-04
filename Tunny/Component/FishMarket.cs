@@ -82,17 +82,16 @@ namespace Tunny.Component
             DA.SetDataTree(0, ArrayedGeometries(fishObjects));
         }
 
-        private GH_Structure<IGH_GeometricGoo> ArrayedGeometries(List<object> fishObjects)
+        private GH_Structure<IGH_GeometricGoo> ArrayedGeometries(IEnumerable<object> fishObjects)
         {
             int countY = 0;
-            bool remainGeometry = true;
             var arrayedGeometries = new GH_Structure<IGH_GeometricGoo>();
             _fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
             var fishGeometries = _fishes.Select(x => x.Value.Geometries).ToList();
 
             while (true)
             {
-                remainGeometry = SetGeometryToResultArray(countY, remainGeometry, arrayedGeometries, fishGeometries);
+                bool remainGeometry = SetGeometryToResultArray(countY, arrayedGeometries, fishGeometries);
                 if (!remainGeometry)
                 {
                     break;
@@ -103,7 +102,7 @@ namespace Tunny.Component
             return arrayedGeometries;
         }
 
-        private bool SetGeometryToResultArray(int countY, bool remainGeometry, GH_Structure<IGH_GeometricGoo> arrayedGeometries, List<List<GeometryBase>> fishGeometries)
+        private bool SetGeometryToResultArray(int countY, GH_Structure<IGH_GeometricGoo> arrayedGeometries, IReadOnlyList<List<GeometryBase>> fishGeometries)
         {
             Vector3d yVec = _settings.Plane.YAxis * (_settings.YInterval * countY);
             for (int countX = 0; countX < _settings.XNum; countX++)
@@ -111,8 +110,7 @@ namespace Tunny.Component
                 int index = countX + _settings.XNum * countY;
                 if (index == _fishes.Count)
                 {
-                    remainGeometry = false;
-                    break;
+                    return false;
                 }
                 Vector3d xVec = _settings.Plane.XAxis * (_settings.XInterval * countX);
                 if (fishGeometries[index] != null)
@@ -127,7 +125,7 @@ namespace Tunny.Component
                     _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
                 }
             }
-            return remainGeometry;
+            return true;
         }
 
         private static IGH_GeometricGoo CreateGeometricGoo(GeometryBase geometry)
@@ -149,12 +147,11 @@ namespace Tunny.Component
             }
         }
 
-        private static Point3d GetUnionBoundingBoxMinPt(List<GeometryBase> geometryBases)
+        private static Point3d GetUnionBoundingBoxMinPt(IEnumerable<GeometryBase> geometryBases)
         {
             var minPt = new Point3d(double.MaxValue, double.MaxValue, double.MaxValue);
-            foreach (GeometryBase geometry in geometryBases)
+            foreach (BoundingBox boundingBox in geometryBases.Select(geometry => geometry.GetBoundingBox(Plane.WorldXY)))
             {
-                BoundingBox boundingBox = geometry.GetBoundingBox(Plane.WorldXY);
                 if (boundingBox.Min.X < minPt.X)
                 {
                     minPt.X = boundingBox.Min.X;
