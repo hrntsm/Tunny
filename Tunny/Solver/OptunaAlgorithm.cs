@@ -66,8 +66,7 @@ namespace Tunny.Solver
                     name.Append(objName + ",");
                 }
                 name.Remove(name.Length - 1, 1);
-                study.set_user_attr("objective_names", name.ToString());
-                study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
+                SetStudyUserAttr(study, name);
 
                 double[] xTest = new double[variableCount];
                 var result = new EvaluatedGHResult();
@@ -99,12 +98,8 @@ namespace Tunny.Solver
                             break;
                         }
                     }
-                    var pyJson = new PyList();
-                    foreach (string json in result.GeometryJson)
-                    {
-                        pyJson.Append(new PyString(json));
-                    }
-                    trial.set_user_attr("geometry", pyJson);
+
+                    SetTrialUserAttrToGeometry(result, trial);
                     try
                     {
                         study.tell(trial, result.ObjectiveValues.ToArray());
@@ -141,6 +136,25 @@ namespace Tunny.Solver
                 }
             }
             PythonEngine.Shutdown();
+        }
+
+        private static void SetStudyUserAttr(dynamic study, StringBuilder name)
+        {
+            study.set_user_attr("objective_names", name.ToString());
+            study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
+        }
+
+        private static void SetTrialUserAttrToGeometry(EvaluatedGHResult result, dynamic trial)
+        {
+            if (result.GeometryJson.Count != 0)
+            {
+                var pyJson = new PyList();
+                foreach (string json in result.GeometryJson)
+                {
+                    pyJson.Append(new PyString(json));
+                }
+                trial.set_user_attr("geometry", pyJson);
+            }
         }
 
         private dynamic SetSamplerSettings(int n, int samplerType, ref int nTrials, dynamic optuna)
