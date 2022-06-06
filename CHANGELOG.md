@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED]
+
+### Fix
+
+- Stopped sampling when there was no geometry input
+
 ## [0.3.0] -2022-05-03
 
 ### Added
