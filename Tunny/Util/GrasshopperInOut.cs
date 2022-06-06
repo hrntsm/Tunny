@@ -168,6 +168,7 @@ namespace Tunny.Util
         {
             if (_component.Params.Input[2].SourceCount == 0)
             {
+                _geometries = new List<IGH_Param>();
                 return false;
             }
 
