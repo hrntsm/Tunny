@@ -46,7 +46,7 @@ jobs:
         run: |
           cp ./Samples ./Release/Samples -recurse
           cp ./LICENSE ./Release/LICENSE
-          cp ./Tunny/bin/Release/nwt48 ./Release/Tunny -recurse
+          cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
 
       - name: Upload release build of plugin as artefact
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
