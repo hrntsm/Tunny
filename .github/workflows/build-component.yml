@@ -40,7 +40,7 @@ jobs:
         env:
           Configuration: ${{ matrix.configuration }}
 
-      - name: Copy Samples & License to /HoaryFox/bin dir
+      - name: Copy Samples & License to /Tunny/bin dir
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         shell: powershell
         run: |
@@ -53,4 +53,4 @@ jobs:
         with:
           name: Tunny 
           path: |
-            ./Release
+            ./
