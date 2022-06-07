@@ -8,6 +8,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ## [UNRELEASED]
 
+### Added
+
+- Component CI build to get easily development build.
+
 ### Fix
 
 - Stopped sampling when there was no geometry input
