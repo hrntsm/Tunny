@@ -3,12 +3,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Rhino.FileIO;
 using Rhino.Geometry;
 
 using Tunny.Component;
-using Tunny.GHType;
 using Tunny.Solver;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -28,7 +27,7 @@ namespace Tunny.Optimization
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
 
-            var cFishes = new List<Fish>();
+            var fishes = new List<Fish>();
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
@@ -43,7 +42,7 @@ namespace Tunny.Optimization
                 case "Restore":
                     for (int i = 0; i < modelResult.Length; i++)
                     {
-                        SetResultToFish(cFishes, modelResult[i], NickNames);
+                        SetResultToFish(fishes, modelResult[i], NickNames);
                         s_worker.ReportProgress(i * 100 / modelResult.Length);
                     }
                     break;
@@ -55,12 +54,12 @@ namespace Tunny.Optimization
                             "Tunny"
                         );
                     }
-                    SetResultToFish(cFishes, modelResult[0], NickNames);
+                    SetResultToFish(fishes, modelResult[0], NickNames);
                     s_worker.ReportProgress(100);
                     break;
             }
 
-            s_component.Fishes = cFishes.ToArray();
+            s_component.Fishes = fishes.ToArray();
             s_worker.ReportProgress(100);
 
             if (s_worker != null)

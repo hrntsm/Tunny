@@ -4,8 +4,8 @@ using System.Drawing;
 
 using Grasshopper.Kernel;
 
-using Tunny.GHType;
 using Tunny.Resources;
+using Tunny.Type;
 
 namespace Tunny.Component
 {
@@ -13,9 +13,9 @@ namespace Tunny.Component
     {
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public Param_Fish()
-         : base("Fish", "Fish",
-                "Fish caught by the optimization nets",
-                "Params", "Tunny")
+          : base("Fish", "Fish",
+            "Fish caught by the optimization nets",
+            "Params", "Tunny")
         {
         }
 

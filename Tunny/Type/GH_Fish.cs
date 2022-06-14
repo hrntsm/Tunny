@@ -5,7 +5,7 @@ using GH_IO.Serialization;
 
 using Grasshopper.Kernel.Types;
 
-namespace Tunny.GHType
+namespace Tunny.Type
 {
     public class GH_Fish : GH_Goo<Fish>
     {
@@ -13,8 +13,8 @@ namespace Tunny.GHType
         {
         }
 
-        public GH_Fish(Fish cFish)
-            : base(cFish)
+        public GH_Fish(Fish fish)
+            : base(fish)
         {
         }
 

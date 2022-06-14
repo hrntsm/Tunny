@@ -10,8 +10,8 @@ using Grasshopper.Kernel.Types;
 using Rhino.Display;
 using Rhino.Geometry;
 
-using Tunny.GHType;
 using Tunny.Resources;
+using Tunny.Type;
 
 namespace Tunny.Component
 {
@@ -26,8 +26,8 @@ namespace Tunny.Component
 
         public FishMarket()
           : base("FishMarket", "FMarket",
-                 "A place to lay out the solutions we caught.",
-                 "Params", "Tunny")
+            "A place to lay out the solutions we caught.",
+            "Params", "Tunny")
         {
         }
 

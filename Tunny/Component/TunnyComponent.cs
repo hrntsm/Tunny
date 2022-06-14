@@ -6,8 +6,8 @@ using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.Kernel;
 
-using Tunny.GHType;
 using Tunny.Resources;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -23,8 +23,8 @@ namespace Tunny.Component
 
         public TunnyComponent()
           : base("Tunny", "Tunny",
-              "Tunny is an optimization component wrapped in optuna.",
-              "Params", "Tunny")
+            "Tunny is an optimization component wrapped in optuna.",
+            "Params", "Tunny")
         {
         }
 

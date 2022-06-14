@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using Rhino.Geometry;
 
-namespace Tunny.GHType
+namespace Tunny.Type
 {
     [Serializable]
     public class Fish
