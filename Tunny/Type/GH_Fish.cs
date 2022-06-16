@@ -48,31 +48,58 @@ namespace Tunny.Type
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("====================================\n");
-            sb.Append("Model Number: " + m_value.ModelNumber + "\n");
-            sb.Append("====================================\n");
-            sb.Append("Variables:\n");
-            sb.Append("------------------------------------\n");
-            foreach (KeyValuePair<string, double> variable in m_value.Variables)
-            {
-                sb.Append("  \"" + variable.Key + "\": " + variable.Value + "\n");
-            }
+            SetModelNumber(sb);
+            SetVariables(sb);
+            SetObjectives(sb);
+            SetAttributes(sb);
+            return sb.ToString();
+        }
 
-            sb.Append("------------------------------------\n");
-            sb.Append("Objectives:\n");
-            sb.Append("------------------------------------\n");
+        private void SetAttributes(StringBuilder sb)
+        {
+            sb.AppendLine("------------------------------------");
+            sb.AppendLine("Attributes:");
+            sb.AppendLine("------------------------------------");
+            bool hasGeometry = m_value.Geometries != null;
+            sb.AppendLine("  Include Geometry: " + hasGeometry);
+
+            foreach (KeyValuePair<string, List<string>> attr in m_value.Attributes)
+            {
+                string valueStrings = string.Empty;
+                foreach (string val in attr.Value)
+                {
+                    valueStrings += val + ", ";
+                }
+                sb.AppendLine("  " + attr.Key + ": " + valueStrings);
+            }
+        }
+
+        private void SetObjectives(StringBuilder sb)
+        {
+            sb.AppendLine("------------------------------------");
+            sb.AppendLine("Objectives:");
+            sb.AppendLine("------------------------------------");
             foreach (KeyValuePair<string, double> objective in m_value.Objectives)
             {
-                sb.Append("  \"" + objective.Key + "\": " + objective.Value + "\n");
+                sb.AppendLine("  \"" + objective.Key + "\": " + objective.Value);
             }
+        }
 
-            sb.Append("------------------------------------\n");
-            sb.Append("Attributes:\n");
-            sb.Append("------------------------------------\n");
-            bool hasGeometry = m_value.Geometries != null;
-            sb.Append("  Include Geometry: " + hasGeometry);
+        private void SetModelNumber(StringBuilder sb)
+        {
+            sb.AppendLine("====================================");
+            sb.AppendLine("Model Number: " + m_value.ModelNumber + "");
+            sb.AppendLine("====================================");
+        }
 
-            return sb.ToString();
+        private void SetVariables(StringBuilder sb)
+        {
+            sb.AppendLine("Variables:");
+            sb.AppendLine("------------------------------------");
+            foreach (KeyValuePair<string, double> variable in m_value.Variables)
+            {
+                sb.AppendLine("  \"" + variable.Key + "\": " + variable.Value + "");
+            }
         }
 
         public class GH_FishProxy : GH_GooProxy<GH_Fish>

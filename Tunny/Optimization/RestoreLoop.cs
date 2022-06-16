@@ -76,7 +76,8 @@ namespace Tunny.Optimization
                 ModelNumber = model.Number,
                 Variables = SetVariables(model, nickname),
                 Objectives = SetObjectives(model),
-                Geometries = SetGeometries(model)
+                Geometries = SetGeometries(model),
+                Attributes = SetAttributes(model),
             });
         }
 
@@ -118,6 +119,16 @@ namespace Tunny.Optimization
                 geometries.Add(geometry);
             }
             return geometries;
+        }
+
+        private static Dictionary<string, List<string>> SetAttributes(ModelResult model)
+        {
+            var attribute = new Dictionary<string, List<string>>();
+            foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
+            {
+                attribute.Add(attr.Key, attr.Value);
+            }
+            return attribute;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Tunny.Type
         public List<GeometryBase> Geometries;
         public Dictionary<string, double> Variables;
         public Dictionary<string, double> Objectives;
+        public Dictionary<string, List<string>> Attributes;
 
         public string SerializeToJson()
         {
@@ -42,7 +43,6 @@ namespace Tunny.Type
             {
                 return (Fish)new BinaryFormatter().Deserialize(ms);
             }
-
         }
     }
 }

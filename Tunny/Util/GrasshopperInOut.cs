@@ -14,6 +14,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.FileIO;
 
 using Tunny.Component;
+using Tunny.Type;
 using Tunny.UI;
 
 namespace Tunny.Util
@@ -24,7 +25,7 @@ namespace Tunny.Util
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
         private List<GalapagosGeneListObject> _genePool;
-        private List<IGH_Param> _geometries;
+        private GH_FishAttribute _attributes;
         public List<IGH_Param> Objectives;
         public List<GH_NumberSlider> Sliders;
 
@@ -46,7 +47,7 @@ namespace Tunny.Util
         {
             SetVariables();
             SetObjectives();
-            SetModelGeometries();
+            SetAttributes();
 
             return true;
         }
@@ -164,15 +165,24 @@ namespace Tunny.Util
             return true;
         }
 
-        private bool SetModelGeometries()
+        private bool SetAttributes()
         {
             if (_component.Params.Input[2].SourceCount == 0)
             {
-                _geometries = new List<IGH_Param>();
+                _attributes = new GH_FishAttribute();
                 return false;
             }
 
-            _geometries = _component.Params.Input[2].Sources.ToList();
+            IGH_StructureEnumerator enumerator = _component.Params.Input[2].Sources[0].VolatileData.AllData(true);
+            foreach (IGH_Goo goo in enumerator)
+            {
+                if (goo is GH_FishAttribute fishAttr)
+                {
+                    _attributes = fishAttr;
+                    break;
+                }
+            }
+
             return true;
         }
 
@@ -280,46 +290,84 @@ namespace Tunny.Util
             var json = new List<string>();
             var option = new SerializationOptions();
 
-            if (_geometries.Count == 0)
+            if (_attributes == null || !_attributes.Value.ContainsKey("Geometry"))
             {
                 return json;
             }
 
-            foreach (IGH_Param param in _geometries)
+            var geometries = _attributes.Value["Geometry"] as List<object>;
+            foreach (object param in geometries)
             {
-                IGH_StructureEnumerator ghEnumerator = param.VolatileData.AllData(true);
-
-                foreach (IGH_Goo goo in ghEnumerator)
+                if (param is IGH_Goo goo)
                 {
-                    AddEachGHParamToJson(json, option, goo);
+                    json.Add(GHParamToString(goo, option));
                 }
             }
 
             return json;
         }
 
-        private static void AddEachGHParamToJson(List<string> json, SerializationOptions option, IGH_Goo goo)
+        private static string GHParamToString(IGH_Goo goo)
         {
+            var option = new SerializationOptions();
+            return GHParamToString(goo, option);
+        }
+
+        private static string GHParamToString(IGH_Goo goo, SerializationOptions option)
+        {
+            string result;
             switch (goo)
             {
                 case GH_Mesh mesh:
-                    json.Add(mesh.Value.ToJSON(option));
+                    result = mesh.Value.ToJSON(option);
                     break;
                 case GH_Brep brep:
-                    json.Add(brep.Value.ToJSON(option));
+                    result = brep.Value.ToJSON(option);
                     break;
                 case GH_Curve curve:
-                    json.Add(curve.Value.ToJSON(option));
+                    result = curve.Value.ToJSON(option);
                     break;
                 case GH_Surface surface:
-                    json.Add(surface.Value.ToJSON(option));
+                    result = surface.Value.ToJSON(option);
                     break;
                 case GH_SubD subd:
-                    json.Add(subd.Value.ToJSON(option));
+                    result = subd.Value.ToJSON(option);
                     break;
                 default:
-                    throw new Exception("Tunny doesn't handle this type of geometry");
+                    result = goo.ToString();
+                    break;
             }
+            return result;
+        }
+
+        public Dictionary<string, List<string>> GetAttributes()
+        {
+            var attrs = new Dictionary<string, List<string>>();
+            if (_attributes == null)
+            {
+                return attrs;
+            }
+
+            foreach (string key in _attributes.Value.Keys)
+            {
+                if (key == "Geometry")
+                {
+                    continue;
+                }
+
+                var value = new List<string>();
+                var objList = _attributes.Value[key] as List<object>;
+                foreach (object param in objList)
+                {
+                    if (param is IGH_Goo goo)
+                    {
+                        value.Add(GHParamToString(goo));
+                    }
+                }
+                attrs.Add(key, value);
+            }
+
+            return attrs;
         }
     }
 }

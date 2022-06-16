@@ -198,21 +198,47 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
+            Dictionary<string, double> variables = ParseVariables(trial);
+            Dictionary<string, List<string>> attributes = ParseAttributes(trial);
+
+            modelResult.Add(new ModelResult()
+            {
+                Number = (int)trial.number,
+                GeometryJson = (string[])trial.user_attrs["Geometry"],
+                Attributes = attributes,
+                Variables = variables,
+                Objectives = (double[])trial.values,
+            });
+        }
+
+        private static Dictionary<string, double> ParseVariables(dynamic trial)
+        {
+            var variables = new Dictionary<string, double>();
             double[] values = (double[])trial.@params.values();
             string[] keys = (string[])trial.@params.keys();
-            var variables = new Dictionary<string, double>();
             for (int i = 0; i < keys.Length; i++)
             {
                 variables.Add(keys[i], values[i]);
             }
 
-            modelResult.Add(new ModelResult()
+            return variables;
+        }
+
+        private static Dictionary<string, List<string>> ParseAttributes(dynamic trial)
+        {
+            var attributes = new Dictionary<string, List<string>>();
+            string[] keys = (string[])trial.user_attrs.keys();
+            for (int i = 0; i < keys.Length; i++)
             {
-                Number = (int)trial.number,
-                GeometryJson = (string[])trial.user_attrs["geometry"],
-                Variables = variables,
-                Objectives = (double[])trial.values,
-            });
+                if (keys[i] == "Geometry")
+                {
+                    continue;
+                }
+                string[] values = (string[])trial.user_attrs[keys[i]];
+                attributes.Add(keys[i], values.ToList());
+            }
+
+            return attributes;
         }
     }
 }

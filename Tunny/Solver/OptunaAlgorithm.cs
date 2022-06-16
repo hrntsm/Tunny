@@ -153,7 +153,20 @@ namespace Tunny.Solver
                 {
                     pyJson.Append(new PyString(json));
                 }
-                trial.set_user_attr("geometry", pyJson);
+                trial.set_user_attr("Geometry", pyJson);
+            }
+
+            if (result.Attribute != null)
+            {
+                foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+                {
+                    var pyList = new PyList();
+                    foreach (string str in pair.Value)
+                    {
+                        pyList.Append(new PyString(str));
+                    }
+                    trial.set_user_attr(pair.Key, pyList);
+                }
             }
         }
 
