@@ -1,28 +1,25 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 using Grasshopper.Kernel;
 
 namespace Tunny.Type
 {
-    public class Param_FishAttribute : GH_Param<GH_FishAttribute>
+    public class Param_FishAttribute : GH_PersistentParam<GH_FishAttribute>
     {
-        public override GH_Exposure Exposure => GH_Exposure.hidden;
+        public override GH_Exposure Exposure => GH_Exposure.primary;
 
-        public Param_FishAttribute(IGH_InstanceDescription tag)
-         : base(tag)
+        public Param_FishAttribute()
+          : base("FishAttributes", "FishAttrs",
+            "Attribute information to be added to each trial of optimization.",
+            "Params", "Tunny")
         {
         }
 
-        public Param_FishAttribute(IGH_InstanceDescription tag, GH_ParamAccess access)
-         : base(tag, access)
-        {
-        }
-
-        public Param_FishAttribute(string name, string nickname, string description, string category, string subcategory, GH_ParamAccess access)
-         : base(name, nickname, description, category, subcategory, access)
-        {
-        }
-
+        protected override GH_GetterResult Prompt_Singular(ref GH_FishAttribute value) => GH_GetterResult.success;
+        protected override GH_GetterResult Prompt_Plural(ref List<GH_FishAttribute> values) => GH_GetterResult.success;
+        protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("bfbd03eb-492d-4c57-8311-e7452d78a78e");
     }
 }

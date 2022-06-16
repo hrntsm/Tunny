@@ -8,15 +8,15 @@ using Tunny.Type;
 
 namespace Tunny.Component
 {
-    public class FishAttribute : GH_Component, IGH_VariableParameterComponent
+    public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
         private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.\"Geometry\" is a special nickname that is visualized with the optimization results. Do not change it.";
         private readonly string _attrDescription = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
-        public FishAttribute()
-          : base("FishAttribute", "FAttribute",
-            "Description of component",
+        public ConstructFishAttribute()
+          : base("ConstructFishAttribute", "ConstrFA",
+            "Construct Fish Attribute.",
             "Params", "Tunny")
         {
         }
@@ -33,8 +33,7 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(
-                new Param_FishAttribute("Attributes", "Attrs", "Attributes to each Trial", "Params", "Tunny", GH_ParamAccess.list));
+            pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Attributes to each Trial", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -126,7 +125,6 @@ namespace Tunny.Component
         }
 
         protected override System.Drawing.Bitmap Icon => null;
-
         public override Guid ComponentGuid => new Guid("0E66E2E8-6A97-45E0-93DF-2251C3949B7D");
     }
 }
