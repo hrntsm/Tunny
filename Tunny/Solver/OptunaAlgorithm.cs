@@ -99,7 +99,7 @@ namespace Tunny.Solver
                         }
                     }
 
-                    SetTrialUserAttrToGeometry(result, trial);
+                    SetTrialUserAttr(result, trial);
                     try
                     {
                         study.tell(trial, result.ObjectiveValues.ToArray());
@@ -144,7 +144,7 @@ namespace Tunny.Solver
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
-        private static void SetTrialUserAttrToGeometry(EvaluatedGHResult result, dynamic trial)
+        private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial)
         {
             if (result.GeometryJson.Count != 0)
             {

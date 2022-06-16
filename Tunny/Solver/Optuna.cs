@@ -198,17 +198,20 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
-            Dictionary<string, double> variables = ParseVariables(trial);
-            Dictionary<string, List<string>> attributes = ParseAttributes(trial);
-
             modelResult.Add(new ModelResult()
             {
                 Number = (int)trial.number,
-                GeometryJson = (string[])trial.user_attrs["Geometry"],
-                Attributes = attributes,
-                Variables = variables,
+                Variables = ParseVariables(trial),
                 Objectives = (double[])trial.values,
+                GeometryJson = ParseGeometries(trial),
+                Attributes = ParseAttributes(trial),
             });
+        }
+
+        private static string[] ParseGeometries(dynamic trial)
+        {
+            string[] keys = (string[])trial.user_attrs.keys();
+            return keys.Contains("Geometry") ? (string[])trial.user_attrs["Geometry"] : (new string[0]);
         }
 
         private static Dictionary<string, double> ParseVariables(dynamic trial)

@@ -60,7 +60,7 @@ namespace Tunny.Type
             sb.AppendLine("------------------------------------");
             sb.AppendLine("Attributes:");
             sb.AppendLine("------------------------------------");
-            bool hasGeometry = m_value.Geometries != null;
+            bool hasGeometry = m_value.Geometries.Count != 0;
             sb.AppendLine("  Include Geometry: " + hasGeometry);
 
             foreach (KeyValuePair<string, List<string>> attr in m_value.Attributes)

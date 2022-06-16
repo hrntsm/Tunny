@@ -290,7 +290,7 @@ namespace Tunny.Util
             var json = new List<string>();
             var option = new SerializationOptions();
 
-            if (_attributes == null || !_attributes.Value.ContainsKey("Geometry"))
+            if (_attributes.Value == null || !_attributes.Value.ContainsKey("Geometry"))
             {
                 return json;
             }
@@ -343,7 +343,7 @@ namespace Tunny.Util
         public Dictionary<string, List<string>> GetAttributes()
         {
             var attrs = new Dictionary<string, List<string>>();
-            if (_attributes == null)
+            if (_attributes.Value == null)
             {
                 return attrs;
             }
