@@ -80,6 +80,7 @@ namespace Tunny.Component
                 return;
             }
             DA.SetDataTree(0, ArrayedGeometries(fishObjects));
+            ExpirePreview(true);
         }
 
         private GH_Structure<IGH_GeometricGoo> ArrayedGeometries(IEnumerable<object> fishObjects)
