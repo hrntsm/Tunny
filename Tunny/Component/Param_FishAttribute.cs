@@ -11,7 +11,7 @@ namespace Tunny.Type
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public Param_FishAttribute()
-          : base("FishAttributes", "FishAttrs",
+          : base("Fish Attributes", "FishAttrs",
             "Attribute information to be added to each trial of optimization.",
             "Params", "Tunny")
         {

@@ -22,10 +22,10 @@ namespace Tunny.Component
         private double _size = 1;
         private Settings _settings = new Settings();
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.quarternary;
 
         public FishMarket()
-          : base("FishMarket", "FMarket",
+          : base("Fish Market", "FMarket",
             "A place to lay out the solutions we caught.",
             "Params", "Tunny")
         {
@@ -88,7 +88,7 @@ namespace Tunny.Component
             int countY = 0;
             var arrayedGeometries = new GH_Structure<IGH_GeometricGoo>();
             _fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
-            var fishGeometries = _fishes.Select(x => x.Value.Geometries).ToList();
+            var fishGeometries = _fishes.Select(x => x.Value.GetGeometries()).ToList();
 
             while (true)
             {

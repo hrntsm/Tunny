@@ -203,15 +203,8 @@ namespace Tunny.Solver
                 Number = (int)trial.number,
                 Variables = ParseVariables(trial),
                 Objectives = (double[])trial.values,
-                GeometryJson = ParseGeometries(trial),
                 Attributes = ParseAttributes(trial),
             });
-        }
-
-        private static string[] ParseGeometries(dynamic trial)
-        {
-            string[] keys = (string[])trial.user_attrs.keys();
-            return keys.Contains("Geometry") ? (string[])trial.user_attrs["Geometry"] : (new string[0]);
         }
 
         private static Dictionary<string, double> ParseVariables(dynamic trial)
@@ -233,10 +226,6 @@ namespace Tunny.Solver
             string[] keys = (string[])trial.user_attrs.keys();
             for (int i = 0; i < keys.Length; i++)
             {
-                if (keys[i] == "Geometry")
-                {
-                    continue;
-                }
                 string[] values = (string[])trial.user_attrs[keys[i]];
                 attributes.Add(keys[i], values.ToList());
             }

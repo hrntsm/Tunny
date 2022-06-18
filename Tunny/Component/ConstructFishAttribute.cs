@@ -15,7 +15,7 @@ namespace Tunny.Component
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public ConstructFishAttribute()
-          : base("ConstructFishAttribute", "ConstrFA",
+          : base("Construct Fish Attribute", "ConstrFA",
             "Construct Fish Attribute.",
             "Params", "Tunny")
         {

@@ -76,7 +76,6 @@ namespace Tunny.Optimization
                 ModelNumber = model.Number,
                 Variables = SetVariables(model, nickname),
                 Objectives = SetObjectives(model),
-                Geometries = SetGeometries(model),
                 Attributes = SetAttributes(model),
             });
         }
@@ -105,28 +104,24 @@ namespace Tunny.Optimization
             return objectives;
         }
 
-        private static List<GeometryBase> SetGeometries(ModelResult model)
+        private static Dictionary<string, object> SetAttributes(ModelResult model)
         {
-            var geometries = new List<GeometryBase>();
-            if (model.GeometryJson.Length == 0)
-            {
-                return geometries;
-            }
-
-            foreach (string json in model.GeometryJson)
-            {
-                var geometry = Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase;
-                geometries.Add(geometry);
-            }
-            return geometries;
-        }
-
-        private static Dictionary<string, List<string>> SetAttributes(ModelResult model)
-        {
-            var attribute = new Dictionary<string, List<string>>();
+            var attribute = new Dictionary<string, object>();
             foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
             {
-                attribute.Add(attr.Key, attr.Value);
+                if (attr.Key == "Geometry")
+                {
+                    var geometries = new List<GeometryBase>();
+                    foreach (string json in attr.Value)
+                    {
+                        geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                    }
+                    attribute.Add(attr.Key, geometries);
+                }
+                else
+                {
+                    attribute.Add(attr.Key, attr.Value);
+                }
             }
             return attribute;
         }

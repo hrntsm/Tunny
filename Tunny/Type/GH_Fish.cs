@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 using GH_IO.Serialization;
 
 using Grasshopper.Kernel.Types;
+
+using Rhino.Geometry;
 
 namespace Tunny.Type
 {
@@ -60,17 +63,47 @@ namespace Tunny.Type
             sb.AppendLine("------------------------------------");
             sb.AppendLine("Attributes:");
             sb.AppendLine("------------------------------------");
-            bool hasGeometry = m_value.Geometries.Count != 0;
-            sb.AppendLine("  Include Geometry: " + hasGeometry);
 
-            foreach (KeyValuePair<string, List<string>> attr in m_value.Attributes)
+            foreach (KeyValuePair<string, object> attr in m_value.Attributes)
             {
                 string valueStrings = string.Empty;
-                foreach (string val in attr.Value)
+                if (attr.Key == "Geometry")
                 {
-                    valueStrings += val + ", ";
+                    List<GeometryBase> geometries = Value.GetGeometries();
+                    foreach (GeometryBase val in geometries)
+                    {
+                        string geomString = GeometryBaseToGoo(val);
+                        valueStrings += "\n    " + geomString;
+                    }
+                }
+                else
+                {
+                    var values = attr.Value as List<string>;
+                    foreach (string val in values)
+                    {
+                        valueStrings += val + ", ";
+                    }
                 }
                 sb.AppendLine("  " + attr.Key + ": " + valueStrings);
+            }
+        }
+
+        private string GeometryBaseToGoo(GeometryBase geometryBase)
+        {
+            switch (geometryBase)
+            {
+                case Mesh mesh:
+                    return new GH_Mesh(mesh).ToString();
+                case Curve curve:
+                    return new GH_Curve(curve).ToString();
+                case Brep brep:
+                    return new GH_Brep(brep).ToString();
+                case Surface surface:
+                    return new GH_Surface(surface).ToString();
+                case SubD subD:
+                    return new GH_SubD(subD).ToString();
+                default:
+                    throw new Exception("Tunny doesn't handle this type of geometry");
             }
         }
 

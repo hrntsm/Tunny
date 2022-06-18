@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -8,6 +7,8 @@ using System.Text;
 using GH_IO.Serialization;
 
 using Grasshopper.Kernel.Types;
+
+using Rhino.Geometry;
 
 namespace Tunny.Type
 {
@@ -51,21 +52,54 @@ namespace Tunny.Type
 
         public override string ToString()
         {
-            var text = new StringBuilder();
-            foreach (string key in Value.Keys)
+            var sb = new StringBuilder();
+            foreach (KeyValuePair<string, object> attr in Value)
             {
-                text.AppendLine($"{key}:");
-                if (Value[key] is IEnumerable iEnum)
+                string valueStrings = string.Empty;
+                switch (attr.Value)
                 {
-                    foreach (object item in iEnum)
-                        text.AppendLine($"  {item}");
+                    case List<object> obj:
+                        valueStrings = string.Join(", ", obj);
+                        break;
+                    case List<string> str:
+                        valueStrings = string.Join(", ", str);
+                        break;
+                    case List<GeometryBase> geo:
+                        valueStrings = string.Join(", ", GeometryBaseToGoo(geo));
+                        break;
                 }
-                else
+                sb.AppendLine("  " + attr.Key + ": " + valueStrings);
+            }
+            return sb.ToString();
+        }
+
+        private List<string> GeometryBaseToGoo(List<GeometryBase> geometryBase)
+        {
+            var list = new List<string>();
+            foreach (GeometryBase geo in geometryBase)
+            {
+                switch (geo)
                 {
-                    text.AppendLine($"  {Value[key]}");
+                    case Mesh mesh:
+                        list.Add(new GH_Mesh(mesh).ToString());
+                        break;
+                    case Curve curve:
+                        list.Add(new GH_Curve(curve).ToString());
+                        break;
+                    case Brep brep:
+                        list.Add(new GH_Brep(brep).ToString());
+                        break;
+                    case Surface surface:
+                        list.Add(new GH_Surface(surface).ToString());
+                        break;
+                    case SubD subD:
+                        list.Add(new GH_SubD(subD).ToString());
+                        break;
+                    default:
+                        throw new Exception("Tunny doesn't handle this type of geometry");
                 }
             }
-            return text.ToString();
+            return list;
         }
 
         public override bool CastFrom(object source)

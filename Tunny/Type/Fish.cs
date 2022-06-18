@@ -13,10 +13,21 @@ namespace Tunny.Type
     public class Fish
     {
         public int ModelNumber;
-        public List<GeometryBase> Geometries;
         public Dictionary<string, double> Variables;
         public Dictionary<string, double> Objectives;
-        public Dictionary<string, List<string>> Attributes;
+        public Dictionary<string, object> Attributes;
+
+        public List<GeometryBase> GetGeometries()
+        {
+            var geometries = new List<GeometryBase>();
+            if (Attributes == null)
+            {
+                return geometries;
+            }
+
+            bool hasGeometry = Attributes.ContainsKey("Geometry");
+            return hasGeometry ? Attributes["Geometry"] as List<GeometryBase> : geometries;
+        }
 
         public string SerializeToJson()
         {
