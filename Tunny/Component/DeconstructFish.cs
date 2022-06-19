@@ -6,10 +6,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
-using Rhino.Geometry;
-
 using Tunny.Type;
-using Tunny.Util;
 
 namespace Tunny.Component
 {
@@ -59,14 +56,13 @@ namespace Tunny.Component
                 {
                     objectives.Append(new GH_Number(objective.Value), path);
                 }
+
+                var attr = new GH_FishAttribute(new Dictionary<string, object>());
                 foreach (KeyValuePair<string, object> attribute in value.Attributes)
                 {
-                    var attr = new GH_FishAttribute(new Dictionary<string, object>()
-                    {
-                        { attribute.Key, attribute.Value }
-                    });
-                    attributes.Append(attr, path);
+                    attr.Value.Add(attribute.Key, attribute.Value);
                 }
+                attributes.Append(attr, path);
             }
 
             DA.SetDataTree(0, variables);
