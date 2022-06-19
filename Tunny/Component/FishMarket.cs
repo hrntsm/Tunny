@@ -88,10 +88,10 @@ namespace Tunny.Component
             int countY = 0;
             var arrayedGeometries = new GH_Structure<IGH_GeometricGoo>();
             _fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
-            var fishGeometries = _fishes.Select(x => x.Value.GetGeometries()).ToList();
 
             while (true)
             {
+                var fishGeometries = _fishes.Select(x => x.Value.GetGeometries()).ToList();
                 bool remainGeometry = SetGeometryToResultArray(countY, arrayedGeometries, fishGeometries);
                 if (!remainGeometry)
                 {
@@ -119,9 +119,10 @@ namespace Tunny.Component
                     Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);
                     foreach (GeometryBase geometry in fishGeometries[index])
                     {
-                        geometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
-                        geometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                        arrayedGeometries.Append(CreateGeometricGoo(geometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
+                        GeometryBase duplicateGeometry = geometry.Duplicate();
+                        duplicateGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
+                        duplicateGeometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
+                        arrayedGeometries.Append(CreateGeometricGoo(duplicateGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
                     }
                     _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
                 }
