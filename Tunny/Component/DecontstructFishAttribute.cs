@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
@@ -148,6 +149,30 @@ namespace Tunny.Component
                 _outputCount = Params.Output.Count;
                 ExpireSolution(true);
             }
+        }
+
+        protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu) => Menu_AppendItem(menu, "Match outputs", new EventHandler(Menu_AutoCreateTree_Clicked));
+
+        private void Menu_AutoCreateTree_Clicked(object sender, EventArgs e)
+        {
+            if (Params.Output.Count == _keys.Count)
+            {
+                return;
+            }
+            RecordUndoEvent("FishAttribute Match");
+            if (Params.Output.Count < _keys.Count)
+            {
+                while (Params.Output.Count < _keys.Count)
+                    Params.RegisterOutputParam(CreateParameter(GH_ParameterSide.Output, Params.Output.Count));
+            }
+            else if (Params.Output.Count > _keys.Count)
+            {
+                while (Params.Output.Count > _keys.Count)
+                    Params.UnregisterOutputParameter(Params.Output[Params.Output.Count - 1]);
+            }
+            Params.OnParametersChanged();
+            VariableParameterMaintenance();
+            ExpireSolution(true);
         }
 
         protected override System.Drawing.Bitmap Icon => null;
