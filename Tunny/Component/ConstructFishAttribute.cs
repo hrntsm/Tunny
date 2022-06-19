@@ -39,7 +39,6 @@ namespace Tunny.Component
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             int paramCount = Params.Input.Count;
-
             var dict = new Dictionary<string, object>();
 
             for (int i = 0; i < paramCount; i++)
