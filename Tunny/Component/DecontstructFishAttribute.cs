@@ -146,7 +146,6 @@ namespace Tunny.Component
             if (_outputCount != Params.Output.Count)
             {
                 _outputCount = Params.Output.Count;
-                _outputNames = Params.Output.Select(x => x.NickName).ToList();
                 ExpireSolution(true);
             }
         }
