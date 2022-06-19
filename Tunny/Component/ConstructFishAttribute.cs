@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
@@ -41,6 +42,12 @@ namespace Tunny.Component
             int paramCount = Params.Input.Count;
             var dict = new Dictionary<string, object>();
 
+            if (CheckIsNicknameDuplicated())
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Attribute nickname must be unique.");
+                return;
+            }
+
             for (int i = 0; i < paramCount; i++)
             {
                 var list = new List<object>();
@@ -55,15 +62,25 @@ namespace Tunny.Component
             DA.SetData(0, dict);
         }
 
-        public bool CanInsertParameter(GH_ParameterSide side, int index)
+        //FIXME: Should be modified to capture and check for change events.
+        private bool CheckIsNicknameDuplicated()
         {
-            return side == GH_ParameterSide.Input;
+            var nicknames = Params.Input.Select(x => x.NickName).ToList();
+            var hashSet = new HashSet<string>();
+
+            foreach (string nickname in nicknames)
+            {
+                if (hashSet.Add(nickname) == false)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index)
-        {
-            return side == GH_ParameterSide.Input;
-        }
+        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index != 0);
+
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index != 0;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
@@ -75,6 +92,7 @@ namespace Tunny.Component
                     p.Name = p.NickName = "Geometry";
                     p.Description = _geomDescription;
                     p.Access = GH_ParamAccess.list;
+                    p.MutableNickName = false;
                     p.Optional = true;
                     return p;
                 }
