@@ -240,9 +240,7 @@ namespace Tunny.Util
         private void Recalculate()
         {
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
-
             _document.NewSolution(true);
-
             while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
         }
 
@@ -250,6 +248,8 @@ namespace Tunny.Util
         {
             SetSliderValues(parameters);
             Recalculate();
+            SetObjectives();
+            SetAttributes();
         }
 
         public List<double> GetObjectiveValues()
