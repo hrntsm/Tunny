@@ -12,10 +12,10 @@ namespace Tunny.Type
     [Serializable]
     public class Fish
     {
-        public int ModelNumber;
-        public Dictionary<string, double> Variables;
-        public Dictionary<string, double> Objectives;
-        public Dictionary<string, object> Attributes;
+        public int ModelNumber { get; set; }
+        public Dictionary<string, double> Variables { get; set; }
+        public Dictionary<string, double> Objectives { get; set; }
+        public Dictionary<string, object> Attributes { get; set; }
 
         public List<GeometryBase> GetGeometries()
         {

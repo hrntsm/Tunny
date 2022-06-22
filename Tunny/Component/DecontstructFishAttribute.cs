@@ -16,7 +16,7 @@ namespace Tunny.Component
 {
     public class DeconstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
-        private int _outputCount = 0;
+        private int _outputCount;
         private List<string> _keys = new List<string>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
@@ -85,7 +85,7 @@ namespace Tunny.Component
             }
         }
 
-        private List<IGH_Goo> GetGooFromAttributeObject(object value)
+        private static List<IGH_Goo> GetGooFromAttributeObject(object value)
         {
             switch (value)
             {
@@ -113,7 +113,7 @@ namespace Tunny.Component
                 case SubD subD:
                     return new GH_SubD(subD);
                 default:
-                    throw new Exception("Tunny doesn't handle this type of geometry");
+                    throw new ArgumentException("Tunny doesn't handle this type of geometry");
             }
         }
 
@@ -123,7 +123,7 @@ namespace Tunny.Component
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
-            if (side == GH_ParameterSide.Output && _keys.Count() > index)
+            if (side == GH_ParameterSide.Output && _keys.Count > index)
             {
                 var p = new Param_GenericObject();
                 p.Name = p.NickName = _keys[index];

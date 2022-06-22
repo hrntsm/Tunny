@@ -18,7 +18,7 @@ namespace Tunny.Type
         {
         }
 
-        public GH_FishAttribute(Dictionary<string, object> internal_data) : base(internal_data)
+        public GH_FishAttribute(Dictionary<string, object> internalData) : base(internalData)
         {
         }
 
@@ -73,7 +73,7 @@ namespace Tunny.Type
             return sb.ToString();
         }
 
-        private List<string> GeometryBaseToGoo(List<GeometryBase> geometryBase)
+        private static List<string> GeometryBaseToGoo(List<GeometryBase> geometryBase)
         {
             var list = new List<string>();
             foreach (GeometryBase geo in geometryBase)
@@ -96,7 +96,7 @@ namespace Tunny.Type
                         list.Add(new GH_SubD(subD).ToString());
                         break;
                     default:
-                        throw new Exception("Tunny doesn't handle this type of geometry");
+                        throw new ArgumentException("Tunny doesn't handle this type of geometry");
                 }
             }
             return list;
@@ -113,19 +113,19 @@ namespace Tunny.Type
                 return false;
         }
 
-        public override bool CastTo<Q>(ref Q target)
+        public override bool CastTo<T>(ref T target)
         {
             target = default;
-            if (typeof(Q).IsAssignableFrom(typeof(Dictionary<string, object>)))
+            if (typeof(T).IsAssignableFrom(typeof(Dictionary<string, object>)))
             {
-                target = (Q)(object)Value;
+                target = (T)(object)Value;
                 return true;
             }
             else
                 return false;
         }
 
-        private Dictionary<string, object> FromBase64(string base64)
+        private static Dictionary<string, object> FromBase64(string base64)
         {
             byte[] bytes = Convert.FromBase64String(base64);
             using (var ms = new MemoryStream(bytes))
@@ -134,7 +134,7 @@ namespace Tunny.Type
             }
         }
 
-        private string ToBase64(Dictionary<string, object> value)
+        private static string ToBase64(Dictionary<string, object> value)
         {
             using (var ms = new MemoryStream())
             {

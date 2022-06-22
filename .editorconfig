@@ -362,3 +362,6 @@ dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
 
+# Additions
+dotnet_code_quality.ca1711.allowed_suffixes = Attribute
+dotnet_diagnostic.CA1707.severity = none

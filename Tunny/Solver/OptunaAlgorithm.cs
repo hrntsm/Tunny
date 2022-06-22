@@ -265,12 +265,12 @@ namespace Tunny.Solver
             );
         }
 
-        public double[] Get_XOptimum()
+        public double[] GetXOptimum()
         {
             return XOpt;
         }
 
-        public double[] Get_fxOptimum()
+        public double[] GetFxOptimum()
         {
             return FxOpt;
         }

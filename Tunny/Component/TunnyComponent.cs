@@ -13,7 +13,7 @@ using Tunny.Util;
 
 namespace Tunny.Component
 {
-    public partial class TunnyComponent : GH_Component
+    public partial class TunnyComponent : GH_Component, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
@@ -53,6 +53,21 @@ namespace Tunny.Component
             GhInOut = new GrasshopperInOut(this);
         }
 
+        public override void RemovedFromDocument(GH_Document document)
+        {
+            base.RemovedFromDocument(document);
+            OptimizationWindow.Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (OptimizationWindow != null)
+            {
+                OptimizationWindow.Dispose();
+            }
+            GC.SuppressFinalize(this);
+        }
+
         public override void CreateAttributes()
         {
             m_attributes = new TunnyAttributes(this);
@@ -76,7 +91,6 @@ namespace Tunny.Component
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;
-
         public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }

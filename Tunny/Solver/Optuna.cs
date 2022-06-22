@@ -37,7 +37,7 @@ namespace Tunny.Solver
             int dVar = variables.Count;
             double[] lb = new double[dVar];
             double[] ub = new double[dVar];
-            bool[] integer = new bool[dVar];
+            bool[] isInteger = new bool[dVar];
             string[] varNickName = new string[dVar];
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
@@ -45,7 +45,7 @@ namespace Tunny.Solver
             {
                 lb[i] = Convert.ToDouble(variables[i].LowerBond);
                 ub[i] = Convert.ToDouble(variables[i].UpperBond);
-                integer[i] = variables[i].Integer;
+                isInteger[i] = variables[i].IsInteger;
                 varNickName[i] = variables[i].NickName;
             }
 
@@ -59,8 +59,8 @@ namespace Tunny.Solver
             {
                 var tpe = new OptunaAlgorithm(lb, ub, varNickName, objNickName, settings, Eval);
                 tpe.Solve();
-                XOpt = tpe.Get_XOptimum();
-                FxOpt = tpe.Get_fxOptimum();
+                XOpt = tpe.GetXOptimum();
+                FxOpt = tpe.GetFxOptimum();
 
                 TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
 

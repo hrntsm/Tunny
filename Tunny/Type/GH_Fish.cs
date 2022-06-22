@@ -88,7 +88,7 @@ namespace Tunny.Type
             }
         }
 
-        private string GeometryBaseToGoo(GeometryBase geometryBase)
+        private static string GeometryBaseToGoo(GeometryBase geometryBase)
         {
             switch (geometryBase)
             {
@@ -103,7 +103,7 @@ namespace Tunny.Type
                 case SubD subD:
                     return new GH_SubD(subD).ToString();
                 default:
-                    throw new Exception("Tunny doesn't handle this type of geometry");
+                    throw new ArgumentException("Tunny doesn't handle this type of geometry");
             }
         }
 

@@ -26,13 +26,13 @@ namespace Tunny.Util
         private readonly TunnyComponent _component;
         private List<GalapagosGeneListObject> _genePool;
         private GH_FishAttribute _attributes;
-        public List<IGH_Param> Objectives;
-        public List<GH_NumberSlider> Sliders;
 
-        public readonly string ComponentFolder;
-        public List<Variable> Variables;
-        public string DocumentPath;
-        public string DocumentName;
+        public List<IGH_Param> Objectives { get; set; }
+        public List<GH_NumberSlider> Sliders { get; set; }
+        public string ComponentFolder { get; }
+        public List<Variable> Variables { get; set; }
+        public string DocumentPath { get; set; }
+        public string DocumentName { get; set; }
 
         public GrasshopperInOut(TunnyComponent component)
         {
@@ -232,7 +232,7 @@ namespace Tunny.Util
             return true;
         }
 
-        private decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
+        private static decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
         {
             return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
