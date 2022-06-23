@@ -48,29 +48,43 @@ namespace Tunny.Component
             {
                 Fish value = fish.Value;
                 var path = new GH_Path(0, value.ModelNumber);
-                foreach (KeyValuePair<string, double> variable in value.Variables)
-                {
-                    variables.Append(new GH_Number(variable.Value), path);
-                }
-                if (value.Objectives != null)
-                {
-                    foreach (KeyValuePair<string, double> objective in value.Objectives)
-                    {
-                        objectives.Append(new GH_Number(objective.Value), path);
-                    }
-                }
-
-                var attr = new GH_FishAttribute(new Dictionary<string, object>());
-                foreach (KeyValuePair<string, object> attribute in value.Attributes)
-                {
-                    attr.Value.Add(attribute.Key, attribute.Value);
-                }
-                attributes.Append(attr, path);
+                SetVariables(variables, value, path);
+                SetObjectives(objectives, value, path);
+                SetAttributes(attributes, value, path);
             }
 
             DA.SetDataTree(0, variables);
             DA.SetDataTree(1, objectives);
             DA.SetDataTree(2, attributes);
+        }
+
+        private static void SetVariables(GH_Structure<GH_Number> variables, Fish value, GH_Path path)
+        {
+            foreach (KeyValuePair<string, double> variable in value.Variables)
+            {
+                variables.Append(new GH_Number(variable.Value), path);
+            }
+        }
+
+        private static void SetObjectives(GH_Structure<GH_Number> objectives, Fish value, GH_Path path)
+        {
+            if (value.Objectives != null)
+            {
+                foreach (KeyValuePair<string, double> objective in value.Objectives)
+                {
+                    objectives.Append(new GH_Number(objective.Value), path);
+                }
+            }
+        }
+
+        private static void SetAttributes(GH_Structure<GH_FishAttribute> attributes, Fish value, GH_Path path)
+        {
+            var attr = new GH_FishAttribute(new Dictionary<string, object>());
+            foreach (KeyValuePair<string, object> attribute in value.Attributes)
+            {
+                attr.Value.Add(attribute.Key, attribute.Value);
+            }
+            attributes.Append(attr, path);
         }
 
         protected override System.Drawing.Bitmap Icon => null;

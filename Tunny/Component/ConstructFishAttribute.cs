@@ -84,32 +84,28 @@ namespace Tunny.Component
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
-            if (side == GH_ParameterSide.Input)
-            {
-                if (index == 0)
-                {
-                    var p = new Param_Geometry();
-                    p.Name = p.NickName = "Geometry";
-                    p.Description = _geomDescription;
-                    p.Access = GH_ParamAccess.list;
-                    p.MutableNickName = false;
-                    p.Optional = true;
-                    return p;
-                }
-                else
-                {
-                    var p = new Param_GenericObject();
-                    p.Name = p.NickName = $"Attr{index}";
-                    p.Description = _attrDescription;
-                    p.Access = GH_ParamAccess.list;
-                    p.Optional = true;
-                    return p;
-                }
-            }
-            else
-            {
-                return null;
-            }
+            return side == GH_ParameterSide.Input ? index == 0 ? SetGeometryParameterInput() : SetGenericParameterInput(index) : null;
+        }
+
+        private IGH_Param SetGenericParameterInput(int index)
+        {
+            var p = new Param_GenericObject();
+            p.Name = p.NickName = $"Attr{index}";
+            p.Description = _attrDescription;
+            p.Access = GH_ParamAccess.list;
+            p.Optional = true;
+            return p;
+        }
+
+        private IGH_Param SetGeometryParameterInput()
+        {
+            var p = new Param_Geometry();
+            p.Name = p.NickName = "Geometry";
+            p.Description = _geomDescription;
+            p.Access = GH_ParamAccess.list;
+            p.MutableNickName = false;
+            p.Optional = true;
+            return p;
         }
 
         public bool DestroyParameter(GH_ParameterSide side, int index)

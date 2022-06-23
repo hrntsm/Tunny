@@ -12,6 +12,7 @@ using Rhino.Geometry;
 
 using Tunny.Resources;
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Component
 {
@@ -119,34 +120,15 @@ namespace Tunny.Component
                     Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);
                     foreach (GeometryBase geometry in fishGeometries[index])
                     {
-                        GeometryBase duplicateGeometry = geometry.Duplicate();
-                        duplicateGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
-                        duplicateGeometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                        arrayedGeometries.Append(CreateGeometricGoo(duplicateGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
+                        GeometryBase dupGeometry = geometry.Duplicate();
+                        dupGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
+                        dupGeometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
+                        arrayedGeometries.Append(Converter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
                     }
                     _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
                 }
             }
             return true;
-        }
-
-        private static IGH_GeometricGoo CreateGeometricGoo(GeometryBase geometry)
-        {
-            switch (geometry)
-            {
-                case Mesh mesh:
-                    return new GH_Mesh(mesh);
-                case Curve curve:
-                    return new GH_Curve(curve);
-                case Brep brep:
-                    return new GH_Brep(brep);
-                case Surface surface:
-                    return new GH_Surface(surface);
-                case SubD subD:
-                    return new GH_SubD(subD);
-                default:
-                    throw new ArgumentException("Tunny only supports mesh, curve, brep, surface, subd, so convert it and enter it.");
-            }
         }
 
         private static Point3d GetUnionBoundingBoxMinPt(IEnumerable<GeometryBase> geometryBases)

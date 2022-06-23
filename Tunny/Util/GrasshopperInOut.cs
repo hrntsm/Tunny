@@ -300,45 +300,13 @@ namespace Tunny.Util
             {
                 if (param is IGH_Goo goo)
                 {
-                    json.Add(GHParamToString(goo, option));
+                    json.Add(Converter.GooToString(goo, true));
                 }
             }
 
             return json;
         }
 
-        private static string GHParamToString(IGH_Goo goo)
-        {
-            var option = new SerializationOptions();
-            return GHParamToString(goo, option);
-        }
-
-        private static string GHParamToString(IGH_Goo goo, SerializationOptions option)
-        {
-            string result;
-            switch (goo)
-            {
-                case GH_Mesh mesh:
-                    result = mesh.Value.ToJSON(option);
-                    break;
-                case GH_Brep brep:
-                    result = brep.Value.ToJSON(option);
-                    break;
-                case GH_Curve curve:
-                    result = curve.Value.ToJSON(option);
-                    break;
-                case GH_Surface surface:
-                    result = surface.Value.ToJSON(option);
-                    break;
-                case GH_SubD subd:
-                    result = subd.Value.ToJSON(option);
-                    break;
-                default:
-                    result = goo.ToString();
-                    break;
-            }
-            return result;
-        }
 
         public Dictionary<string, List<string>> GetAttributes()
         {
@@ -361,7 +329,7 @@ namespace Tunny.Util
                 {
                     if (param is IGH_Goo goo)
                     {
-                        value.Add(GHParamToString(goo));
+                        value.Add(Converter.GooToString(goo, true));
                     }
                 }
                 attrs.Add(key, value);

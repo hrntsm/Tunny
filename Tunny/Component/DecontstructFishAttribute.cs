@@ -11,6 +11,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Component
 {
@@ -47,27 +48,33 @@ namespace Tunny.Component
                 GH_Path path = fishAttributeStructure.Paths[i];
                 Dictionary<string, object> value = fishAttributeStructure.Branches[i][0].Value;
 
-                //FIXME: This process should be done once, but foreach executes it every time.
-                _keys = value.Keys.ToList();
-
-                foreach (KeyValuePair<string, object> pair in value)
-                {
-                    if (nicknames.Contains(pair.Key))
-                    {
-                        if (!outputValues.ContainsKey(pair.Key))
-                        {
-                            outputValues.Add(pair.Key, new GH_Structure<IGH_Goo>());
-                        }
-
-                        List<IGH_Goo> goo = GetGooFromAttributeObject(pair.Value);
-                        foreach (IGH_Goo g in goo)
-                        {
-                            outputValues[pair.Key].Append(g, path);
-                        }
-                    }
-                }
+                SetOutputValues(nicknames, outputValues, path, value);
             }
 
+            SetDataTreeToDataAccess(DA, nicknames, outputValues);
+        }
+
+        private void SetOutputValues(List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
+        {
+            //FIXME: This process should be done once, but foreach executes it every time.
+            _keys = value.Keys.ToList();
+            foreach (KeyValuePair<string, object> pair in value.Where(pair => nicknames.Contains(pair.Key)))
+            {
+                if (!outputValues.ContainsKey(pair.Key))
+                {
+                    outputValues.Add(pair.Key, new GH_Structure<IGH_Goo>());
+                }
+
+                List<IGH_Goo> goo = GetGooFromAttributeObject(pair.Value);
+                foreach (IGH_Goo g in goo)
+                {
+                    outputValues[pair.Key].Append(g, path);
+                }
+            }
+        }
+
+        private void SetDataTreeToDataAccess(IGH_DataAccess DA, List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues)
+        {
             if (Params.Output.Count == 0)
             {
                 return;
@@ -75,12 +82,9 @@ namespace Tunny.Component
 
             for (int i = 0; i < Params.Output.Count; i++)
             {
-                foreach (string nickName in nicknames)
+                foreach (string nickName in nicknames.Where(nickName => Params.Output[i].NickName == nickName))
                 {
-                    if (Params.Output[i].NickName == nickName)
-                    {
-                        DA.SetDataTree(i, outputValues[nickName]);
-                    }
+                    DA.SetDataTree(i, outputValues[nickName]);
                 }
             }
         }
@@ -92,28 +96,9 @@ namespace Tunny.Component
                 case List<string> str:
                     return str.Select(s => new GH_String(s)).Cast<IGH_Goo>().ToList();
                 case List<GeometryBase> geom:
-                    return geom.Select(g => CreateGeometricGoo(g)).Cast<IGH_Goo>().ToList();
+                    return geom.Select(g => Converter.GeometryBaseToGoo(g)).Cast<IGH_Goo>().ToList();
                 default:
                     return new List<IGH_Goo>();
-            }
-        }
-
-        private static IGH_GeometricGoo CreateGeometricGoo(GeometryBase geometry)
-        {
-            switch (geometry)
-            {
-                case Mesh mesh:
-                    return new GH_Mesh(mesh);
-                case Curve curve:
-                    return new GH_Curve(curve);
-                case Brep brep:
-                    return new GH_Brep(brep);
-                case Surface surface:
-                    return new GH_Surface(surface);
-                case SubD subD:
-                    return new GH_SubD(subD);
-                default:
-                    throw new ArgumentException("Tunny only supports mesh, curve, brep, surface, subd, so convert it and enter it.");
             }
         }
 

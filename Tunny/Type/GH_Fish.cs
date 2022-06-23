@@ -8,6 +8,8 @@ using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
 
+using Tunny.Util;
+
 namespace Tunny.Type
 {
     public class GH_Fish : GH_Goo<Fish>
@@ -66,45 +68,31 @@ namespace Tunny.Type
 
             foreach (KeyValuePair<string, object> attr in m_value.Attributes)
             {
-                string valueStrings = string.Empty;
-                if (attr.Key == "Geometry")
-                {
-                    List<GeometryBase> geometries = Value.GetGeometries();
-                    foreach (GeometryBase val in geometries)
-                    {
-                        string geomString = GeometryBaseToGoo(val);
-                        valueStrings += "\n    " + geomString;
-                    }
-                }
-                else
-                {
-                    var values = attr.Value as List<string>;
-                    foreach (string val in values)
-                    {
-                        valueStrings += val + ", ";
-                    }
-                }
-                sb.AppendLine("  " + attr.Key + ": " + valueStrings);
+                SetAttributeEachItem(sb, attr);
             }
         }
 
-        private static string GeometryBaseToGoo(GeometryBase geometryBase)
+        private void SetAttributeEachItem(StringBuilder sb, KeyValuePair<string, object> attr)
         {
-            switch (geometryBase)
+            string valueStrings = string.Empty;
+            if (attr.Key == "Geometry")
             {
-                case Mesh mesh:
-                    return new GH_Mesh(mesh).ToString();
-                case Curve curve:
-                    return new GH_Curve(curve).ToString();
-                case Brep brep:
-                    return new GH_Brep(brep).ToString();
-                case Surface surface:
-                    return new GH_Surface(surface).ToString();
-                case SubD subD:
-                    return new GH_SubD(subD).ToString();
-                default:
-                    throw new ArgumentException("Tunny doesn't handle this type of geometry");
+                List<GeometryBase> geometries = Value.GetGeometries();
+                foreach (GeometryBase geom in geometries)
+                {
+                    string geomString = Converter.GeometryBaseToGoo(geom).ToString();
+                    valueStrings += "\n    " + geomString;
+                }
             }
+            else
+            {
+                var values = attr.Value as List<string>;
+                foreach (string val in values)
+                {
+                    valueStrings += val + ", ";
+                }
+            }
+            sb.AppendLine("  " + attr.Key + ": " + valueStrings);
         }
 
         private void SetObjectives(StringBuilder sb)

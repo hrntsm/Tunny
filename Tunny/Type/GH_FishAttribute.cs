@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
@@ -9,6 +10,8 @@ using GH_IO.Serialization;
 using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
+
+using Tunny.Util;
 
 namespace Tunny.Type
 {
@@ -65,41 +68,13 @@ namespace Tunny.Type
                         valueStrings = string.Join(", ", str);
                         break;
                     case List<GeometryBase> geo:
-                        valueStrings = string.Join(", ", GeometryBaseToGoo(geo));
+                        IEnumerable<string> geometryStrings = geo.Select(g => Converter.GeometryBaseToGoo(g).ToString());
+                        valueStrings = string.Join(", ", geometryStrings);
                         break;
                 }
                 sb.AppendLine("  " + attr.Key + ": " + valueStrings);
             }
             return sb.ToString();
-        }
-
-        private static List<string> GeometryBaseToGoo(List<GeometryBase> geometryBase)
-        {
-            var list = new List<string>();
-            foreach (GeometryBase geo in geometryBase)
-            {
-                switch (geo)
-                {
-                    case Mesh mesh:
-                        list.Add(new GH_Mesh(mesh).ToString());
-                        break;
-                    case Curve curve:
-                        list.Add(new GH_Curve(curve).ToString());
-                        break;
-                    case Brep brep:
-                        list.Add(new GH_Brep(brep).ToString());
-                        break;
-                    case Surface surface:
-                        list.Add(new GH_Surface(surface).ToString());
-                        break;
-                    case SubD subD:
-                        list.Add(new GH_SubD(subD).ToString());
-                        break;
-                    default:
-                        throw new ArgumentException("Tunny doesn't handle this type of geometry");
-                }
-            }
-            return list;
         }
 
         public override bool CastFrom(object source)
