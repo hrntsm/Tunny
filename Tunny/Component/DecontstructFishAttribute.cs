@@ -113,7 +113,7 @@ namespace Tunny.Component
                 case SubD subD:
                     return new GH_SubD(subD);
                 default:
-                    throw new ArgumentException("Tunny doesn't handle this type of geometry");
+                    throw new ArgumentException("Tunny only supports mesh, curve, brep, surface, subd, so convert it and enter it.");
             }
         }
 
