@@ -112,9 +112,12 @@ namespace Tunny.Type
             sb.AppendLine("------------------------------------");
             sb.AppendLine("Objectives:");
             sb.AppendLine("------------------------------------");
-            foreach (KeyValuePair<string, double> objective in m_value.Objectives)
+            if (m_value.Objectives != null)
             {
-                sb.AppendLine("  \"" + objective.Key + "\": " + objective.Value);
+                foreach (KeyValuePair<string, double> objective in m_value.Objectives)
+                {
+                    sb.AppendLine("  \"" + objective.Key + "\": " + objective.Value);
+                }
             }
         }
 

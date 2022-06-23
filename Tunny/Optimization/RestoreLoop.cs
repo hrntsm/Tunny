@@ -97,6 +97,10 @@ namespace Tunny.Optimization
         {
             string[] nickNames = s_component.GhInOut.Objectives.Select(x => x.NickName).ToArray();
             var objectives = new Dictionary<string, double>();
+            if (model.Objectives == null)
+            {
+                return null;
+            }
             for (int i = 0; i < model.Objectives.Length; i++)
             {
                 objectives.Add(nickNames[i], model.Objectives[i]);

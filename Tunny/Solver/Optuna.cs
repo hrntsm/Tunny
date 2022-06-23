@@ -198,13 +198,17 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
-            modelResult.Add(new ModelResult()
+            var trialResult = new ModelResult()
             {
                 Number = (int)trial.number,
                 Variables = ParseVariables(trial),
                 Objectives = (double[])trial.values,
                 Attributes = ParseAttributes(trial),
-            });
+            };
+            if (trialResult.Objectives != null)
+            {
+                modelResult.Add(trialResult);
+            }
         }
 
         private static Dictionary<string, double> ParseVariables(dynamic trial)

@@ -27,6 +27,10 @@ namespace Tunny.Optimization
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
+            if (double.IsNaN(result[0]))
+            {
+                return;
+            }
             var decimalResults = result.Select(Convert.ToDecimal).ToList();
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;

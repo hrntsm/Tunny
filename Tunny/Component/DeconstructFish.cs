@@ -52,9 +52,12 @@ namespace Tunny.Component
                 {
                     variables.Append(new GH_Number(variable.Value), path);
                 }
-                foreach (KeyValuePair<string, double> objective in value.Objectives)
+                if (value.Objectives != null)
                 {
-                    objectives.Append(new GH_Number(objective.Value), path);
+                    foreach (KeyValuePair<string, double> objective in value.Objectives)
+                    {
+                        objectives.Append(new GH_Number(objective.Value), path);
+                    }
                 }
 
                 var attr = new GH_FishAttribute(new Dictionary<string, object>());
