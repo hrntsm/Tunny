@@ -106,7 +106,8 @@ namespace Tunny.Solver
                     }
                     catch
                     {
-                        break;
+                        // 多分ここでエラーが出てかってにsuccess になっているので もともと breakだったのものをcontinue に変えた
+                        continue;
                     }
                 }
 
