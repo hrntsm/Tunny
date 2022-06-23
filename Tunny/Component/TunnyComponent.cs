@@ -63,6 +63,7 @@ namespace Tunny.Component
         {
             if (OptimizationWindow != null)
             {
+                OptimizationWindow.BGDispose();
                 OptimizationWindow.Dispose();
             }
             GC.SuppressFinalize(this);

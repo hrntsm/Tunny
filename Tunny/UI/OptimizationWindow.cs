@@ -56,6 +56,12 @@ namespace Tunny.UI
             restoreBackgroundWorker.WorkerSupportsCancellation = true;
         }
 
+        public void BGDispose()
+        {
+            optimizeBackgroundWorker.Dispose();
+            restoreBackgroundWorker.Dispose();
+        }
+
         private void LoadSettingJson()
         {
             string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
@@ -106,14 +112,16 @@ namespace Tunny.UI
             ghCanvas?.EnableUI();
             SaveUIValues();
 
+            //TODO: use cancelAsync to stop the background worker safely
             if (optimizeBackgroundWorker != null)
             {
-                optimizeBackgroundWorker.CancelAsync();
+                // optimizeBackgroundWorker.CancelAsync();
+                optimizeBackgroundWorker.Dispose();
             }
-
             if (restoreBackgroundWorker != null)
             {
-                restoreBackgroundWorker.CancelAsync();
+                // restoreBackgroundWorker.CancelAsync();
+                restoreBackgroundWorker.Dispose();
             }
         }
 
