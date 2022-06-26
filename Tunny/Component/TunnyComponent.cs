@@ -56,7 +56,11 @@ namespace Tunny.Component
         public override void RemovedFromDocument(GH_Document document)
         {
             base.RemovedFromDocument(document);
-            OptimizationWindow.Dispose();
+            if (OptimizationWindow != null)
+            {
+                OptimizationWindow.BGDispose();
+                OptimizationWindow.Dispose();
+            }
         }
 
         public void Dispose()
