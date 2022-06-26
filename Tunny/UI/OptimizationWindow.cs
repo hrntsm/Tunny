@@ -115,12 +115,10 @@ namespace Tunny.UI
             //TODO: use cancelAsync to stop the background worker safely
             if (optimizeBackgroundWorker != null)
             {
-                // optimizeBackgroundWorker.CancelAsync();
                 optimizeBackgroundWorker.Dispose();
             }
             if (restoreBackgroundWorker != null)
             {
-                // restoreBackgroundWorker.CancelAsync();
                 restoreBackgroundWorker.Dispose();
             }
         }

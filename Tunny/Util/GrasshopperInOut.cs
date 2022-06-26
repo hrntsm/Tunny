@@ -43,16 +43,14 @@ namespace Tunny.Util
             SetInputs();
         }
 
-        private bool SetInputs()
+        private void SetInputs()
         {
             SetVariables();
             SetObjectives();
             SetAttributes();
-
-            return true;
         }
 
-        private bool SetVariables()
+        private void SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
             _genePool = new List<GalapagosGeneListObject>();
@@ -65,7 +63,6 @@ namespace Tunny.Util
             if (_inputGuids.Count == 0)
             {
                 TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
-                return false;
             }
 
             foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
@@ -85,7 +82,6 @@ namespace Tunny.Util
             SetInputSliderValues(variables);
             SetInputGenePoolValues(variables);
             Variables = variables;
-            return true;
         }
 
         private void SetInputSliderValues(ICollection<Variable> variables)
@@ -153,24 +149,21 @@ namespace Tunny.Util
         }
 
 
-        private bool SetObjectives()
+        private void SetObjectives()
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
                 TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
-                return false;
             }
 
             Objectives = _component.Params.Input[1].Sources.ToList();
-            return true;
         }
 
-        private bool SetAttributes()
+        private void SetAttributes()
         {
             if (_component.Params.Input[2].SourceCount == 0)
             {
                 _attributes = new GH_FishAttribute();
-                return false;
             }
 
             IGH_StructureEnumerator enumerator = _component.Params.Input[2].Sources[0].VolatileData.AllData(true);
@@ -182,8 +175,6 @@ namespace Tunny.Util
                     break;
                 }
             }
-
-            return true;
         }
 
         private bool SetSliderValues(IList<decimal> parameters)
@@ -288,7 +279,6 @@ namespace Tunny.Util
         public List<string> GetGeometryJson()
         {
             var json = new List<string>();
-            var option = new SerializationOptions();
 
             if (_attributes.Value == null || !_attributes.Value.ContainsKey("Geometry"))
             {

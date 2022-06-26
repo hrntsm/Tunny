@@ -74,14 +74,15 @@ namespace Tunny.Type
 
         private void SetAttributeEachItem(StringBuilder sb, KeyValuePair<string, object> attr)
         {
-            string valueStrings = string.Empty;
+            var valueStrings = new StringBuilder();
             if (attr.Key == "Geometry")
             {
                 List<GeometryBase> geometries = Value.GetGeometries();
                 foreach (GeometryBase geom in geometries)
                 {
                     string geomString = Converter.GeometryBaseToGoo(geom).ToString();
-                    valueStrings += "\n    " + geomString;
+                    valueStrings.Append("\n    ");
+                    valueStrings.Append(geomString);
                 }
             }
             else
@@ -89,10 +90,11 @@ namespace Tunny.Type
                 var values = attr.Value as List<string>;
                 foreach (string val in values)
                 {
-                    valueStrings += val + ", ";
+                    valueStrings.Append(val);
+                    valueStrings.Append(", ");
                 }
             }
-            sb.AppendLine("  " + attr.Key + ": " + valueStrings);
+            sb.AppendLine("  " + attr.Key + ": " + valueStrings.ToString());
         }
 
         private void SetObjectives(StringBuilder sb)

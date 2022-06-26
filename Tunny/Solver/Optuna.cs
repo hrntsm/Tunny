@@ -198,7 +198,7 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
-            var trialResult = new ModelResult()
+            var trialResult = new ModelResult
             {
                 Number = (int)trial.number,
                 Variables = ParseVariables(trial),

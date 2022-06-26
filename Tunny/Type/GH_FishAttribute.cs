@@ -32,10 +32,7 @@ namespace Tunny.Type
         public override bool IsValid => Value != null;
         public override string TypeName => "FishAttribute";
         public override string TypeDescription => "DictionaryGoo for grasshopper";
-        public override IGH_Goo Duplicate()
-        {
-            return new GH_FishAttribute() { Value = Value };
-        }
+        public override IGH_Goo Duplicate() => new GH_FishAttribute { Value = Value };
 
         public override bool Read(GH_IReader reader)
         {
@@ -71,6 +68,8 @@ namespace Tunny.Type
                         IEnumerable<string> geometryStrings = geo.Select(g => Converter.GeometryBaseToGoo(g).ToString());
                         valueStrings = string.Join(", ", geometryStrings);
                         break;
+                    default:
+                        throw new ArgumentException($"Unsupported type: {attr.Value.GetType()}");
                 }
                 sb.AppendLine("  " + attr.Key + ": " + valueStrings);
             }
@@ -85,7 +84,9 @@ namespace Tunny.Type
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         public override bool CastTo<T>(ref T target)

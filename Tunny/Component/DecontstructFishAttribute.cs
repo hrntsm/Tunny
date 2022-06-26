@@ -36,6 +36,7 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+            // No output parameters
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -149,12 +150,16 @@ namespace Tunny.Component
             if (Params.Output.Count < _keys.Count)
             {
                 while (Params.Output.Count < _keys.Count)
+                {
                     Params.RegisterOutputParam(CreateParameter(GH_ParameterSide.Output, Params.Output.Count));
+                }
             }
             else if (Params.Output.Count > _keys.Count)
             {
                 while (Params.Output.Count > _keys.Count)
+                {
                     Params.UnregisterOutputParameter(Params.Output[Params.Output.Count - 1]);
+                }
             }
             Params.OnParametersChanged();
             VariableParameterMaintenance();
