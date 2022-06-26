@@ -6,3 +6,7 @@
   - https://icooon-mono.com/15801-%e3%83%9e%e3%82%b0%e3%83%ad%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b31/
 - FishMarket Icon
   - https://icon-rainbow.com/%e3%81%be%e3%81%90%e3%82%8d%e3%81%ae%e7%84%a1%e6%96%99%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b3%e7%b4%a0%e6%9d%90-1/
+- Attribute gear
+  - https://icooon-mono.com/14476-%E6%AD%AF%E8%BB%8A%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B310/
+- Deconstruct Fire
+  - https://icooon-mono.com/13073-fire-icon/?lang=en

@@ -4,6 +4,8 @@ using System.Drawing;
 
 using Grasshopper.Kernel;
 
+using Tunny.Resources;
+
 namespace Tunny.Type
 {
     public class Param_FishAttribute : GH_PersistentParam<GH_FishAttribute>
@@ -19,7 +21,7 @@ namespace Tunny.Type
 
         protected override GH_GetterResult Prompt_Singular(ref GH_FishAttribute value) => GH_GetterResult.success;
         protected override GH_GetterResult Prompt_Plural(ref List<GH_FishAttribute> values) => GH_GetterResult.success;
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.ParamFishAttribute;
         public override Guid ComponentGuid => new Guid("bfbd03eb-492d-4c57-8311-e7452d78a78e");
     }
 }

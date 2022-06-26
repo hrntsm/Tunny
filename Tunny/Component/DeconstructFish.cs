@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Tunny.Resources;
 using Tunny.Type;
 
 namespace Tunny.Component
@@ -87,7 +88,7 @@ namespace Tunny.Component
             attributes.Append(attr, path);
         }
 
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Resource.DeconstructFish;
         public override Guid ComponentGuid => new Guid("1D0EA5A9-9499-4D70-8505-6AB4B05889F4");
     }
 }

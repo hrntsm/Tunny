@@ -10,6 +10,7 @@ using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
 
+using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
 
@@ -160,7 +161,7 @@ namespace Tunny.Component
             ExpireSolution(true);
         }
 
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Resource.DeconstructFishAttribute;
         public override Guid ComponentGuid => new Guid("D3B7B64A-71BA-41BE-9B2E-B0F459886B36");
     }
 }
