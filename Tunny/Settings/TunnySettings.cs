@@ -6,7 +6,7 @@ namespace Tunny.Settings
 {
     public class TunnySettings
     {
-        public string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        public string Version { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         public Optimize Optimize { get; set; } = new Optimize();
         public Result Result { get; set; } = new Result();
         public string StudyName { get; set; } = "study1";

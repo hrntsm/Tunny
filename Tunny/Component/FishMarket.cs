@@ -10,8 +10,9 @@ using Grasshopper.Kernel.Types;
 using Rhino.Display;
 using Rhino.Geometry;
 
-using Tunny.GHType;
 using Tunny.Resources;
+using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Component
 {
@@ -22,12 +23,12 @@ namespace Tunny.Component
         private double _size = 1;
         private Settings _settings = new Settings();
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.quarternary;
 
         public FishMarket()
-          : base("FishMarket", "FMarket",
-                 "A place to lay out the solutions we caught.",
-                 "Params", "Tunny")
+          : base("Fish Market", "FMarket",
+            "A place to lay out the solutions we caught.",
+            "Params", "Tunny")
         {
         }
 
@@ -80,6 +81,7 @@ namespace Tunny.Component
                 return;
             }
             DA.SetDataTree(0, ArrayedGeometries(fishObjects));
+            ExpirePreview(true);
         }
 
         private GH_Structure<IGH_GeometricGoo> ArrayedGeometries(IEnumerable<object> fishObjects)
@@ -87,10 +89,10 @@ namespace Tunny.Component
             int countY = 0;
             var arrayedGeometries = new GH_Structure<IGH_GeometricGoo>();
             _fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
-            var fishGeometries = _fishes.Select(x => x.Value.Geometries).ToList();
 
             while (true)
             {
+                var fishGeometries = _fishes.Select(x => x.Value.GetGeometries()).ToList();
                 bool remainGeometry = SetGeometryToResultArray(countY, arrayedGeometries, fishGeometries);
                 if (!remainGeometry)
                 {
@@ -118,33 +120,15 @@ namespace Tunny.Component
                     Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);
                     foreach (GeometryBase geometry in fishGeometries[index])
                     {
-                        geometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
-                        geometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                        arrayedGeometries.Append(CreateGeometricGoo(geometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
+                        GeometryBase dupGeometry = geometry.Duplicate();
+                        dupGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
+                        dupGeometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
+                        arrayedGeometries.Append(Converter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
                     }
                     _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
                 }
             }
             return true;
-        }
-
-        private static IGH_GeometricGoo CreateGeometricGoo(GeometryBase geometry)
-        {
-            switch (geometry)
-            {
-                case Mesh mesh:
-                    return new GH_Mesh(mesh);
-                case Curve curve:
-                    return new GH_Curve(curve);
-                case Brep brep:
-                    return new GH_Brep(brep);
-                case Surface surface:
-                    return new GH_Surface(surface);
-                case SubD subD:
-                    return new GH_SubD(subD);
-                default:
-                    throw new Exception("Tunny doesn't handle this type of geometry");
-            }
         }
 
         private static Point3d GetUnionBoundingBoxMinPt(IEnumerable<GeometryBase> geometryBases)

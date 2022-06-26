@@ -2,16 +2,16 @@ namespace Tunny.Util
 {
     public struct Variable
     {
-        public readonly decimal LowerBond;
-        public readonly decimal UpperBond;
-        public readonly bool Integer;
-        public readonly string NickName;
+        public decimal LowerBond { get; }
+        public decimal UpperBond { get; }
+        public bool IsInteger { get; }
+        public string NickName { get; }
 
-        public Variable(decimal lowerBond, decimal upperBond, bool integer, string nickName)
+        public Variable(decimal lowerBond, decimal upperBond, bool isInteger, string nickName)
         {
             LowerBond = lowerBond;
             UpperBond = upperBond;
-            Integer = integer;
+            IsInteger = isInteger;
             NickName = nickName;
         }
     }

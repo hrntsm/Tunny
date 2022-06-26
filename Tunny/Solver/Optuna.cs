@@ -37,7 +37,7 @@ namespace Tunny.Solver
             int dVar = variables.Count;
             double[] lb = new double[dVar];
             double[] ub = new double[dVar];
-            bool[] integer = new bool[dVar];
+            bool[] isInteger = new bool[dVar];
             string[] varNickName = new string[dVar];
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
@@ -45,7 +45,7 @@ namespace Tunny.Solver
             {
                 lb[i] = Convert.ToDouble(variables[i].LowerBond);
                 ub[i] = Convert.ToDouble(variables[i].UpperBond);
-                integer[i] = variables[i].Integer;
+                isInteger[i] = variables[i].IsInteger;
                 varNickName[i] = variables[i].NickName;
             }
 
@@ -59,8 +59,8 @@ namespace Tunny.Solver
             {
                 var tpe = new OptunaAlgorithm(lb, ub, varNickName, objNickName, settings, Eval);
                 tpe.Solve();
-                XOpt = tpe.Get_XOptimum();
-                FxOpt = tpe.Get_fxOptimum();
+                XOpt = tpe.GetXOptimum();
+                FxOpt = tpe.GetFxOptimum();
 
                 TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
 
@@ -198,21 +198,43 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
+            var trialResult = new ModelResult
+            {
+                Number = (int)trial.number,
+                Variables = ParseVariables(trial),
+                Objectives = (double[])trial.values,
+                Attributes = ParseAttributes(trial),
+            };
+            if (trialResult.Objectives != null)
+            {
+                modelResult.Add(trialResult);
+            }
+        }
+
+        private static Dictionary<string, double> ParseVariables(dynamic trial)
+        {
+            var variables = new Dictionary<string, double>();
             double[] values = (double[])trial.@params.values();
             string[] keys = (string[])trial.@params.keys();
-            var variables = new Dictionary<string, double>();
             for (int i = 0; i < keys.Length; i++)
             {
                 variables.Add(keys[i], values[i]);
             }
 
-            modelResult.Add(new ModelResult()
+            return variables;
+        }
+
+        private static Dictionary<string, List<string>> ParseAttributes(dynamic trial)
+        {
+            var attributes = new Dictionary<string, List<string>>();
+            string[] keys = (string[])trial.user_attrs.keys();
+            for (int i = 0; i < keys.Length; i++)
             {
-                Number = (int)trial.number,
-                GeometryJson = (string[])trial.user_attrs["geometry"],
-                Variables = variables,
-                Objectives = (double[])trial.values,
-            });
+                string[] values = (string[])trial.user_attrs[keys[i]];
+                attributes.Add(keys[i], values.ToList());
+            }
+
+            return attributes;
         }
     }
 }

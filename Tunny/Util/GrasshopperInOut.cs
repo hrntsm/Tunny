@@ -14,6 +14,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.FileIO;
 
 using Tunny.Component;
+using Tunny.Type;
 using Tunny.UI;
 
 namespace Tunny.Util
@@ -24,14 +25,14 @@ namespace Tunny.Util
         private readonly List<Guid> _inputGuids;
         private readonly TunnyComponent _component;
         private List<GalapagosGeneListObject> _genePool;
-        private List<IGH_Param> _geometries;
-        public List<IGH_Param> Objectives;
-        public List<GH_NumberSlider> Sliders;
+        private GH_FishAttribute _attributes;
 
-        public readonly string ComponentFolder;
-        public List<Variable> Variables;
-        public string DocumentPath;
-        public string DocumentName;
+        public List<IGH_Param> Objectives { get; set; }
+        public List<GH_NumberSlider> Sliders { get; set; }
+        public string ComponentFolder { get; }
+        public List<Variable> Variables { get; set; }
+        public string DocumentPath { get; set; }
+        public string DocumentName { get; set; }
 
         public GrasshopperInOut(TunnyComponent component)
         {
@@ -42,16 +43,14 @@ namespace Tunny.Util
             SetInputs();
         }
 
-        private bool SetInputs()
+        private void SetInputs()
         {
             SetVariables();
             SetObjectives();
-            SetModelGeometries();
-
-            return true;
+            SetAttributes();
         }
 
-        private bool SetVariables()
+        private void SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
             _genePool = new List<GalapagosGeneListObject>();
@@ -64,7 +63,6 @@ namespace Tunny.Util
             if (_inputGuids.Count == 0)
             {
                 TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
-                return false;
             }
 
             foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
@@ -84,7 +82,6 @@ namespace Tunny.Util
             SetInputSliderValues(variables);
             SetInputGenePoolValues(variables);
             Variables = variables;
-            return true;
         }
 
         private void SetInputSliderValues(ICollection<Variable> variables)
@@ -152,28 +149,32 @@ namespace Tunny.Util
         }
 
 
-        private bool SetObjectives()
+        private void SetObjectives()
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
                 TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
-                return false;
             }
 
             Objectives = _component.Params.Input[1].Sources.ToList();
-            return true;
         }
 
-        private bool SetModelGeometries()
+        private void SetAttributes()
         {
             if (_component.Params.Input[2].SourceCount == 0)
             {
-                _geometries = new List<IGH_Param>();
-                return false;
+                _attributes = new GH_FishAttribute();
             }
 
-            _geometries = _component.Params.Input[2].Sources.ToList();
-            return true;
+            IGH_StructureEnumerator enumerator = _component.Params.Input[2].Sources[0].VolatileData.AllData(true);
+            foreach (IGH_Goo goo in enumerator)
+            {
+                if (goo is GH_FishAttribute fishAttr)
+                {
+                    _attributes = fishAttr;
+                    break;
+                }
+            }
         }
 
         private bool SetSliderValues(IList<decimal> parameters)
@@ -222,7 +223,7 @@ namespace Tunny.Util
             return true;
         }
 
-        private decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
+        private static decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
         {
             return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
@@ -230,9 +231,7 @@ namespace Tunny.Util
         private void Recalculate()
         {
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
-
             _document.NewSolution(true);
-
             while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
         }
 
@@ -240,6 +239,8 @@ namespace Tunny.Util
         {
             SetSliderValues(parameters);
             Recalculate();
+            SetObjectives();
+            SetAttributes();
         }
 
         public List<double> GetObjectiveValues()
@@ -278,48 +279,53 @@ namespace Tunny.Util
         public List<string> GetGeometryJson()
         {
             var json = new List<string>();
-            var option = new SerializationOptions();
 
-            if (_geometries.Count == 0)
+            if (_attributes.Value == null || !_attributes.Value.ContainsKey("Geometry"))
             {
                 return json;
             }
 
-            foreach (IGH_Param param in _geometries)
+            var geometries = _attributes.Value["Geometry"] as List<object>;
+            foreach (object param in geometries)
             {
-                IGH_StructureEnumerator ghEnumerator = param.VolatileData.AllData(true);
-
-                foreach (IGH_Goo goo in ghEnumerator)
+                if (param is IGH_Goo goo)
                 {
-                    AddEachGHParamToJson(json, option, goo);
+                    json.Add(Converter.GooToString(goo, true));
                 }
             }
 
             return json;
         }
 
-        private static void AddEachGHParamToJson(List<string> json, SerializationOptions option, IGH_Goo goo)
+
+        public Dictionary<string, List<string>> GetAttributes()
         {
-            switch (goo)
+            var attrs = new Dictionary<string, List<string>>();
+            if (_attributes.Value == null)
             {
-                case GH_Mesh mesh:
-                    json.Add(mesh.Value.ToJSON(option));
-                    break;
-                case GH_Brep brep:
-                    json.Add(brep.Value.ToJSON(option));
-                    break;
-                case GH_Curve curve:
-                    json.Add(curve.Value.ToJSON(option));
-                    break;
-                case GH_Surface surface:
-                    json.Add(surface.Value.ToJSON(option));
-                    break;
-                case GH_SubD subd:
-                    json.Add(subd.Value.ToJSON(option));
-                    break;
-                default:
-                    throw new Exception("Tunny doesn't handle this type of geometry");
+                return attrs;
             }
+
+            foreach (string key in _attributes.Value.Keys)
+            {
+                if (key == "Geometry")
+                {
+                    continue;
+                }
+
+                var value = new List<string>();
+                var objList = _attributes.Value[key] as List<object>;
+                foreach (object param in objList)
+                {
+                    if (param is IGH_Goo goo)
+                    {
+                        value.Add(Converter.GooToString(goo, true));
+                    }
+                }
+                attrs.Add(key, value);
+            }
+
+            return attrs;
         }
     }
 }

@@ -27,6 +27,10 @@ namespace Tunny.Optimization
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
+            if (double.IsNaN(result[0]))
+            {
+                return;
+            }
             var decimalResults = result.Select(Convert.ToDecimal).ToList();
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
@@ -69,7 +73,8 @@ namespace Tunny.Optimization
             var result = new EvaluatedGHResult
             {
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
-                GeometryJson = s_component.GhInOut.GetGeometryJson()
+                GeometryJson = s_component.GhInOut.GetGeometryJson(),
+                Attribute = s_component.GhInOut.GetAttributes()
             };
             return result;
         }

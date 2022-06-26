@@ -99,14 +99,13 @@ namespace Tunny.Solver
                         }
                     }
 
-                    SetTrialUserAttrToGeometry(result, trial);
+                    SetTrialUserAttr(result, trial);
                     try
                     {
                         study.tell(trial, result.ObjectiveValues.ToArray());
                     }
                     catch
                     {
-                        break;
                     }
                 }
 
@@ -144,7 +143,7 @@ namespace Tunny.Solver
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
-        private static void SetTrialUserAttrToGeometry(EvaluatedGHResult result, dynamic trial)
+        private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial)
         {
             if (result.GeometryJson.Count != 0)
             {
@@ -153,7 +152,20 @@ namespace Tunny.Solver
                 {
                     pyJson.Append(new PyString(json));
                 }
-                trial.set_user_attr("geometry", pyJson);
+                trial.set_user_attr("Geometry", pyJson);
+            }
+
+            if (result.Attribute != null)
+            {
+                foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+                {
+                    var pyList = new PyList();
+                    foreach (string str in pair.Value)
+                    {
+                        pyList.Append(new PyString(str));
+                    }
+                    trial.set_user_attr(pair.Key, pyList);
+                }
             }
         }
 
@@ -252,12 +264,12 @@ namespace Tunny.Solver
             );
         }
 
-        public double[] Get_XOptimum()
+        public double[] GetXOptimum()
         {
             return XOpt;
         }
 
-        public double[] Get_fxOptimum()
+        public double[] GetFxOptimum()
         {
             return FxOpt;
         }

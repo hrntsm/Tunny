@@ -9,9 +9,9 @@ namespace Tunny.Settings
         public double? Sigma0 { get; set; }
         public int NStartupTrials { get; set; } = 1;
         public bool WarnIndependentSampling { get; set; } = true;
-        public bool ConsiderPrunedTrials { get; set; } = false;
+        public bool ConsiderPrunedTrials { get; set; }
         public string RestartStrategy { get; set; }
         public int IncPopsize { get; set; } = 2;
-        public bool UseSeparableCma { get; set; } = false;
+        public bool UseSeparableCma { get; set; }
     }
 }

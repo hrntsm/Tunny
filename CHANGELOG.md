@@ -11,10 +11,26 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Component CI build to get easily development build.
+  - If you want to dogfooding, go right ahead!
+- Param_FishAttribute component
+- Construct Fish Attribute component
+  - Component that creates attribute information to be attached to each trial of optimization
+- Deconstruct Fish component
+  - Component that separates optimization results into Variables, Objectives, and Attributes
+- Deconstruct Fish Attribute component
+  - Components that output each attribute
+
+### Changed
+
+- The output of the Tunny component is made into Fish, a type that summarizes the results.
+- The Geometry input of the Tunny component has been changed to Attribute to allow more attribute information to be handled.
+- When restoring the results from Tunny component as Fishes, those that the trial did not work and Objective could not get are not output.
 
 ### Fix
 
 - Stopped sampling when there was no geometry input
+- Once optimize output error, the component won't run again
+  - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
 
 ## [0.3.0] -2022-05-03
 

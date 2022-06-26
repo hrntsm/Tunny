@@ -8,7 +8,7 @@ namespace Tunny.Util
 {
     public static class PythonInstaller
     {
-        public static string Path = ".";
+        public static string Path { get; set; } = ".";
         public static void Run(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
