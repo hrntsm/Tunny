@@ -69,7 +69,8 @@ namespace Tunny.Type
                         valueStrings = string.Join(", ", geometryStrings);
                         break;
                     default:
-                        throw new ArgumentException($"Unsupported type: {attr.Value.GetType()}");
+                        valueStrings = attr.Value.ToString();
+                        break;
                 }
                 sb.AppendLine("  " + attr.Key + ": " + valueStrings);
             }
@@ -98,7 +99,9 @@ namespace Tunny.Type
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         private static Dictionary<string, object> FromBase64(string base64)

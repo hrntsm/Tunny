@@ -94,7 +94,7 @@ namespace Tunny.Type
                     valueStrings.Append(", ");
                 }
             }
-            sb.AppendLine("  " + attr.Key + ": " + valueStrings.ToString());
+            sb.AppendLine("  " + attr.Key + ": " + valueStrings);
         }
 
         private void SetObjectives(StringBuilder sb)
