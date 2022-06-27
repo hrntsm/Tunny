@@ -15,7 +15,7 @@ namespace Tunny.Type
         public Param_FishAttribute()
           : base("Fish Attribute", "FishAttr",
             "Attribute information to be added to each trial of optimization.",
-            "Params", "Tunny")
+            "Tunny", "Tunny")
         {
         }
 

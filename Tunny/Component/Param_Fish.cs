@@ -15,7 +15,7 @@ namespace Tunny.Component
         public Param_Fish()
           : base("Fish", "Fish",
             "Fish caught by the optimization nets",
-            "Params", "Tunny")
+            "Tunny", "Tunny")
         {
         }
 

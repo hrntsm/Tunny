@@ -63,6 +63,7 @@ namespace Tunny.Util
             if (_inputGuids.Count == 0)
             {
                 TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
+                return;
             }
 
             foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
@@ -154,6 +155,7 @@ namespace Tunny.Util
             if (_component.Params.Input[1].SourceCount == 0)
             {
                 TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
+                return;
             }
 
             Objectives = _component.Params.Input[1].Sources.ToList();
@@ -164,6 +166,7 @@ namespace Tunny.Util
             if (_component.Params.Input[2].SourceCount == 0)
             {
                 _attributes = new GH_FishAttribute();
+                return;
             }
 
             IGH_StructureEnumerator enumerator = _component.Params.Input[2].Sources[0].VolatileData.AllData(true);

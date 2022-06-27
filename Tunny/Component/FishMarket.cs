@@ -28,7 +28,7 @@ namespace Tunny.Component
         public FishMarket()
           : base("Fish Market", "FMarket",
             "A place to lay out the solutions we caught.",
-            "Params", "Tunny")
+            "Tunny", "Tunny")
         {
         }
 
