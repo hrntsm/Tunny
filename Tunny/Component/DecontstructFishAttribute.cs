@@ -25,7 +25,7 @@ namespace Tunny.Component
         public DeconstructFishAttribute()
           : base("Deconstruct Fish Attribute", "DeconFA",
               "Deconstruct Fish Attribute.",
-              "Params", "Tunny")
+              "Tunny", "Tunny")
         {
         }
 

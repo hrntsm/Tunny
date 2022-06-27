@@ -19,7 +19,7 @@ namespace Tunny.Component
         public ConstructFishAttribute()
           : base("Construct Fish Attribute", "ConstrFA",
             "Construct Fish Attribute.",
-            "Params", "Tunny")
+            "Tunny", "Tunny")
         {
         }
 

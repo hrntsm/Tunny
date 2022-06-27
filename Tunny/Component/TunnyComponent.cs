@@ -24,7 +24,7 @@ namespace Tunny.Component
         public TunnyComponent()
           : base("Tunny", "Tunny",
             "Tunny is an optimization component wrapped in optuna.",
-            "Params", "Tunny")
+            "Tunny", "Tunny")
         {
         }
 
