@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 using Python.Included;
@@ -69,21 +71,17 @@ namespace Tunny.Util
 
         private static string[] GetTunnyPackageList()
         {
-            return new[]
+            string line = string.Empty;
+            var pipPackages = new List<string>();
+
+            using (var sr = new StreamReader("./Lib/requirements.txt"))
             {
-                "alembic",    "attrs",    "autopage",
-                "bottle",     "cliff",    "cmaes",
-                "cmd2",       "colorama", "colorlog",
-                "greenlet",   "joblib",   "Mako",
-                "MarkupSafe", "numpy",    "optuna",
-                "optuna-dashboard",       "packaging",
-                "pbr",        "plotly",   "prettytable",
-                "pyparsing",  "pyperclip","pyreadline3",
-                "PyYAML",     "scikit-learn",
-                "scipy",      "six",      "sklearn",
-                "SQLAlchemy", "stevedore","tenacity",
-                "threadpoolctl", "tqdm", "wcwidth",
-            };
+                while ((line = sr.ReadLine()) != null)
+                {
+                    pipPackages.Add(line);
+                }
+            }
+            return pipPackages.ToArray();
         }
     }
 }
