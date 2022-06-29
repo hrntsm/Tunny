@@ -103,9 +103,9 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap ParamFishAttribute {
+        internal static System.Drawing.Bitmap ParamFish {
             get {
-                object obj = ResourceManager.GetObject("ParamFishAttribute", resourceCulture);
+                object obj = ResourceManager.GetObject("ParamFish", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap ParamFishIcon {
+        internal static System.Drawing.Bitmap ParamFishAttribute {
             get {
-                object obj = ResourceManager.GetObject("ParamFishIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("ParamFishAttribute", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
