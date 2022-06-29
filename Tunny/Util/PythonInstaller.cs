@@ -32,7 +32,7 @@ namespace Tunny.Util
         {
             for (int i = 0; i < packageList.Length; i++)
             {
-                string packageName = packageList[i] == "plotly"
+                string packageName = packageList[i].Split('=')[0] == "plotly"
                     ? packageList[i] + "... This package will take time to install. Please wait"
                     : packageList[i];
                 worker.ReportProgress((i + 2) * 100 / installItems, "Now installing " + packageName + "...");
@@ -43,7 +43,7 @@ namespace Tunny.Util
         internal static bool CheckPackagesIsInstalled()
         {
             Installer.InstallPath = Path;
-            string[] packageList = GetTunnyPackageList();
+            string[] packageList = GetTunnyPackageList().Select(s => s.Split('=')[0]).ToArray();
             if (!Installer.IsPythonInstalled())
             {
                 return false;
@@ -74,7 +74,7 @@ namespace Tunny.Util
             string line = string.Empty;
             var pipPackages = new List<string>();
 
-            using (var sr = new StreamReader("./Lib/requirements.txt"))
+            using (var sr = new StreamReader(Path + "/Lib/requirements.txt"))
             {
                 while ((line = sr.ReadLine()) != null)
                 {
