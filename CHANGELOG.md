@@ -19,6 +19,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Component that separates optimization results into Variables, Objectives, and Attributes
 - Deconstruct Fish Attribute component
   - Components that output each attribute
+- Python package licenses to clearly state the license of each package.
+- requirements.txt file to avoid conflict python packages versions.
 
 ### Changed
 
