@@ -54,8 +54,8 @@ namespace Tunny.Util
             }
             foreach (string package in packageList)
             {
-                string[] aa = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl" };
-                if (!Installer.IsModuleInstalled(package) && !aa.Contains(package))
+                string[] singleFilePackages = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl" };
+                if (!Installer.IsModuleInstalled(package) && !singleFilePackages.Contains(package))
                 {
                     return false;
                 }
