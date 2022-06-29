@@ -46,6 +46,7 @@ jobs:
         run: |
           cp ./Samples ./Release/Samples -recurse
           cp ./LICENSE ./Release/LICENSE
+          cp ./PYTHON_PACKAGE_LICENSE ./Release/PYTHON_PACKAGE_LICENSE
           cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
 
       - name: Upload release build of plugin as artefact

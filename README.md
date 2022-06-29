@@ -193,3 +193,4 @@ Copyright© 2022, hrntsm
 
 Release package is embedded Python runtime & optuna libraries.
 These depend on their own licenses.
+Please see PYTHON_PACKAGE_LICENSE for more license informations.
