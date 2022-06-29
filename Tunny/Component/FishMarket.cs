@@ -114,21 +114,30 @@ namespace Tunny.Component
                 {
                     return false;
                 }
-                Vector3d xVec = _settings.Plane.XAxis * (_settings.XInterval * countX);
+                Vector3d moveVec = _settings.Plane.XAxis * (_settings.XInterval * countX) + yVec;
                 if (fishGeometries[index] != null)
                 {
-                    Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);
-                    foreach (GeometryBase geometry in fishGeometries[index])
-                    {
-                        GeometryBase dupGeometry = geometry.Duplicate();
-                        dupGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
-                        dupGeometry.Translate(xVec + yVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                        arrayedGeometries.Append(Converter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
-                    }
-                    _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
+                    MoveGeometries(index, moveVec, fishGeometries, arrayedGeometries);
                 }
             }
             return true;
+        }
+
+        //FIXME: Possibly heavy because deep copying here and doing it for all geometry every time.
+        private void MoveGeometries(int index, Vector3d moveVec, IReadOnlyList<List<GeometryBase>> fishGeometries, GH_Structure<IGH_GeometricGoo> arrayedGeometries)
+        {
+            var movedGeometries = new GeometryBase[fishGeometries[index].Count];
+            Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);
+            foreach ((GeometryBase geometry, int i) in fishGeometries[index].Select((g, i) => (g, i)))
+            {
+                GeometryBase dupGeometry = geometry.Duplicate();
+                dupGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
+                dupGeometry.Translate(moveVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
+                arrayedGeometries.Append(Converter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
+                movedGeometries[i] = dupGeometry;
+            }
+            modelMinPt = GetUnionBoundingBoxMinPt(movedGeometries);
+            _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
         }
 
         private static Point3d GetUnionBoundingBoxMinPt(IEnumerable<GeometryBase> geometryBases)
