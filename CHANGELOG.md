@@ -28,12 +28,15 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - The output of the Tunny component is made into Fish, a type that summarizes the results.
 - The Geometry input of the Tunny component has been changed to Attribute to allow more attribute information to be handled.
 - When restoring the results from Tunny component as Fishes, those that the trial did not work and Objective could not get are not output.
+- Update UI
+  - The UI of the Restore tab was confusing, so the UI was modified to make it easier to understand which button to press and how the results are output.
 
 ### Fix
 
 - Stopped sampling when there was no geometry input
 - Once optimize output error, the component won't run again
   - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
+- Optuna-DashBoard and Delete Result Files functions do not work properly when a different Storage path is specified in Settings than the default.
 
 ## [0.3.0] -2022-05-03
 
