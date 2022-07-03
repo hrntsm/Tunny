@@ -51,6 +51,8 @@ namespace Tunny.UI
                     CheckIndicesLength(indices);
                     OutputLoop.Indices = new[] { indices[0] };
                     break;
+                default:
+                    throw new ArgumentException("Unsupported output mode.");
             }
             outputResultBackgroundWorker.RunWorkerAsync(_component);
         }
@@ -84,6 +86,8 @@ namespace Tunny.UI
                             .Select(x => (decimal)x.Value).ToList();
                     _component.GhInOut.NewSolution(decimalVar);
                     break;
+                default:
+                    throw new ArgumentException("Unsupported output mode.");
             }
         }
 
