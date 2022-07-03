@@ -13,14 +13,14 @@ using Tunny.Util;
 
 namespace Tunny.Optimization
 {
-    internal static class RestoreLoop
+    internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;
-        public static string Mode;
+        public static OutputMode Mode;
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
@@ -33,30 +33,14 @@ namespace Tunny.Optimization
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
             if (modelResult.Length == 0)
             {
-                TunnyMessageBox.Show("There are no restore models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            switch (Mode)
+            for (int i = 0; i < modelResult.Length; i++)
             {
-                case "Restore":
-                    for (int i = 0; i < modelResult.Length; i++)
-                    {
-                        SetResultToFish(fishes, modelResult[i], NickNames);
-                        s_worker.ReportProgress(i * 100 / modelResult.Length);
-                    }
-                    break;
-                case "Reflect":
-                    if (modelResult.Length > 1)
-                    {
-                        TunnyMessageBox.Show(
-                            "You input multi restore model numbers, but this function only reflect variables to slider or genepool to first one.",
-                            "Tunny"
-                        );
-                    }
-                    SetResultToFish(fishes, modelResult[0], NickNames);
-                    s_worker.ReportProgress(100);
-                    break;
+                SetResultToFish(fishes, modelResult[i], NickNames);
+                s_worker.ReportProgress(i * 100 / modelResult.Length);
             }
 
             s_component.Fishes = fishes.ToArray();
@@ -66,7 +50,7 @@ namespace Tunny.Optimization
             {
                 s_worker.CancelAsync();
             }
-            TunnyMessageBox.Show("Restore completed successfully.", "Tunny");
+            TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
         private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)

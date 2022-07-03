@@ -77,7 +77,7 @@ namespace Tunny.Solver
             }
         }
 
-        public void ShowResultVisualize(string visualize, string studyName)
+        public void ShowSelectedTypePlot(string visualize, string studyName)
         {
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
