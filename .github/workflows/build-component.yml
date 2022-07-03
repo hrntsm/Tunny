@@ -45,8 +45,8 @@ jobs:
         shell: powershell
         run: |
           cp ./Samples ./Release/Samples -recurse
-          cp ./LICENSE ./Release/LICENSE
-          cp ./PYTHON_PACKAGE_LICENSE ./Release/PYTHON_PACKAGE_LICENSE
+          cp ./LICENSE ./Release/LICENSE.txt
+          cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
           cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
 
       - name: Upload release build of plugin as artefact
