@@ -39,6 +39,7 @@ namespace Tunny.Solver
             int variableCount = Lb.Length;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
+            double timeout = Settings.Optimize.Timeout;
             int nObjective = ObjNickName.Length;
             string[] directions = new string[nObjective];
             for (int i = 0; i < nObjective; i++)
@@ -70,9 +71,17 @@ namespace Tunny.Solver
 
                 double[] xTest = new double[variableCount];
                 var result = new EvaluatedGHResult();
-                for (int i = 0; i < nTrials; i++)
+
+                int trialNum = 0;
+                DateTime startTime = DateTime.Now;
+                while (true)
                 {
-                    int progress = i * 100 / nTrials;
+                    if (trialNum == nTrials || (DateTime.Now - startTime).TotalSeconds >= timeout)
+                    {
+                        break;
+                    }
+
+                    int progress = trialNum * 100 / nTrials;
                     dynamic trial = study.ask();
 
                     //TODO: Is this the correct way to handle the case of null?
@@ -107,6 +116,7 @@ namespace Tunny.Solver
                     catch
                     {
                     }
+                    trialNum++;
                 }
 
                 if (nObjective == 1)

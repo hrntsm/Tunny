@@ -6,5 +6,6 @@ namespace Tunny.Settings
         public int NumberOfTrials { get; set; } = 100;
         public bool LoadExistStudy { get; set; } = true;
         public int SelectSampler { get; set; }
+        public double Timeout { get; set; } = double.MaxValue;
     }
 }
