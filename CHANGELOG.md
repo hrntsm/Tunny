@@ -21,6 +21,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Components that output each attribute
 - Python package licenses to clearly state the license of each package.
 - requirements.txt file to avoid conflict python packages versions.
+- Implemented Timeout to stop optimization over time.
 
 ### Changed
 
