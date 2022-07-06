@@ -39,7 +39,7 @@ namespace Tunny.Solver
             int variableCount = Lb.Length;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
-            double timeout = Settings.Optimize.Timeout;
+            double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
             int nObjective = ObjNickName.Length;
             string[] directions = new string[nObjective];
             for (int i = 0; i < nObjective; i++)

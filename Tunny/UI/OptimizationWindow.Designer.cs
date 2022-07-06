@@ -29,6 +29,7 @@ namespace Tunny.UI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizationWindow));
             this.optimizeRunButton = new System.Windows.Forms.Button();
             this.optimizeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -68,6 +69,9 @@ namespace Tunny.UI
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.Timeout = new System.Windows.Forms.Label();
+            this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -75,6 +79,7 @@ namespace Tunny.UI
             this.outputTabPage.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.fileTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -134,7 +139,7 @@ namespace Tunny.UI
             this.loadIfExistsCheckBox.AutoSize = true;
             this.loadIfExistsCheckBox.Checked = true;
             this.loadIfExistsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.loadIfExistsCheckBox.Location = new System.Drawing.Point(20, 135);
+            this.loadIfExistsCheckBox.Location = new System.Drawing.Point(19, 156);
             this.loadIfExistsCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.loadIfExistsCheckBox.Name = "loadIfExistsCheckBox";
             this.loadIfExistsCheckBox.Size = new System.Drawing.Size(237, 27);
@@ -162,7 +167,7 @@ namespace Tunny.UI
             this.samplerComboBox.Location = new System.Drawing.Point(148, 12);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.samplerComboBox.Name = "samplerComboBox";
-            this.samplerComboBox.Size = new System.Drawing.Size(208, 31);
+            this.samplerComboBox.Size = new System.Drawing.Size(214, 31);
             this.samplerComboBox.TabIndex = 7;
             // 
             // samplerTypeText
@@ -178,7 +183,7 @@ namespace Tunny.UI
             // studyNameLabel
             // 
             this.studyNameLabel.AutoSize = true;
-            this.studyNameLabel.Location = new System.Drawing.Point(15, 172);
+            this.studyNameLabel.Location = new System.Drawing.Point(14, 193);
             this.studyNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.studyNameLabel.Name = "studyNameLabel";
             this.studyNameLabel.Size = new System.Drawing.Size(116, 23);
@@ -187,7 +192,7 @@ namespace Tunny.UI
             // 
             // studyNameTextBox
             // 
-            this.studyNameTextBox.Location = new System.Drawing.Point(152, 166);
+            this.studyNameTextBox.Location = new System.Drawing.Point(151, 187);
             this.studyNameTextBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.studyNameTextBox.Name = "studyNameTextBox";
             this.studyNameTextBox.Size = new System.Drawing.Size(205, 30);
@@ -211,6 +216,8 @@ namespace Tunny.UI
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.Controls.Add(this.timeoutNumUpDown);
+            this.optimizeTabPage.Controls.Add(this.Timeout);
             this.optimizeTabPage.Controls.Add(this.studyNameTextBox);
             this.optimizeTabPage.Controls.Add(this.samplerComboBox);
             this.optimizeTabPage.Controls.Add(this.studyNameLabel);
@@ -514,6 +521,32 @@ namespace Tunny.UI
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
+            // Timeout
+            // 
+            this.Timeout.AutoSize = true;
+            this.Timeout.Location = new System.Drawing.Point(16, 102);
+            this.Timeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Timeout.Name = "Timeout";
+            this.Timeout.Size = new System.Drawing.Size(132, 23);
+            this.Timeout.TabIndex = 11;
+            this.Timeout.Text = "Timeout (sec)";
+            // 
+            // timeoutNumUpDown
+            // 
+            this.timeoutNumUpDown.Location = new System.Drawing.Point(197, 102);
+            this.timeoutNumUpDown.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.timeoutNumUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.timeoutNumUpDown.Name = "timeoutNumUpDown";
+            this.timeoutNumUpDown.Size = new System.Drawing.Size(165, 30);
+            this.timeoutNumUpDown.TabIndex = 12;
+            this.timeoutNumUpDown.ThousandsSeparator = true;
+            this.toolTip1.SetToolTip(this.timeoutNumUpDown, "After this time has elapsed from the start of optimization, optimization is stopp" +
+        "ed.");
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -537,6 +570,7 @@ namespace Tunny.UI
             this.outputTabPage.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
             this.fileTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -581,6 +615,9 @@ namespace Tunny.UI
         private System.Windows.Forms.TabPage fileTabPage;
         private System.Windows.Forms.Button openResultFolderButton;
         private System.Windows.Forms.Button clearResultButton;
+        private System.Windows.Forms.NumericUpDown timeoutNumUpDown;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label Timeout;
     }
 }
 
