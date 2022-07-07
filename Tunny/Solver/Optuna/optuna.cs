@@ -14,16 +14,18 @@ using Tunny.Util;
 
 namespace Tunny.Solver.Optuna
 {
-    public class optuna
+    public class Optuna
     {
         public double[] XOpt { get; private set; }
         private double[] FxOpt { get; set; }
 
         private readonly string _componentFolder;
+        private readonly TunnySettings _settings;
 
-        public optuna(string componentFolder)
+        public Optuna(string componentFolder, TunnySettings settings)
         {
             _componentFolder = componentFolder;
+            _settings = settings;
             string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
@@ -31,8 +33,7 @@ namespace Tunny.Solver.Optuna
         public bool RunSolver(
             List<Variable> variables,
             IEnumerable<IGH_Param> objectives,
-            Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
-            TunnySettings settings)
+            Func<IList<decimal>, int, EvaluatedGHResult> evaluate)
         {
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
@@ -44,7 +45,7 @@ namespace Tunny.Solver.Optuna
 
             try
             {
-                var tpe = new Algorithm(variables, objNickName, settings, Eval);
+                var tpe = new Algorithm(variables, objNickName, _settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.GetXOptimum();
                 FxOpt = tpe.GetFxOptimum();
@@ -66,8 +67,7 @@ namespace Tunny.Solver.Optuna
 
         public void ShowSelectedTypePlot(string visualize, string studyName)
         {
-            //TODO: Use settings path to get the path of the database.
-            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            string storage = "sqlite:///" + _settings.Storage;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -136,8 +136,7 @@ namespace Tunny.Solver.Optuna
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName)
         {
-            //TODO: Use settings path to get the path of the database.
-            string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
+            string storage = "sqlite:///" + _settings.Storage;
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())

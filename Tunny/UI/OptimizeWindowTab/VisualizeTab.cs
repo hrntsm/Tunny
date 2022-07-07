@@ -26,7 +26,7 @@ namespace Tunny.UI
 
         private void SelectedTypePlotButton_Click(object sender, EventArgs e)
         {
-            var optuna = new optuna(_component.GhInOut.ComponentFolder);
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings);
             optuna.ShowSelectedTypePlot(visualizeTypeComboBox.Text, studyNameTextBox.Text);
         }
     }

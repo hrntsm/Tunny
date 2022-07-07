@@ -54,10 +54,9 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
 
-            bool solverStarted = optunaSolver.RunSolver(
-                variables, objectives, EvaluateFunction, Settings);
+            bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }

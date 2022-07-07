@@ -33,6 +33,7 @@ namespace Tunny.UI
         private void RunOutputLoop(OutputMode mode)
         {
             OutputLoop.Mode = mode;
+            OutputLoop.Settings = _settings;
             OutputLoop.StudyName = studyNameTextBox.Text;
             OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             int[] indices = outputModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
