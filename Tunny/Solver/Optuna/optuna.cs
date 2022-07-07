@@ -12,16 +12,16 @@ using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Solver
+namespace Tunny.Solver.Optuna
 {
-    public class Optuna
+    public class optuna
     {
         public double[] XOpt { get; private set; }
         private double[] FxOpt { get; set; }
 
         private readonly string _componentFolder;
 
-        public Optuna(string componentFolder)
+        public optuna(string componentFolder)
         {
             _componentFolder = componentFolder;
             string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
@@ -57,7 +57,7 @@ namespace Tunny.Solver
 
             try
             {
-                var tpe = new OptunaAlgorithm(lb, ub, varNickName, objNickName, settings, Eval);
+                var tpe = new Algorithm(lb, ub, varNickName, objNickName, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.GetXOptimum();
                 FxOpt = tpe.GetFxOptimum();

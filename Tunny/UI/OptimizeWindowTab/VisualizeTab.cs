@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using Tunny.Solver;
+using Tunny.Solver.Optuna;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -26,7 +26,7 @@ namespace Tunny.UI
 
         private void SelectedTypePlotButton_Click(object sender, EventArgs e)
         {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder);
+            var optuna = new optuna(_component.GhInOut.ComponentFolder);
             optuna.ShowSelectedTypePlot(visualizeTypeComboBox.Text, studyNameTextBox.Text);
         }
     }

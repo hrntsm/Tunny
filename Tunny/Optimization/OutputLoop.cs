@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Rhino.Geometry;
 
 using Tunny.Component;
-using Tunny.Solver;
+using Tunny.Solver.Optuna;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
@@ -29,7 +29,7 @@ namespace Tunny.Optimization
 
             var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new optuna(s_component.GhInOut.ComponentFolder);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
             if (modelResult.Length == 0)
             {

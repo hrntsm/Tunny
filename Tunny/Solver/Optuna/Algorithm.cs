@@ -7,36 +7,39 @@ using Python.Runtime;
 
 using Tunny.Optimization;
 using Tunny.Settings;
+using Tunny.Util;
 
-namespace Tunny.Solver
+namespace Tunny.Solver.Optuna
 {
-    public class OptunaAlgorithm
+    public class Algorithm
     {
-        private double[] Lb { get; set; }
-        private double[] Ub { get; set; }
-        private string[] VarNickName { get; set; }
+        private SliderValueParameters Sliders { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
 
-        public OptunaAlgorithm(
+        public Algorithm(
             double[] lb, double[] ub, string[] varNickName, string[] objNickName,
             TunnySettings settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
-            Lb = lb;
-            Ub = ub;
-            VarNickName = varNickName;
+            Sliders = new SliderValueParameters
+            {
+                LowerBond = lb,
+                UpperBond = ub,
+                NickName = varNickName,
+                Count = lb.Length
+            };
             ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
+
         }
 
         public void Solve()
         {
-            int variableCount = Lb.Length;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
@@ -51,7 +54,7 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(variableCount, samplerType, ref nTrials, optuna);
+                dynamic sampler = SetSamplerSettings(Sliders, samplerType, ref nTrials, optuna);
 
                 dynamic study = optuna.create_study(
                     sampler: sampler,
@@ -69,7 +72,7 @@ namespace Tunny.Solver
                 name.Remove(name.Length - 1, 1);
                 SetStudyUserAttr(study, name);
 
-                double[] xTest = new double[variableCount];
+                double[] xTest = new double[Sliders.Count];
                 var result = new EvaluatedGHResult();
 
                 int trialNum = 0;
@@ -91,9 +94,9 @@ namespace Tunny.Solver
                     int nullCount = 0;
                     while (nullCount < 10)
                     {
-                        for (int j = 0; j < variableCount; j++)
+                        for (int j = 0; j < Sliders.Count; j++)
                         {
-                            xTest[j] = trial.suggest_uniform(VarNickName[j], Lb[j], Ub[j]);
+                            xTest[j] = trial.suggest_uniform(Sliders.NickName[j], Sliders.LowerBond[j], Sliders.UpperBond[j]);
                         }
                         result = EvalFunc(xTest, progress);
 
@@ -123,13 +126,13 @@ namespace Tunny.Solver
                 {
                     double[] values = (double[])study.best_params.values();
                     string[] keys = (string[])study.best_params.keys();
-                    double[] opt = new double[VarNickName.Length];
+                    double[] opt = new double[Sliders.Count];
 
-                    for (int i = 0; i < VarNickName.Length; i++)
+                    for (int i = 0; i < Sliders.Count; i++)
                     {
                         for (int j = 0; j < keys.Length; j++)
                         {
-                            if (keys[j] == VarNickName[i])
+                            if (keys[j] == Sliders.NickName[i])
                             {
                                 opt[i] = values[j];
                             }
@@ -179,25 +182,25 @@ namespace Tunny.Solver
             }
         }
 
-        private dynamic SetSamplerSettings(int n, int samplerType, ref int nTrials, dynamic optuna)
+        private dynamic SetSamplerSettings(SliderValueParameters sliders, int samplerType, ref int nTrials, dynamic optuna)
         {
             dynamic sampler;
             switch (samplerType)
             {
                 case 0:
-                    sampler = SetTPESamplerSettings(optuna);
+                    sampler = Sampler.TPE(optuna, Settings);
                     break;
                 case 1:
-                    sampler = SetNSGAIISamplerSettings(optuna);
+                    sampler = Sampler.NSGAII(optuna, Settings);
                     break;
                 case 2:
-                    sampler = SetCmaEsSamplerSettings(optuna);
+                    sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 3:
-                    sampler = SetRandomSamplerSettings(optuna);
+                    sampler = Sampler.Random(optuna, Settings);
                     break;
                 case 4:
-                    sampler = SetGridSamplerSettings(n, ref nTrials, optuna);
+                    sampler = Sampler.Grid(optuna, sliders, ref nTrials);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
@@ -205,74 +208,6 @@ namespace Tunny.Solver
             return sampler;
         }
 
-        private dynamic SetRandomSamplerSettings(dynamic optuna)
-        {
-            Settings.Random random = Settings.Optimize.Sampler.Random;
-            return optuna.samplers.RandomSampler(
-                seed: random.Seed
-            );
-        }
-
-        private dynamic SetCmaEsSamplerSettings(dynamic optuna)
-        {
-            CmaEs cmaEs = Settings.Optimize.Sampler.CmaEs;
-            return optuna.samplers.CmaEsSampler(
-                sigma0: cmaEs.Sigma0,
-                n_startup_trials: cmaEs.NStartupTrials,
-                warn_independent_sampling: cmaEs.WarnIndependentSampling,
-                seed: cmaEs.Seed,
-                consider_pruned_trials: cmaEs.ConsiderPrunedTrials,
-                restart_strategy: cmaEs.RestartStrategy,
-                inc_popsize: cmaEs.IncPopsize,
-                use_separable_cma: cmaEs.UseSeparableCma
-            );
-        }
-
-        private dynamic SetGridSamplerSettings(int n, ref int nTrials, dynamic optuna)
-        {
-            var searchSpace = new Dictionary<string, List<double>>();
-            for (int i = 0; i < n; i++)
-            {
-                var numSpace = new List<double>();
-                for (int j = 0; j < nTrials; j++)
-                {
-                    numSpace.Add(Lb[i] + ((Ub[i] - Lb[i]) * j / (nTrials - 1)));
-                }
-                searchSpace.Add(VarNickName[i], numSpace);
-            }
-            nTrials = (int)Math.Pow(nTrials, n);
-            return optuna.samplers.GridSampler(searchSpace);
-        }
-
-        private dynamic SetNSGAIISamplerSettings(dynamic optuna)
-        {
-            NSGAII nsga2 = Settings.Optimize.Sampler.NsgaII;
-            return optuna.samplers.NSGAIISampler(
-                population_size: nsga2.PopulationSize,
-                mutation_prob: nsga2.MutationProb,
-                crossover_prob: nsga2.CrossoverProb,
-                swapping_prob: nsga2.SwappingProb,
-                seed: nsga2.Seed
-            );
-        }
-
-        private dynamic SetTPESamplerSettings(dynamic optuna)
-        {
-            Tpe tpe = Settings.Optimize.Sampler.Tpe;
-            return optuna.samplers.TPESampler(
-                seed: tpe.Seed,
-                consider_prior: tpe.ConsiderPrior,
-                prior_weight: 1.0,
-                consider_magic_clip: tpe.ConsiderMagicClip,
-                consider_endpoints: tpe.ConsiderEndpoints,
-                n_startup_trials: tpe.NStartupTrials,
-                n_ei_candidates: tpe.NEICandidates,
-                multivariate: tpe.Multivariate,
-                group: tpe.Group,
-                warn_independent_sampling: tpe.WarnIndependentSampling,
-                constant_liar: tpe.ConstantLiar
-            );
-        }
 
         public double[] GetXOptimum()
         {

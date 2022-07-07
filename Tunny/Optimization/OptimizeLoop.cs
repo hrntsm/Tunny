@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 
 using Tunny.Component;
 using Tunny.Settings;
-using Tunny.Solver;
+using Tunny.Solver.Optuna;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -54,7 +54,7 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new optuna(s_component.GhInOut.ComponentFolder);
 
             bool solverStarted = optunaSolver.RunSolver(
                 variables, objectives, EvaluateFunction, Settings);
