@@ -19,6 +19,7 @@ namespace Tunny.Solver.Optuna
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
+        public EndState EndState { get; set; } = EndState.Error;
 
         public Algorithm(
             List<Variable> variables, string[] objNickName,
@@ -108,8 +109,14 @@ namespace Tunny.Solver.Optuna
             DateTime startTime = DateTime.Now;
             while (true)
             {
-                if (trialNum == nTrials || (DateTime.Now - startTime).TotalSeconds >= timeout)
+                if (trialNum >= nTrials)
                 {
+                    EndState = EndState.AllTrialFinish;
+                    break;
+                }
+                else if ((DateTime.Now - startTime).TotalSeconds >= timeout)
+                {
+                    EndState = EndState.Timeout;
                     break;
                 }
 
@@ -216,5 +223,13 @@ namespace Tunny.Solver.Optuna
         {
             return FxOpt;
         }
+
+    }
+
+    public enum EndState
+    {
+        AllTrialFinish,
+        Timeout,
+        Error
     }
 }

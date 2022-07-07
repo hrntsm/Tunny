@@ -43,17 +43,33 @@ namespace Tunny.Solver.Optuna
 
             try
             {
-                var tpe = new Algorithm(variables, objNickName, _settings, Eval);
-                tpe.Solve();
-                XOpt = tpe.GetXOptimum();
+                var optimize = new Algorithm(variables, objNickName, _settings, Eval);
+                optimize.Solve();
+                XOpt = optimize.GetXOptimum();
 
-                TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
+                ShowEndMessages(optimize);
                 return true;
             }
             catch (Exception e)
             {
                 ShowErrorMessages(e);
                 return false;
+            }
+        }
+
+        private static void ShowEndMessages(Algorithm optimize)
+        {
+            switch (optimize.EndState)
+            {
+                case EndState.Timeout:
+                    TunnyMessageBox.Show("Solver completed successfully.\nThe specified time has elapsed.", "Tunny");
+                    break;
+                case EndState.AllTrialFinish:
+                    TunnyMessageBox.Show("Solver completed successfully.\nThe specified number of trials has been completed.", "Tunny");
+                    break;
+                default:
+                    TunnyMessageBox.Show("Solver error.", "Tunny");
+                    break;
             }
         }
 
