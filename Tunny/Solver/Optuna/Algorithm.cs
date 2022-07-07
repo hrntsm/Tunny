@@ -66,82 +66,87 @@ namespace Tunny.Solver.Optuna
                 name.Remove(name.Length - 1, 1);
                 SetStudyUserAttr(study, name);
 
-                double[] xTest = new double[Variables.Count];
-                var result = new EvaluatedGHResult();
+                RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
+                SetResultValues(nObjective, study, xTest, result);
+            }
+            PythonEngine.Shutdown();
+        }
 
-                int trialNum = 0;
-                DateTime startTime = DateTime.Now;
-                while (true)
+        private void SetResultValues(int nObjective, dynamic study, double[] xTest, EvaluatedGHResult result)
+        {
+            if (nObjective == 1)
+            {
+                double[] values = (double[])study.best_params.values();
+                string[] keys = (string[])study.best_params.keys();
+                double[] opt = new double[Variables.Count];
+
+                for (int i = 0; i < Variables.Count; i++)
                 {
-                    if (trialNum == nTrials || (DateTime.Now - startTime).TotalSeconds >= timeout)
+                    for (int j = 0; j < keys.Length; j++)
+                    {
+                        if (keys[j] == Variables[i].NickName)
+                        {
+                            opt[i] = values[j];
+                        }
+                    }
+                }
+                XOpt = opt;
+                FxOpt = new[] { (double)study.best_value };
+            }
+            else
+            {
+                XOpt = xTest;
+                FxOpt = result.ObjectiveValues.ToArray();
+            }
+        }
+
+        private void RunOptimize(int nTrials, double timeout, dynamic study, out double[] xTest, out EvaluatedGHResult result)
+        {
+            xTest = new double[Variables.Count];
+            result = new EvaluatedGHResult();
+            int trialNum = 0;
+            DateTime startTime = DateTime.Now;
+            while (true)
+            {
+                if (trialNum == nTrials || (DateTime.Now - startTime).TotalSeconds >= timeout)
+                {
+                    break;
+                }
+
+                int progress = trialNum * 100 / nTrials;
+                dynamic trial = study.ask();
+
+                //TODO: Is this the correct way to handle the case of null?
+                int nullCount = 0;
+                while (nullCount < 10)
+                {
+                    for (int j = 0; j < Variables.Count; j++)
+                    {
+                        xTest[j] = trial.suggest_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond);
+                    }
+                    result = EvalFunc(xTest, progress);
+
+                    if (result.ObjectiveValues.Contains(double.NaN))
+                    {
+                        trial = study.ask();
+                        nullCount++;
+                    }
+                    else
                     {
                         break;
                     }
-
-                    int progress = trialNum * 100 / nTrials;
-                    dynamic trial = study.ask();
-
-                    //TODO: Is this the correct way to handle the case of null?
-                    //Other than TPE, the value is returned at random when retrying, so the value will be anything but null.
-                    //TPEs, on the other hand, search for a specific location determined by GP,
-                    //so the value tends to remain the same even after retries and there is no way to get out.
-                    int nullCount = 0;
-                    while (nullCount < 10)
-                    {
-                        for (int j = 0; j < Variables.Count; j++)
-                        {
-                            xTest[j] = trial.suggest_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond);
-                        }
-                        result = EvalFunc(xTest, progress);
-
-                        if (result.ObjectiveValues.Contains(double.NaN))
-                        {
-                            trial = study.ask();
-                            nullCount++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    SetTrialUserAttr(result, trial);
-                    try
-                    {
-                        study.tell(trial, result.ObjectiveValues.ToArray());
-                    }
-                    catch
-                    {
-                    }
-                    trialNum++;
                 }
 
-                if (nObjective == 1)
+                SetTrialUserAttr(result, trial);
+                try
                 {
-                    double[] values = (double[])study.best_params.values();
-                    string[] keys = (string[])study.best_params.keys();
-                    double[] opt = new double[Variables.Count];
-
-                    for (int i = 0; i < Variables.Count; i++)
-                    {
-                        for (int j = 0; j < keys.Length; j++)
-                        {
-                            if (keys[j] == Variables[i].NickName)
-                            {
-                                opt[i] = values[j];
-                            }
-                        }
-                    }
-                    XOpt = opt;
-                    FxOpt = new[] { (double)study.best_value };
+                    study.tell(trial, result.ObjectiveValues.ToArray());
                 }
-                else
+                catch
                 {
-                    XOpt = xTest;
-                    FxOpt = result.ObjectiveValues.ToArray();
                 }
+                trialNum++;
             }
-            PythonEngine.Shutdown();
         }
 
         private static void SetStudyUserAttr(dynamic study, StringBuilder name)
@@ -201,7 +206,6 @@ namespace Tunny.Solver.Optuna
             }
             return sampler;
         }
-
 
         public double[] GetXOptimum()
         {

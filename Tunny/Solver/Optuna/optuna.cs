@@ -17,8 +17,6 @@ namespace Tunny.Solver.Optuna
     public class Optuna
     {
         public double[] XOpt { get; private set; }
-        private double[] FxOpt { get; set; }
-
         private readonly string _componentFolder;
         private readonly TunnySettings _settings;
 
@@ -48,21 +46,24 @@ namespace Tunny.Solver.Optuna
                 var tpe = new Algorithm(variables, objNickName, _settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.GetXOptimum();
-                FxOpt = tpe.GetFxOptimum();
 
                 TunnyMessageBox.Show("Solver completed successfully.", "Tunny");
-
                 return true;
             }
             catch (Exception e)
             {
-                TunnyMessageBox.Show(
-                    "Tunny runtime error:\n" +
-                    "Please send below message (& gh file if possible) to Tunny support.\n\n" +
-                    "\" " + e.Message + " \"", "Tunny",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessages(e);
                 return false;
             }
+        }
+
+        private static void ShowErrorMessages(Exception e)
+        {
+            TunnyMessageBox.Show(
+                "Tunny runtime error:\n" +
+                "Please send below message (& gh file if possible) to Tunny support.\n\n" +
+                "\" " + e.Message + " \"", "Tunny",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public void ShowSelectedTypePlot(string visualize, string studyName)
@@ -86,45 +87,7 @@ namespace Tunny.Solver.Optuna
                 string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
                 try
                 {
-                    dynamic vis;
-                    switch (visualize)
-                    {
-                        case "contour":
-                            vis = optuna.visualization.plot_contour(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        case "EDF":
-                            vis = optuna.visualization.plot_edf(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        case "intermediate values":
-                            vis = optuna.visualization.plot_intermediate_values(study);
-                            vis.show();
-                            break;
-                        case "optimization history":
-                            vis = optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        case "parallel coordinate":
-                            vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        case "param importances":
-                            vis = optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        case "pareto front":
-                            vis = optuna.visualization.plot_pareto_front(study, target_names: nickNames);
-                            vis.show();
-                            break;
-                        case "slice":
-                            vis = optuna.visualization.plot_slice(study, target_name: nickNames[0]);
-                            vis.show();
-                            break;
-                        default:
-                            TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
-                            break;
-                    }
+                    ShowPlot(optuna, visualize, study, nickNames);
                 }
                 catch (Exception)
                 {
@@ -132,6 +95,42 @@ namespace Tunny.Solver.Optuna
                 }
             }
             PythonEngine.Shutdown();
+        }
+
+        private static void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
+        {
+            dynamic vis;
+            switch (visualize)
+            {
+                case "contour":
+                    vis = optuna.visualization.plot_contour(study, target_name: nickNames[0]);
+                    break;
+                case "EDF":
+                    vis = optuna.visualization.plot_edf(study, target_name: nickNames[0]);
+                    break;
+                case "intermediate values":
+                    vis = optuna.visualization.plot_intermediate_values(study);
+                    break;
+                case "optimization history":
+                    vis = optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
+                    break;
+                case "parallel coordinate":
+                    vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
+                    break;
+                case "param importances":
+                    vis = optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
+                    break;
+                case "pareto front":
+                    vis = optuna.visualization.plot_pareto_front(study, target_names: nickNames);
+                    break;
+                case "slice":
+                    vis = optuna.visualization.plot_slice(study, target_name: nickNames[0]);
+                    break;
+                default:
+                    TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
+                    return;
+            }
+            vis.show();
         }
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName)
@@ -154,34 +153,39 @@ namespace Tunny.Solver.Optuna
                     return modelResult.ToArray();
                 }
 
-                if (resultNum[0] == -1)
-                {
+                SetTrialsToModelResult(resultNum, modelResult, study);
+            }
+            PythonEngine.Shutdown();
+
+            return modelResult.ToArray();
+        }
+
+        private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study)
+        {
+            switch (resultNum[0])
+            {
+                case -1:
                     var bestTrials = (dynamic[])study.best_trials;
                     foreach (dynamic trial in bestTrials)
                     {
                         ParseTrial(modelResult, trial);
                     }
-                }
-                else if (resultNum[0] == -10)
-                {
+                    break;
+                case -10:
                     var trials = (dynamic[])study.trials;
                     foreach (dynamic trial in trials)
                     {
                         ParseTrial(modelResult, trial);
                     }
-                }
-                else
-                {
+                    break;
+                default:
                     foreach (int res in resultNum)
                     {
                         dynamic trial = study.trials[res];
                         ParseTrial(modelResult, trial);
                     }
-                }
+                    break;
             }
-            PythonEngine.Shutdown();
-
-            return modelResult.ToArray();
         }
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
