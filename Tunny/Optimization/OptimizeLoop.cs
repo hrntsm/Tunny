@@ -17,13 +17,12 @@ namespace Tunny.Optimization
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
-        public static readonly TunnySettings Settings;
+        public static TunnySettings Settings;
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
-
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
