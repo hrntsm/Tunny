@@ -6,7 +6,7 @@ using Tunny.Util;
 
 namespace Tunny.Solver.Optuna
 {
-    public class Sampler
+    public static class Sampler
     {
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
