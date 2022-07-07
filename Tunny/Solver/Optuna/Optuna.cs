@@ -162,29 +162,29 @@ namespace Tunny.Solver.Optuna
 
         private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study)
         {
-            switch (resultNum[0])
+            if (resultNum[0] == -1)
             {
-                case -1:
-                    var bestTrials = (dynamic[])study.best_trials;
-                    foreach (dynamic trial in bestTrials)
-                    {
-                        ParseTrial(modelResult, trial);
-                    }
-                    break;
-                case -10:
-                    var trials = (dynamic[])study.trials;
-                    foreach (dynamic trial in trials)
-                    {
-                        ParseTrial(modelResult, trial);
-                    }
-                    break;
-                default:
-                    foreach (int res in resultNum)
-                    {
-                        dynamic trial = study.trials[res];
-                        ParseTrial(modelResult, trial);
-                    }
-                    break;
+                var bestTrials = (dynamic[])study.best_trials;
+                foreach (dynamic trial in bestTrials)
+                {
+                    ParseTrial(modelResult, trial);
+                }
+            }
+            else if (resultNum[0] == -10)
+            {
+                var trials = (dynamic[])study.trials;
+                foreach (dynamic trial in trials)
+                {
+                    ParseTrial(modelResult, trial);
+                }
+            }
+            else
+            {
+                foreach (int res in resultNum)
+                {
+                    dynamic trial = study.trials[res];
+                    ParseTrial(modelResult, trial);
+                }
             }
         }
 
