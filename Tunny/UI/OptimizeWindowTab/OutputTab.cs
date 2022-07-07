@@ -33,9 +33,16 @@ namespace Tunny.UI
         private void RunOutputLoop(OutputMode mode)
         {
             OutputLoop.Mode = mode;
+            OutputLoop.Settings = _settings;
             OutputLoop.StudyName = studyNameTextBox.Text;
             OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             int[] indices = outputModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
+            SetOutputIndices(mode, indices);
+            outputResultBackgroundWorker.RunWorkerAsync(_component);
+        }
+
+        private static void SetOutputIndices(OutputMode mode, int[] indices)
+        {
             switch (mode)
             {
                 case OutputMode.ParatoSolutions:
@@ -54,7 +61,6 @@ namespace Tunny.UI
                 default:
                     throw new ArgumentException("Unsupported output mode.");
             }
-            outputResultBackgroundWorker.RunWorkerAsync(_component);
         }
 
         private static void CheckIndicesLength(int[] indices)

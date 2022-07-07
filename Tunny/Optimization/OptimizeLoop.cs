@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 
 using Tunny.Component;
 using Tunny.Settings;
-using Tunny.Solver;
+using Tunny.Solver.Optuna;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -23,7 +23,6 @@ namespace Tunny.Optimization
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
-
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
@@ -54,10 +53,9 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
 
-            bool solverStarted = optunaSolver.RunSolver(
-                variables, objectives, EvaluateFunction, Settings);
+            bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }

@@ -6,7 +6,8 @@ using System.Windows.Forms;
 using Rhino.Geometry;
 
 using Tunny.Component;
-using Tunny.Solver;
+using Tunny.Settings;
+using Tunny.Solver.Optuna;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
@@ -17,6 +18,7 @@ namespace Tunny.Optimization
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
+        public static TunnySettings Settings;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;
@@ -29,7 +31,7 @@ namespace Tunny.Optimization
 
             var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
             if (modelResult.Length == 0)
             {

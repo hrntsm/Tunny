@@ -20,6 +20,7 @@ namespace Tunny.UI
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.StudyName = studyNameTextBox.Text;
+            _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
@@ -64,7 +65,7 @@ namespace Tunny.UI
 
             if (optimizeBackgroundWorker != null)
             {
-                optimizeBackgroundWorker.CancelAsync();
+                optimizeBackgroundWorker.Dispose();
             }
 
             //Enable GUI

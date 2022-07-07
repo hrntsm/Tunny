@@ -21,6 +21,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Components that output each attribute
 - Python package licenses to clearly state the license of each package.
 - requirements.txt file to avoid conflict python packages versions.
+- Implemented Timeout to stop optimization over time.
 
 ### Changed
 
@@ -36,7 +37,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Stopped sampling when there was no geometry input
 - Once optimize output error, the component won't run again
   - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
-- Optuna-DashBoard and Delete Result Files functions do not work properly when a different Storage path is specified in Settings than the default.
+- Optuna-DashBoard and storage relate functions do not work properly when a different Storage path is specified in Settings than the default.
 
 ## [0.3.0] -2022-05-03
 
