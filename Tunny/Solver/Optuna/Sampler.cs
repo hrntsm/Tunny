@@ -31,19 +31,19 @@ namespace Tunny.Solver.Optuna
             );
         }
 
-        internal static dynamic Grid(dynamic optuna, SliderValueParameters sliders, ref int nTrials)
+        internal static dynamic Grid(dynamic optuna, List<Variable> variables, ref int nTrials)
         {
             var searchSpace = new Dictionary<string, List<double>>();
-            for (int i = 0; i < sliders.LowerBond.Length; i++)
+            for (int i = 0; i < variables.Count; i++)
             {
                 var numSpace = new List<double>();
                 for (int j = 0; j < nTrials; j++)
                 {
-                    numSpace.Add(sliders.LowerBond[i] + (sliders.UpperBond[i] - sliders.LowerBond[i]) * j / (nTrials - 1));
+                    numSpace.Add(variables[i].LowerBond + (variables[i].UpperBond - variables[i].LowerBond) * j / (nTrials - 1));
                 }
-                searchSpace.Add(sliders.NickName[i], numSpace);
+                searchSpace.Add(variables[i].NickName, numSpace);
             }
-            nTrials = (int)Math.Pow(nTrials, sliders.Count);
+            nTrials = (int)Math.Pow(nTrials, variables.Count);
             return optuna.samplers.GridSampler(searchSpace);
         }
 

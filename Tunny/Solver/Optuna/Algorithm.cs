@@ -13,7 +13,7 @@ namespace Tunny.Solver.Optuna
 {
     public class Algorithm
     {
-        private SliderValueParameters Sliders { get; set; }
+        private List<Variable> Variables { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
@@ -21,17 +21,11 @@ namespace Tunny.Solver.Optuna
         private double[] FxOpt { get; set; }
 
         public Algorithm(
-            double[] lb, double[] ub, string[] varNickName, string[] objNickName,
+            List<Variable> variables, string[] objNickName,
             TunnySettings settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
-            Sliders = new SliderValueParameters
-            {
-                LowerBond = lb,
-                UpperBond = ub,
-                NickName = varNickName,
-                Count = lb.Length
-            };
+            Variables = variables;
             ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
@@ -54,7 +48,7 @@ namespace Tunny.Solver.Optuna
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(Sliders, samplerType, ref nTrials, optuna);
+                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna);
 
                 dynamic study = optuna.create_study(
                     sampler: sampler,
@@ -72,7 +66,7 @@ namespace Tunny.Solver.Optuna
                 name.Remove(name.Length - 1, 1);
                 SetStudyUserAttr(study, name);
 
-                double[] xTest = new double[Sliders.Count];
+                double[] xTest = new double[Variables.Count];
                 var result = new EvaluatedGHResult();
 
                 int trialNum = 0;
@@ -94,9 +88,9 @@ namespace Tunny.Solver.Optuna
                     int nullCount = 0;
                     while (nullCount < 10)
                     {
-                        for (int j = 0; j < Sliders.Count; j++)
+                        for (int j = 0; j < Variables.Count; j++)
                         {
-                            xTest[j] = trial.suggest_uniform(Sliders.NickName[j], Sliders.LowerBond[j], Sliders.UpperBond[j]);
+                            xTest[j] = trial.suggest_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond);
                         }
                         result = EvalFunc(xTest, progress);
 
@@ -126,13 +120,13 @@ namespace Tunny.Solver.Optuna
                 {
                     double[] values = (double[])study.best_params.values();
                     string[] keys = (string[])study.best_params.keys();
-                    double[] opt = new double[Sliders.Count];
+                    double[] opt = new double[Variables.Count];
 
-                    for (int i = 0; i < Sliders.Count; i++)
+                    for (int i = 0; i < Variables.Count; i++)
                     {
                         for (int j = 0; j < keys.Length; j++)
                         {
-                            if (keys[j] == Sliders.NickName[i])
+                            if (keys[j] == Variables[i].NickName)
                             {
                                 opt[i] = values[j];
                             }
@@ -182,7 +176,7 @@ namespace Tunny.Solver.Optuna
             }
         }
 
-        private dynamic SetSamplerSettings(SliderValueParameters sliders, int samplerType, ref int nTrials, dynamic optuna)
+        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna)
         {
             dynamic sampler;
             switch (samplerType)
@@ -200,7 +194,7 @@ namespace Tunny.Solver.Optuna
                     sampler = Sampler.Random(optuna, Settings);
                     break;
                 case 4:
-                    sampler = Sampler.Grid(optuna, sliders, ref nTrials);
+                    sampler = Sampler.Grid(optuna, Variables, ref nTrials);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");

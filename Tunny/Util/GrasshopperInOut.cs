@@ -127,7 +127,7 @@ namespace Tunny.Util
                         break;
                 }
 
-                variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
+                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
             }
         }
 
@@ -144,7 +144,7 @@ namespace Tunny.Util
                 for (int j = 0; j < genePool.Count; j++)
                 {
                     string nickName = "genepool" + count++;
-                    variables.Add(new Variable(lowerBond, upperBond, isInteger, nickName));
+                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
                 }
             }
         }

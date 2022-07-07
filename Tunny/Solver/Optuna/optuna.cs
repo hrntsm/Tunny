@@ -34,20 +34,7 @@ namespace Tunny.Solver.Optuna
             Func<IList<decimal>, int, EvaluatedGHResult> evaluate,
             TunnySettings settings)
         {
-            int dVar = variables.Count;
-            double[] lb = new double[dVar];
-            double[] ub = new double[dVar];
-            bool[] isInteger = new bool[dVar];
-            string[] varNickName = new string[dVar];
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
-
-            for (int i = 0; i < dVar; i++)
-            {
-                lb[i] = Convert.ToDouble(variables[i].LowerBond);
-                ub[i] = Convert.ToDouble(variables[i].UpperBond);
-                isInteger[i] = variables[i].IsInteger;
-                varNickName[i] = variables[i].NickName;
-            }
 
             EvaluatedGHResult Eval(double[] x, int progress)
             {
@@ -57,7 +44,7 @@ namespace Tunny.Solver.Optuna
 
             try
             {
-                var tpe = new Algorithm(lb, ub, varNickName, objNickName, settings, Eval);
+                var tpe = new Algorithm(variables, objNickName, settings, Eval);
                 tpe.Solve();
                 XOpt = tpe.GetXOptimum();
                 FxOpt = tpe.GetFxOptimum();
@@ -79,6 +66,7 @@ namespace Tunny.Solver.Optuna
 
         public void ShowSelectedTypePlot(string visualize, string studyName)
         {
+            //TODO: Use settings path to get the path of the database.
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -148,6 +136,7 @@ namespace Tunny.Solver.Optuna
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName)
         {
+            //TODO: Use settings path to get the path of the database.
             string storage = "sqlite:///" + _componentFolder + "/Tunny_Opt_Result.db";
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
