@@ -35,23 +35,33 @@ namespace Tunny.Component
                         }
                         break;
                     case GH_CanvasChannel.Objects:
-                        GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
-                        GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
-                        GH_Skin.palette_normal_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
-                        GH_Skin.palette_warning_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
-                        base.Render(canvas, graphics, channel);
-                        GH_Skin.palette_normal_standard = normalStyle;
-                        GH_Skin.palette_warning_standard = warningStyle;
+                        DrawObjects(canvas, graphics, channel);
                         break;
                     case GH_CanvasChannel.Wires:
-                        DrawVariableWire(canvas, graphics);
-                        DrawObjectiveWire(canvas, graphics);
-                        DrawAttributeWire(canvas, graphics);
+                        DrawWires(canvas, graphics);
                         break;
                     default:
                         base.Render(canvas, graphics, channel);
                         break;
                 }
+            }
+
+            private void DrawObjects(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
+            {
+                GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
+                GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
+                GH_Skin.palette_normal_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
+                GH_Skin.palette_warning_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
+                base.Render(canvas, graphics, channel);
+                GH_Skin.palette_normal_standard = normalStyle;
+                GH_Skin.palette_warning_standard = warningStyle;
+            }
+
+            private void DrawWires(GH_Canvas canvas, Graphics graphics)
+            {
+                DrawVariableWire(canvas, graphics);
+                DrawObjectiveWire(canvas, graphics);
+                DrawAttributeWire(canvas, graphics);
             }
 
             private void RenderInputComponentBoxes(Graphics graphics)
@@ -98,51 +108,48 @@ namespace Tunny.Component
             private void DrawVariableWire(GH_Canvas canvas, Graphics graphics)
             {
                 IGH_Param param = Owner.Params.Input[0];
-                PointF p1 = param.Attributes.InputGrip;
 
-                int wireWidth = 1;
-                var wireColor = Color.FromArgb(Convert.ToInt32("3300008B", 16));
+                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("3300008B", 16)));
                 if (Owner.Attributes.Selected)
                 {
-                    wireWidth = 3;
-                    wireColor = Color.DarkBlue;
-
+                    wire.Width = 3;
+                    wire.Color = Color.DarkBlue;
                 }
 
-                foreach (IGH_Param source in param.Sources)
-                {
-                    PointF p0 = source.Attributes.OutputGrip;
-                    if (!canvas.Painter.ConnectionVisible(p0, p1))
-                    {
-                        continue;
-                    }
-
-                    GraphicsPath wirePath = GH_Painter.ConnectionPath(p0, p1, GH_WireDirection.right, GH_WireDirection.left);
-                    if (wirePath == null)
-                    {
-                        continue;
-                    }
-
-                    var wirePen = new Pen(wireColor, wireWidth);
-                    graphics.DrawPath(wirePen, wirePath);
-                    wirePen.Dispose();
-                    wirePath.Dispose();
-                }
+                DrawPath(canvas, graphics, param, wire);
             }
 
             private void DrawObjectiveWire(GH_Canvas canvas, Graphics graphics)
             {
                 IGH_Param param = Owner.Params.Input[1];
-                PointF p1 = param.Attributes.InputGrip;
 
-                int wireWidth = 2;
-                var wireColor = Color.FromArgb(Convert.ToInt32("33008000", 16));
+                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("33008000", 16)));
                 if (Owner.Attributes.Selected)
                 {
-                    wireWidth = 3;
-                    wireColor = Color.Green;
+                    wire.Width = 3;
+                    wire.Color = Color.Green;
                 }
 
+                DrawPath(canvas, graphics, param, wire);
+            }
+
+            private void DrawAttributeWire(GH_Canvas canvas, Graphics graphics)
+            {
+                IGH_Param param = Owner.Params.Input[2];
+
+                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("338B008B", 16)));
+                if (Owner.Attributes.Selected)
+                {
+                    wire.Width = 3;
+                    wire.Color = Color.DarkMagenta;
+                }
+
+                DrawPath(canvas, graphics, param, wire);
+            }
+
+            private static void DrawPath(GH_Canvas canvas, Graphics graphics, IGH_Param param, Wire wire)
+            {
+                PointF p1 = param.Attributes.InputGrip;
                 foreach (IGH_Param source in param.Sources)
                 {
                     PointF p0 = source.Attributes.OutputGrip;
@@ -157,44 +164,22 @@ namespace Tunny.Component
                         continue;
                     }
 
-                    var wirePen = new Pen(wireColor, wireWidth);
+                    var wirePen = new Pen(wire.Color, wire.Width);
                     graphics.DrawPath(wirePen, wirePath);
                     wirePen.Dispose();
                     wirePath.Dispose();
                 }
             }
 
-            private void DrawAttributeWire(GH_Canvas canvas, Graphics graphics)
+            private class Wire
             {
-                IGH_Param param = Owner.Params.Input[2];
-                PointF p1 = param.Attributes.InputGrip;
+                public int Width;
+                public Color Color;
 
-                int wireWidth = 2;
-                var wireColor = Color.FromArgb(Convert.ToInt32("338B008B", 16));
-                if (Owner.Attributes.Selected)
+                public Wire(int wireWidth, Color wireColor)
                 {
-                    wireWidth = 3;
-                    wireColor = Color.DarkMagenta;
-                }
-
-                foreach (IGH_Param source in param.Sources)
-                {
-                    PointF p0 = source.Attributes.OutputGrip;
-                    if (!canvas.Painter.ConnectionVisible(p0, p1))
-                    {
-                        continue;
-                    }
-
-                    GraphicsPath wirePath = GH_Painter.ConnectionPath(p0, p1, GH_WireDirection.right, GH_WireDirection.left);
-                    if (wirePath == null)
-                    {
-                        continue;
-                    }
-
-                    var wirePen = new Pen(wireColor, wireWidth);
-                    graphics.DrawPath(wirePen, wirePath);
-                    wirePen.Dispose();
-                    wirePath.Dispose();
+                    Width = wireWidth;
+                    Color = wireColor;
                 }
             }
         }
