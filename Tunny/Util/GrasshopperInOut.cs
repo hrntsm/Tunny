@@ -55,20 +55,26 @@ namespace Tunny.Util
             Sliders = new List<GH_NumberSlider>();
             _genePool = new List<GalapagosGeneListObject>();
 
-            foreach (IGH_Param source in _component.Params.Input[0].Sources)
-            {
-                _inputGuids.Add(source.InstanceGuid);
-            }
-
+            _inputGuids.AddRange(_component.Params.Input[0].Sources.Select(source => source.InstanceGuid));
             if (_inputGuids.Count == 0)
             {
-                TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny");
+                TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            foreach (IGH_DocumentObject input in _inputGuids.Select(guid => _document.FindObject(guid, true)))
+            var variables = new List<Variable>();
+            SortInputs();
+            SetInputSliderValues(variables);
+            SetInputGenePoolValues(variables);
+            Variables = variables;
+        }
+
+        private void SortInputs()
+        {
+            var errorGuids = new List<Guid>();
+            foreach ((IGH_DocumentObject docObject, int i) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, true), i)))
             {
-                switch (input)
+                switch (docObject)
                 {
                     case GH_NumberSlider slider:
                         Sliders.Add(slider);
@@ -76,13 +82,25 @@ namespace Tunny.Util
                     case GalapagosGeneListObject genePool:
                         _genePool.Add(genePool);
                         break;
+                    default:
+                        errorGuids.Add(docObject.InstanceGuid);
+                        break;
                 }
             }
+            if (errorGuids.Count > 0)
+            {
+                ShowIncorrectVariableInputMessage(errorGuids);
+            }
+        }
 
-            var variables = new List<Variable>();
-            SetInputSliderValues(variables);
-            SetInputGenePoolValues(variables);
-            Variables = variables;
+        private void ShowIncorrectVariableInputMessage(List<Guid> errorGuids)
+        {
+            TunnyMessageBox.Show("Input variables must be either a number slider or a gene pool.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            foreach (Guid guid in errorGuids)
+            {
+                _component.Params.Input[0].RemoveSource(guid);
+            }
+            _component.ExpireSolution(true);
         }
 
         private void SetInputSliderValues(ICollection<Variable> variables)
@@ -149,23 +167,52 @@ namespace Tunny.Util
             }
         }
 
-
         private void SetObjectives()
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
-                TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny");
+                TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var noNumberObjectives = new List<IGH_Param>();
+            foreach (IGH_Param ghParam in _component.Params.Input[1].Sources)
+            {
+                if (ghParam.ToString() != "Grasshopper.Kernel.Parameters.Param_Number")
+                {
+                    noNumberObjectives.Add(ghParam);
+                }
+            }
+
+            if (noNumberObjectives.Count > 0)
+            {
+                ShowIncorrectObjectiveInputMessage(noNumberObjectives);
                 return;
             }
 
             Objectives = _component.Params.Input[1].Sources.ToList();
         }
 
+        private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> noNumberObjectives)
+        {
+            TunnyMessageBox.Show("Objective supports only the Number input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            foreach (IGH_Param noNumberSource in noNumberObjectives)
+            {
+                _component.Params.Input[1].RemoveSource(noNumberSource);
+            }
+            _component.ExpireSolution(true);
+        }
+
         private void SetAttributes()
         {
+            _attributes = new GH_FishAttribute();
             if (_component.Params.Input[2].SourceCount == 0)
             {
-                _attributes = new GH_FishAttribute();
+                return;
+            }
+            else if (_component.Params.Input[2].SourceCount >= 2)
+            {
+                ShowIncorrectAttributeInputMessage();
                 return;
             }
 
@@ -178,6 +225,16 @@ namespace Tunny.Util
                     break;
                 }
             }
+        }
+
+        private void ShowIncorrectAttributeInputMessage()
+        {
+            TunnyMessageBox.Show("Inputs to Attribute should be grouped together into a single input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            while (_component.Params.Input[2].SourceCount > 1)
+            {
+                _component.Params.Input[2].RemoveSource(_component.Params.Input[2].Sources[1]);
+            }
+            _component.ExpireSolution(true);
         }
 
         private bool SetSliderValues(IList<decimal> parameters)
