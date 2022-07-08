@@ -59,9 +59,23 @@ namespace Tunny.Component
 
             private void DrawWires(GH_Canvas canvas, Graphics graphics)
             {
-                DrawVariableWire(canvas, graphics);
-                DrawObjectiveWire(canvas, graphics);
-                DrawAttributeWire(canvas, graphics);
+                Wire[] wires = Owner.Attributes.Selected
+                    ? (new[]
+                    {
+                        new Wire(3, Color.DarkBlue),
+                        new Wire(3, Color.Green),
+                        new Wire(3, Color.DarkMagenta),
+                    })
+                    : (new[]
+                    {
+                        new Wire(2, Color.FromArgb(Convert.ToInt32("3300008B", 16))),
+                        new Wire(2, Color.FromArgb(Convert.ToInt32("33008000", 16))),
+                        new Wire(2, Color.FromArgb(Convert.ToInt32("338B008B", 16))),
+                    });
+                for (int i = 0; i < 2; i++)
+                {
+                    DrawPath(canvas, graphics, Owner.Params.Input[i], wires[i]);
+                }
             }
 
             private void RenderInputComponentBoxes(Graphics graphics)
@@ -103,48 +117,6 @@ namespace Tunny.Component
                 rectangle.Inflate(5, 5);
                 graphics.FillRectangle(fill, rectangle);
                 graphics.DrawRectangle(edge, rectangle);
-            }
-
-            private void DrawVariableWire(GH_Canvas canvas, Graphics graphics)
-            {
-                IGH_Param param = Owner.Params.Input[0];
-
-                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("3300008B", 16)));
-                if (Owner.Attributes.Selected)
-                {
-                    wire.Width = 3;
-                    wire.Color = Color.DarkBlue;
-                }
-
-                DrawPath(canvas, graphics, param, wire);
-            }
-
-            private void DrawObjectiveWire(GH_Canvas canvas, Graphics graphics)
-            {
-                IGH_Param param = Owner.Params.Input[1];
-
-                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("33008000", 16)));
-                if (Owner.Attributes.Selected)
-                {
-                    wire.Width = 3;
-                    wire.Color = Color.Green;
-                }
-
-                DrawPath(canvas, graphics, param, wire);
-            }
-
-            private void DrawAttributeWire(GH_Canvas canvas, Graphics graphics)
-            {
-                IGH_Param param = Owner.Params.Input[2];
-
-                var wire = new Wire(2, Color.FromArgb(Convert.ToInt32("338B008B", 16)));
-                if (Owner.Attributes.Selected)
-                {
-                    wire.Width = 3;
-                    wire.Color = Color.DarkMagenta;
-                }
-
-                DrawPath(canvas, graphics, param, wire);
             }
 
             private static void DrawPath(GH_Canvas canvas, Graphics graphics, IGH_Param param, Wire wire)
