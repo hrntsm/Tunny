@@ -31,6 +31,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - When restoring the results from Tunny component as Fishes, those that the trial did not work and Objective could not get are not output.
 - Update UI
   - The UI of the Restore tab was confusing, so the UI was modified to make it easier to understand which button to press and how the results are output.
+- The progress bar on the Output tab has been made to show progress in a more understandable way.
 
 ### Fix
 
@@ -38,6 +39,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Once optimize output error, the component won't run again
   - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
 - Optuna-DashBoard and storage relate functions do not work properly when a different Storage path is specified in Settings than the default.
+- Pressing the stop button in output and the stop button in Optimize does not stop the operation.
 
 ## [0.3.0] -2022-05-03
 
