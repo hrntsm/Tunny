@@ -33,6 +33,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Update UI
   - The UI of the Restore tab was confusing, so the UI was modified to make it easier to understand which button to press and how the results are output.
 - The progress bar on the Output tab has been made to show progress in a more understandable way.
+- Error messages are displayed when the input to Tunny component is not appropriate, and inappropriate input wires are automatically removed.
 
 ### Fix
 
