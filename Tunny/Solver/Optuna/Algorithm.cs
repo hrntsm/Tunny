@@ -30,7 +30,6 @@ namespace Tunny.Solver.Optuna
             ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
-
         }
 
         public void Solve()
@@ -111,12 +110,18 @@ namespace Tunny.Solver.Optuna
             {
                 if (trialNum >= nTrials)
                 {
-                    EndState = EndState.AllTrialFinish;
+                    EndState = EndState.AllTrialCompleted;
                     break;
                 }
                 else if ((DateTime.Now - startTime).TotalSeconds >= timeout)
                 {
                     EndState = EndState.Timeout;
+                    break;
+                }
+                else if (OptimizeLoop.IsForcedStopOptimize)
+                {
+                    EndState = EndState.StoppedByUser;
+                    OptimizeLoop.IsForcedStopOptimize = false;
                     break;
                 }
 
@@ -228,8 +233,9 @@ namespace Tunny.Solver.Optuna
 
     public enum EndState
     {
-        AllTrialFinish,
+        AllTrialCompleted,
         Timeout,
+        StoppedByUser,
         Error
     }
 }
