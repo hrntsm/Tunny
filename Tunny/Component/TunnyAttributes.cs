@@ -50,11 +50,14 @@ namespace Tunny.Component
             {
                 GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
                 GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
+                GH_PaletteStyle hiddenStyle = GH_Skin.palette_hidden_standard;
                 GH_Skin.palette_normal_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
                 GH_Skin.palette_warning_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
+                GH_Skin.palette_hidden_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
                 base.Render(canvas, graphics, channel);
                 GH_Skin.palette_normal_standard = normalStyle;
                 GH_Skin.palette_warning_standard = warningStyle;
+                GH_Skin.palette_hidden_standard = hiddenStyle;
             }
 
             private void DrawWires(GH_Canvas canvas, Graphics graphics)
@@ -72,7 +75,7 @@ namespace Tunny.Component
                         new Wire(2, Color.FromArgb(Convert.ToInt32("33008000", 16))),
                         new Wire(2, Color.FromArgb(Convert.ToInt32("338B008B", 16))),
                     });
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     DrawPath(canvas, graphics, Owner.Params.Input[i], wires[i]);
                 }
