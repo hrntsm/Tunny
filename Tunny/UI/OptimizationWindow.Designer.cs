@@ -44,6 +44,8 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
             this.dashboardButton = new System.Windows.Forms.Button();
             this.visualizeButton = new System.Windows.Forms.Button();
@@ -69,17 +71,15 @@ namespace Tunny.UI
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.Timeout = new System.Windows.Forms.Label();
-            this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
             this.outputTabPage.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.fileTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -236,6 +236,32 @@ namespace Tunny.UI
             this.optimizeTabPage.TabIndex = 0;
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // timeoutNumUpDown
+            // 
+            this.timeoutNumUpDown.Location = new System.Drawing.Point(197, 102);
+            this.timeoutNumUpDown.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.timeoutNumUpDown.Maximum = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.timeoutNumUpDown.Name = "timeoutNumUpDown";
+            this.timeoutNumUpDown.Size = new System.Drawing.Size(165, 30);
+            this.timeoutNumUpDown.TabIndex = 12;
+            this.timeoutNumUpDown.ThousandsSeparator = true;
+            this.toolTip1.SetToolTip(this.timeoutNumUpDown, "After this time has elapsed, optimization stops.\r\nIf 0 is entered, no stop by tim" +
+        "e is performed.");
+            // 
+            // Timeout
+            // 
+            this.Timeout.AutoSize = true;
+            this.Timeout.Location = new System.Drawing.Point(16, 102);
+            this.Timeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.Timeout.Name = "Timeout";
+            this.Timeout.Size = new System.Drawing.Size(132, 23);
+            this.Timeout.TabIndex = 11;
+            this.Timeout.Text = "Timeout (sec)";
             // 
             // visualizeTabPage
             // 
@@ -521,32 +547,6 @@ namespace Tunny.UI
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
-            // Timeout
-            // 
-            this.Timeout.AutoSize = true;
-            this.Timeout.Location = new System.Drawing.Point(16, 102);
-            this.Timeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Timeout.Name = "Timeout";
-            this.Timeout.Size = new System.Drawing.Size(132, 23);
-            this.Timeout.TabIndex = 11;
-            this.Timeout.Text = "Timeout (sec)";
-            // 
-            // timeoutNumUpDown
-            // 
-            this.timeoutNumUpDown.Location = new System.Drawing.Point(197, 102);
-            this.timeoutNumUpDown.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.timeoutNumUpDown.Maximum = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.timeoutNumUpDown.Name = "timeoutNumUpDown";
-            this.timeoutNumUpDown.Size = new System.Drawing.Size(165, 30);
-            this.timeoutNumUpDown.TabIndex = 12;
-            this.timeoutNumUpDown.ThousandsSeparator = true;
-            this.toolTip1.SetToolTip(this.timeoutNumUpDown, "After this time has elapsed from the start of optimization, optimization is stopp" +
-        "ed.");
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -564,13 +564,13 @@ namespace Tunny.UI
             this.optimizeTabControl.ResumeLayout(false);
             this.optimizeTabPage.ResumeLayout(false);
             this.optimizeTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
             this.visualizeTabPage.PerformLayout();
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
             this.fileTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }

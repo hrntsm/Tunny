@@ -64,8 +64,11 @@ namespace Tunny.Solver.Optuna
                 case EndState.Timeout:
                     TunnyMessageBox.Show("Solver completed successfully.\nThe specified time has elapsed.", "Tunny");
                     break;
-                case EndState.AllTrialFinish:
+                case EndState.AllTrialCompleted:
                     TunnyMessageBox.Show("Solver completed successfully.\nThe specified number of trials has been completed.", "Tunny");
+                    break;
+                case EndState.StoppedByUser:
+                    TunnyMessageBox.Show("Solver completed successfully.\nThe user stopped the solver.", "Tunny");
                     break;
                 default:
                     TunnyMessageBox.Show("Solver error.", "Tunny");

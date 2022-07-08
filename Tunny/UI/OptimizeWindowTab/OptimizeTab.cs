@@ -62,6 +62,7 @@ namespace Tunny.UI
         {
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
+            OptimizeLoop.IsForcedStopOptimize = true;
 
             if (optimizeBackgroundWorker != null)
             {
