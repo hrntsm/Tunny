@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -152,7 +153,7 @@ namespace Tunny.Solver.Optuna
             vis.show();
         }
 
-        public ModelResult[] GetModelResult(int[] resultNum, string studyName)
+        public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
         {
             string storage = "sqlite:///" + _settings.Storage;
             var modelResult = new List<ModelResult>();
@@ -172,38 +173,71 @@ namespace Tunny.Solver.Optuna
                     return modelResult.ToArray();
                 }
 
-                SetTrialsToModelResult(resultNum, modelResult, study);
+                SetTrialsToModelResult(resultNum, modelResult, study, worker);
             }
             PythonEngine.Shutdown();
 
             return modelResult.ToArray();
         }
 
-        private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study)
+        private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
             if (resultNum[0] == -1)
             {
-                var bestTrials = (dynamic[])study.best_trials;
-                foreach (dynamic trial in bestTrials)
-                {
-                    ParseTrial(modelResult, trial);
-                }
+                ParatoSolutions(modelResult, study, worker);
             }
             else if (resultNum[0] == -10)
             {
-                var trials = (dynamic[])study.trials;
-                foreach (dynamic trial in trials)
-                {
-                    ParseTrial(modelResult, trial);
-                }
+                AllTrials(modelResult, study, worker);
             }
             else
             {
-                foreach (int res in resultNum)
+                UseModelNumber(resultNum, modelResult, study, worker);
+            }
+        }
+
+        private void UseModelNumber(int[] resultNum, List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        {
+            for (int i = 0; i < resultNum.Length; i++)
+            {
+                int res = resultNum[i];
+                if (OutputLoop.IsForcedStopOutput)
                 {
-                    dynamic trial = study.trials[res];
-                    ParseTrial(modelResult, trial);
+                    break;
                 }
+                dynamic trial = study.trials[res];
+                ParseTrial(modelResult, trial);
+                worker.ReportProgress(i * 100 / resultNum.Length);
+            }
+        }
+
+        private void AllTrials(List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        {
+            var trials = (dynamic[])study.trials;
+            for (int i = 0; i < trials.Length; i++)
+            {
+                dynamic trial = trials[i];
+                if (OutputLoop.IsForcedStopOutput)
+                {
+                    break;
+                }
+                ParseTrial(modelResult, trial);
+                worker.ReportProgress(i * 100 / trials.Length);
+            }
+        }
+
+        private void ParatoSolutions(List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        {
+            var bestTrials = (dynamic[])study.best_trials;
+            for (int i = 0; i < bestTrials.Length; i++)
+            {
+                dynamic trial = bestTrials[i];
+                if (OutputLoop.IsForcedStopOutput)
+                {
+                    break;
+                }
+                ParseTrial(modelResult, trial);
+                worker.ReportProgress(i * 100 / bestTrials.Length);
             }
         }
 

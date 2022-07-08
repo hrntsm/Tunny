@@ -32,6 +32,7 @@ namespace Tunny.UI
 
         private void RunOutputLoop(OutputMode mode)
         {
+            outputStopButton.Enabled = true;
             OutputLoop.Mode = mode;
             OutputLoop.Settings = _settings;
             OutputLoop.StudyName = studyNameTextBox.Text;
@@ -80,6 +81,7 @@ namespace Tunny.UI
             {
                 outputResultBackgroundWorker.Dispose();
             }
+            OutputLoop.IsForcedStopOutput = true;
             switch (OutputLoop.Mode)
             {
                 case OutputMode.ParatoSolutions:
@@ -95,6 +97,9 @@ namespace Tunny.UI
                 default:
                     throw new ArgumentException("Unsupported output mode.");
             }
+
+            outputStopButton.Enabled = false;
+            OutputLoop.IsForcedStopOutput = false;
         }
 
         private void OutputProgressChangedHandler(object sender, ProgressChangedEventArgs e)

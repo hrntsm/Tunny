@@ -23,6 +23,7 @@ namespace Tunny.Optimization
         public static string[] NickNames;
         public static int[] Indices;
         public static OutputMode Mode;
+        public static bool IsForcedStopOutput;
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
@@ -32,17 +33,16 @@ namespace Tunny.Optimization
             var fishes = new List<Fish>();
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
-            ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
+            ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
             if (modelResult.Length == 0)
             {
                 TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            for (int i = 0; i < modelResult.Length; i++)
+            foreach (ModelResult result in modelResult)
             {
-                SetResultToFish(fishes, modelResult[i], NickNames);
-                s_worker.ReportProgress(i * 100 / modelResult.Length);
+                SetResultToFish(fishes, result, NickNames);
             }
 
             s_component.Fishes = fishes.ToArray();
@@ -50,7 +50,7 @@ namespace Tunny.Optimization
 
             if (s_worker != null)
             {
-                s_worker.CancelAsync();
+                s_worker.Dispose();
             }
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
