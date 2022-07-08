@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
@@ -25,26 +26,73 @@ namespace Tunny.Component
 
             protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
             {
-                if (channel == GH_CanvasChannel.Objects)
+                switch (channel)
                 {
-                    GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
-                    GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
-                    GH_Skin.palette_normal_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
-                    GH_Skin.palette_warning_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
-                    base.Render(canvas, graphics, channel);
-                    GH_Skin.palette_normal_standard = normalStyle;
-                    GH_Skin.palette_warning_standard = warningStyle;
+                    case GH_CanvasChannel.First:
+                        if (Selected)
+                        {
+                            RenderInputComponentBoxes(graphics);
+                        }
+                        break;
+                    case GH_CanvasChannel.Objects:
+                        GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
+                        GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
+                        GH_Skin.palette_normal_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
+                        GH_Skin.palette_warning_standard = new GH_PaletteStyle(Color.CornflowerBlue, Color.Blue, Color.Black);
+                        base.Render(canvas, graphics, channel);
+                        GH_Skin.palette_normal_standard = normalStyle;
+                        GH_Skin.palette_warning_standard = warningStyle;
+                        break;
+                    case GH_CanvasChannel.Wires:
+                        DrawVariableWire(canvas, graphics);
+                        DrawObjectiveWire(canvas, graphics);
+                        DrawAttributeWire(canvas, graphics);
+                        break;
+                    default:
+                        base.Render(canvas, graphics, channel);
+                        break;
                 }
-                else if (channel == GH_CanvasChannel.Wires)
+            }
+
+            private void RenderInputComponentBoxes(Graphics graphics)
+            {
+                Brush[] fill = new[]
                 {
-                    DrawVariableWire(canvas, graphics);
-                    DrawObjectiveWire(canvas, graphics);
-                    DrawModelMeshWire(canvas, graphics);
-                }
-                else
+                    new SolidBrush(Color.FromArgb(Convert.ToInt32("9900008B", 16))),
+                    new SolidBrush(Color.FromArgb(Convert.ToInt32("99008000", 16))),
+                    new SolidBrush(Color.FromArgb(Convert.ToInt32("998B008B", 16))),
+                };
+                Pen[] edge = new[] { Pens.DarkBlue, Pens.Green, Pens.DarkMagenta };
+                for (int i = 0; i < 3; i++)
                 {
-                    base.Render(canvas, graphics, channel);
+                    foreach (Guid guid in Owner.Params.Input[i].Sources.Select(s => s.InstanceGuid))
+                    {
+                        RenderBox(graphics, fill[i], edge[i], guid);
+                    }
                 }
+            }
+
+            private void RenderBox(Graphics graphics, Brush fill, Pen edge, Guid guid)
+            {
+                GH_Document doc = Owner.OnPingDocument();
+                if (doc == null)
+                {
+                    return;
+                }
+                IGH_DocumentObject obj = doc.FindObject(guid, false);
+                if (obj == null)
+                {
+                    return;
+                }
+                if (!obj.Attributes.IsTopLevel)
+                {
+                    Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
+                    obj = doc.FindObject(topLevelGuid, true);
+                }
+                var rectangle = GH_Convert.ToRectangle(obj.Attributes.Bounds);
+                rectangle.Inflate(5, 5);
+                graphics.FillRectangle(fill, rectangle);
+                graphics.DrawRectangle(edge, rectangle);
             }
 
             private void DrawVariableWire(GH_Canvas canvas, Graphics graphics)
@@ -116,7 +164,7 @@ namespace Tunny.Component
                 }
             }
 
-            private void DrawModelMeshWire(GH_Canvas canvas, Graphics graphics)
+            private void DrawAttributeWire(GH_Canvas canvas, Graphics graphics)
             {
                 IGH_Param param = Owner.Params.Input[2];
                 PointF p1 = param.Attributes.InputGrip;
