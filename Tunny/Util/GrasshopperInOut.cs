@@ -205,12 +205,12 @@ namespace Tunny.Util
 
         private void SetAttributes()
         {
+            _attributes = new GH_FishAttribute();
             if (_component.Params.Input[2].SourceCount == 0)
             {
-                _attributes = new GH_FishAttribute();
                 return;
             }
-            if (_component.Params.Input[2].SourceCount >= 2)
+            else if (_component.Params.Input[2].SourceCount >= 2)
             {
                 ShowIncorrectAttributeInputMessage();
                 return;
@@ -235,7 +235,6 @@ namespace Tunny.Util
                 _component.Params.Input[2].RemoveSource(_component.Params.Input[2].Sources[1]);
             }
             _component.ExpireSolution(true);
-            _attributes = new GH_FishAttribute();
         }
 
         private bool SetSliderValues(IList<decimal> parameters)
