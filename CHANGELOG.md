@@ -22,6 +22,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Python package licenses to clearly state the license of each package.
 - requirements.txt file to avoid conflict python packages versions.
 - Implemented Timeout to stop optimization over time.
+- Input components are now highlighted in color, as are other optimization components.
 
 ### Changed
 
@@ -40,6 +41,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
 - Optuna-DashBoard and storage relate functions do not work properly when a different Storage path is specified in Settings than the default.
 - Pressing the stop button in output and the stop button in Optimize does not stop the operation.
+- Components were in their normal color instead of blue.
 
 ## [0.3.0] -2022-05-03
 
