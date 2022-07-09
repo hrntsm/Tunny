@@ -19,7 +19,7 @@ namespace Tunny.Solver.Optuna
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
-        public EndState EndState { get; set; } = EndState.Error;
+        public EndState EndState { get; set; }
 
         public Algorithm(
             List<Variable> variables, string[] objNickName,
@@ -34,15 +34,13 @@ namespace Tunny.Solver.Optuna
 
         public void Solve()
         {
+            EndState = EndState.Error;
+            OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
             int nObjective = ObjNickName.Length;
-            string[] directions = new string[nObjective];
-            for (int i = 0; i < nObjective; i++)
-            {
-                directions[i] = "minimize";
-            }
+            string[] directions = SetDirectionValues(nObjective);
 
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -50,26 +48,81 @@ namespace Tunny.Solver.Optuna
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna);
 
-                dynamic study = optuna.create_study(
-                    sampler: sampler,
-                    directions: directions,
-                    storage: "sqlite:///" + Settings.Storage,
-                    study_name: Settings.StudyName,
-                    load_if_exists: Settings.Optimize.LoadExistStudy
-                );
-
-                var name = new StringBuilder();
-                foreach (string objName in ObjNickName)
+                if (CheckExistStudyParameter(nObjective, optuna))
                 {
-                    name.Append(objName + ",");
+                    dynamic study = CreateStudy(directions, optuna, sampler);
+                    SetStudyUserAttr(study, ObjectNicknameToAttr());
+                    RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
+                    SetResultValues(nObjective, study, xTest, result);
                 }
-                name.Remove(name.Length - 1, 1);
-                SetStudyUserAttr(study, name);
-
-                RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
-                SetResultValues(nObjective, study, xTest, result);
             }
             PythonEngine.Shutdown();
+        }
+
+        private StringBuilder ObjectNicknameToAttr()
+        {
+            var name = new StringBuilder();
+            foreach (string objName in ObjNickName)
+            {
+                name.Append(objName + ",");
+            }
+            name.Remove(name.Length - 1, 1);
+            return name;
+        }
+
+        private dynamic CreateStudy(string[] directions, dynamic optuna, dynamic sampler)
+        {
+            return optuna.create_study(
+                sampler: sampler,
+                directions: directions,
+                storage: "sqlite:///" + Settings.Storage,
+                study_name: Settings.StudyName,
+                load_if_exists: Settings.Optimize.LoadExistStudy
+            );
+        }
+
+        private static string[] SetDirectionValues(int nObjective)
+        {
+            string[] directions = new string[nObjective];
+            for (int i = 0; i < nObjective; i++)
+            {
+                directions[i] = "minimize";
+            }
+
+            return directions;
+        }
+
+        private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
+        {
+            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
+            var directions = new Dictionary<string, int>();
+
+            foreach (dynamic pyObj in studySummaries)
+            {
+                directions.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
+            }
+
+            return directions.ContainsKey(Settings.StudyName)
+                ? CheckDirections(nObjective, directions)
+                : directions.Count == 0;
+        }
+
+        private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
+        {
+            if (!Settings.Optimize.LoadExistStudy)
+            {
+                EndState = EndState.UseExitStudyWithoutLoading;
+                return false;
+            }
+            else if (directions[Settings.StudyName] == nObjective)
+            {
+                return true;
+            }
+            else
+            {
+                EndState = EndState.DirectionNumNotMatch;
+                return false;
+            }
         }
 
         private void SetResultValues(int nObjective, dynamic study, double[] xTest, EvaluatedGHResult result)
@@ -96,7 +149,7 @@ namespace Tunny.Solver.Optuna
             else
             {
                 XOpt = xTest;
-                FxOpt = result.ObjectiveValues.ToArray();
+                FxOpt = result.ObjectiveValues?.ToArray();
             }
         }
 
@@ -236,6 +289,8 @@ namespace Tunny.Solver.Optuna
         AllTrialCompleted,
         Timeout,
         StoppedByUser,
+        DirectionNumNotMatch,
+        UseExitStudyWithoutLoading,
         Error
     }
 }

@@ -27,7 +27,7 @@ namespace Tunny.Optimization
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
-            if (double.IsNaN(result[0]))
+            if (result == null || double.IsNaN(result[0]))
             {
                 return;
             }

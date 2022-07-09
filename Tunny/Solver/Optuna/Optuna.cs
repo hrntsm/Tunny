@@ -63,13 +63,19 @@ namespace Tunny.Solver.Optuna
             switch (optimize.EndState)
             {
                 case EndState.Timeout:
-                    TunnyMessageBox.Show("Solver completed successfully.\nThe specified time has elapsed.", "Tunny");
+                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.", "Tunny");
                     break;
                 case EndState.AllTrialCompleted:
-                    TunnyMessageBox.Show("Solver completed successfully.\nThe specified number of trials has been completed.", "Tunny");
+                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified number of trials has been completed.", "Tunny");
                     break;
                 case EndState.StoppedByUser:
-                    TunnyMessageBox.Show("Solver completed successfully.\nThe user stopped the solver.", "Tunny");
+                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe user stopped the solver.", "Tunny");
+                    break;
+                case EndState.DirectionNumNotMatch:
+                    TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case EndState.UseExitStudyWithoutLoading:
+                    TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 default:
                     TunnyMessageBox.Show("Solver error.", "Tunny");
