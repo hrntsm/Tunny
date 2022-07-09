@@ -34,8 +34,11 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - The UI of the Restore tab was confusing, so the UI was modified to make it easier to understand which button to press and how the results are output.
 - The progress bar on the Output tab has been made to show progress in a more understandable way.
 - Error messages are displayed when the input to Tunny component is not appropriate, and inappropriate input wires are automatically removed.
+- Error massage in python runtime is more clear.
+  - Added error message when the number of objective does not match the existing Study.
+  - Added error message when a Study with the same name exists but is used without Loading.
 
-### Fix
+### Fixed
 
 - Stopped sampling when there was no geometry input
 - Once optimize output error, the component won't run again
@@ -43,6 +46,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Optuna-DashBoard and storage relate functions do not work properly when a different Storage path is specified in Settings than the default.
 - Pressing the stop button in output and the stop button in Optimize does not stop the operation.
 - Components were in their normal color instead of blue.
+- Once an error occurs in PythonRuntime, the optimization will not work after that.
 
 ## [0.3.0] -2022-05-03
 
