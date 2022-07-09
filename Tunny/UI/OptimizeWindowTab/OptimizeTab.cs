@@ -20,6 +20,8 @@ namespace Tunny.UI
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.StudyName = studyNameTextBox.Text;
+            _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
+            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
             OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
@@ -27,6 +29,10 @@ namespace Tunny.UI
                 return;
             }
 
+            if (optimizeBackgroundWorker.IsBusy)
+            {
+                optimizeBackgroundWorker.Dispose();
+            }
             optimizeBackgroundWorker.RunWorkerAsync(_component);
             optimizeStopButton.Enabled = true;
         }
@@ -61,10 +67,11 @@ namespace Tunny.UI
         {
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
+            OptimizeLoop.IsForcedStopOptimize = true;
 
             if (optimizeBackgroundWorker != null)
             {
-                optimizeBackgroundWorker.CancelAsync();
+                optimizeBackgroundWorker.Dispose();
             }
 
             //Enable GUI

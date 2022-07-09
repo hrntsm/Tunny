@@ -3,71 +3,56 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Rhino.FileIO;
 using Rhino.Geometry;
 
 using Tunny.Component;
-using Tunny.GHType;
-using Tunny.Solver;
+using Tunny.Settings;
+using Tunny.Solver.Optuna;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Optimization
 {
-    internal static class RestoreLoop
+    internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
+        public static TunnySettings Settings;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;
-        public static string Mode;
+        public static OutputMode Mode;
+        public static bool IsForcedStopOutput;
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
 
-            var cFishes = new List<Fish>();
+            var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
-            ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
+            ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
             if (modelResult.Length == 0)
             {
-                TunnyMessageBox.Show("There are no restore models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            switch (Mode)
+            foreach (ModelResult result in modelResult)
             {
-                case "Restore":
-                    for (int i = 0; i < modelResult.Length; i++)
-                    {
-                        SetResultToFish(cFishes, modelResult[i], NickNames);
-                        s_worker.ReportProgress(i * 100 / modelResult.Length);
-                    }
-                    break;
-                case "Reflect":
-                    if (modelResult.Length > 1)
-                    {
-                        TunnyMessageBox.Show(
-                            "You input multi restore model numbers, but this function only reflect variables to slider or genepool to first one.",
-                            "Tunny"
-                        );
-                    }
-                    SetResultToFish(cFishes, modelResult[0], NickNames);
-                    s_worker.ReportProgress(100);
-                    break;
+                SetResultToFish(fishes, result, NickNames);
             }
 
-            s_component.Fishes = cFishes.ToArray();
+            s_component.Fishes = fishes.ToArray();
             s_worker.ReportProgress(100);
 
             if (s_worker != null)
             {
-                s_worker.CancelAsync();
+                s_worker.Dispose();
             }
-            TunnyMessageBox.Show("Restore completed successfully.", "Tunny");
+            TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
         private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
@@ -77,7 +62,7 @@ namespace Tunny.Optimization
                 ModelNumber = model.Number,
                 Variables = SetVariables(model, nickname),
                 Objectives = SetObjectives(model),
-                Geometries = SetGeometries(model)
+                Attributes = SetAttributes(model),
             });
         }
 
@@ -98,6 +83,10 @@ namespace Tunny.Optimization
         {
             string[] nickNames = s_component.GhInOut.Objectives.Select(x => x.NickName).ToArray();
             var objectives = new Dictionary<string, double>();
+            if (model.Objectives == null)
+            {
+                return null;
+            }
             for (int i = 0; i < model.Objectives.Length; i++)
             {
                 objectives.Add(nickNames[i], model.Objectives[i]);
@@ -105,20 +94,26 @@ namespace Tunny.Optimization
             return objectives;
         }
 
-        private static List<GeometryBase> SetGeometries(ModelResult model)
+        private static Dictionary<string, object> SetAttributes(ModelResult model)
         {
-            var geometries = new List<GeometryBase>();
-            if (model.GeometryJson.Length == 0)
+            var attribute = new Dictionary<string, object>();
+            foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
             {
-                return geometries;
+                if (attr.Key == "Geometry")
+                {
+                    var geometries = new List<GeometryBase>();
+                    foreach (string json in attr.Value)
+                    {
+                        geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                    }
+                    attribute.Add(attr.Key, geometries);
+                }
+                else
+                {
+                    attribute.Add(attr.Key, attr.Value);
+                }
             }
-
-            foreach (string json in model.GeometryJson)
-            {
-                var geometry = Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase;
-                geometries.Add(geometry);
-            }
-            return geometries;
+            return attribute;
         }
     }
 }

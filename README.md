@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/releases)
 [![download](https://img.shields.io/github/downloads/hrntsm/Tunny/total)](https://github.com/hrntsm/Tunny/releases)
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284)](https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/Tunny&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284)](https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&utm_medium=referral&utm_content=hrntsm/Tunny&utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/63a5b0a923062d25ad23/maintainability)](https://codeclimate.com/github/hrntsm/Tunny/maintainability)
 ![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/hrntsm/Tunny)
 
@@ -32,71 +32,83 @@ First, Tunny runs on Windows only.
 1. Right-click the file > Properties > make sure there is no "blocked" text
 1. In Grasshopper, choose File > Special Folders > Components folder. Move Tunny folder you downloaded there.
 1. Restart Rhino and Grasshopper
+1. In Grasshopper, Place the Tunny component and double-click the icon to start downloading the necessary libraries.
 1. Enjoy!
-
-Tunny also support yak. So you can find Tunny in Rhinoceros package manager.
 
 ## Usage
 
 ### Quick usage
 
-![tunny](https://user-images.githubusercontent.com/23289252/166186417-7541ccb9-efa0-4569-a068-373ebde1c0ed.gif)
+https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-97b0-840a4f1f329c.mp4
 
 ### Component location
 
-Tunny can be found in the Params tab if it has been installed.
+Tunny can be found in the Tunny tab if it has been installed.
 
-![image](https://user-images.githubusercontent.com/23289252/172011237-583835a5-3ecc-4ca9-a77d-29c1f5a1687a.png)
+<img width="20%" alt="image" src="https://user-images.githubusercontent.com/23289252/178104435-25ea999a-5f98-443d-b645-f157c4252d0b.png">
 
 ### Inputs
 
 #### Variables
 
-This component support Number slider & GenePool.
+Tunny support Number slider & GenePool.
 Optimization is performed when this value is changed by Tunny.
 
 It is recommended that components be given nicknames, as this makes it easier to understand the resulting process. Here it is named x1, x2, x3.
+The genepool values are nicknamed from the top as genepool1, genepool2, and so on.
 
-![image](https://user-images.githubusercontent.com/23289252/172011316-b8e812bd-0362-443f-8841-a2157032b7d1.png)
+<img width="40%" src="https://user-images.githubusercontent.com/23289252/178102419-903887d3-6a30-4485-adf8-369ac218a28b.png">
 
 #### Objectives
 
-Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.  
+Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.
 
 Each objective value have to be separated to a number component.
 It is recommended to set nickname like input variables.
 
-![image](https://user-images.githubusercontent.com/23289252/172011407-e1c8a0ea-f5bc-466a-9670-d005f35af89c.png)
+<img width="40%" src="https://user-images.githubusercontent.com/23289252/178102527-4d8a90f1-c2d6-4611-8b20-ea655c9f752b.png">
 
-#### Geometries 
+#### Attributes
 
 This input is optional.
 
-GeometryBase input is supported as a function to save the model during optimization.
-Input of large date size geometries are deprecated because it makes the analysis heavier.
+The ConstructFishAttribute component allows you to set an Attribute for each trial of optimization.
+ZUI is supported, so you can increase the number of inputs to any number and set Attribute.
 
-![image](https://user-images.githubusercontent.com/23289252/172012910-d49e526b-db3f-43cd-af45-1f24a9f0e221.png)
+The nickname of the ConstructFishAttribute component input is stored paired with the value entered as the name of that Attribute.
+
+The Geometry input has a special meaning; what is entered here will be displayed as a Geometry when the results are sorted in the FishMarket component described below.
+
+<img width="40%" src="https://user-images.githubusercontent.com/23289252/178102569-16b64446-1a67-4eb6-80fa-a4c846c4b294.png">
 
 ### Other components
 
-![image](https://user-images.githubusercontent.com/23289252/172013084-a74e08d7-9b8d-47a5-8eef-f6840a369ee1.png)
+<img width="934" alt="image" src="https://user-images.githubusercontent.com/23289252/178102825-18bd8884-1d3d-4a3a-a3da-a9a2fb8e9324.png">
 
-- The Fish component, a Param component dedicated to Tunny, was created to facilitate data handling.
-- You can internalize and save the results to an gh file.
-- The FishMarket comport allows the results obtained from optimization to be viewed side by side just like a fish market.
+- The **Fish** component, a Param component dedicated to Tunny, was created to facilitate data handling.
+  - You can internalize and save the results to a .gh file.
+- The **FishMarket** component allows the results obtained from optimization to be viewed side by side just like a fish market.
+- The **Deconstruct Fish** and **Deconstruct Fish Attribute** components are used to retrieve each value.
+
+  - The DeconstructFishAttribute component, like the ExplodeTree component, creates Outputs for the number of Attributes by selecting Match outputs from the context menu.
+
+    <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178102966-f3960954-254d-465c-8a19-03fceecda83e.png">
 
 ### Optimization Window
 
 Double-click on the component icon to open the form for performing optimization.
 
-The component differs from other optimization components in that it does not graph the learning status during optimization.  
+The component differs from other optimization components in that it does not graph the learning status during optimization in GrasshopperUI.  
 On the other hand, it is possible to save the learning status, and even after the optimization has been completed once, the study content can be used to perform ongoing optimization.
+
+On the other hand, Running the Dashboard function, which charts the results, starts a server that handles the results and allows you to see the optimization results in real time in your browser.  
+This feature is useful for analyzing post-optimization results, as it allows the user to not only see the results in real time, but also to view several figures at once.
 
 It is recommended that optimization be performed a small number of times, and after completion, the results should be reviewed to determine if continued optimization should be performed.
 
 #### Optimize Tab
 
-![image](https://user-images.githubusercontent.com/23289252/172011516-a0d170f9-f118-4f62-a1aa-b76f4cbb9218.png)
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103175-02ade5f2-fa3e-4f34-9757-1b944d699785.png">
 
 Values that can be set and their meanings are as follows.
 
@@ -112,40 +124,28 @@ Values that can be set and their meanings are as follows.
   - This number of trials will be performed.
   - If the grid sampler is selected, the calculation is performed by dividing each entered Variable by this number.
     - **Note** that the number of calculations is (Number of trial) to the power of (Number of Variable).
+- Timeout(sec)
+  - After the time set here elapses, optimization stops.
+  - If 0 is input, no stop by time is performed.
 - Load if study file exists
   - If the checkbox is checked and a file of optimization results is available, the results of the training will be used to perform ongoing optimization.
 - Study Name
   - Name of the training result to be saved in the optimization result file
 - RunOptimize
   - Push the button to perform the optimization.
+- Stop
+  - Forces optimization to stop.
+  - Even when stopped, the system automatically saves the results up to the most recent evaluation.
 
-#### Settings Tab
+#### Visualize Tab
 
-![image](https://user-images.githubusercontent.com/23289252/172011625-3b5476f8-c143-40a1-809b-e6e066379d1e.png)
-
-Tunny stores the settings in this window in json.
-Detailed settings in optimization can now also be configured in Json.
-
-- Open API page
-  - Open Optuna's API page with the meaning of each value in the advanced optimization settings.
-- Save settings to json
-  - Save the settings to Json.
-  - Settings are also saved when the window is closed with the X button.
-- Load settings from json
-  - Loads a settings file.
-- Open Settings.Json folder
-  - Open the folder where the settings files are stored.
-  - The file Settings.json is Tunny's settings file. Edit it with any text editor.
-
-#### Result Tab
-
-![image](https://user-images.githubusercontent.com/23289252/172011663-e60c9e10-f8fc-48bd-b909-2c15b0b23ca9.png)
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103288-6e7bc0fe-f730-4e23-8159-6d43df55f1ae.png">
 
 Values that can be set and their meanings are as follows.
 
-- Dashboard
-  -  Run Real-time Web Dashboard for Optuna.
-  - https://github.com/optuna/optuna-dashboard#features
+- Open Optuna-Dashboard
+  - Run Real-time Web Dashboard for handling optimization results.
+    - https://github.com/optuna/optuna-dashboard#features
   - You can now more easily check results or even see results in real time.
 - Visualize type
   - The following types of graphing are supported. See the [Optuna.visualization](https://optuna.readthedocs.io/en/stable/reference/visualization/index.html) page below for more information.
@@ -157,17 +157,68 @@ Values that can be set and their meanings are as follows.
     6. param importance
     7. pareto front
     8. slice
+- Show selected type of plots
+  - Show the plot selected in Visualize type above.
+
+#### Output Tab
+
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103410-e2a589b2-ffd0-436e-b4b1-2deb4e7346ba.png">
+
+Values that can be set and their meanings are as follows.
+
+- First, the model number matches the tree structure of the output.
+  - If the model number is 42, the output is {0; 42}.
+- Parato solutions
+  - Output Parato solutions.
+- All trials
+  - Output all trials.
+- Use model number
+
+  - Multiple values can be entered separated by commas, such as "1,3,42".
+
+- Output
+
+  - The model with the number entered here is restored from the optimization results file and is the output of the component.
+  - The model number can be found on each plot.
+  - In the example below, model number 424 with a value of -11.49 for the first objective function is selected.
+
+    <img width="50%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103519-70286138-3dc4-4d65-ae66-7c918e5b4805.png">
+
+- Reflect the result on the sliders
+  - The result of the input model number is reflected in Slider and Genepool.
+
+#### Settings Tab
+
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103758-3ca8fa88-4796-4b0c-8c17-f8a810a47caf.png">
+
+Tunny stores the optimize settings in json.  
+Detailed settings in optimization can now also be configured in Json.
+
+- **IMPORTANT**: The default hyperparameter for each optimization contain Optuna defaults.
+  - These are not necessarily the best values for your optimization.
+  - Pay particular attention to the initial population or trial.
+    - the recommended initial trial for TPE is "the number of Variable" x 11 - 1.
+- Open API page
+  - Open Optuna's API page with the meaning of each value in the advanced optimization settings.
+- Save settings to json
+  - Save the settings to Json.
+  - Settings are also saved when the window is closed with the X button.
+- Load settings from json
+  - Loads a settings file.
+- Open Settings.Json folder
+  - Open the folder where the settings files are stored.
+  - The file Settings.json is Tunny's settings file. Edit it with any text editor.
+
+#### File Tab
+
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103993-d4448d03-5aef-45bd-a8a0-497a0cf417a4.png">
+
 - Open result file folder
-  - Open the folder where the file containing the optimization results is located. The results are stored under the name "Tunny_Opt_Result.db".
+  - Open the folder where the file containing the optimization results is located.
+  - Results are saved as "Tunny_Opt_Result.db" by default.
+  - This can be made to be anything you want by rewriting the Setting.json file.
 - Clear result file
   - Deletes the optimization result file.
-  - If the value of the input changes, delete it if necessary, since optimization using a file containing the same name study will cause content conflicts and optimization will not be performed.
-- Set restore model number
-  - The model with the number entered here is restored from the optimization results file and is the output of the component.
-  - The model number matches the tree structure of the output.
-  - -1 is input, the results of all models on the Pareto front will output.
-  - -10 is input, the results of all models will output
-  - Clicking the Reflect button will cause Grasshopper to reflect the results of the model number inputted.
 
 ## Contact information
 
@@ -176,6 +227,7 @@ Values that can be set and their meanings are as follows.
 - HP : [https://hiron.dev/](https://hiron.dev/)
 - Mail : support(at)hrntsm.com
   - change (at) to @
+- Postings to [the discussion page](https://github.com/hrntsm/Tunny/discussions) are also welcome.
 
 ## Donation
 
@@ -191,5 +243,6 @@ Or [pixivFANBOX](https://hiron.fanbox.cc/)
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
 Copyright© 2022, hrntsm
 
-Release package is embedded Python runtime & optuna libraries.
+Tunny use Python runtime & some python packages.
 These depend on their own licenses.
+Please see PYTHON_PACKAGE_LICENSE for more license information.

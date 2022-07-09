@@ -49,11 +49,17 @@ namespace Tunny.UI
             optimizeBackgroundWorker.WorkerReportsProgress = true;
             optimizeBackgroundWorker.WorkerSupportsCancellation = true;
 
-            restoreBackgroundWorker.DoWork += RestoreLoop.Run;
-            restoreBackgroundWorker.ProgressChanged += RestoreProgressChangedHandler;
-            restoreBackgroundWorker.RunWorkerCompleted += RestoreStopButton_Click;
-            restoreBackgroundWorker.WorkerReportsProgress = true;
-            restoreBackgroundWorker.WorkerSupportsCancellation = true;
+            outputResultBackgroundWorker.DoWork += OutputLoop.Run;
+            outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
+            outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;
+            outputResultBackgroundWorker.WorkerReportsProgress = true;
+            outputResultBackgroundWorker.WorkerSupportsCancellation = true;
+        }
+
+        public void BGDispose()
+        {
+            optimizeBackgroundWorker.Dispose();
+            outputResultBackgroundWorker.Dispose();
         }
 
         private void LoadSettingJson()
@@ -77,9 +83,10 @@ namespace Tunny.UI
         {
             samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
             nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
             loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
             studyNameTextBox.Text = _settings.StudyName;
-            restoreModelNumTextBox.Text = _settings.Result.RestoreNumberString;
+            outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
         }
 
@@ -106,14 +113,14 @@ namespace Tunny.UI
             ghCanvas?.EnableUI();
             SaveUIValues();
 
+            //TODO: use cancelAsync to stop the background worker safely
             if (optimizeBackgroundWorker != null)
             {
-                optimizeBackgroundWorker.CancelAsync();
+                optimizeBackgroundWorker.Dispose();
             }
-
-            if (restoreBackgroundWorker != null)
+            if (outputResultBackgroundWorker != null)
             {
-                restoreBackgroundWorker.CancelAsync();
+                outputResultBackgroundWorker.Dispose();
             }
         }
 
@@ -121,9 +128,10 @@ namespace Tunny.UI
         {
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
+            _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
             _settings.StudyName = studyNameTextBox.Text;
-            _settings.Result.RestoreNumberString = restoreModelNumTextBox.Text;
+            _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
         }

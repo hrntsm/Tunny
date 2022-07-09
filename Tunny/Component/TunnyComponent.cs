@@ -6,33 +6,33 @@ using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.Kernel;
 
-using Tunny.GHType;
 using Tunny.Resources;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Component
 {
-    public partial class TunnyComponent : GH_Component
+    public partial class TunnyComponent : GH_Component, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
         internal Fish[] Fishes;
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.tertiary;
 
         public TunnyComponent()
           : base("Tunny", "Tunny",
-              "Tunny is an optimization component wrapped in optuna.",
-              "Params", "Tunny")
+            "Tunny is an optimization component wrapped in optuna.",
+            "Tunny", "Tunny")
         {
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Variables", "Connect variable number slider here.", GH_ParamAccess.tree);
-            pManager.AddNumberParameter("Objectives", "Objectives", "Connect objective number component here.", GH_ParamAccess.tree);
-            pManager.AddGeometryParameter("Geometries", "Geometries", "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.", GH_ParamAccess.tree);
+            pManager.AddNumberParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
+            pManager.AddNumberParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
+            pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
@@ -51,6 +51,26 @@ namespace Tunny.Component
         public void GhInOutInstantiate()
         {
             GhInOut = new GrasshopperInOut(this);
+        }
+
+        public override void RemovedFromDocument(GH_Document document)
+        {
+            base.RemovedFromDocument(document);
+            if (OptimizationWindow != null)
+            {
+                OptimizationWindow.BGDispose();
+                OptimizationWindow.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (OptimizationWindow != null)
+            {
+                OptimizationWindow.BGDispose();
+                OptimizationWindow.Dispose();
+            }
+            GC.SuppressFinalize(this);
         }
 
         public override void CreateAttributes()
@@ -76,7 +96,6 @@ namespace Tunny.Component
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;
-
         public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }

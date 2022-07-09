@@ -7,15 +7,27 @@ using Newtonsoft.Json;
 
 using Rhino.Geometry;
 
-namespace Tunny.GHType
+namespace Tunny.Type
 {
     [Serializable]
     public class Fish
     {
-        public int ModelNumber;
-        public List<GeometryBase> Geometries;
-        public Dictionary<string, double> Variables;
-        public Dictionary<string, double> Objectives;
+        public int ModelNumber { get; set; }
+        public Dictionary<string, double> Variables { get; set; }
+        public Dictionary<string, double> Objectives { get; set; }
+        public Dictionary<string, object> Attributes { get; set; }
+
+        public List<GeometryBase> GetGeometries()
+        {
+            var geometries = new List<GeometryBase>();
+            if (Attributes == null)
+            {
+                return geometries;
+            }
+
+            bool hasGeometry = Attributes.ContainsKey("Geometry");
+            return hasGeometry ? Attributes["Geometry"] as List<GeometryBase> : geometries;
+        }
 
         public string SerializeToJson()
         {
@@ -42,7 +54,6 @@ namespace Tunny.GHType
             {
                 return (Fish)new BinaryFormatter().Deserialize(ms);
             }
-
         }
     }
 }

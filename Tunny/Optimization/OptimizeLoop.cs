@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 
 using Tunny.Component;
 using Tunny.Settings;
-using Tunny.Solver;
+using Tunny.Solver.Optuna;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -18,15 +18,19 @@ namespace Tunny.Optimization
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
         public static TunnySettings Settings;
+        public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as TunnyComponent;
-
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
+            if (result == null || double.IsNaN(result[0]))
+            {
+                return;
+            }
             var decimalResults = result.Select(Convert.ToDecimal).ToList();
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
@@ -50,10 +54,9 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
 
-            bool solverStarted = optunaSolver.RunSolver(
-                variables, objectives, EvaluateFunction, Settings);
+            bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
@@ -69,7 +72,8 @@ namespace Tunny.Optimization
             var result = new EvaluatedGHResult
             {
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
-                GeometryJson = s_component.GhInOut.GetGeometryJson()
+                GeometryJson = s_component.GhInOut.GetGeometryJson(),
+                Attribute = s_component.GhInOut.GetAttributes()
             };
             return result;
         }

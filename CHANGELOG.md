@@ -6,6 +6,48 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [0.4.0] -2022-07-09
+
+### Added
+
+- Component CI build to get easily development build.
+  - If you want to dogfooding, go right ahead!
+- Param_FishAttribute component
+- Construct Fish Attribute component
+  - Component that creates attribute information to be attached to each trial of optimization
+- Deconstruct Fish component
+  - Component that separates optimization results into Variables, Objectives, and Attributes
+- Deconstruct Fish Attribute component
+  - Components that output each attribute
+- Python package licenses to clearly state the license of each package.
+- requirements.txt file to avoid conflict python packages versions.
+- Implemented Timeout to stop optimization over time.
+- Input components are now highlighted in color, as are other optimization components.
+
+### Changed
+
+- Component location on the Tunny tab.
+- The output of the Tunny component is made into Fish, a type that summarizes the results.
+- The Geometry input of the Tunny component has been changed to Attribute to allow more attribute information to be handled.
+- When restoring the results from Tunny component as Fishes, those that the trial did not work and Objective could not get are not output.
+- Update UI
+  - The UI of the Restore tab was confusing, so the UI was modified to make it easier to understand which button to press and how the results are output.
+- The progress bar on the Output tab has been made to show progress in a more understandable way.
+- Error messages are displayed when the input to Tunny component is not appropriate, and inappropriate input wires are automatically removed.
+- Error massage in python runtime is more clear.
+  - Added error message when the number of objective does not match the existing Study.
+  - Added error message when a Study with the same name exists but is used without Loading.
+
+### Fixed
+
+- Stopped sampling when there was no geometry input
+- Once optimize output error, the component won't run again
+  - I've tried to do a proper Dispose to fix this problem, but it still doesn't work sometimes.
+- Optuna-DashBoard and storage relate functions do not work properly when a different Storage path is specified in Settings than the default.
+- Pressing the stop button in output and the stop button in Optimize does not stop the operation.
+- Components were in their normal color instead of blue.
+- Once an error occurs in PythonRuntime, the optimization will not work after that.
+
 ## [0.3.0] -2022-05-03
 
 ### Added

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 using Python.Included;
@@ -8,7 +10,7 @@ namespace Tunny.Util
 {
     public static class PythonInstaller
     {
-        public static string Path = ".";
+        public static string Path { get; set; } = ".";
         public static void Run(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
@@ -30,7 +32,7 @@ namespace Tunny.Util
         {
             for (int i = 0; i < packageList.Length; i++)
             {
-                string packageName = packageList[i] == "plotly"
+                string packageName = packageList[i].Split('=')[0] == "plotly"
                     ? packageList[i] + "... This package will take time to install. Please wait"
                     : packageList[i];
                 worker.ReportProgress((i + 2) * 100 / installItems, "Now installing " + packageName + "...");
@@ -41,7 +43,7 @@ namespace Tunny.Util
         internal static bool CheckPackagesIsInstalled()
         {
             Installer.InstallPath = Path;
-            string[] packageList = GetTunnyPackageList();
+            string[] packageList = GetTunnyPackageList().Select(s => s.Split('=')[0]).ToArray();
             if (!Installer.IsPythonInstalled())
             {
                 return false;
@@ -52,8 +54,8 @@ namespace Tunny.Util
             }
             foreach (string package in packageList)
             {
-                string[] aa = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl" };
-                if (!Installer.IsModuleInstalled(package) && !aa.Contains(package))
+                string[] singleFilePackages = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl" };
+                if (!Installer.IsModuleInstalled(package) && !singleFilePackages.Contains(package))
                 {
                     return false;
                 }
@@ -69,21 +71,17 @@ namespace Tunny.Util
 
         private static string[] GetTunnyPackageList()
         {
-            return new[]
+            string line = string.Empty;
+            var pipPackages = new List<string>();
+
+            using (var sr = new StreamReader(Path + "/Lib/requirements.txt"))
             {
-                "alembic",    "attrs",    "autopage",
-                "bottle",     "cliff",    "cmaes",
-                "cmd2",       "colorama", "colorlog",
-                "greenlet",   "joblib",   "Mako",
-                "MarkupSafe", "numpy",    "optuna",
-                "optuna-dashboard",       "packaging",
-                "pbr",        "plotly",   "prettytable",
-                "pyparsing",  "pyperclip","pyreadline3",
-                "PyYAML",     "scikit-learn",
-                "scipy",      "six",      "sklearn",
-                "SQLAlchemy", "stevedore","tenacity",
-                "threadpoolctl", "tqdm", "wcwidth",
-            };
+                while ((line = sr.ReadLine()) != null)
+                {
+                    pipPackages.Add(line);
+                }
+            }
+            return pipPackages.ToArray();
         }
     }
 }
