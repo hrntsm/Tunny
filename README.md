@@ -18,7 +18,7 @@
   <a href="https://open.vscode.dev/hrntsm/Tunny"><img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open in Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="Open in Visual Studio Code"></a></p>
 </p>
 
-**Tunny** is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.
+:fish:**Tunny**:fish: is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.
 
 The following is taken from the official website
 
@@ -30,7 +30,7 @@ Optuna official site
 
 - https://optuna.org/
 
-## :fish:Install 
+## :tropical_fish: Install 
 
 First, Tunny runs on Windows only.
 
@@ -41,7 +41,7 @@ First, Tunny runs on Windows only.
 1. In Grasshopper, Place the Tunny component and double-click the icon to start downloading the necessary libraries.
 1. Enjoy!
 
-## :shshi: Support
+## :sushi: Support
 
 This software is being updated with your support.
 If you like this software, please donation.
@@ -243,7 +243,7 @@ Detailed settings in optimization can now also be configured in Json.
 - Clear result file
   - Deletes the optimization result file.
 
-## :ocean: Contact information
+## :surfer: Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
 
