@@ -1,18 +1,24 @@
-![TunnyIcon](https://user-images.githubusercontent.com/23289252/162955418-1dbe2830-f0ed-4664-993b-b6f23aaa702a.png)
+<p align="center">
+  <img width="30%"src="https://user-images.githubusercontent.com/23289252/179126574-3cbbd815-02d7-4105-80d0-98040862fd84.png" />
+</p>
+<h1 align="center">
+  Tunny : A Grasshopper optimization component using Optuna
+</h1>
+<p align="center">
+  <a href="https://github.com/hrntsm/Tunny/blob/master/LICENSE"><img src="https://img.shields.io/github/license/hrntsm/Tunny" alt="License"></a>
+  <a href="https://github.com/hrntsm/Tunny/releases"><img src="https://img.shields.io/github/v/release/hrntsm/Tunny" alt="Release"></a>
+  <a href="https://github.com/hrntsm/Tunny/releases"><img src="https://img.shields.io/github/downloads/hrntsm/Tunny/total" alt="download"></a>
+  <a href="https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/Tunny&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284" alt="Codacy Badge"></a>
+  <a href="https://codeclimate.com/github/hrntsm/Tunny/maintainability"><img src="https://api.codeclimate.com/v1/badges/63a5b0a923062d25ad23/maintainability" alt="Maintainability"></a>
+  <img src="https://img.shields.io/codeclimate/tech-debt/hrntsm/Tunny" alt="Code Climate technical debt">
+</p>
+<p align="center">
+  <a href="https://github.com/hrntsm/Tunny"><img src="https://img.shields.io/github/stars/hrntsm/Tunny?style=social" alt="GitHub Repo stars"></a>
+  <a href="https://github.com/hrntsm/Tunny/network"><img alt="GitHub forks" src="https://img.shields.io/github/forks/hrntsm/Tunny?style=social"></a>
+  <a href="https://open.vscode.dev/hrntsm/Tunny"><img src="https://img.shields.io/static/v1?logo=visualstudiocode&amp;label=&amp;message=Open in Visual Studio Code&amp;labelColor=2c2c32&amp;color=007acc&amp;logoColor=007acc" alt="Open in Visual Studio Code"></a></p>
+</p>
 
-# Tunny : A Grasshopper optimization component using Optuna
-
-[![License](https://img.shields.io/github/license/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/blob/master/LICENSE)
-[![Release](https://img.shields.io/github/v/release/hrntsm/Tunny)](https://github.com/hrntsm/Tunny/releases)
-[![download](https://img.shields.io/github/downloads/hrntsm/Tunny/total)](https://github.com/hrntsm/Tunny/releases)
-
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284)](https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&utm_medium=referral&utm_content=hrntsm/Tunny&utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/63a5b0a923062d25ad23/maintainability)](https://codeclimate.com/github/hrntsm/Tunny/maintainability)
-![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/hrntsm/Tunny)
-
-[![GitHub Repo stars](https://img.shields.io/github/stars/hrntsm/Tunny?style=social)](https://github.com/hrntsm/Tunny)
-
-**Tunny** is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.
+:fish:**Tunny**:fish: is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.
 
 The following is taken from the official website
 
@@ -24,7 +30,7 @@ Optuna official site
 
 - https://optuna.org/
 
-## Install
+## :tropical_fish: Install
 
 First, Tunny runs on Windows only.
 
@@ -35,21 +41,39 @@ First, Tunny runs on Windows only.
 1. In Grasshopper, Place the Tunny component and double-click the icon to start downloading the necessary libraries.
 1. Enjoy!
 
-## Usage
+## :sushi: Support
 
-### Quick usage
+This software is being updated with your support.
+If you like this software, please donation.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
+
+Or [pixivFANBOX](https://hiron.fanbox.cc/)
+
+## :blowfish: License
+
+Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
+Copyright© 2022, hrntsm
+
+Tunny use Python runtime & some python packages.
+These depend on their own licenses.
+Please see PYTHON_PACKAGE_LICENSE for more license information.
+
+## :dolphin: Usage
+
+### :speedboat: Quick usage
 
 https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-97b0-840a4f1f329c.mp4
 
-### Component location
+### :anchor: Component location
 
 Tunny can be found in the Tunny tab if it has been installed.
 
 <img width="20%" alt="image" src="https://user-images.githubusercontent.com/23289252/178104435-25ea999a-5f98-443d-b645-f157c4252d0b.png">
 
-### Inputs
+### :whale: Inputs
 
-#### Variables
+#### :ocean: Variables
 
 Tunny support Number slider & GenePool.
 Optimization is performed when this value is changed by Tunny.
@@ -59,7 +83,7 @@ The genepool values are nicknamed from the top as genepool1, genepool2, and so o
 
 <img width="40%" src="https://user-images.githubusercontent.com/23289252/178102419-903887d3-6a30-4485-adf8-369ac218a28b.png">
 
-#### Objectives
+#### :whale2: Objectives
 
 Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.
 
@@ -68,7 +92,7 @@ It is recommended to set nickname like input variables.
 
 <img width="40%" src="https://user-images.githubusercontent.com/23289252/178102527-4d8a90f1-c2d6-4611-8b20-ea655c9f752b.png">
 
-#### Attributes
+#### :fried_shrimp: Attributes
 
 This input is optional.
 
@@ -81,7 +105,7 @@ The Geometry input has a special meaning; what is entered here will be displayed
 
 <img width="40%" src="https://user-images.githubusercontent.com/23289252/178102569-16b64446-1a67-4eb6-80fa-a4c846c4b294.png">
 
-### Other components
+### :octopus: Other components
 
 <img width="934" alt="image" src="https://user-images.githubusercontent.com/23289252/178102825-18bd8884-1d3d-4a3a-a3da-a9a2fb8e9324.png">
 
@@ -94,7 +118,7 @@ The Geometry input has a special meaning; what is entered here will be displayed
 
     <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178102966-f3960954-254d-465c-8a19-03fceecda83e.png">
 
-### Optimization Window
+### :shell: Optimization Window
 
 Double-click on the component icon to open the form for performing optimization.
 
@@ -106,7 +130,7 @@ This feature is useful for analyzing post-optimization results, as it allows the
 
 It is recommended that optimization be performed a small number of times, and after completion, the results should be reviewed to determine if continued optimization should be performed.
 
-#### Optimize Tab
+#### :sailboat: Optimize Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103175-02ade5f2-fa3e-4f34-9757-1b944d699785.png">
 
@@ -137,7 +161,7 @@ Values that can be set and their meanings are as follows.
   - Forces optimization to stop.
   - Even when stopped, the system automatically saves the results up to the most recent evaluation.
 
-#### Visualize Tab
+#### :boat: Visualize Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103288-6e7bc0fe-f730-4e23-8159-6d43df55f1ae.png">
 
@@ -160,7 +184,7 @@ Values that can be set and their meanings are as follows.
 - Show selected type of plots
   - Show the plot selected in Visualize type above.
 
-#### Output Tab
+#### :fishing_pole_and_fish: Output Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103410-e2a589b2-ffd0-436e-b4b1-2deb4e7346ba.png">
 
@@ -187,7 +211,7 @@ Values that can be set and their meanings are as follows.
 - Reflect the result on the sliders
   - The result of the input model number is reflected in Slider and Genepool.
 
-#### Settings Tab
+#### :droplet: Settings Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103758-3ca8fa88-4796-4b0c-8c17-f8a810a47caf.png">
 
@@ -209,7 +233,7 @@ Detailed settings in optimization can now also be configured in Json.
   - Open the folder where the settings files are stored.
   - The file Settings.json is Tunny's settings file. Edit it with any text editor.
 
-#### File Tab
+#### :turtle: File Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103993-d4448d03-5aef-45bd-a8a0-497a0cf417a4.png">
 
@@ -220,7 +244,7 @@ Detailed settings in optimization can now also be configured in Json.
 - Clear result file
   - Deletes the optimization result file.
 
-## Contact information
+## :surfer: Contact information
 
 [![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
 
@@ -228,21 +252,3 @@ Detailed settings in optimization can now also be configured in Json.
 - Mail : support(at)hrntsm.com
   - change (at) to @
 - Postings to [the discussion page](https://github.com/hrntsm/Tunny/discussions) are also welcome.
-
-## Donation
-
-This software is being updated with your support.
-If you like this software, please donation.
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
-
-Or [pixivFANBOX](https://hiron.fanbox.cc/)
-
-## License
-
-Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
-Copyright© 2022, hrntsm
-
-Tunny use Python runtime & some python packages.
-These depend on their own licenses.
-Please see PYTHON_PACKAGE_LICENSE for more license information.
