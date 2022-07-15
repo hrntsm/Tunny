@@ -30,7 +30,7 @@ Optuna official site
 
 - https://optuna.org/
 
-## :tropical_fish: Install 
+## :tropical_fish: Install
 
 First, Tunny runs on Windows only.
 
@@ -58,9 +58,10 @@ Copyright© 2022, hrntsm
 Tunny use Python runtime & some python packages.
 These depend on their own licenses.
 Please see PYTHON_PACKAGE_LICENSE for more license information.
+
 ## :dolphin: Usage
 
-### :fishing_pole_and_fish:Quick usage
+### :speedboat: Quick usage
 
 https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-97b0-840a4f1f329c.mp4
 
@@ -72,7 +73,7 @@ Tunny can be found in the Tunny tab if it has been installed.
 
 ### :whale: Inputs
 
-#### Variables
+#### :ocean: Variables
 
 Tunny support Number slider & GenePool.
 Optimization is performed when this value is changed by Tunny.
@@ -82,7 +83,7 @@ The genepool values are nicknamed from the top as genepool1, genepool2, and so o
 
 <img width="40%" src="https://user-images.githubusercontent.com/23289252/178102419-903887d3-6a30-4485-adf8-369ac218a28b.png">
 
-#### Objectives
+#### :whale2: Objectives
 
 Optimization is performed to minimize the value input here. Multi-objective optimization is also supported.
 
@@ -91,7 +92,7 @@ It is recommended to set nickname like input variables.
 
 <img width="40%" src="https://user-images.githubusercontent.com/23289252/178102527-4d8a90f1-c2d6-4611-8b20-ea655c9f752b.png">
 
-#### Attributes
+#### :fried_shrimp: Attributes
 
 This input is optional.
 
@@ -129,7 +130,7 @@ This feature is useful for analyzing post-optimization results, as it allows the
 
 It is recommended that optimization be performed a small number of times, and after completion, the results should be reviewed to determine if continued optimization should be performed.
 
-#### Optimize Tab
+#### :sailboat: Optimize Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103175-02ade5f2-fa3e-4f34-9757-1b944d699785.png">
 
@@ -160,7 +161,7 @@ Values that can be set and their meanings are as follows.
   - Forces optimization to stop.
   - Even when stopped, the system automatically saves the results up to the most recent evaluation.
 
-#### Visualize Tab
+#### :boat: Visualize Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103288-6e7bc0fe-f730-4e23-8159-6d43df55f1ae.png">
 
@@ -183,7 +184,7 @@ Values that can be set and their meanings are as follows.
 - Show selected type of plots
   - Show the plot selected in Visualize type above.
 
-#### Output Tab
+#### :fishing_pole_and_fish: Output Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103410-e2a589b2-ffd0-436e-b4b1-2deb4e7346ba.png">
 
@@ -210,7 +211,7 @@ Values that can be set and their meanings are as follows.
 - Reflect the result on the sliders
   - The result of the input model number is reflected in Slider and Genepool.
 
-#### Settings Tab
+#### :droplet: Settings Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103758-3ca8fa88-4796-4b0c-8c17-f8a810a47caf.png">
 
@@ -232,7 +233,7 @@ Detailed settings in optimization can now also be configured in Json.
   - Open the folder where the settings files are stored.
   - The file Settings.json is Tunny's settings file. Edit it with any text editor.
 
-#### File Tab
+#### :turtle: File Tab
 
 <img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103993-d4448d03-5aef-45bd-a8a0-497a0cf417a4.png">
 
