@@ -255,15 +255,18 @@ namespace Tunny.Solver.Optuna
                     sampler = Sampler.TPE(optuna, Settings);
                     break;
                 case 1:
-                    sampler = Sampler.NSGAII(optuna, Settings);
+                    sampler = Sampler.BoTorch(optuna, Settings);
                     break;
                 case 2:
-                    sampler = Sampler.CmaEs(optuna, Settings);
+                    sampler = Sampler.NSGAII(optuna, Settings);
                     break;
                 case 3:
-                    sampler = Sampler.Random(optuna, Settings);
+                    sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 4:
+                    sampler = Sampler.Random(optuna, Settings);
+                    break;
+                case 5:
                     sampler = Sampler.Grid(optuna, Variables, ref nTrials);
                     break;
                 default:
