@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED]
+
+### Added
+
+- Hypervolume visualization
+  - It is useful for determining convergence in multi-objective optimization.
+
 ## [0.4.0] -2022-07-09
 
 ### Added
