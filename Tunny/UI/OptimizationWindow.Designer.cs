@@ -321,7 +321,8 @@ namespace Tunny.UI
             "parallel coordinate",
             "param importances",
             "pareto front",
-            "slice"});
+            "slice",
+            "hypervolume"});
             this.visualizeTypeComboBox.Location = new System.Drawing.Point(33, 160);
             this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
