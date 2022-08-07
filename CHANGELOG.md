@@ -12,6 +12,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Hypervolume visualization
   - It is useful for determining convergence in multi-objective optimization.
+- BoTorch Sampler
+  - This sampler use Gaussian Process and support multi-objective optimization.
 
 ## [0.4.0] -2022-07-09
 
@@ -61,7 +63,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Use json to set sampler detail settings
   - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
-- UI for above detail settings 
+- UI for above detail settings
 - If input "-10" in restore model number, Tunny output all result
 - Fish component
   - Special GH_Param component for Tunny result to handle its result easier.

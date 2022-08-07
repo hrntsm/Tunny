@@ -159,15 +159,16 @@ namespace Tunny.UI
             // 
             this.samplerComboBox.FormattingEnabled = true;
             this.samplerComboBox.Items.AddRange(new object[] {
-            "TPE",
-            "NSGA-II",
-            "CMA-ES",
+            "BayesianOpt (TPE)",
+            "BayesianOpt (GP)",
+            "GeneticAlgorithm (NSGA-II)",
+            "EvolutionStrategy (CMA-ES)",
             "Random",
             "Grid"});
-            this.samplerComboBox.Location = new System.Drawing.Point(148, 12);
+            this.samplerComboBox.Location = new System.Drawing.Point(104, 12);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.samplerComboBox.Name = "samplerComboBox";
-            this.samplerComboBox.Size = new System.Drawing.Size(214, 31);
+            this.samplerComboBox.Size = new System.Drawing.Size(258, 31);
             this.samplerComboBox.TabIndex = 7;
             // 
             // samplerTypeText

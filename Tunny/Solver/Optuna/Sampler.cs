@@ -8,6 +8,15 @@ namespace Tunny.Solver.Optuna
 {
     public static class Sampler
     {
+        internal static dynamic BoTorch(dynamic optuna, TunnySettings settings)
+        {
+            BoTorch boTorch = settings.Optimize.Sampler.BoTorch;
+            return optuna.integration.BoTorchSampler(
+                n_startup_trials: boTorch.NStartupTrials
+            );
+
+        }
+
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
             Settings.Random random = settings.Optimize.Sampler.Random;
