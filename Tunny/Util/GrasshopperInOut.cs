@@ -120,7 +120,7 @@ namespace Tunny.Util
                 {
                     nickName = "param" + i++;
                 }
-
+                double eps = Convert.ToDouble(slider.Slider.Epsilon);
                 switch (slider.Slider.Type)
                 {
                     case Grasshopper.GUI.Base.GH_SliderAccuracy.Even:
@@ -145,7 +145,7 @@ namespace Tunny.Util
                         break;
                 }
 
-                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
+                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName, eps));
             }
         }
 
@@ -160,11 +160,11 @@ namespace Tunny.Util
                 bool isInteger = genePool.Decimals == 0;
                 decimal lowerBond = genePool.Minimum;
                 decimal upperBond = genePool.Maximum;
-
+                double eps = Math.Pow(10, -genePool.Decimals);
                 for (int j = 0; j < genePool.Count; j++)
                 {
                     string name = nickNames[i] + j;
-                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name));
+                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name, eps));
                 }
             }
         }

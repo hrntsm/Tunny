@@ -187,7 +187,9 @@ namespace Tunny.Solver.Optuna
                 {
                     for (int j = 0; j < Variables.Count; j++)
                     {
-                        xTest[j] = trial.suggest_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond);
+                        xTest[j] = Variables[j].IsInteger
+                        ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, Variables[j].Epsilon)
+                        : trial.suggest_discrete_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, Variables[j].Epsilon);
                     }
                     result = EvalFunc(xTest, progress);
 
