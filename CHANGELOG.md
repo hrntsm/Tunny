@@ -15,6 +15,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - BoTorch Sampler
   - This sampler use Gaussian Process and support multi-objective optimization.
 
+### Changed
+
+- When genepool is an input, it now creates variable names using nicknames.
+
+### Fixed
+
+- The PythonInstaller window now has no text on the progress bar.
+
 ## [0.4.0] -2022-07-09
 
 ### Added
