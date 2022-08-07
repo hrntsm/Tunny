@@ -87,8 +87,8 @@ namespace Tunny.Solver.Optuna
         {
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
-                "Please send below message (& gh file if possible) to Tunny support.\n\n" +
-                "If this error occurs, the Tunny solver will not work after this unless Rhino is restarted." +
+                "Please send below message (& gh file if possible) to Tunny support.\n" +
+                "If this error occurs, the Tunny solver will not work after this unless Rhino is restarted.\n\n" +
                 "\" " + e.Message + " \"", "Tunny",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
