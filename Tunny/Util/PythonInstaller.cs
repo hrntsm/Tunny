@@ -54,8 +54,9 @@ namespace Tunny.Util
             }
             foreach (string package in packageList)
             {
-                string[] singleFilePackages = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl" };
-                if (!Installer.IsModuleInstalled(package) && !singleFilePackages.Contains(package))
+                string[] singleFilePackages = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl", "typing_extensions" };
+                string[] useUnderLinePackages = { "opt-einsum", "pyro-api", "pyro-ppl" };
+                if (!Installer.IsModuleInstalled(package) && !singleFilePackages.Contains(package) && !useUnderLinePackages.Contains(package))
                 {
                     return false;
                 }
