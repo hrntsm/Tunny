@@ -18,6 +18,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - When genepool is an input, it now creates variable names using nicknames.
+- Use `suggest_int` and `suggest_discrete_uniform` instead of `suggest_uniform` for more accurate variable generation in optimization
 
 ### Fixed
 
