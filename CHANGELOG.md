@@ -23,6 +23,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Fixed
 
 - The PythonInstaller window now has no text on the progress bar.
+- When more than one Study exists, another Study Name is set and RunOpt no longer causes a Solver Error.
 
 ## [0.4.0] -2022-07-09
 

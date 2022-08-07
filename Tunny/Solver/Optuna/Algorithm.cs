@@ -95,16 +95,16 @@ namespace Tunny.Solver.Optuna
         private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
         {
             PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
-            var directions = new Dictionary<string, int>();
+            var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
             {
-                directions.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
+                studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
             }
 
-            return directions.ContainsKey(Settings.StudyName)
-                ? CheckDirections(nObjective, directions)
-                : directions.Count == 0;
+            return studySummaryDict.ContainsKey(Settings.StudyName)
+                ? CheckDirections(nObjective, studySummaryDict)
+                : studySummaryDict.Count != 0;
         }
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
