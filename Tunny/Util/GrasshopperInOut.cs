@@ -151,18 +151,20 @@ namespace Tunny.Util
 
         private void SetInputGenePoolValues(ICollection<Variable> variables)
         {
-            int count = 0;
-
-            foreach (GalapagosGeneListObject genePool in _genePool)
+            var nickNames = new List<string>();
+            for (int i = 0; i < _genePool.Count; i++)
             {
+                GalapagosGeneListObject genePool = _genePool[i];
+                string nickName = nickNames.Contains(genePool.NickName) ? genePool.NickName + i + "-" : genePool.NickName;
+                nickNames.Add(nickName);
                 bool isInteger = genePool.Decimals == 0;
                 decimal lowerBond = genePool.Minimum;
                 decimal upperBond = genePool.Maximum;
 
                 for (int j = 0; j < genePool.Count; j++)
                 {
-                    string nickName = "genepool" + count++;
-                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
+                    string name = nickNames[i] + j;
+                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name));
                 }
             }
         }
