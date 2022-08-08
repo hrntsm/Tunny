@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Python.Runtime;
+
 using Tunny.Settings;
 using Tunny.Util;
 
@@ -40,17 +42,18 @@ namespace Tunny.Solver.Optuna
             );
         }
 
+        //FIXME:FIX
         internal static dynamic Grid(dynamic optuna, List<Variable> variables, ref int nTrials)
         {
-            var searchSpace = new Dictionary<string, List<double>>();
+            var searchSpace = new PyDict();
             for (int i = 0; i < variables.Count; i++)
             {
-                var numSpace = new List<double>();
+                var numSpace = new PyList();
                 for (int j = 0; j < nTrials; j++)
                 {
-                    numSpace.Add(variables[i].LowerBond + (variables[i].UpperBond - variables[i].LowerBond) * j / (nTrials - 1));
+                    numSpace.Append(new PyFloat(variables[i].LowerBond + (variables[i].UpperBond - variables[i].LowerBond) * j / (nTrials - 1)));
                 }
-                searchSpace.Add(variables[i].NickName, numSpace);
+                searchSpace.SetItem(new PyString(variables[i].NickName), numSpace);
             }
             nTrials = (int)Math.Pow(nTrials, variables.Count);
             return optuna.samplers.GridSampler(searchSpace);
@@ -83,6 +86,18 @@ namespace Tunny.Solver.Optuna
                 group: tpe.Group,
                 warn_independent_sampling: tpe.WarnIndependentSampling,
                 constant_liar: tpe.ConstantLiar
+            );
+        }
+
+        internal static dynamic QMC(dynamic optuna, TunnySettings settings)
+        {
+            QuasiMonteCarlo qmc = settings.Optimize.Sampler.QMC;
+            return optuna.samplers.QMCSampler(
+                qmc_type: qmc.QmcType,
+                scramble: qmc.Scramble,
+                seed: qmc.Seed,
+                // warn_asynchronous_seeding: qmc.WarnAsynchronousSeeding,
+                warn_independent_sampling: qmc.WarnIndependentSampling
             );
         }
     }

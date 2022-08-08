@@ -159,10 +159,11 @@ namespace Tunny.UI
             // 
             this.samplerComboBox.FormattingEnabled = true;
             this.samplerComboBox.Items.AddRange(new object[] {
-            "BayesianOpt (TPE)",
-            "BayesianOpt (GP)",
+            "BayesianOptimization (TPE)",
+            "BayesianOptimization (GP)",
             "GeneticAlgorithm (NSGA-II)",
             "EvolutionStrategy (CMA-ES)",
+            "Quasi-MonteCarlo",
             "Random",
             "Grid"});
             this.samplerComboBox.Location = new System.Drawing.Point(104, 12);

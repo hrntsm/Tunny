@@ -102,9 +102,7 @@ namespace Tunny.Solver.Optuna
                 studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
             }
 
-            return studySummaryDict.ContainsKey(Settings.StudyName)
-                ? CheckDirections(nObjective, studySummaryDict)
-                : studySummaryDict.Count != 0;
+            return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
         }
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
@@ -266,9 +264,12 @@ namespace Tunny.Solver.Optuna
                     sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 4:
-                    sampler = Sampler.Random(optuna, Settings);
+                    sampler = Sampler.QMC(optuna, Settings);
                     break;
                 case 5:
+                    sampler = Sampler.Random(optuna, Settings);
+                    break;
+                case 6:
                     sampler = Sampler.Grid(optuna, Variables, ref nTrials);
                     break;
                 default:

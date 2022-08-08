@@ -9,6 +9,7 @@ namespace Tunny.Settings
         public Tpe Tpe { get; set; } = new Tpe();
         public CmaEs CmaEs { get; set; } = new CmaEs();
         public NSGAII NsgaII { get; set; } = new NSGAII();
+        public QuasiMonteCarlo QMC { get; set; } = new QuasiMonteCarlo();
         public BoTorch BoTorch { get; set; } = new BoTorch();
     }
 }
