@@ -104,7 +104,10 @@ namespace Tunny.Optimization
                     var geometries = new List<GeometryBase>();
                     foreach (string json in attr.Value)
                     {
-                        geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                        }
                     }
                     attribute.Add(attr.Key, geometries);
                 }
