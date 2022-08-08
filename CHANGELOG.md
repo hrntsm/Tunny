@@ -14,16 +14,21 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - It is useful for determining convergence in multi-objective optimization.
 - BoTorch Sampler
   - This sampler use Gaussian Process and support multi-objective optimization.
+- Quasi-MonteCarlo Sampler
+  - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html)
 
 ### Changed
 
 - When genepool is an input, it now creates variable names using nicknames.
 - Use `suggest_int` and `suggest_discrete_uniform` instead of `suggest_uniform` for more accurate variable generation in optimization
+- Updated Optuna used to v3.0.0rc
+- Random and Grid samplers now support multi-objective optimization
 
 ### Fixed
 
 - The PythonInstaller window now has no text on the progress bar.
 - When more than one Study exists, another Study Name is set and RunOpt no longer causes a Solver Error.
+- The error does not occur when the Brep of Geometry of Attribute is null.
 
 ## [0.4.0] -2022-07-09
 
