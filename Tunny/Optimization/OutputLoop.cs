@@ -32,7 +32,7 @@ namespace Tunny.Optimization
 
             var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
             if (modelResult.Length == 0)
             {

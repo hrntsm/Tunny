@@ -48,14 +48,14 @@ namespace Tunny.Optimization
         {
             List<Variable> variables = s_component.GhInOut.Variables;
             List<IGH_Param> objectives = s_component.GhInOut.Objectives;
+            bool hasConstraint = s_component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
             {
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
-
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };

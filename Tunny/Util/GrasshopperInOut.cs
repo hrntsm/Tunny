@@ -31,6 +31,7 @@ namespace Tunny.Util
         public List<GH_NumberSlider> Sliders { get; set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; set; }
+        public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
 
@@ -224,6 +225,7 @@ namespace Tunny.Util
                 if (goo is GH_FishAttribute fishAttr)
                 {
                     _attributes = fishAttr;
+                    HasConstraint = fishAttr.Value.ContainsKey("Constraint");
                     break;
                 }
             }

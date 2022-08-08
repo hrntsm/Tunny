@@ -10,15 +10,6 @@ namespace Tunny.Solver.Optuna
 {
     public static class Sampler
     {
-        internal static dynamic BoTorch(dynamic optuna, TunnySettings settings)
-        {
-            BoTorch boTorch = settings.Optimize.Sampler.BoTorch;
-            return optuna.integration.BoTorchSampler(
-                n_startup_trials: boTorch.NStartupTrials
-            );
-
-        }
-
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
             Settings.Random random = settings.Optimize.Sampler.Random;
@@ -59,7 +50,7 @@ namespace Tunny.Solver.Optuna
             return optuna.samplers.GridSampler(searchSpace);
         }
 
-        internal static dynamic NSGAII(dynamic optuna, TunnySettings settings)
+        internal static dynamic NSGAII(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
             NSGAII nsga2 = settings.Optimize.Sampler.NsgaII;
             return optuna.samplers.NSGAIISampler(
@@ -67,11 +58,12 @@ namespace Tunny.Solver.Optuna
                 mutation_prob: nsga2.MutationProb,
                 crossover_prob: nsga2.CrossoverProb,
                 swapping_prob: nsga2.SwappingProb,
-                seed: nsga2.Seed
+                seed: nsga2.Seed,
+                constraints_func: hasConstraints ? ConstraintFunc() : null
             );
         }
 
-        internal static dynamic TPE(dynamic optuna, TunnySettings settings)
+        internal static dynamic TPE(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
             Tpe tpe = settings.Optimize.Sampler.Tpe;
             return optuna.samplers.TPESampler(
@@ -85,9 +77,20 @@ namespace Tunny.Solver.Optuna
                 multivariate: tpe.Multivariate,
                 group: tpe.Group,
                 warn_independent_sampling: tpe.WarnIndependentSampling,
-                constant_liar: tpe.ConstantLiar
+                constant_liar: tpe.ConstantLiar,
+                constraints_func: hasConstraints ? ConstraintFunc() : null
             );
         }
+
+        internal static dynamic BoTorch(dynamic optuna, TunnySettings settings, bool hasConstraints)
+        {
+            BoTorch boTorch = settings.Optimize.Sampler.BoTorch;
+            return optuna.integration.BoTorchSampler(
+                n_startup_trials: boTorch.NStartupTrials,
+                constraints_func: hasConstraints ? ConstraintFunc() : null
+            );
+        }
+
 
         internal static dynamic QMC(dynamic optuna, TunnySettings settings)
         {
@@ -99,6 +102,16 @@ namespace Tunny.Solver.Optuna
                 // warn_asynchronous_seeding: qmc.WarnAsynchronousSeeding,
                 warn_independent_sampling: qmc.WarnIndependentSampling
             );
+        }
+
+        internal static dynamic ConstraintFunc()
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(
+                "def constraints(trial):\n" +
+                "  return trial.user_attrs[\"Constraint\"]\n"
+            );
+            return ps.Get("constraints");
         }
     }
 }
