@@ -16,6 +16,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - This sampler use Gaussian Process and support multi-objective optimization.
 - Quasi-MonteCarlo Sampler
   - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html)
+- Support Constraint.
+  - Only TPE, GP, NSGAII can use constraint.
 
 ### Changed
 
