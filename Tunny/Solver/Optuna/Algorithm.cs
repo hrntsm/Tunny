@@ -7,6 +7,7 @@ using Python.Runtime;
 
 using Tunny.Optimization;
 using Tunny.Settings;
+using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver.Optuna
@@ -291,6 +292,10 @@ namespace Tunny.Solver.Optuna
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
+            }
+            if (samplerType > 2 && hasConstraints)
+            {
+                TunnyMessageBox.Show("Only TPE, GP and NSGAII support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return sampler;
         }
