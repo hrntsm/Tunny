@@ -85,5 +85,17 @@ namespace Tunny.Solver.Optuna
                 constant_liar: tpe.ConstantLiar
             );
         }
+
+        internal static dynamic QMC(dynamic optuna, TunnySettings settings)
+        {
+            QuasiMonteCarlo qmc = settings.Optimize.Sampler.QMC;
+            return optuna.samplers.QMCSampler(
+                qmc_type: qmc.QmcType,
+                scramble: qmc.Scramble,
+                seed: qmc.Seed,
+                // warn_asynchronous_seeding: qmc.WarnAsynchronousSeeding,
+                warn_independent_sampling: qmc.WarnIndependentSampling
+            );
+        }
     }
 }

@@ -180,7 +180,7 @@ namespace Tunny.Solver.Optuna
             }
 
             PyList hvs = ComputeHypervolume(optuna, trials, maxObjectiveValues, out PyList trialNumbers);
-            return CreateFigure(trials, hvs, trialNumbers);
+            return CreateHypervolumeFigure(trials, hvs, trialNumbers);
         }
 
         private static PyList ComputeHypervolume(dynamic optuna, dynamic[] trials, double[] maxObjectiveValues, out PyList trialNumbers)
@@ -211,7 +211,7 @@ namespace Tunny.Solver.Optuna
             return hvs;
         }
 
-        private static dynamic CreateFigure(dynamic[] trials, PyList hvs, PyList trialNumbers)
+        private static dynamic CreateHypervolumeFigure(dynamic[] trials, PyList hvs, PyList trialNumbers)
         {
             dynamic go = Py.Import("plotly.graph_objects");
 
@@ -224,10 +224,10 @@ namespace Tunny.Solver.Optuna
             plotRange.SetItem("range", new PyList(rangeObj));
 
             dynamic fig = go.Figure();
-            fig.add_trace(go.Scatter(plotItems, name: "Hyper Volume"));
+            fig.add_trace(go.Scatter(plotItems, name: "Hypervolume"));
             fig.update_layout(xaxis: plotRange);
             fig.update_xaxes(title_text: "#Trials");
-            fig.update_yaxes(title_text: "Hyper Volume");
+            fig.update_yaxes(title_text: "Hypervolume");
 
             return fig;
         }
