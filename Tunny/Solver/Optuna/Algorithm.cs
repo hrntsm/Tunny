@@ -102,8 +102,7 @@ namespace Tunny.Solver.Optuna
                 studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
             }
 
-            return !studySummaryDict.ContainsKey(Settings.StudyName)
-|| CheckDirections(nObjective, studySummaryDict);
+            return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
         }
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)

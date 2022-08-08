@@ -47,10 +47,10 @@ namespace Tunny.UI
                 return false;
             }
             else if (objectiveValues.Count > 1
-                     && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random" || samplerComboBox.Text == "Grid"))
+                     && (samplerComboBox.Text == "EvolutionStrategy (CMA-ES)"))
             {
                 TunnyMessageBox.Show(
-                    "CMA-ES, Random and Grid samplers only support single objective optimization.",
+                    "CMA-ES samplers only support single objective optimization.",
                     "Tunny",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
