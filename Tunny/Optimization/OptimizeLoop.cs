@@ -55,7 +55,7 @@ namespace Tunny.Optimization
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
