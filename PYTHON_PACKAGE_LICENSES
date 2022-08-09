@@ -1803,7 +1803,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 optuna
-2.10.1
+3.0.0rc0
 MIT License
 https://optuna.org/
 MIT License
@@ -1829,7 +1829,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 optuna-dashboard
-0.7.1
+0.7.2
 MIT License
 https://github.com/optuna/optuna-dashboard
 MIT License
