@@ -26,11 +26,13 @@ namespace Tunny.Component
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "Geometry", _geomDescription, GH_ParamAccess.list);
+            pManager.AddNumberParameter("Constraint", "Constraint", _geomDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr1", "Attr1", _attrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", _attrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
+            Params.Input[3].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -85,7 +87,13 @@ namespace Tunny.Component
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
-            return side == GH_ParameterSide.Input ? index == 0 ? SetGeometryParameterInput() : SetGenericParameterInput(index) : null;
+            return side == GH_ParameterSide.Input
+                ? index == 0
+                    ? SetGeometryParameterInput()
+                    : index == 1
+                        ? SetNumberParameterInput()
+                        : SetGenericParameterInput(index)
+                : null;
         }
 
         private IGH_Param SetGenericParameterInput(int index)
@@ -94,6 +102,17 @@ namespace Tunny.Component
             p.Name = p.NickName = $"Attr{index}";
             p.Description = _attrDescription;
             p.Access = GH_ParamAccess.list;
+            p.Optional = true;
+            return p;
+        }
+
+        private IGH_Param SetNumberParameterInput()
+        {
+            var p = new Param_Number();
+            p.Name = p.NickName = $"Constraint";
+            p.Description = _attrDescription;
+            p.Access = GH_ParamAccess.list;
+            p.MutableNickName = false;
             p.Optional = true;
             return p;
         }

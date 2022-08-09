@@ -19,12 +19,14 @@ namespace Tunny.Solver.Optuna
     {
         public double[] XOpt { get; private set; }
         private readonly string _componentFolder;
+        private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
 
-        public Optuna(string componentFolder, TunnySettings settings)
+        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint)
         {
             _componentFolder = componentFolder;
             _settings = settings;
+            _hasConstraint = hasConstraint;
             string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
@@ -44,7 +46,7 @@ namespace Tunny.Solver.Optuna
 
             try
             {
-                var optimize = new Algorithm(variables, objNickName, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objNickName, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.GetXOptimum();
 
@@ -124,43 +126,41 @@ namespace Tunny.Solver.Optuna
             PythonEngine.Shutdown();
         }
 
-        private static void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
+        private void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
         {
-            dynamic vis;
             switch (visualize)
             {
                 case "contour":
-                    vis = optuna.visualization.plot_contour(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_contour(study, target_name: nickNames[0]).show();
                     break;
                 case "EDF":
-                    vis = optuna.visualization.plot_edf(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_edf(study, target_name: nickNames[0]).show();
                     break;
                 case "intermediate values":
-                    vis = optuna.visualization.plot_intermediate_values(study);
+                    optuna.visualization.plot_intermediate_values(study).show();
                     break;
                 case "optimization history":
-                    vis = optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]).show();
                     break;
                 case "parallel coordinate":
-                    vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]).show();
                     break;
                 case "param importances":
-                    vis = optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_param_importances(study, target_name: nickNames[0]).show();
                     break;
                 case "pareto front":
-                    vis = optuna.visualization.plot_pareto_front(study, target_names: nickNames);
+                    optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null).show();
                     break;
                 case "slice":
-                    vis = optuna.visualization.plot_slice(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
                     break;
                 case "hypervolume":
-                    vis = PlotHypervolume(optuna, study);
+                    PlotHypervolume(optuna, study).show();
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
                     return;
             }
-            vis.show();
         }
 
         private static dynamic PlotHypervolume(dynamic optuna, dynamic study)

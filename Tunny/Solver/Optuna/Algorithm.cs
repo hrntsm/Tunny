@@ -7,6 +7,7 @@ using Python.Runtime;
 
 using Tunny.Optimization;
 using Tunny.Settings;
+using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver.Optuna
@@ -14,6 +15,7 @@ namespace Tunny.Solver.Optuna
     public class Algorithm
     {
         private List<Variable> Variables { get; set; }
+        private bool HasConstraints { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
@@ -22,11 +24,12 @@ namespace Tunny.Solver.Optuna
         public EndState EndState { get; set; }
 
         public Algorithm(
-            List<Variable> variables, string[] objNickName,
+            List<Variable> variables, bool hasConstraint, string[] objNickName,
             TunnySettings settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
             Variables = variables;
+            HasConstraints = hasConstraint;
             ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
@@ -46,7 +49,7 @@ namespace Tunny.Solver.Optuna
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna);
+                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
 
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
@@ -234,31 +237,46 @@ namespace Tunny.Solver.Optuna
 
             if (result.Attribute != null)
             {
-                foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+                SetNonGeometricAttr(result, trial);
+            }
+        }
+
+        private static void SetNonGeometricAttr(EvaluatedGHResult result, dynamic trial)
+        {
+            foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+            {
+                var pyList = new PyList();
+                if (pair.Key == "Constraint")
                 {
-                    var pyList = new PyList();
+                    foreach (string str in pair.Value)
+                    {
+                        pyList.Append(new PyFloat(double.Parse(str)));
+                    }
+                }
+                else
+                {
                     foreach (string str in pair.Value)
                     {
                         pyList.Append(new PyString(str));
                     }
-                    trial.set_user_attr(pair.Key, pyList);
                 }
+                trial.set_user_attr(pair.Key, pyList);
             }
         }
 
-        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna)
+        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna, bool hasConstraints)
         {
             dynamic sampler;
             switch (samplerType)
             {
                 case 0:
-                    sampler = Sampler.TPE(optuna, Settings);
+                    sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
                 case 1:
-                    sampler = Sampler.BoTorch(optuna, Settings);
+                    sampler = Sampler.BoTorch(optuna, Settings, hasConstraints);
                     break;
                 case 2:
-                    sampler = Sampler.NSGAII(optuna, Settings);
+                    sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
                     break;
                 case 3:
                     sampler = Sampler.CmaEs(optuna, Settings);
@@ -274,6 +292,10 @@ namespace Tunny.Solver.Optuna
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
+            }
+            if (samplerType > 2 && hasConstraints)
+            {
+                TunnyMessageBox.Show("Only TPE, GP and NSGAII support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return sampler;
         }
