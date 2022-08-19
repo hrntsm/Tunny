@@ -88,6 +88,7 @@ namespace Tunny.UI
             studyNameTextBox.Text = _settings.StudyName;
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
+            InitializeSamplerSettings();
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
