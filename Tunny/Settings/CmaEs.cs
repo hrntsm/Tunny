@@ -10,7 +10,7 @@ namespace Tunny.Settings
         public int NStartupTrials { get; set; } = 1;
         public bool WarnIndependentSampling { get; set; } = true;
         public bool ConsiderPrunedTrials { get; set; }
-        public string RestartStrategy { get; set; }
+        public string RestartStrategy { get; set; } = string.Empty;
         public int IncPopsize { get; set; } = 2;
         public bool UseSeparableCma { get; set; }
     }
