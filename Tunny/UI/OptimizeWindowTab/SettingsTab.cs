@@ -22,6 +22,31 @@ namespace Tunny.UI
             cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
         }
 
+        private void TpeDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetTpeSettings(new Tpe());
+        }
+
+        private void NsgaDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetNSGAIISettings(new NSGAII());
+        }
+
+        private void CmaEsDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetCmaEsSettings(new CmaEs());
+        }
+
+        private void BoTorchDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetBoTorchSettings(new BoTorch());
+        }
+
+        private void QmcDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetQMCSettings(new QuasiMonteCarlo());
+        }
+
         private void InitializeSamplerSettings()
         {
             Sampler sampler = _settings.Optimize.Sampler;

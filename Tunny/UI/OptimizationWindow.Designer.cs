@@ -63,6 +63,7 @@ namespace Tunny.UI
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.TPE = new System.Windows.Forms.TabPage();
+            this.tpeDefaultButton = new System.Windows.Forms.Button();
             this.tpeNEICandidatesLabel = new System.Windows.Forms.Label();
             this.tpeNStartupTrialsLabel = new System.Windows.Forms.Label();
             this.tpePriorWeightLabel = new System.Windows.Forms.Label();
@@ -77,9 +78,11 @@ namespace Tunny.UI
             this.tpeConsiderMagicClipCheckBox = new System.Windows.Forms.CheckBox();
             this.tpeConsiderPriorCheckBox = new System.Windows.Forms.CheckBox();
             this.GP = new System.Windows.Forms.TabPage();
+            this.boTorchDefaultButton = new System.Windows.Forms.Button();
             this.boTorchNStartupTrialsLabel = new System.Windows.Forms.Label();
             this.boTorchStartupNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.NSGAII = new System.Windows.Forms.TabPage();
+            this.nsgaDefaultButton = new System.Windows.Forms.Button();
             this.nsgaMutationProbCheckBox = new System.Windows.Forms.CheckBox();
             this.nsgaPopulationSizeLabel = new System.Windows.Forms.Label();
             this.nsgaPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
@@ -89,10 +92,10 @@ namespace Tunny.UI
             this.nsgaCrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsgaMutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsDefaultButton = new System.Windows.Forms.Button();
             this.cmaEsRestartCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsUseSaparableCmaCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsNStartupTrialsLabel = new System.Windows.Forms.Label();
-            this.cmaesNStartup = new System.Windows.Forms.Label();
             this.cmaEsStartupNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.cmaEsConsiderPruneTrialsCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
@@ -101,6 +104,7 @@ namespace Tunny.UI
             this.cmaEsSigmaCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsSigmaNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.QMC = new System.Windows.Forms.TabPage();
+            this.qmcDefaultButton = new System.Windows.Forms.Button();
             this.qmcTypeComboBox = new System.Windows.Forms.ComboBox();
             this.qmcTypeLabel = new System.Windows.Forms.Label();
             this.qmcWarnAsyncSeedingCheckBox = new System.Windows.Forms.CheckBox();
@@ -514,6 +518,7 @@ namespace Tunny.UI
             // 
             // TPE
             // 
+            this.TPE.Controls.Add(this.tpeDefaultButton);
             this.TPE.Controls.Add(this.tpeNEICandidatesLabel);
             this.TPE.Controls.Add(this.tpeNStartupTrialsLabel);
             this.TPE.Controls.Add(this.tpePriorWeightLabel);
@@ -536,6 +541,17 @@ namespace Tunny.UI
             this.toolTip1.SetToolTip(this.TPE, "aa");
             this.TPE.ToolTipText = "aaaaa";
             this.TPE.UseVisualStyleBackColor = true;
+            // 
+            // tpeDefaultButton
+            // 
+            this.tpeDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.tpeDefaultButton.Name = "tpeDefaultButton";
+            this.tpeDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.tpeDefaultButton.TabIndex = 13;
+            this.tpeDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.tpeDefaultButton, "Set to Optuna\'s default value.");
+            this.tpeDefaultButton.UseVisualStyleBackColor = true;
+            this.tpeDefaultButton.Click += new System.EventHandler(this.TpeDefaultButton_Click);
             // 
             // tpeNEICandidatesLabel
             // 
@@ -718,6 +734,7 @@ namespace Tunny.UI
             // 
             // GP
             // 
+            this.GP.Controls.Add(this.boTorchDefaultButton);
             this.GP.Controls.Add(this.boTorchNStartupTrialsLabel);
             this.GP.Controls.Add(this.boTorchStartupNumUpDown);
             this.GP.Location = new System.Drawing.Point(4, 32);
@@ -727,6 +744,17 @@ namespace Tunny.UI
             this.GP.TabIndex = 1;
             this.GP.Text = "GP";
             this.GP.UseVisualStyleBackColor = true;
+            // 
+            // boTorchDefaultButton
+            // 
+            this.boTorchDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.boTorchDefaultButton.Name = "boTorchDefaultButton";
+            this.boTorchDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.boTorchDefaultButton.TabIndex = 14;
+            this.boTorchDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.boTorchDefaultButton, "Set to Optuna\'s default value.");
+            this.boTorchDefaultButton.UseVisualStyleBackColor = true;
+            this.boTorchDefaultButton.Click += new System.EventHandler(this.BoTorchDefaultButton_Click);
             // 
             // boTorchNStartupTrialsLabel
             // 
@@ -763,6 +791,7 @@ namespace Tunny.UI
             // 
             // NSGAII
             // 
+            this.NSGAII.Controls.Add(this.nsgaDefaultButton);
             this.NSGAII.Controls.Add(this.nsgaMutationProbCheckBox);
             this.NSGAII.Controls.Add(this.nsgaPopulationSizeLabel);
             this.NSGAII.Controls.Add(this.nsgaPopulationSizeUpDown);
@@ -777,6 +806,17 @@ namespace Tunny.UI
             this.NSGAII.TabIndex = 3;
             this.NSGAII.Text = "NSGAII";
             this.NSGAII.UseVisualStyleBackColor = true;
+            // 
+            // nsgaDefaultButton
+            // 
+            this.nsgaDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.nsgaDefaultButton.Name = "nsgaDefaultButton";
+            this.nsgaDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.nsgaDefaultButton.TabIndex = 23;
+            this.nsgaDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.nsgaDefaultButton, "Set to Optuna\'s default value.");
+            this.nsgaDefaultButton.UseVisualStyleBackColor = true;
+            this.nsgaDefaultButton.Click += new System.EventHandler(this.NsgaDefaultButton_Click);
             // 
             // nsgaMutationProbCheckBox
             // 
@@ -910,10 +950,10 @@ namespace Tunny.UI
             // 
             // CMAES
             // 
+            this.CMAES.Controls.Add(this.cmaEsDefaultButton);
             this.CMAES.Controls.Add(this.cmaEsRestartCheckBox);
             this.CMAES.Controls.Add(this.cmaEsUseSaparableCmaCheckBox);
             this.CMAES.Controls.Add(this.cmaEsNStartupTrialsLabel);
-            this.CMAES.Controls.Add(this.cmaesNStartup);
             this.CMAES.Controls.Add(this.cmaEsStartupNumUpDown);
             this.CMAES.Controls.Add(this.cmaEsConsiderPruneTrialsCheckBox);
             this.CMAES.Controls.Add(this.cmaEsWarnIndependentSamplingCheckBox);
@@ -927,6 +967,17 @@ namespace Tunny.UI
             this.CMAES.TabIndex = 2;
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
+            // 
+            // cmaEsDefaultButton
+            // 
+            this.cmaEsDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.cmaEsDefaultButton.Name = "cmaEsDefaultButton";
+            this.cmaEsDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.cmaEsDefaultButton.TabIndex = 33;
+            this.cmaEsDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.cmaEsDefaultButton, "Set to Optuna\'s default value.");
+            this.cmaEsDefaultButton.UseVisualStyleBackColor = true;
+            this.cmaEsDefaultButton.Click += new System.EventHandler(this.CmaEsDefaultButton_Click);
             // 
             // cmaEsRestartCheckBox
             // 
@@ -955,24 +1006,13 @@ namespace Tunny.UI
             // cmaEsNStartupTrialsLabel
             // 
             this.cmaEsNStartupTrialsLabel.AutoSize = true;
-            this.cmaEsNStartupTrialsLabel.Location = new System.Drawing.Point(7, 7);
+            this.cmaEsNStartupTrialsLabel.Location = new System.Drawing.Point(7, 5);
             this.cmaEsNStartupTrialsLabel.Name = "cmaEsNStartupTrialsLabel";
             this.cmaEsNStartupTrialsLabel.Size = new System.Drawing.Size(219, 23);
             this.cmaEsNStartupTrialsLabel.TabIndex = 30;
             this.cmaEsNStartupTrialsLabel.Text = "Number of startup trials";
             this.toolTip1.SetToolTip(this.cmaEsNStartupTrialsLabel, "The independent sampling is used instead of the CMA-ES algorithm\r\nuntil the given" +
         " number of trials finish in the same study.");
-            // 
-            // cmaesNStartup
-            // 
-            this.cmaesNStartup.AutoSize = true;
-            this.cmaesNStartup.Location = new System.Drawing.Point(7, 5);
-            this.cmaesNStartup.Name = "cmaesNStartup";
-            this.cmaesNStartup.Size = new System.Drawing.Size(219, 23);
-            this.cmaesNStartup.TabIndex = 30;
-            this.cmaesNStartup.Text = "Number of startup trials";
-            this.toolTip1.SetToolTip(this.cmaesNStartup, "The independent sampling is used instead of the CMA-ES algorithm until the given " +
-        "number of trials finish in the same study.");
             // 
             // cmaEsStartupNumUpDown
             // 
@@ -1079,6 +1119,7 @@ namespace Tunny.UI
             // 
             // QMC
             // 
+            this.QMC.Controls.Add(this.qmcDefaultButton);
             this.QMC.Controls.Add(this.qmcTypeComboBox);
             this.QMC.Controls.Add(this.qmcTypeLabel);
             this.QMC.Controls.Add(this.qmcWarnAsyncSeedingCheckBox);
@@ -1090,6 +1131,17 @@ namespace Tunny.UI
             this.QMC.TabIndex = 4;
             this.QMC.Text = "QMC";
             this.QMC.UseVisualStyleBackColor = true;
+            // 
+            // qmcDefaultButton
+            // 
+            this.qmcDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.qmcDefaultButton.Name = "qmcDefaultButton";
+            this.qmcDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.qmcDefaultButton.TabIndex = 33;
+            this.qmcDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.qmcDefaultButton, "Set to Optuna\'s default value.");
+            this.qmcDefaultButton.UseVisualStyleBackColor = true;
+            this.qmcDefaultButton.Click += new System.EventHandler(this.QmcDefaultButton_Click);
             // 
             // qmcTypeComboBox
             // 
@@ -1308,7 +1360,6 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckBox cmaEsRestartCheckBox;
         private System.Windows.Forms.CheckBox cmaEsUseSaparableCmaCheckBox;
         private System.Windows.Forms.Label cmaEsNStartupTrialsLabel;
-        private System.Windows.Forms.Label cmaesNStartup;
         private System.Windows.Forms.NumericUpDown cmaEsStartupNumUpDown;
         private System.Windows.Forms.CheckBox cmaEsConsiderPruneTrialsCheckBox;
         private System.Windows.Forms.CheckBox cmaEsWarnIndependentSamplingCheckBox;
@@ -1321,6 +1372,11 @@ namespace Tunny.UI
         private System.Windows.Forms.Label qmcTypeLabel;
         private System.Windows.Forms.CheckBox qmcWarnAsyncSeedingCheckBox;
         private System.Windows.Forms.CheckBox qmcScrambleCheckBox;
+        private System.Windows.Forms.Button tpeDefaultButton;
+        private System.Windows.Forms.Button boTorchDefaultButton;
+        private System.Windows.Forms.Button nsgaDefaultButton;
+        private System.Windows.Forms.Button cmaEsDefaultButton;
+        private System.Windows.Forms.Button qmcDefaultButton;
     }
 }
 
