@@ -17,11 +17,7 @@ namespace Tunny.UI
             ghCanvas.DisableUI();
 
             optimizeRunButton.Enabled = false;
-            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
-            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
-            _settings.StudyName = studyNameTextBox.Text;
-            _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
-            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            GetUIValues();
             OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))

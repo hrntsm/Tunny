@@ -88,6 +88,7 @@ namespace Tunny.UI
             studyNameTextBox.Text = _settings.StudyName;
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
+            InitializeSamplerSettings();
         }
 
         private void UpdateGrasshopper(IList<decimal> parameters)
@@ -111,7 +112,8 @@ namespace Tunny.UI
         {
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
-            SaveUIValues();
+            GetUIValues();
+            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
 
             //TODO: use cancelAsync to stop the background worker safely
             if (optimizeBackgroundWorker != null)
@@ -124,7 +126,7 @@ namespace Tunny.UI
             }
         }
 
-        private void SaveUIValues()
+        private void GetUIValues()
         {
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
@@ -133,7 +135,7 @@ namespace Tunny.UI
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
-            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
+            _settings.Optimize.Sampler = GetSamplerSettings();
         }
     }
 }

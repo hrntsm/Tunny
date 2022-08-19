@@ -12,7 +12,8 @@ namespace Tunny.Component
 {
     public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
-        private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.\"Geometry\" is a special nickname that is visualized with the optimization results. Do not change it.";
+        private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
+        private readonly string _constraintDescription = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
         private readonly string _attrDescription = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
@@ -26,7 +27,7 @@ namespace Tunny.Component
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "Geometry", _geomDescription, GH_ParamAccess.list);
-            pManager.AddNumberParameter("Constraint", "Constraint", _geomDescription, GH_ParamAccess.list);
+            pManager.AddNumberParameter("Constraint", "Constraint", _constraintDescription, GH_ParamAccess.item);
             pManager.AddGenericParameter("Attr1", "Attr1", _attrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", _attrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
@@ -110,7 +111,7 @@ namespace Tunny.Component
         {
             var p = new Param_Number();
             p.Name = p.NickName = $"Constraint";
-            p.Description = _attrDescription;
+            p.Description = _constraintDescription;
             p.Access = GH_ParamAccess.list;
             p.MutableNickName = false;
             p.Optional = true;
@@ -122,7 +123,7 @@ namespace Tunny.Component
             var p = new Param_Geometry();
             p.Name = p.NickName = "Geometry";
             p.Description = _geomDescription;
-            p.Access = GH_ParamAccess.list;
+            p.Access = GH_ParamAccess.item;
             p.MutableNickName = false;
             p.Optional = true;
             return p;

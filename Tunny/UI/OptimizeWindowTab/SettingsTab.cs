@@ -1,46 +1,190 @@
 using System;
-using System.Diagnostics;
 using System.Windows.Forms;
+
+using Tunny.Settings;
 
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private void SettingsOpenAPIPage_Click(object sender, EventArgs e)
+        private void NsgaMutationProbCheckedChanged(object sender, EventArgs e)
         {
-            int apiIndex = settingsAPIComboBox.SelectedIndex;
-            switch (apiIndex)
+            nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
+        }
+
+        private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
+        {
+            cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
+        }
+
+        private void CmaEsRestartStrategyCheckedChanged(object sender, EventArgs e)
+        {
+            cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
+        }
+
+        private void TpeDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetTpeSettings(new Tpe());
+        }
+
+        private void NsgaDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetNSGAIISettings(new NSGAII());
+        }
+
+        private void CmaEsDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetCmaEsSettings(new CmaEs());
+        }
+
+        private void BoTorchDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetBoTorchSettings(new BoTorch());
+        }
+
+        private void QmcDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetQMCSettings(new QuasiMonteCarlo());
+        }
+
+        private void InitializeSamplerSettings()
+        {
+            Sampler sampler = _settings.Optimize.Sampler;
+            SetTpeSettings(sampler.Tpe);
+            SetBoTorchSettings(sampler.BoTorch);
+            SetNSGAIISettings(sampler.NsgaII);
+            SetCmaEsSettings(sampler.CmaEs);
+            SetQMCSettings(sampler.QMC);
+        }
+
+        private void SetTpeSettings(Tpe tpe)
+        {
+            tpeStartupNumUpDown.Value = tpe.NStartupTrials;
+            tpeEINumUpDown.Value = tpe.NEICandidates;
+            tpePriorNumUpDown.Value = (decimal)tpe.PriorWeight;
+
+            tpeConsiderPriorCheckBox.Checked = tpe.ConsiderPrior;
+            tpeMultivariateCheckBox.Checked = tpe.Multivariate;
+            tpeConsiderEndpointsCheckBox.Checked = tpe.ConsiderEndpoints;
+            tpeGroupCheckBox.Checked = tpe.Group;
+            tpeConsiderMagicClipCheckBox.Checked = tpe.ConsiderMagicClip;
+            tpeConstantLiarCheckBox.Checked = tpe.ConstantLiar;
+            tpeWarnIndependentSamplingCheckBox.Checked = tpe.WarnIndependentSampling;
+        }
+
+        private void SetBoTorchSettings(BoTorch boTorch)
+        {
+            boTorchStartupNumUpDown.Value = boTorch.NStartupTrials;
+        }
+
+        private void SetNSGAIISettings(NSGAII nsga)
+        {
+            nsgaMutationProbCheckBox.Checked = nsga.MutationProb != null;
+            nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
+            nsgaMutationProbUpDown.Value = nsga.MutationProb != null ? (decimal)nsga.MutationProb : 0;
+            nsgaCrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
+            nsgaSwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
+            nsgaPopulationSizeUpDown.Value = nsga.PopulationSize;
+        }
+
+        private void SetCmaEsSettings(CmaEs cmaEs)
+        {
+            cmaEsStartupNumUpDown.Value = cmaEs.NStartupTrials;
+            cmaEsSigmaCheckBox.Checked = cmaEs.Sigma0 != null;
+            cmaEsSigmaNumUpDown.Value = cmaEs.Sigma0 != null ? (decimal)cmaEs.Sigma0 : 0;
+            cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
+
+            cmaEsWarnIndependentSamplingCheckBox.Checked = cmaEs.WarnIndependentSampling;
+            cmaEsConsiderPruneTrialsCheckBox.Checked = cmaEs.ConsiderPrunedTrials;
+            cmaEsUseSaparableCmaCheckBox.Checked = cmaEs.UseSeparableCma;
+
+            cmaEsRestartCheckBox.Checked = cmaEs.RestartStrategy != string.Empty;
+            cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
+            cmaEsIncPopSizeUpDown.Value = cmaEs.IncPopsize;
+        }
+
+        private void SetQMCSettings(QuasiMonteCarlo qmc)
+        {
+            qmcTypeComboBox.SelectedIndex = qmc.QmcType == "sobol" ? 0 : 1;
+
+            qmcScrambleCheckBox.Checked = qmc.Scramble;
+            qmcWarnIndependentSamplingCheckBox.Checked = qmc.WarnIndependentSampling;
+            qmcWarnAsyncSeedingCheckBox.Checked = qmc.WarnAsynchronousSeeding;
+        }
+
+        private Sampler GetSamplerSettings()
+        {
+            return new Sampler
             {
-                case 0: // TPE
-                    Process.Start("https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.TPESampler.html");
-                    break;
-                case 1: // NSGA2
-                    Process.Start("https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.NSGAIISampler.html");
-                    break;
-                case 2: // CMA-ES
-                    Process.Start("https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.CmaEsSampler.html");
-                    break;
-                case 3: // Random
-                    Process.Start("https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.RandomSampler.html");
-                    break;
-            }
+                Tpe = GetTpeSettings(),
+                BoTorch = GetBoTorchSettings(),
+                NsgaII = GetNSGAIISettings(),
+                CmaEs = GetCmaEsSettings(),
+                QMC = GetQMCSettings()
+            };
         }
 
-        private void SettingsFromJson_Click(object sender, EventArgs e)
+        private Tpe GetTpeSettings()
         {
-            LoadSettingJson();
-            InitializeUIValues();
+            return new Tpe
+            {
+                NStartupTrials = (int)tpeStartupNumUpDown.Value,
+                NEICandidates = (int)tpeEINumUpDown.Value,
+                PriorWeight = (double)tpePriorNumUpDown.Value,
+                ConsiderPrior = tpeConsiderPriorCheckBox.Checked,
+                Multivariate = tpeMultivariateCheckBox.Checked,
+                ConsiderEndpoints = tpeConsiderEndpointsCheckBox.Checked,
+                Group = tpeGroupCheckBox.Checked,
+                ConsiderMagicClip = tpeConsiderMagicClipCheckBox.Checked,
+                ConstantLiar = tpeConstantLiarCheckBox.Checked,
+                WarnIndependentSampling = tpeWarnIndependentSamplingCheckBox.Checked
+            };
         }
 
-        private void SettingsToJson_Click(object sender, EventArgs e)
+        private BoTorch GetBoTorchSettings()
         {
-            SaveUIValues();
+            return new BoTorch
+            {
+                NStartupTrials = (int)boTorchStartupNumUpDown.Value
+            };
         }
 
-        private void SettingsFolderOpen_Click(object sender, EventArgs e)
+        private NSGAII GetNSGAIISettings()
         {
-            SaveUIValues();
-            Process.Start("EXPLORER.EXE", _component.GhInOut.ComponentFolder);
+            return new NSGAII
+            {
+                MutationProb = nsgaMutationProbCheckBox.Checked
+                    ? (double?)nsgaMutationProbUpDown.Value : null,
+                CrossoverProb = (double)nsgaCrossoverProbUpDown.Value,
+                SwappingProb = (double)nsgaSwappingProbUpDown.Value,
+                PopulationSize = (int)nsgaPopulationSizeUpDown.Value
+            };
+        }
+
+        private CmaEs GetCmaEsSettings()
+        {
+            return new CmaEs
+            {
+                NStartupTrials = (int)cmaEsStartupNumUpDown.Value,
+                Sigma0 = cmaEsSigmaCheckBox.Checked
+                    ? (double?)cmaEsSigmaNumUpDown.Value : null,
+                WarnIndependentSampling = cmaEsWarnIndependentSamplingCheckBox.Checked,
+                ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked,
+                UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked,
+                RestartStrategy = cmaEsRestartCheckBox.Checked ? "ipop" : string.Empty,
+                IncPopsize = (int)cmaEsIncPopSizeUpDown.Value
+            };
+        }
+
+        private QuasiMonteCarlo GetQMCSettings()
+        {
+            return new QuasiMonteCarlo
+            {
+                QmcType = qmcTypeComboBox.SelectedIndex == 0 ? "sobol" : "halton",
+                Scramble = qmcScrambleCheckBox.Checked,
+                WarnIndependentSampling = qmcWarnIndependentSamplingCheckBox.Checked,
+                WarnAsynchronousSeeding = qmcWarnAsyncSeedingCheckBox.Checked
+            };
         }
     }
 }

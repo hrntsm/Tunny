@@ -18,6 +18,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html)
 - Support Constraint.
   - Only TPE, GP, NSGAII can use constraint.
+- Sampler detail settings UI
+  - Previously it was necessary to change the JSON file of the settings, but now it can be changed in the UI
 
 ### Changed
 

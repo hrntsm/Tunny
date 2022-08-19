@@ -27,7 +27,7 @@ namespace Tunny.Solver.Optuna
                 warn_independent_sampling: cmaEs.WarnIndependentSampling,
                 seed: cmaEs.Seed,
                 consider_pruned_trials: cmaEs.ConsiderPrunedTrials,
-                restart_strategy: cmaEs.RestartStrategy,
+                restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                 inc_popsize: cmaEs.IncPopsize,
                 use_separable_cma: cmaEs.UseSeparableCma
             );
