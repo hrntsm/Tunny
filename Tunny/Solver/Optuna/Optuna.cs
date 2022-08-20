@@ -149,7 +149,8 @@ namespace Tunny.Solver.Optuna
                     optuna.visualization.plot_param_importances(study, target_name: nickNames[0]).show();
                     break;
                 case "pareto front":
-                    optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null).show();
+                    dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                    TruncateParetoFront(fig, study).show();
                     break;
                 case "slice":
                     optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
@@ -161,6 +162,29 @@ namespace Tunny.Solver.Optuna
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
                     return;
             }
+        }
+
+        private static dynamic TruncateParetoFront(dynamic fig, dynamic study)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(
+                "def truncate(fig, study):\n" +
+                "    import json\n" +
+                "    user_attr = study.trials[0].user_attrs\n" +
+                "    has_geometry = 'Geometry' in user_attr\n" +
+                "    if has_geometry == False:\n" +
+                "        return fig\n" +
+                "    for scatter_id in range(len(fig.data)):\n" +
+                "        new_texts = []\n" +
+                "        for i, original_label in enumerate(fig.data[scatter_id]['text']):\n" +
+                "            json_label = json.loads(original_label.replace('<br>', '\\n'))\n" +
+                "            json_label['user_attrs']['Geometry'] = 'True'\n" +
+                "            new_texts.append(json.dumps(json_label, indent=2).replace('\\n', '<br>'))\n" +
+                "        fig.data[scatter_id]['text'] = new_texts\n" +
+                "    return fig\n"
+            );
+            dynamic truncate = ps.Get("truncate");
+            return truncate(fig, study);
         }
 
         private static dynamic PlotHypervolume(dynamic optuna, dynamic study)
