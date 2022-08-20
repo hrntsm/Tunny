@@ -538,8 +538,6 @@ namespace Tunny.UI
             this.TPE.Size = new System.Drawing.Size(406, 393);
             this.TPE.TabIndex = 0;
             this.TPE.Text = "TPE";
-            this.toolTip1.SetToolTip(this.TPE, "aa");
-            this.TPE.ToolTipText = "aaaaa";
             this.TPE.UseVisualStyleBackColor = true;
             // 
             // tpeDefaultButton
