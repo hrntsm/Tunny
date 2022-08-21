@@ -11,8 +11,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Rhino.FileIO;
-
 using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
@@ -378,14 +376,26 @@ namespace Tunny.Util
                 }
 
                 var value = new List<string>();
-                var objList = _attributes.Value[key] as List<object>;
-                foreach (object param in objList)
+                if (key == "Constraint")
                 {
-                    if (param is IGH_Goo goo)
+                    object obj = _attributes.Value[key];
+                    if (obj is double val)
                     {
-                        value.Add(Converter.GooToString(goo, true));
+                        value.Add(val.ToString());
                     }
                 }
+                else
+                {
+                    var objList = _attributes.Value[key] as List<object>;
+                    foreach (object param in objList)
+                    {
+                        if (param is IGH_Goo goo)
+                        {
+                            value.Add(Converter.GooToString(goo, true));
+                        }
+                    }
+                }
+
                 attrs.Add(key, value);
             }
 
