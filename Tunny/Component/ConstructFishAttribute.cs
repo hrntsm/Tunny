@@ -52,18 +52,33 @@ namespace Tunny.Component
                 return;
             }
 
+            GetInputData(DA, paramCount, dict);
+            DA.SetData(0, dict);
+        }
+
+        private void GetInputData(IGH_DataAccess DA, int paramCount, Dictionary<string, object> dict)
+        {
             for (int i = 0; i < paramCount; i++)
             {
-                var list = new List<object>();
-                if (!DA.GetDataList(i, list))
-                {
-                    continue;
-                }
                 string key = Params.Input[i].NickName;
-                dict.Add(key, list);
+                if (i == 1)
+                {
+                    double constraint = 0;
+                    if (DA.GetData(i, ref constraint))
+                    {
+                        dict.Add(key, constraint);
+                    }
+                }
+                else
+                {
+                    var list = new List<object>();
+                    if (!DA.GetDataList(i, list))
+                    {
+                        continue;
+                    }
+                    dict.Add(key, list);
+                }
             }
-
-            DA.SetData(0, dict);
         }
 
         //FIXME: Should be modified to capture and check for change events.
@@ -82,9 +97,9 @@ namespace Tunny.Component
             return false;
         }
 
-        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index != 0);
+        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 2);
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index != 0;
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 2;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
