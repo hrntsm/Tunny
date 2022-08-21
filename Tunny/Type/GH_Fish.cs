@@ -78,11 +78,15 @@ namespace Tunny.Type
             if (attr.Key == "Geometry")
             {
                 List<GeometryBase> geometries = Value.GetGeometries();
-                foreach (GeometryBase geom in geometries)
+                for (int i = 0; i < 5; i++)
                 {
-                    string geomString = Converter.GeometryBaseToGoo(geom).ToString();
+                    string geomString = Converter.GeometryBaseToGoo(geometries[i]).ToString();
                     valueStrings.Append("\n    ");
                     valueStrings.Append(geomString);
+                }
+                if (geometries.Count > 5)
+                {
+                    valueStrings.Append(".....");
                 }
             }
             else

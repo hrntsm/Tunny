@@ -378,10 +378,19 @@ namespace Tunny.Solver.Optuna
             string[] keys = (string[])trial.user_attrs.keys();
             for (int i = 0; i < keys.Length; i++)
             {
-                string[] values = (string[])trial.user_attrs[keys[i]];
-                attributes.Add(keys[i], values.ToList());
+                var values = new List<string>();
+                if (keys[i] == "Constraint")
+                {
+                    double[] constraint = (double[])trial.user_attrs[keys[i]];
+                    values = constraint.Select(v => v.ToString()).ToList();
+                }
+                else
+                {
+                    string[] valueArray = (string[])trial.user_attrs[keys[i]];
+                    values = valueArray.ToList();
+                }
+                attributes.Add(keys[i], values);
             }
-
             return attributes;
         }
     }
