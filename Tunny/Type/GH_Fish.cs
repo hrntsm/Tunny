@@ -78,7 +78,8 @@ namespace Tunny.Type
             if (attr.Key == "Geometry")
             {
                 List<GeometryBase> geometries = Value.GetGeometries();
-                for (int i = 0; i < 5; i++)
+                int maxLength = geometries.Count > 5 ? 5 : geometries.Count;
+                for (int i = 0; i < maxLength; i++)
                 {
                     string geomString = Converter.GeometryBaseToGoo(geometries[i]).ToString();
                     valueStrings.Append("\n    ");

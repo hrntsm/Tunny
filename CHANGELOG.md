@@ -20,6 +20,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Only TPE, GP, NSGAII can use constraint.
 - Sampler detail settings UI
   - Previously it was necessary to change the JSON file of the settings, but now it can be changed in the UI
+- Enable Text Bake in the FishMarket component.
 
 ### Changed
 
