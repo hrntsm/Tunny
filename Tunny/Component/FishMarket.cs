@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Rhino;
 using Rhino.Display;
 using Rhino.Geometry;
 
@@ -169,6 +171,37 @@ namespace Tunny.Component
                 var text3d = new Text3d(_fishes[i].ToString(), _tagPlanes[i], _size);
                 args.Display.Draw3dText(text3d, Color.Black);
             }
+        }
+
+        public override void BakeGeometry(RhinoDoc doc, List<Guid> obj_ids)
+        {
+            base.BakeGeometry(doc, obj_ids);
+
+            for (int i = 0; i < _fishes.Count; i++)
+            {
+                var text3d = new Text3d(_fishes[i].ToString(), _tagPlanes[i], _size);
+                Vector3d diagonal = text3d.BoundingBox.Diagonal;
+                Vector3d axisY = _tagPlanes[i].YAxis;
+                axisY.Unitize();
+                Vector3d vecY = -axisY * diagonal.Y;
+                var pln = new Plane(_tagPlanes[i].Origin + vecY, _tagPlanes[i].Normal);
+                doc.Objects.AddText(_fishes[i].ToString(), pln, _size, "Meiryo", false, false);
+            }
+        }
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            ToolStripMenuItem item = Menu_AppendItem(menu, "Bake with Text", BakeGeometryFromMenu);
+            item.ToolTipText = "Bake not only geometry, but also result texts.";
+        }
+
+        private void BakeGeometryFromMenu(object sender, EventArgs e)
+        {
+            RhinoDoc doc = RhinoDoc.ActiveDoc;
+            var objIds = new List<Guid>();
+            BakeGeometry(doc, objIds);
+            doc.Views.Redraw();
         }
 
         protected override Bitmap Icon => Resource.FishMarket;
