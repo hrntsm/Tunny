@@ -179,12 +179,6 @@ namespace Tunny.Component
 
             for (int i = 0; i < _fishes.Count; i++)
             {
-                var text3d = new Text3d(_fishes[i].ToString(), _tagPlanes[i], _size);
-                Vector3d diagonal = text3d.BoundingBox.Diagonal;
-                Vector3d axisY = _tagPlanes[i].YAxis;
-                axisY.Unitize();
-                Vector3d vecY = -axisY * diagonal.Y;
-                var pln = new Plane(_tagPlanes[i].Origin + vecY, _tagPlanes[i].Normal);
                 doc.Objects.AddText(_fishes[i].ToString(), _tagPlanes[i], _size, "Meiryo", false, false, TextJustification.TopLeft);
             }
         }
