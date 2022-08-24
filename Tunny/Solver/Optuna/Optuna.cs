@@ -150,7 +150,7 @@ namespace Tunny.Solver.Optuna
                     break;
                 case "pareto front":
                     dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
-                    TruncateParetoFront(fig, study).show();
+                    TruncateParetoFrontPlotHover(fig, study).show();
                     break;
                 case "slice":
                     optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
@@ -164,7 +164,7 @@ namespace Tunny.Solver.Optuna
             }
         }
 
-        private static dynamic TruncateParetoFront(dynamic fig, dynamic study)
+        private static dynamic TruncateParetoFrontPlotHover(dynamic fig, dynamic study)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(
@@ -178,7 +178,7 @@ namespace Tunny.Solver.Optuna
                 "        new_texts = []\n" +
                 "        for i, original_label in enumerate(fig.data[scatter_id]['text']):\n" +
                 "            json_label = json.loads(original_label.replace('<br>', '\\n'))\n" +
-                "            json_label['user_attrs']['Geometry'] = 'True'\n" +
+                "            json_label['user_attrs'].pop('Geometry')\n" +
                 "            new_texts.append(json.dumps(json_label, indent=2).replace('\\n', '<br>'))\n" +
                 "        fig.data[scatter_id]['text'] = new_texts\n" +
                 "    return fig\n"
@@ -254,6 +254,80 @@ namespace Tunny.Solver.Optuna
             fig.update_yaxes(title_text: "Hypervolume");
 
             return fig;
+        }
+
+        public void ShowClusteringPlot(string studyName, int numCluster)
+        {
+            string storage = "sqlite:///" + _settings.Storage;
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                dynamic study;
+                dynamic optuna = Py.Import("optuna");
+                try
+                {
+                    study = optuna.load_study(storage: storage, study_name: studyName);
+                }
+                catch (Exception e)
+                {
+                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
+                try
+                {
+                    ShowCluster(optuna, study, nickNames, numCluster);
+                }
+                catch (Exception)
+                {
+                    TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            PythonEngine.Shutdown();
+
+        }
+
+        private void ShowCluster(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
+        {
+            dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+            fig = TruncateParetoFrontPlotHover(fig, study);
+            ClusteringParetoFrontPlot(fig, study, numCluster).show();
+        }
+
+        private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(
+                "def clustering(fig, study, num):\n" +
+                "    from sklearn.cluster import KMeans\n" +
+
+                "    if 'Constraints' in study.trials[0].user_attrs:\n" +
+                "        best_values = [trial.values for trial in study.best_trials if max(trial.user_attrs['Constraints']) <= 0]\n" +
+                "    else:\n" +
+                "        best_values = [trial.values for trial in study.best_trials]\n" +
+
+                "    kmeans = KMeans(n_clusters=num).fit(best_values)\n" +
+                "    labels = kmeans.labels_\n" +
+                "    best_length = len(best_values)\n" +
+
+                "    for scatter_id in range(len(fig.data)):\n" +
+                "        color = fig.data[scatter_id]['marker']['color']\n" +
+                "        if (len(color) == best_length):\n" +
+                "            fig.data[scatter_id]['marker']['color'] = labels\n" +
+                "            fig.data[scatter_id]['marker']['colorscale'] = 'rainbow'\n" +
+                "            fig.data[scatter_id]['marker']['colorbar']['title'] = '# Cluster'\n" +
+                "        elif fig.data[scatter_id]['marker']['color'] == '#cccccc':\n" +
+                "            pass\n" +
+                "        else:\n" +
+                "            new_color = ['#cccccc' for c in color]\n" +
+                "            fig.data[scatter_id]['marker']['color'] = new_color\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorscale')\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorbar')\n" +
+                "    return fig\n"
+            );
+            dynamic clustering = ps.Get("clustering");
+            return clustering(fig, study, numCluster);
         }
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)

@@ -47,6 +47,10 @@ namespace Tunny.UI
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
+            this.visualizeClusteringPlotButton = new System.Windows.Forms.Button();
+            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
+            this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.visualizeClusteringLabel = new System.Windows.Forms.Label();
             this.dashboardButton = new System.Windows.Forms.Button();
             this.visualizeButton = new System.Windows.Forms.Button();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
@@ -120,6 +124,7 @@ namespace Tunny.UI
             this.optimizeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).BeginInit();
             this.outputTabPage.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.settingsTabControl.SuspendLayout();
@@ -327,6 +332,10 @@ namespace Tunny.UI
             // 
             // visualizeTabPage
             // 
+            this.visualizeTabPage.Controls.Add(this.visualizeClusteringPlotButton);
+            this.visualizeTabPage.Controls.Add(this.visualizeNumClusterLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeClusterNumUpDown);
+            this.visualizeTabPage.Controls.Add(this.visualizeClusteringLabel);
             this.visualizeTabPage.Controls.Add(this.dashboardButton);
             this.visualizeTabPage.Controls.Add(this.visualizeButton);
             this.visualizeTabPage.Controls.Add(this.visualizeTypeLabel);
@@ -339,6 +348,53 @@ namespace Tunny.UI
             this.visualizeTabPage.TabIndex = 1;
             this.visualizeTabPage.Text = "Visualize";
             this.visualizeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // visualizeClusteringPlotButton
+            // 
+            this.visualizeClusteringPlotButton.Location = new System.Drawing.Point(54, 343);
+            this.visualizeClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeClusteringPlotButton.Name = "visualizeClusteringPlotButton";
+            this.visualizeClusteringPlotButton.Size = new System.Drawing.Size(323, 39);
+            this.visualizeClusteringPlotButton.TabIndex = 15;
+            this.visualizeClusteringPlotButton.Text = "Show clustering plot";
+            this.visualizeClusteringPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeClusteringPlotButton.Click += new System.EventHandler(this.VisualizeClusteringPlotButton_Click);
+            // 
+            // visualizeNumClusterLabel
+            // 
+            this.visualizeNumClusterLabel.AutoSize = true;
+            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(50, 306);
+            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
+            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
+            this.visualizeNumClusterLabel.TabIndex = 14;
+            this.visualizeNumClusterLabel.Text = "Number of cluster";
+            // 
+            // visualizeClusterNumUpDown
+            // 
+            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(284, 304);
+            this.visualizeClusterNumUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.visualizeClusterNumUpDown.Name = "visualizeClusterNumUpDown";
+            this.visualizeClusterNumUpDown.Size = new System.Drawing.Size(93, 30);
+            this.visualizeClusterNumUpDown.TabIndex = 13;
+            this.visualizeClusterNumUpDown.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // visualizeClusteringLabel
+            // 
+            this.visualizeClusteringLabel.AutoSize = true;
+            this.visualizeClusteringLabel.Location = new System.Drawing.Point(25, 261);
+            this.visualizeClusteringLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.visualizeClusteringLabel.Name = "visualizeClusteringLabel";
+            this.visualizeClusteringLabel.Size = new System.Drawing.Size(175, 23);
+            this.visualizeClusteringLabel.TabIndex = 12;
+            this.visualizeClusteringLabel.Text = "k-means clustering";
             // 
             // dashboardButton
             // 
@@ -353,7 +409,7 @@ namespace Tunny.UI
             // 
             // visualizeButton
             // 
-            this.visualizeButton.Location = new System.Drawing.Point(54, 207);
+            this.visualizeButton.Location = new System.Drawing.Point(54, 191);
             this.visualizeButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeButton.Name = "visualizeButton";
             this.visualizeButton.Size = new System.Drawing.Size(323, 39);
@@ -365,7 +421,7 @@ namespace Tunny.UI
             // visualizeTypeLabel
             // 
             this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(25, 125);
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(25, 109);
             this.visualizeTypeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.visualizeTypeLabel.Name = "visualizeTypeLabel";
             this.visualizeTypeLabel.Size = new System.Drawing.Size(130, 23);
@@ -385,7 +441,7 @@ namespace Tunny.UI
             "pareto front",
             "slice",
             "hypervolume"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(54, 164);
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(54, 148);
             this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(323, 31);
@@ -427,7 +483,7 @@ namespace Tunny.UI
             this.outputParatoSolutionButton.Name = "outputParatoSolutionButton";
             this.outputParatoSolutionButton.Size = new System.Drawing.Size(297, 34);
             this.outputParatoSolutionButton.TabIndex = 17;
-            this.outputParatoSolutionButton.Text = "Parato solutions";
+            this.outputParatoSolutionButton.Text = "Pareto solutions";
             this.outputParatoSolutionButton.UseVisualStyleBackColor = true;
             this.outputParatoSolutionButton.Click += new System.EventHandler(this.OutputParatoSolutionButton_Click);
             // 
@@ -471,7 +527,6 @@ namespace Tunny.UI
             this.outputModelNumberButton.TabIndex = 13;
             this.outputModelNumberButton.Text = "Output";
             this.outputModelNumberButton.UseVisualStyleBackColor = true;
-            this.outputModelNumberButton.Click += new System.EventHandler(this.OutputModelNumberButton_Click);
             // 
             // outputModelNumTextBox
             // 
@@ -1259,6 +1314,7 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
             this.visualizeTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).EndInit();
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
@@ -1375,6 +1431,10 @@ namespace Tunny.UI
         private System.Windows.Forms.Button nsgaDefaultButton;
         private System.Windows.Forms.Button cmaEsDefaultButton;
         private System.Windows.Forms.Button qmcDefaultButton;
+        private System.Windows.Forms.Label visualizeNumClusterLabel;
+        private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
+        private System.Windows.Forms.Label visualizeClusteringLabel;
+        private System.Windows.Forms.Button visualizeClusteringPlotButton;
     }
 }
 
