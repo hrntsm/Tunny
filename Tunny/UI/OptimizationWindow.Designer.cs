@@ -395,6 +395,7 @@ namespace Tunny.UI
             this.visualizeClusteringLabel.Size = new System.Drawing.Size(175, 23);
             this.visualizeClusteringLabel.TabIndex = 12;
             this.visualizeClusteringLabel.Text = "k-means clustering";
+            this.toolTip1.SetToolTip(this.visualizeClusteringLabel, "Cluster the multi-objective optimization results using the k-means method.");
             // 
             // dashboardButton
             // 

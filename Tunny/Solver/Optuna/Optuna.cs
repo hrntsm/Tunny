@@ -275,13 +275,20 @@ namespace Tunny.Solver.Optuna
                 }
 
                 string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
-                try
+                if (nickNames.Length == 1)
                 {
-                    ShowCluster(optuna, study, nickNames, numCluster);
+                    TunnyMessageBox.Show("Clustering Error\n\nClustering is for multi-objective optimization only.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch (Exception)
+                else
                 {
-                    TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    try
+                    {
+                        ShowCluster(optuna, study, nickNames, numCluster);
+                    }
+                    catch (Exception)
+                    {
+                        TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
             PythonEngine.Shutdown();
