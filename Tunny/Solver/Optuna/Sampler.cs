@@ -33,7 +33,6 @@ namespace Tunny.Solver.Optuna
             );
         }
 
-        //FIXME:FIX
         internal static dynamic Grid(dynamic optuna, List<Variable> variables, ref int nTrials)
         {
             var searchSpace = new PyDict();

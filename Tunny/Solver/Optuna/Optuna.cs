@@ -298,15 +298,33 @@ namespace Tunny.Solver.Optuna
         private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
         {
             PyModule ps = Py.CreateScope();
+            //FIXME: Rewrite to c-sharp code.
             ps.Exec(
                 "def clustering(fig, study, num):\n" +
                 "    from sklearn.cluster import KMeans\n" +
+                "    import optuna\n" +
 
-                "    if 'Constraints' in study.trials[0].user_attrs:\n" +
-                "        best_values = [trial.values for trial in study.best_trials if max(trial.user_attrs['Constraints']) <= 0]\n" +
+                "    if 'Constraint' in study.trials[0].user_attrs:\n" +
+                "        feasible_trials = []\n" +
+                "        infeasible_trials = []\n" +
+                "        for trial in study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)):\n" +
+                "            if all(map(lambda x: x <= 0.0, trial.user_attrs['Constraint'])):\n" +
+                "                feasible_trials.append(trial)\n" +
+                "            else:\n" +
+                "                infeasible_trials.append(trial)\n" +
+                "        best_trials = optuna.visualization._pareto_front._get_pareto_front_trials_by_trials(\n" +
+                "            feasible_trials, study.directions)\n" +
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            feasible_trials, best_trials)\n" +
                 "    else:\n" +
-                "        best_values = [trial.values for trial in study.best_trials]\n" +
+                "        best_trials = study.best_trials\n" +
 
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)), best_trials\n" +
+                "        )\n" +
+                "        infeasible_trials = []\n" +
+
+                "    best_values = [trial.values for trial in best_trials]\n" +
                 "    kmeans = KMeans(n_clusters=num).fit(best_values)\n" +
                 "    labels = kmeans.labels_\n" +
                 "    best_length = len(best_values)\n" +
