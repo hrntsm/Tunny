@@ -88,6 +88,7 @@ namespace Tunny.UI
             studyNameTextBox.Text = _settings.StudyName;
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
+            visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
             InitializeSamplerSettings();
         }
 
@@ -135,6 +136,7 @@ namespace Tunny.UI
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
+            _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.Optimize.Sampler = GetSamplerSettings();
         }
     }
