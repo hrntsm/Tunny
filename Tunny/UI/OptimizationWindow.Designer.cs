@@ -528,6 +528,7 @@ namespace Tunny.UI
             this.outputModelNumberButton.TabIndex = 13;
             this.outputModelNumberButton.Text = "Output";
             this.outputModelNumberButton.UseVisualStyleBackColor = true;
+            this.outputModelNumberButton.Click += new System.EventHandler(this.OutputModelNumberButton_Click);
             // 
             // outputModelNumTextBox
             // 
