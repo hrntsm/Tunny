@@ -95,21 +95,30 @@ namespace Tunny.Solver.Optuna
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
+        {
+            try
+            {
+                return optuna.load_study(storage: storage, study_name: studyName);
+            }
+            catch (Exception e)
+            {
+                TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+        }
+
         public void ShowSelectedTypePlot(string visualize, string studyName)
         {
             string storage = "sqlite:///" + _settings.Storage;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
-                dynamic study;
                 dynamic optuna = Py.Import("optuna");
-                try
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
                 {
-                    study = optuna.load_study(storage: storage, study_name: studyName);
-                }
-                catch (Exception e)
-                {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -262,15 +271,10 @@ namespace Tunny.Solver.Optuna
             PythonEngine.Initialize();
             using (Py.GIL())
             {
-                dynamic study;
                 dynamic optuna = Py.Import("optuna");
-                try
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
                 {
-                    study = optuna.load_study(storage: storage, study_name: studyName);
-                }
-                catch (Exception e)
-                {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -281,25 +285,24 @@ namespace Tunny.Solver.Optuna
                 }
                 else
                 {
-                    try
-                    {
-                        ShowCluster(optuna, study, nickNames, numCluster);
-                    }
-                    catch (Exception)
-                    {
-                        TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    ShowCluster(optuna, study, nickNames, numCluster);
                 }
             }
             PythonEngine.Shutdown();
-
         }
 
         private void ShowCluster(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
         {
-            dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
-            fig = TruncateParetoFrontPlotHover(fig, study);
-            ClusteringParetoFrontPlot(fig, study, numCluster).show();
+            try
+            {
+                dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                fig = TruncateParetoFrontPlotHover(fig, study);
+                ClusteringParetoFrontPlot(fig, study, numCluster).show();
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
