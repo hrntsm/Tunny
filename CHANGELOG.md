@@ -30,6 +30,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Use `suggest_int` and `suggest_discrete_uniform` instead of `suggest_uniform` for more accurate variable generation in optimization
 - Updated Optuna used to v3.0.0rc
 - Random and Grid samplers now support multi-objective optimization
+- The output of the Pareto solution was made to consider the constraints.
 
 ### Fixed
 
