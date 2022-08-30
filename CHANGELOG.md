@@ -12,6 +12,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Hypervolume visualization
   - It is useful for determining convergence in multi-objective optimization.
+- Clustering visualization
+  - Clustering of results during multi-objective optimization makes it easier to evaluate solutions.
 - BoTorch Sampler
   - This sampler use Gaussian Process and support multi-objective optimization.
 - Quasi-MonteCarlo Sampler

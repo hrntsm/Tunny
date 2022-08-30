@@ -95,21 +95,30 @@ namespace Tunny.Solver.Optuna
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
+        {
+            try
+            {
+                return optuna.load_study(storage: storage, study_name: studyName);
+            }
+            catch (Exception e)
+            {
+                TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+        }
+
         public void ShowSelectedTypePlot(string visualize, string studyName)
         {
             string storage = "sqlite:///" + _settings.Storage;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
-                dynamic study;
                 dynamic optuna = Py.Import("optuna");
-                try
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
                 {
-                    study = optuna.load_study(storage: storage, study_name: studyName);
-                }
-                catch (Exception e)
-                {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -150,13 +159,13 @@ namespace Tunny.Solver.Optuna
                     break;
                 case "pareto front":
                     dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
-                    TruncateParetoFront(fig, study).show();
+                    TruncateParetoFrontPlotHover(fig, study).show();
                     break;
                 case "slice":
                     optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
                     break;
                 case "hypervolume":
-                    PlotHypervolume(optuna, study).show();
+                    Hypervolume.CreateFigure(optuna, study).show();
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
@@ -164,7 +173,7 @@ namespace Tunny.Solver.Optuna
             }
         }
 
-        private static dynamic TruncateParetoFront(dynamic fig, dynamic study)
+        private static dynamic TruncateParetoFrontPlotHover(dynamic fig, dynamic study)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(
@@ -178,7 +187,7 @@ namespace Tunny.Solver.Optuna
                 "        new_texts = []\n" +
                 "        for i, original_label in enumerate(fig.data[scatter_id]['text']):\n" +
                 "            json_label = json.loads(original_label.replace('<br>', '\\n'))\n" +
-                "            json_label['user_attrs']['Geometry'] = 'True'\n" +
+                "            json_label['user_attrs'].pop('Geometry')\n" +
                 "            new_texts.append(json.dumps(json_label, indent=2).replace('\\n', '<br>'))\n" +
                 "        fig.data[scatter_id]['text'] = new_texts\n" +
                 "    return fig\n"
@@ -187,73 +196,97 @@ namespace Tunny.Solver.Optuna
             return truncate(fig, study);
         }
 
-        private static dynamic PlotHypervolume(dynamic optuna, dynamic study)
+        public void ShowClusteringPlot(string studyName, int numCluster)
         {
-
-            var trials = (dynamic[])study.trials;
-            int objectivesCount = ((double[])trials[0].values).Length;
-            var trialValues = new List<double[]>();
-            foreach (dynamic trial in trials)
+            string storage = "sqlite:///" + _settings.Storage;
+            PythonEngine.Initialize();
+            using (Py.GIL())
             {
-                trialValues.Add((double[])trial.values);
-            }
-            double[] maxObjectiveValues = new double[objectivesCount];
-            for (int i = 0; i < objectivesCount; i++)
-            {
-                maxObjectiveValues[i] = trialValues.Select(v => v[i]).Max();
-            }
-
-            PyList hvs = ComputeHypervolume(optuna, trials, maxObjectiveValues, out PyList trialNumbers);
-            return CreateHypervolumeFigure(trials, hvs, trialNumbers);
-        }
-
-        private static PyList ComputeHypervolume(dynamic optuna, dynamic[] trials, double[] maxObjectiveValues, out PyList trialNumbers)
-        {
-            dynamic np = Py.Import("numpy");
-
-            var hvs = new PyList();
-            var rpObj = new PyList();
-            trialNumbers = new PyList();
-
-            foreach (double max in maxObjectiveValues)
-            {
-                rpObj.Append(new PyFloat(max));
-            }
-            dynamic referencePoint = np.array(rpObj);
-
-            dynamic wfg = optuna._hypervolume.WFG();
-            for (int i = 1; i < trials.Length + 1; i++)
-            {
-                var vector = new PyList();
-                for (int j = 0; j < i; j++)
+                dynamic optuna = Py.Import("optuna");
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
                 {
-                    vector.Append(trials[j].values);
+                    return;
                 }
-                hvs.Append(wfg.compute(np.array(vector), referencePoint));
-                trialNumbers.Append(new PyInt(i));
+
+                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
+                if (nickNames.Length == 1)
+                {
+                    TunnyMessageBox.Show("Clustering Error\n\nClustering is for multi-objective optimization only.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    ShowCluster(optuna, study, nickNames, numCluster);
+                }
             }
-            return hvs;
+            PythonEngine.Shutdown();
         }
 
-        private static dynamic CreateHypervolumeFigure(dynamic[] trials, PyList hvs, PyList trialNumbers)
+        private void ShowCluster(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
         {
-            dynamic go = Py.Import("plotly.graph_objects");
+            try
+            {
+                dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                fig = TruncateParetoFrontPlotHover(fig, study);
+                ClusteringParetoFrontPlot(fig, study, numCluster).show();
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-            var plotItems = new PyDict();
-            plotItems.SetItem("x", trialNumbers);
-            plotItems.SetItem("y", hvs);
+        private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
+        {
+            PyModule ps = Py.CreateScope();
+            //FIXME: Rewrite to c-sharp code.
+            ps.Exec(
+                "def clustering(fig, study, num):\n" +
+                "    from sklearn.cluster import KMeans\n" +
+                "    import optuna\n" +
 
-            var plotRange = new PyDict();
-            var rangeObj = new PyObject[] { new PyFloat(0), new PyFloat(trials.Length + 1) };
-            plotRange.SetItem("range", new PyList(rangeObj));
+                "    if 'Constraint' in study.trials[0].user_attrs:\n" +
+                "        feasible_trials = []\n" +
+                "        infeasible_trials = []\n" +
+                "        for trial in study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)):\n" +
+                "            if all(map(lambda x: x <= 0.0, trial.user_attrs['Constraint'])):\n" +
+                "                feasible_trials.append(trial)\n" +
+                "            else:\n" +
+                "                infeasible_trials.append(trial)\n" +
+                "        best_trials = optuna.visualization._pareto_front._get_pareto_front_trials_by_trials(\n" +
+                "            feasible_trials, study.directions)\n" +
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            feasible_trials, best_trials)\n" +
+                "    else:\n" +
+                "        best_trials = study.best_trials\n" +
 
-            dynamic fig = go.Figure();
-            fig.add_trace(go.Scatter(plotItems, name: "Hypervolume"));
-            fig.update_layout(xaxis: plotRange);
-            fig.update_xaxes(title_text: "#Trials");
-            fig.update_yaxes(title_text: "Hypervolume");
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)), best_trials\n" +
+                "        )\n" +
+                "        infeasible_trials = []\n" +
 
-            return fig;
+                "    best_values = [trial.values for trial in best_trials]\n" +
+                "    kmeans = KMeans(n_clusters=num).fit(best_values)\n" +
+                "    labels = kmeans.labels_\n" +
+                "    best_length = len(best_values)\n" +
+
+                "    for scatter_id in range(len(fig.data)):\n" +
+                "        color = fig.data[scatter_id]['marker']['color']\n" +
+                "        if (len(color) == best_length):\n" +
+                "            fig.data[scatter_id]['marker']['color'] = labels\n" +
+                "            fig.data[scatter_id]['marker']['colorscale'] = 'rainbow'\n" +
+                "            fig.data[scatter_id]['marker']['colorbar']['title'] = '# Cluster'\n" +
+                "        elif fig.data[scatter_id]['marker']['color'] == '#cccccc':\n" +
+                "            pass\n" +
+                "        else:\n" +
+                "            new_color = ['#cccccc' for c in color]\n" +
+                "            fig.data[scatter_id]['marker']['color'] = new_color\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorscale')\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorbar')\n" +
+                "    return fig\n"
+            );
+            dynamic clustering = ps.Get("clustering");
+            return clustering(fig, study, numCluster);
         }
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
