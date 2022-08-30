@@ -368,13 +368,36 @@ namespace Tunny.Solver.Optuna
             for (int i = 0; i < bestTrials.Length; i++)
             {
                 dynamic trial = bestTrials[i];
+                bool isFeasible = CheckFeasible(trial);
                 if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
-                ParseTrial(modelResult, trial);
+                if (isFeasible)
+                {
+                    ParseTrial(modelResult, trial);
+                }
                 worker.ReportProgress(i * 100 / bestTrials.Length);
             }
+        }
+
+        private static bool CheckFeasible(dynamic trial)
+        {
+            string[] keys = (string[])trial.user_attrs.keys();
+            for (int j = 0; j < keys.Length; j++)
+            {
+                if (keys[j] == "Constraint")
+                {
+                    double[] constraint = (double[])trial.user_attrs[keys[j]];
+                    double max = constraint.Max();
+                    if (max > 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
