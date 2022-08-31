@@ -12,6 +12,11 @@ namespace Tunny.UI
             nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
         }
 
+        private void NsgaCrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            nsgaCrossoverComboBox.Enabled = nsgaCrossoverCheckBox.Checked;
+        }
+
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
         {
             cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
@@ -20,6 +25,7 @@ namespace Tunny.UI
         private void CmaEsRestartStrategyCheckedChanged(object sender, EventArgs e)
         {
             cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
+            cmaEsPopulationSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
         }
 
         private void TpeDefaultButton_Click(object sender, EventArgs e)
@@ -85,6 +91,31 @@ namespace Tunny.UI
             nsgaCrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
             nsgaSwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
             nsgaPopulationSizeUpDown.Value = nsga.PopulationSize;
+            nsgaCrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
+            nsgaCrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
+            nsgaCrossoverComboBox.SelectedIndex = SetNSGAIICrossoverSetting(nsga.Crossover);
+        }
+
+        private static int SetNSGAIICrossoverSetting(string crossover)
+        {
+            switch (crossover)
+            {
+                case "":
+                case "Uniform":
+                    return 0;
+                case "BLXAlpha":
+                    return 1;
+                case "SPX":
+                    return 2;
+                case "SBX":
+                    return 3;
+                case "VSBX":
+                    return 4;
+                case "UNDX":
+                    return 5;
+                default:
+                    throw new ArgumentException("Unexpected crossover method.");
+            }
         }
 
         private void SetCmaEsSettings(CmaEs cmaEs)
@@ -101,6 +132,8 @@ namespace Tunny.UI
             cmaEsRestartCheckBox.Checked = cmaEs.RestartStrategy != string.Empty;
             cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
             cmaEsIncPopSizeUpDown.Value = cmaEs.IncPopsize;
+            cmaEsPopulationSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
+            cmaEsPopulationSizeUpDown.Value = cmaEs.PopulationSize != null ? (decimal)cmaEs.PopulationSize : (decimal)1;
         }
 
         private void SetQMCSettings(QuasiMonteCarlo qmc)
@@ -157,7 +190,9 @@ namespace Tunny.UI
                     ? (double?)nsgaMutationProbUpDown.Value : null,
                 CrossoverProb = (double)nsgaCrossoverProbUpDown.Value,
                 SwappingProb = (double)nsgaSwappingProbUpDown.Value,
-                PopulationSize = (int)nsgaPopulationSizeUpDown.Value
+                PopulationSize = (int)nsgaPopulationSizeUpDown.Value,
+                Crossover = nsgaCrossoverCheckBox.Checked
+                    ? nsgaCrossoverComboBox.Text : string.Empty,
             };
         }
 
@@ -172,7 +207,8 @@ namespace Tunny.UI
                 ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked,
                 UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked,
                 RestartStrategy = cmaEsRestartCheckBox.Checked ? "ipop" : string.Empty,
-                IncPopsize = (int)cmaEsIncPopSizeUpDown.Value
+                IncPopsize = (int)cmaEsIncPopSizeUpDown.Value,
+                PopulationSize = cmaEsRestartCheckBox.Checked ? (int?)cmaEsPopulationSizeUpDown.Value : null,
             };
         }
 

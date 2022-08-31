@@ -23,14 +23,19 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Sampler detail settings UI
   - Previously it was necessary to change the JSON file of the settings, but now it can be changed in the UI
 - Enable Text Bake in the FishMarket component.
+- Allows selection of NSGA-II crossover methods.
+  - `Uniform`, `BLXAlpha`, `SPX`, `SBX`, `VSBX`, `UNDX`
+- ability to set Popsize on CMA-ES restart
 
 ### Changed
 
 - When genepool is an input, it now creates variable names using nicknames.
-- Use `suggest_int` and `suggest_discrete_uniform` instead of `suggest_uniform` for more accurate variable generation in optimization
-- Updated Optuna used to v3.0.0rc
-- Random and Grid samplers now support multi-objective optimization
 - The output of the Pareto solution was made to consider the constraints.
+- Multivariate in TPE sampler default option is false to true
+- Updated Optuna used to v3.0.0
+  - Use `suggest_int` and `suggest_float` instead of `suggest_uniform` for more accurate variable generation in optimization
+  - Random and Grid samplers now support multi-objective optimization
+  - The format of the db file in which the results are saved has changed. Please note that it is not compatible with the previous one.
 
 ### Fixed
 

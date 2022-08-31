@@ -86,6 +86,8 @@ namespace Tunny.UI
             this.boTorchNStartupTrialsLabel = new System.Windows.Forms.Label();
             this.boTorchStartupNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.NSGAII = new System.Windows.Forms.TabPage();
+            this.nsgaCrossoverComboBox = new System.Windows.Forms.ComboBox();
+            this.nsgaCrossoverCheckBox = new System.Windows.Forms.CheckBox();
             this.nsgaDefaultButton = new System.Windows.Forms.Button();
             this.nsgaMutationProbCheckBox = new System.Windows.Forms.CheckBox();
             this.nsgaPopulationSizeLabel = new System.Windows.Forms.Label();
@@ -119,6 +121,8 @@ namespace Tunny.UI
             this.clearResultButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cmaEsPopulationSizeLabel = new System.Windows.Forms.Label();
+            this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -145,6 +149,7 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsSigmaNumUpDown)).BeginInit();
             this.QMC.SuspendLayout();
             this.fileTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -740,9 +745,9 @@ namespace Tunny.UI
             this.tpeMultivariateCheckBox.AutoSize = true;
             this.tpeMultivariateCheckBox.Location = new System.Drawing.Point(241, 137);
             this.tpeMultivariateCheckBox.Name = "tpeMultivariateCheckBox";
-            this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(137, 27);
+            this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(138, 27);
             this.tpeMultivariateCheckBox.TabIndex = 3;
-            this.tpeMultivariateCheckBox.Text = "Maltivariate";
+            this.tpeMultivariateCheckBox.Text = "Multivariate";
             this.toolTip1.SetToolTip(this.tpeMultivariateCheckBox, "If this is True, \r\nthe multivariate TPE is used when suggesting parameters. \r\nThe" +
         " multivariate TPE is reported to outperform the independent TPE.");
             this.tpeMultivariateCheckBox.UseVisualStyleBackColor = true;
@@ -846,6 +851,8 @@ namespace Tunny.UI
             // 
             // NSGAII
             // 
+            this.NSGAII.Controls.Add(this.nsgaCrossoverComboBox);
+            this.NSGAII.Controls.Add(this.nsgaCrossoverCheckBox);
             this.NSGAII.Controls.Add(this.nsgaDefaultButton);
             this.NSGAII.Controls.Add(this.nsgaMutationProbCheckBox);
             this.NSGAII.Controls.Add(this.nsgaPopulationSizeLabel);
@@ -861,6 +868,35 @@ namespace Tunny.UI
             this.NSGAII.TabIndex = 3;
             this.NSGAII.Text = "NSGAII";
             this.NSGAII.UseVisualStyleBackColor = true;
+            // 
+            // nsgaCrossoverComboBox
+            // 
+            this.nsgaCrossoverComboBox.FormattingEnabled = true;
+            this.nsgaCrossoverComboBox.Items.AddRange(new object[] {
+            "Uniform",
+            "BLXAlpha",
+            "SPX",
+            "SBX",
+            "VSBX",
+            "UNDX"});
+            this.nsgaCrossoverComboBox.Location = new System.Drawing.Point(265, 154);
+            this.nsgaCrossoverComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.nsgaCrossoverComboBox.Name = "nsgaCrossoverComboBox";
+            this.nsgaCrossoverComboBox.Size = new System.Drawing.Size(135, 31);
+            this.nsgaCrossoverComboBox.TabIndex = 33;
+            this.nsgaCrossoverComboBox.Text = "Uniform";
+            // 
+            // nsgaCrossoverCheckBox
+            // 
+            this.nsgaCrossoverCheckBox.AutoSize = true;
+            this.nsgaCrossoverCheckBox.Location = new System.Drawing.Point(13, 154);
+            this.nsgaCrossoverCheckBox.Name = "nsgaCrossoverCheckBox";
+            this.nsgaCrossoverCheckBox.Size = new System.Drawing.Size(122, 27);
+            this.nsgaCrossoverCheckBox.TabIndex = 24;
+            this.nsgaCrossoverCheckBox.Text = "Crossover";
+            this.toolTip1.SetToolTip(this.nsgaCrossoverCheckBox, "Crossover to be applied when creating child individuals. ");
+            this.nsgaCrossoverCheckBox.UseVisualStyleBackColor = true;
+            this.nsgaCrossoverCheckBox.CheckedChanged += new System.EventHandler(this.NsgaCrossoverCheckBox_CheckedChanged);
             // 
             // nsgaDefaultButton
             // 
@@ -1005,6 +1041,8 @@ namespace Tunny.UI
             // 
             // CMAES
             // 
+            this.CMAES.Controls.Add(this.cmaEsPopulationSizeUpDown);
+            this.CMAES.Controls.Add(this.cmaEsPopulationSizeLabel);
             this.CMAES.Controls.Add(this.cmaEsDefaultButton);
             this.CMAES.Controls.Add(this.cmaEsRestartCheckBox);
             this.CMAES.Controls.Add(this.cmaEsUseSaparableCmaCheckBox);
@@ -1119,7 +1157,7 @@ namespace Tunny.UI
             // cmaEsIncPopsizeLabel
             // 
             this.cmaEsIncPopsizeLabel.AutoSize = true;
-            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(7, 233);
+            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(7, 273);
             this.cmaEsIncPopsizeLabel.Name = "cmaEsIncPopsizeLabel";
             this.cmaEsIncPopsizeLabel.Size = new System.Drawing.Size(240, 23);
             this.cmaEsIncPopsizeLabel.TabIndex = 26;
@@ -1129,7 +1167,7 @@ namespace Tunny.UI
             // cmaEsIncPopSizeUpDown
             // 
             this.cmaEsIncPopSizeUpDown.Enabled = false;
-            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 231);
+            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 271);
             this.cmaEsIncPopSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1296,6 +1334,35 @@ namespace Tunny.UI
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
+            // cmaEsPopulationSizeLabel
+            // 
+            this.cmaEsPopulationSizeLabel.AutoSize = true;
+            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(7, 237);
+            this.cmaEsPopulationSizeLabel.Name = "cmaEsPopulationSizeLabel";
+            this.cmaEsPopulationSizeLabel.Size = new System.Drawing.Size(144, 23);
+            this.cmaEsPopulationSizeLabel.TabIndex = 34;
+            this.cmaEsPopulationSizeLabel.Text = "Population Size";
+            this.toolTip1.SetToolTip(this.cmaEsPopulationSizeLabel, "A population size of CMA-ES. \r\nWhen set restart_strategy is checked,\r\nthis is use" +
+        "d as the initial population size.");
+            // 
+            // cmaEsPopulationSizeUpDown
+            // 
+            this.cmaEsPopulationSizeUpDown.Enabled = false;
+            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 235);
+            this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmaEsPopulationSizeUpDown.Name = "cmaEsPopulationSizeUpDown";
+            this.cmaEsPopulationSizeUpDown.Size = new System.Drawing.Size(94, 30);
+            this.cmaEsPopulationSizeUpDown.TabIndex = 35;
+            this.cmaEsPopulationSizeUpDown.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1343,6 +1410,7 @@ namespace Tunny.UI
             this.QMC.ResumeLayout(false);
             this.QMC.PerformLayout();
             this.fileTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1437,6 +1505,10 @@ namespace Tunny.UI
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
         private System.Windows.Forms.Label visualizeClusteringLabel;
         private System.Windows.Forms.Button visualizeClusteringPlotButton;
+        private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
+        private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
+        private System.Windows.Forms.NumericUpDown cmaEsPopulationSizeUpDown;
+        private System.Windows.Forms.Label cmaEsPopulationSizeLabel;
     }
 }
 

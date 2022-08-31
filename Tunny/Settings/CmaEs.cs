@@ -12,6 +12,7 @@ namespace Tunny.Settings
         public bool ConsiderPrunedTrials { get; set; }
         public string RestartStrategy { get; set; } = string.Empty;
         public int IncPopsize { get; set; } = 2;
+        public int? PopulationSize { get; set; }
         public bool UseSeparableCma { get; set; }
     }
 }
