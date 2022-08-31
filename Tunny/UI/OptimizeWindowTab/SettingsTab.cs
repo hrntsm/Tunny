@@ -100,6 +100,7 @@ namespace Tunny.UI
         {
             switch (crossover)
             {
+                case "":
                 case "Uniform":
                     return 0;
                 case "BLXAlpha":
@@ -113,7 +114,7 @@ namespace Tunny.UI
                 case "UNDX":
                     return 5;
                 default:
-                    return 0;
+                    throw new ArgumentException("Unexpected crossover method.");
             }
         }
 

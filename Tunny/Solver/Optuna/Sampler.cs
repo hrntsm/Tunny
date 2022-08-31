@@ -80,6 +80,8 @@ namespace Tunny.Solver.Optuna
                     return optuna.samplers.nsgaii.VSBXCrossover();
                 case "UNDX":
                     return optuna.samplers.nsgaii.UNDXCrossover();
+                case "":
+                    return null;
                 default:
                     throw new ArgumentException("Unexpected crossover setting");
             }
