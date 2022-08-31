@@ -8,6 +8,7 @@ namespace Tunny.Settings
         public int? Seed { get; set; }
         public double? MutationProb { get; set; }
         public int PopulationSize { get; set; } = 50;
+        public string Crossover { get; set; } = string.Empty;
         public double CrossoverProb { get; set; } = 0.9;
         public double SwappingProb { get; set; } = 0.5;
     }

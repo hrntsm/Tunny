@@ -12,6 +12,11 @@ namespace Tunny.UI
             nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
         }
 
+        private void NsgaCrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            nsgaCrossoverComboBox.Enabled = nsgaCrossoverCheckBox.Checked;
+        }
+
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
         {
             cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
@@ -85,6 +90,29 @@ namespace Tunny.UI
             nsgaCrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
             nsgaSwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
             nsgaPopulationSizeUpDown.Value = nsga.PopulationSize;
+            nsgaCrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
+            nsgaCrossoverComboBox.SelectedIndex = SetNSGAIICrossoverSetting(nsga.Crossover);
+        }
+
+        private static int SetNSGAIICrossoverSetting(string crossover)
+        {
+            switch (crossover)
+            {
+                case "Uniform":
+                    return 0;
+                case "BLXAlpha":
+                    return 1;
+                case "SPX":
+                    return 2;
+                case "SBX":
+                    return 3;
+                case "VSBX":
+                    return 4;
+                case "UNDX":
+                    return 5;
+                default:
+                    throw new ArgumentException("Unexpected crossover setting");
+            }
         }
 
         private void SetCmaEsSettings(CmaEs cmaEs)
@@ -157,7 +185,9 @@ namespace Tunny.UI
                     ? (double?)nsgaMutationProbUpDown.Value : null,
                 CrossoverProb = (double)nsgaCrossoverProbUpDown.Value,
                 SwappingProb = (double)nsgaSwappingProbUpDown.Value,
-                PopulationSize = (int)nsgaPopulationSizeUpDown.Value
+                PopulationSize = (int)nsgaPopulationSizeUpDown.Value,
+                Crossover = nsgaCrossoverCheckBox.Checked
+                    ? nsgaCrossoverComboBox.Text : string.Empty,
             };
         }
 

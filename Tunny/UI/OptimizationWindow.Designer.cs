@@ -86,6 +86,8 @@ namespace Tunny.UI
             this.boTorchNStartupTrialsLabel = new System.Windows.Forms.Label();
             this.boTorchStartupNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.NSGAII = new System.Windows.Forms.TabPage();
+            this.nsgaCrossoverComboBox = new System.Windows.Forms.ComboBox();
+            this.nsgaCrossoverCheckBox = new System.Windows.Forms.CheckBox();
             this.nsgaDefaultButton = new System.Windows.Forms.Button();
             this.nsgaMutationProbCheckBox = new System.Windows.Forms.CheckBox();
             this.nsgaPopulationSizeLabel = new System.Windows.Forms.Label();
@@ -846,6 +848,8 @@ namespace Tunny.UI
             // 
             // NSGAII
             // 
+            this.NSGAII.Controls.Add(this.nsgaCrossoverComboBox);
+            this.NSGAII.Controls.Add(this.nsgaCrossoverCheckBox);
             this.NSGAII.Controls.Add(this.nsgaDefaultButton);
             this.NSGAII.Controls.Add(this.nsgaMutationProbCheckBox);
             this.NSGAII.Controls.Add(this.nsgaPopulationSizeLabel);
@@ -861,6 +865,35 @@ namespace Tunny.UI
             this.NSGAII.TabIndex = 3;
             this.NSGAII.Text = "NSGAII";
             this.NSGAII.UseVisualStyleBackColor = true;
+            // 
+            // nsgaCrossoverComboBox
+            // 
+            this.nsgaCrossoverComboBox.FormattingEnabled = true;
+            this.nsgaCrossoverComboBox.Items.AddRange(new object[] {
+            "Uniform",
+            "BLXAlpha",
+            "SPX",
+            "SBX",
+            "VSBX",
+            "UNDX"});
+            this.nsgaCrossoverComboBox.Location = new System.Drawing.Point(265, 154);
+            this.nsgaCrossoverComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.nsgaCrossoverComboBox.Name = "nsgaCrossoverComboBox";
+            this.nsgaCrossoverComboBox.Size = new System.Drawing.Size(135, 31);
+            this.nsgaCrossoverComboBox.TabIndex = 33;
+            this.nsgaCrossoverComboBox.Text = "Uniform";
+            // 
+            // nsgaCrossoverCheckBox
+            // 
+            this.nsgaCrossoverCheckBox.AutoSize = true;
+            this.nsgaCrossoverCheckBox.Location = new System.Drawing.Point(13, 154);
+            this.nsgaCrossoverCheckBox.Name = "nsgaCrossoverCheckBox";
+            this.nsgaCrossoverCheckBox.Size = new System.Drawing.Size(122, 27);
+            this.nsgaCrossoverCheckBox.TabIndex = 24;
+            this.nsgaCrossoverCheckBox.Text = "Crossover";
+            this.toolTip1.SetToolTip(this.nsgaCrossoverCheckBox, "Crossover to be applied when creating child individuals. ");
+            this.nsgaCrossoverCheckBox.UseVisualStyleBackColor = true;
+            this.nsgaCrossoverCheckBox.CheckedChanged += new System.EventHandler(this.NsgaCrossoverCheckBox_CheckedChanged);
             // 
             // nsgaDefaultButton
             // 
@@ -1437,6 +1470,8 @@ namespace Tunny.UI
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
         private System.Windows.Forms.Label visualizeClusteringLabel;
         private System.Windows.Forms.Button visualizeClusteringPlotButton;
+        private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
+        private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
     }
 }
 

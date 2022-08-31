@@ -58,8 +58,30 @@ namespace Tunny.Solver.Optuna
                 crossover_prob: nsga2.CrossoverProb,
                 swapping_prob: nsga2.SwappingProb,
                 seed: nsga2.Seed,
+                crossover: SetCrossover(optuna, nsga2.Crossover),
                 constraints_func: hasConstraints ? ConstraintFunc() : null
             );
+        }
+
+        private static dynamic SetCrossover(dynamic optuna, string crossover)
+        {
+            switch (crossover)
+            {
+                case "Uniform":
+                    return optuna.samplers.nsgaii.UniformCrossover();
+                case "BLXAlpha":
+                    return optuna.samplers.nsgaii.BLXAlphaCrossover();
+                case "SPX":
+                    return optuna.samplers.nsgaii.SPXCrossover();
+                case "SBX":
+                    return optuna.samplers.nsgaii.SBXCrossover();
+                case "VSBX":
+                    return optuna.samplers.nsgaii.VSBXCrossover();
+                case "UNDX":
+                    return optuna.samplers.nsgaii.UNDXCrossover();
+                default:
+                    throw new ArgumentException("Unexpected crossover setting");
+            }
         }
 
         internal static dynamic TPE(dynamic optuna, TunnySettings settings, bool hasConstraints)
