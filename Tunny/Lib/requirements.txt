@@ -16,7 +16,7 @@ MarkupSafe==2.1.1
 multipledispatch==0.6.0
 numpy==1.23.0
 opt-einsum==3.3.0
-optuna==3.0.0rc0
+optuna==3.0.0
 optuna-dashboard==0.7.2
 packaging==21.3
 pbr==5.9.0
