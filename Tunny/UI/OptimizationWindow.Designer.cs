@@ -745,9 +745,9 @@ namespace Tunny.UI
             this.tpeMultivariateCheckBox.AutoSize = true;
             this.tpeMultivariateCheckBox.Location = new System.Drawing.Point(241, 137);
             this.tpeMultivariateCheckBox.Name = "tpeMultivariateCheckBox";
-            this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(137, 27);
+            this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(138, 27);
             this.tpeMultivariateCheckBox.TabIndex = 3;
-            this.tpeMultivariateCheckBox.Text = "Maltivariate";
+            this.tpeMultivariateCheckBox.Text = "Multivariate";
             this.toolTip1.SetToolTip(this.tpeMultivariateCheckBox, "If this is True, \r\nthe multivariate TPE is used when suggesting parameters. \r\nThe" +
         " multivariate TPE is reported to outperform the independent TPE.");
             this.tpeMultivariateCheckBox.UseVisualStyleBackColor = true;
