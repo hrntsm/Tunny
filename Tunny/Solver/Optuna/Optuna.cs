@@ -384,16 +384,12 @@ namespace Tunny.Solver.Optuna
         private static bool CheckFeasible(dynamic trial)
         {
             string[] keys = (string[])trial.user_attrs.keys();
-            for (int j = 0; j < keys.Length; j++)
+            if (keys.Contains("Constraint"))
             {
-                if (keys[j] == "Constraint")
+                double[] constraint = (double[])trial.user_attrs["Constraint"];
+                if (constraint.Max() > 0)
                 {
-                    double[] constraint = (double[])trial.user_attrs[keys[j]];
-                    double max = constraint.Max();
-                    if (max > 0)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
