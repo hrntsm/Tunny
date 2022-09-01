@@ -25,7 +25,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Enable Text Bake in the FishMarket component.
 - Allows selection of NSGA-II crossover methods.
   - `Uniform`, `BLXAlpha`, `SPX`, `SBX`, `VSBX`, `UNDX`
-- ability to set Popsize on CMA-ES restart
+- Ability to set Popsize on CMA-ES restart
+- Run GC after trial when has geometry attribute or setting always run.
+  - **This change probably make optimize slower before**
+  - If you want to cut this setting, set the value of "GcAfterTrial" to 2 in Settings.json.
 
 ### Changed
 
