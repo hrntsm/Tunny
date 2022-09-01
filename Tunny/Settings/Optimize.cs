@@ -1,3 +1,5 @@
+using Tunny.Solver.Optuna;
+
 namespace Tunny.Settings
 {
     public class Optimize
@@ -7,5 +9,6 @@ namespace Tunny.Settings
         public bool LoadExistStudy { get; set; } = true;
         public int SelectSampler { get; set; }
         public double Timeout { get; set; }
+        public GcAfterTrial GcAfterTrial { get; set; } = GcAfterTrial.HasGeometry;
     }
 }

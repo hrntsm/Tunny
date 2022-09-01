@@ -213,7 +213,23 @@ namespace Tunny.Solver.Optuna
                 catch
                 {
                 }
+                finally
+                {
+                    RunGC(result);
+                }
                 trialNum++;
+            }
+        }
+
+        private void RunGC(EvaluatedGHResult result)
+        {
+            GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
+            if (gcAfterTrial == GcAfterTrial.Always ||
+                (result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry)
+            )
+            {
+                dynamic gc = Py.Import("gc");
+                gc.collect();
             }
         }
 
@@ -312,13 +328,10 @@ namespace Tunny.Solver.Optuna
 
     }
 
-    public enum EndState
+    public enum GcAfterTrial
     {
-        AllTrialCompleted,
-        Timeout,
-        StoppedByUser,
-        DirectionNumNotMatch,
-        UseExitStudyWithoutLoading,
-        Error
+        Always,
+        HasGeometry,
+        NoExecute,
     }
 }
