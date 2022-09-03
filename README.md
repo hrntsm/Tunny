@@ -65,6 +65,10 @@ Please see PYTHON_PACKAGE_LICENSE for more license information.
 
 https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-97b0-840a4f1f329c.mp4
 
+### :fish_cake: Select sampler flow chart
+
+<img width="75%" alt="image" src="https://user-images.githubusercontent.com/23289252/188254450-1e718d97-f81e-49a1-949b-e158837bc44f.png">
+
 ### :anchor: Component location
 
 Tunny can be found in the Tunny tab if it has been installed.
@@ -103,7 +107,10 @@ The nickname of the ConstructFishAttribute component input is stored paired with
 
 The Geometry input has a special meaning; what is entered here will be displayed as a Geometry when the results are sorted in the FishMarket component described below.
 
-<img width="40%" src="https://user-images.githubusercontent.com/23289252/178102569-16b64446-1a67-4eb6-80fa-a4c846c4b294.png">
+Constraint inputs are also special inputs.**(new in v0.5.0)** The values entered here are the constraints in the optimization.
+When this value is less than 0, the constraint is considered satisfied. Constraint conditions are supported by TPE, GP and NSGAII.
+
+<img width="60%" alt="image" src="https://user-images.githubusercontent.com/23289252/188254609-3c8432ba-3f1c-45f4-bd2a-9e3f08271c2b.png">
 
 ### :octopus: Other components
 
@@ -128,24 +135,26 @@ On the other hand, it is possible to save the learning status, and even after th
 On the other hand, Running the Dashboard function, which charts the results, starts a server that handles the results and allows you to see the optimization results in real time in your browser.  
 This feature is useful for analyzing post-optimization results, as it allows the user to not only see the results in real time, but also to view several figures at once.
 
-It is recommended that optimization be performed a small number of times, and after completion, the results should be reviewed to determine if continued optimization should be performed.
-
 #### :sailboat: Optimize Tab
 
-<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103175-02ade5f2-fa3e-4f34-9757-1b944d699785.png">
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/188254704-533139c7-169a-4aee-bcd5-0e98ff45f35e.png">
 
 Values that can be set and their meanings are as follows.
 
 - Sampler
   - Sets the algorithm to perform the optimization. The following types are available.
   - All are optimization algorithms provided by Optuna.
-    1. TPE (Bayesian optimization)
-    1. NSGA-II (Genetic algorithm)
-    1. CMA-ES (Evolution strategy)
-    1. Random
-    1. Grid
+    1. Bayesian optimization(TPE)
+    2. Bayesian optimization(GP) **(new in v0.5.0)**
+    3. Genetic algorithm(NSGA-II)
+    4. Evolution strategy(CMA-ES)
+    5. Quasi-MonteCarlo **(new in v0.5.0)**
+    6. Random
+    7. Grid
 - Number of trial
   - This number of trials will be performed.
+    - Bayesian optimization first performs random sampling to create a surrogate model. This is the setting for how many trials random sampling is performed.
+    - The original paper recommends “number of variables” \* 11-1.
   - If the grid sampler is selected, the calculation is performed by dividing each entered Variable by this number.
     - **Note** that the number of calculations is (Number of trial) to the power of (Number of Variable).
 - Timeout(sec)
@@ -163,7 +172,7 @@ Values that can be set and their meanings are as follows.
 
 #### :boat: Visualize Tab
 
-<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103288-6e7bc0fe-f730-4e23-8159-6d43df55f1ae.png">
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/188255757-8532948f-b784-45b7-b116-17ba79db9536.png">
 
 Values that can be set and their meanings are as follows.
 
@@ -181,12 +190,15 @@ Values that can be set and their meanings are as follows.
     6. param importance
     7. pareto front
     8. slice
-- Show selected type of plots
-  - Show the plot selected in Visualize type above.
+    9. hypervolume **(new in v0.5.0)**
+  - Show selected type of plots
+    - Show the plot selected in Visualize type above.
+- k-means clustering
+  - Cluster the results of the Pareto front when performing multi-objective optimization.Any number of clusters can be specified.
 
 #### :fishing_pole_and_fish: Output Tab
 
-<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103410-e2a589b2-ffd0-436e-b4b1-2deb4e7346ba.png">
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/188255933-62df2324-29b0-40e2-9568-6b825ed147dd.png">
 
 Values that can be set and their meanings are as follows.
 
@@ -197,11 +209,8 @@ Values that can be set and their meanings are as follows.
 - All trials
   - Output all trials.
 - Use model number
-
   - Multiple values can be entered separated by commas, such as "1,3,42".
-
 - Output
-
   - The model with the number entered here is restored from the optimization results file and is the output of the component.
   - The model number can be found on each plot.
   - In the example below, model number 424 with a value of -11.49 for the first objective function is selected.
@@ -213,36 +222,28 @@ Values that can be set and their meanings are as follows.
 
 #### :droplet: Settings Tab
 
-<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103758-3ca8fa88-4796-4b0c-8c17-f8a810a47caf.png">
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/188255969-9355c626-36d3-4d9b-8f50-0a8bda79bf8e.png">
 
-Tunny stores the optimize settings in json.  
-Detailed settings in optimization can now also be configured in Json.
+**(new in v0.5.0)**
+Allows detailed optimization settings to be performed in the UI.
+See below for the meaning of each setting.
 
-- **IMPORTANT**: The default hyperparameter for each optimization contain Optuna defaults.
-  - These are not necessarily the best values for your optimization.
-  - Pay particular attention to the initial population or trial.
-    - the recommended initial trial for TPE is "the number of Variable" x 11 - 1.
-- Open API page
-  - Open Optuna's API page with the meaning of each value in the advanced optimization settings.
-- Save settings to json
-  - Save the settings to Json.
-  - Settings are also saved when the window is closed with the X button.
-- Load settings from json
-  - Loads a settings file.
-- Open Settings.Json folder
-  - Open the folder where the settings files are stored.
-  - The file Settings.json is Tunny's settings file. Edit it with any text editor.
+[Guideline for selecting optimization algorithms](https://graceful-stag-dae.notion.site/Guidelines-for-Selecting-a-Optimization-Algorithm-8505b2e020ee4af2a77272f25acc6094)
 
 #### :turtle: File Tab
 
-<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/178103993-d4448d03-5aef-45bd-a8a0-497a0cf417a4.png">
+<img width="30%" alt="image" src="https://user-images.githubusercontent.com/23289252/188256059-82679c52-4909-4e29-a9ad-36b3bab5c577.png">
 
-- Open result file folder
-  - Open the folder where the file containing the optimization results is located.
-  - Results are saved as "Tunny_Opt_Result.db" by default.
-  - This can be made to be anything you want by rewriting the Setting.json file.
-- Clear result file
-  - Deletes the optimization result file.
+- Result
+  - Open result file folder
+    - Open the folder where the file containing the optimization results is located.
+    - Results are saved as "Tunny_Opt_Result.db" by default.
+    - This can be made to be anything you want by rewriting the Setting.json file.
+  - Clear result file
+    - Deletes the optimization result file.
+- License **(new in v0.5.0)**
+  - You can check license to push each button.
+
 
 ## :surfer: Contact information
 
