@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
@@ -37,13 +38,17 @@ namespace Tunny.UI
             OutputLoop.Settings = _settings;
             OutputLoop.StudyName = studyNameTextBox.Text;
             OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
-            int[] indices = outputModelNumTextBox.Text.Split(',').Select(int.Parse).ToArray();
-            SetOutputIndices(mode, indices);
-            outputResultBackgroundWorker.RunWorkerAsync(_component);
+            bool result = SetOutputIndices(mode);
+            if (result)
+            {
+                outputResultBackgroundWorker.RunWorkerAsync(_component);
+            }
         }
 
-        private static void SetOutputIndices(OutputMode mode, int[] indices)
+        private bool SetOutputIndices(OutputMode mode)
         {
+            bool result = true;
+            var indices = new List<int>();
             switch (mode)
             {
                 case OutputMode.ParatoSolutions:
@@ -53,15 +58,39 @@ namespace Tunny.UI
                     OutputLoop.Indices = new[] { -10 };
                     break;
                 case OutputMode.ModelNumber:
-                    OutputLoop.Indices = indices;
+                    result = ParseModelNumberInput(ref indices);
+                    if (result)
+                    {
+                        OutputLoop.Indices = indices.ToArray();
+                    }
                     break;
                 case OutputMode.ReflectToSliders:
-                    CheckIndicesLength(indices);
-                    OutputLoop.Indices = new[] { indices[0] };
+                    result = ParseModelNumberInput(ref indices);
+                    if (result)
+                    {
+                        CheckIndicesLength(indices.ToArray());
+                        OutputLoop.Indices = new[] { indices[0] };
+                    }
                     break;
                 default:
                     throw new ArgumentException("Unsupported output mode.");
             }
+            return result;
+        }
+
+        private bool ParseModelNumberInput(ref List<int> indices)
+        {
+            bool result = true;
+            try
+            {
+                indices = outputModelNumTextBox.Text.Split(',').Select(int.Parse).ToList();
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("The model number format of the input is incorrect. \nPlease use a comma separator as follows.\n\"1,2,3\"", "Tunny");
+                result = false;
+            }
+            return result;
         }
 
         private static void CheckIndicesLength(int[] indices)

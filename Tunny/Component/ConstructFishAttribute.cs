@@ -12,7 +12,8 @@ namespace Tunny.Component
 {
     public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
-        private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.\"Geometry\" is a special nickname that is visualized with the optimization results. Do not change it.";
+        private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
+        private readonly string _constraintDescription = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
         private readonly string _attrDescription = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
@@ -26,11 +27,13 @@ namespace Tunny.Component
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "Geometry", _geomDescription, GH_ParamAccess.list);
+            pManager.AddNumberParameter("Constraint", "Constraint", _constraintDescription, GH_ParamAccess.item);
             pManager.AddGenericParameter("Attr1", "Attr1", _attrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", _attrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
+            Params.Input[3].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -49,18 +52,33 @@ namespace Tunny.Component
                 return;
             }
 
+            GetInputData(DA, paramCount, dict);
+            DA.SetData(0, dict);
+        }
+
+        private void GetInputData(IGH_DataAccess DA, int paramCount, Dictionary<string, object> dict)
+        {
             for (int i = 0; i < paramCount; i++)
             {
-                var list = new List<object>();
-                if (!DA.GetDataList(i, list))
-                {
-                    continue;
-                }
                 string key = Params.Input[i].NickName;
-                dict.Add(key, list);
+                if (i == 1)
+                {
+                    double constraint = 0;
+                    if (DA.GetData(i, ref constraint))
+                    {
+                        dict.Add(key, constraint);
+                    }
+                }
+                else
+                {
+                    var list = new List<object>();
+                    if (!DA.GetDataList(i, list))
+                    {
+                        continue;
+                    }
+                    dict.Add(key, list);
+                }
             }
-
-            DA.SetData(0, dict);
         }
 
         //FIXME: Should be modified to capture and check for change events.
@@ -79,13 +97,19 @@ namespace Tunny.Component
             return false;
         }
 
-        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index != 0);
+        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 2);
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index != 0;
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 2;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
-            return side == GH_ParameterSide.Input ? index == 0 ? SetGeometryParameterInput() : SetGenericParameterInput(index) : null;
+            return side == GH_ParameterSide.Input
+                ? index == 0
+                    ? SetGeometryParameterInput()
+                    : index == 1
+                        ? SetNumberParameterInput()
+                        : SetGenericParameterInput(index)
+                : null;
         }
 
         private IGH_Param SetGenericParameterInput(int index)
@@ -98,12 +122,23 @@ namespace Tunny.Component
             return p;
         }
 
+        private IGH_Param SetNumberParameterInput()
+        {
+            var p = new Param_Number();
+            p.Name = p.NickName = $"Constraint";
+            p.Description = _constraintDescription;
+            p.Access = GH_ParamAccess.list;
+            p.MutableNickName = false;
+            p.Optional = true;
+            return p;
+        }
+
         private IGH_Param SetGeometryParameterInput()
         {
             var p = new Param_Geometry();
             p.Name = p.NickName = "Geometry";
             p.Description = _geomDescription;
-            p.Access = GH_ParamAccess.list;
+            p.Access = GH_ParamAccess.item;
             p.MutableNickName = false;
             p.Optional = true;
             return p;

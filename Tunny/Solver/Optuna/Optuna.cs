@@ -19,12 +19,14 @@ namespace Tunny.Solver.Optuna
     {
         public double[] XOpt { get; private set; }
         private readonly string _componentFolder;
+        private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
 
-        public Optuna(string componentFolder, TunnySettings settings)
+        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint)
         {
             _componentFolder = componentFolder;
             _settings = settings;
+            _hasConstraint = hasConstraint;
             string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
@@ -44,7 +46,7 @@ namespace Tunny.Solver.Optuna
 
             try
             {
-                var optimize = new Algorithm(variables, objNickName, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objNickName, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.GetXOptimum();
 
@@ -87,9 +89,24 @@ namespace Tunny.Solver.Optuna
         {
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
-                "Please send below message (& gh file if possible) to Tunny support.\n\n" +
+                "Please send below message (& gh file if possible) to Tunny support.\n" +
+                "If this error occurs, the Tunny solver will not work after this unless Rhino is restarted.\n\n" +
                 "\" " + e.Message + " \"", "Tunny",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
+        {
+            try
+            {
+                return optuna.load_study(storage: storage, study_name: studyName);
+            }
+            catch (Exception e)
+            {
+                TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
         }
 
         public void ShowSelectedTypePlot(string visualize, string studyName)
@@ -98,15 +115,10 @@ namespace Tunny.Solver.Optuna
             PythonEngine.Initialize();
             using (Py.GIL())
             {
-                dynamic study;
                 dynamic optuna = Py.Import("optuna");
-                try
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
                 {
-                    study = optuna.load_study(storage: storage, study_name: studyName);
-                }
-                catch (Exception e)
-                {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -123,40 +135,158 @@ namespace Tunny.Solver.Optuna
             PythonEngine.Shutdown();
         }
 
-        private static void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
+        private void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
         {
-            dynamic vis;
             switch (visualize)
             {
                 case "contour":
-                    vis = optuna.visualization.plot_contour(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_contour(study, target_name: nickNames[0]).show();
                     break;
                 case "EDF":
-                    vis = optuna.visualization.plot_edf(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_edf(study, target_name: nickNames[0]).show();
                     break;
                 case "intermediate values":
-                    vis = optuna.visualization.plot_intermediate_values(study);
+                    optuna.visualization.plot_intermediate_values(study).show();
                     break;
                 case "optimization history":
-                    vis = optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]).show();
                     break;
                 case "parallel coordinate":
-                    vis = optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]).show();
                     break;
                 case "param importances":
-                    vis = optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_param_importances(study, target_name: nickNames[0]).show();
                     break;
                 case "pareto front":
-                    vis = optuna.visualization.plot_pareto_front(study, target_names: nickNames);
+                    dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                    TruncateParetoFrontPlotHover(fig, study).show();
                     break;
                 case "slice":
-                    vis = optuna.visualization.plot_slice(study, target_name: nickNames[0]);
+                    optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
+                    break;
+                case "hypervolume":
+                    Hypervolume.CreateFigure(optuna, study).show();
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
                     return;
             }
-            vis.show();
+        }
+
+        private static dynamic TruncateParetoFrontPlotHover(dynamic fig, dynamic study)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(
+                "def truncate(fig, study):\n" +
+                "    import json\n" +
+                "    user_attr = study.trials[0].user_attrs\n" +
+                "    has_geometry = 'Geometry' in user_attr\n" +
+                "    if has_geometry == False:\n" +
+                "        return fig\n" +
+                "    for scatter_id in range(len(fig.data)):\n" +
+                "        new_texts = []\n" +
+                "        for i, original_label in enumerate(fig.data[scatter_id]['text']):\n" +
+                "            json_label = json.loads(original_label.replace('<br>', '\\n'))\n" +
+                "            json_label['user_attrs'].pop('Geometry')\n" +
+                "            new_texts.append(json.dumps(json_label, indent=2).replace('\\n', '<br>'))\n" +
+                "        fig.data[scatter_id]['text'] = new_texts\n" +
+                "    return fig\n"
+            );
+            dynamic truncate = ps.Get("truncate");
+            return truncate(fig, study);
+        }
+
+        public void ShowClusteringPlot(string studyName, int numCluster)
+        {
+            string storage = "sqlite:///" + _settings.Storage;
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                dynamic optuna = Py.Import("optuna");
+                dynamic study = LoadStudy(optuna, storage, studyName);
+                if (study == null)
+                {
+                    return;
+                }
+
+                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
+                if (nickNames.Length == 1)
+                {
+                    TunnyMessageBox.Show("Clustering Error\n\nClustering is for multi-objective optimization only.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    ShowCluster(optuna, study, nickNames, numCluster);
+                }
+            }
+            PythonEngine.Shutdown();
+        }
+
+        private void ShowCluster(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
+        {
+            try
+            {
+                dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                fig = TruncateParetoFrontPlotHover(fig, study);
+                ClusteringParetoFrontPlot(fig, study, numCluster).show();
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
+        {
+            PyModule ps = Py.CreateScope();
+            //FIXME: Rewrite to c-sharp code.
+            ps.Exec(
+                "def clustering(fig, study, num):\n" +
+                "    from sklearn.cluster import KMeans\n" +
+                "    import optuna\n" +
+
+                "    if 'Constraint' in study.trials[0].user_attrs:\n" +
+                "        feasible_trials = []\n" +
+                "        infeasible_trials = []\n" +
+                "        for trial in study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)):\n" +
+                "            if all(map(lambda x: x <= 0.0, trial.user_attrs['Constraint'])):\n" +
+                "                feasible_trials.append(trial)\n" +
+                "            else:\n" +
+                "                infeasible_trials.append(trial)\n" +
+                "        best_trials = optuna.visualization._pareto_front._get_pareto_front_trials_by_trials(\n" +
+                "            feasible_trials, study.directions)\n" +
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            feasible_trials, best_trials)\n" +
+                "    else:\n" +
+                "        best_trials = study.best_trials\n" +
+
+                "        non_best_trials = optuna.visualization._pareto_front._get_non_pareto_front_trials(\n" +
+                "            study.get_trials(deepcopy=False, states=(optuna.trial.TrialState.COMPLETE,)), best_trials\n" +
+                "        )\n" +
+                "        infeasible_trials = []\n" +
+
+                "    best_values = [trial.values for trial in best_trials]\n" +
+                "    kmeans = KMeans(n_clusters=num).fit(best_values)\n" +
+                "    labels = kmeans.labels_\n" +
+                "    best_length = len(best_values)\n" +
+
+                "    for scatter_id in range(len(fig.data)):\n" +
+                "        color = fig.data[scatter_id]['marker']['color']\n" +
+                "        if (len(color) == best_length):\n" +
+                "            fig.data[scatter_id]['marker']['color'] = labels\n" +
+                "            fig.data[scatter_id]['marker']['colorscale'] = 'rainbow'\n" +
+                "            fig.data[scatter_id]['marker']['colorbar']['title'] = '# Cluster'\n" +
+                "        elif fig.data[scatter_id]['marker']['color'] == '#cccccc':\n" +
+                "            pass\n" +
+                "        else:\n" +
+                "            new_color = ['#cccccc' for c in color]\n" +
+                "            fig.data[scatter_id]['marker']['color'] = new_color\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorscale')\n" +
+                "            fig.data[scatter_id]['marker'].pop('colorbar')\n" +
+                "    return fig\n"
+            );
+            dynamic clustering = ps.Get("clustering");
+            return clustering(fig, study, numCluster);
         }
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
@@ -238,13 +368,32 @@ namespace Tunny.Solver.Optuna
             for (int i = 0; i < bestTrials.Length; i++)
             {
                 dynamic trial = bestTrials[i];
+                bool isFeasible = CheckFeasible(trial);
                 if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
-                ParseTrial(modelResult, trial);
+                if (isFeasible)
+                {
+                    ParseTrial(modelResult, trial);
+                }
                 worker.ReportProgress(i * 100 / bestTrials.Length);
             }
+        }
+
+        private static bool CheckFeasible(dynamic trial)
+        {
+            string[] keys = (string[])trial.user_attrs.keys();
+            if (keys.Contains("Constraint"))
+            {
+                double[] constraint = (double[])trial.user_attrs["Constraint"];
+                if (constraint.Max() > 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
@@ -281,10 +430,19 @@ namespace Tunny.Solver.Optuna
             string[] keys = (string[])trial.user_attrs.keys();
             for (int i = 0; i < keys.Length; i++)
             {
-                string[] values = (string[])trial.user_attrs[keys[i]];
-                attributes.Add(keys[i], values.ToList());
+                var values = new List<string>();
+                if (keys[i] == "Constraint")
+                {
+                    double[] constraint = (double[])trial.user_attrs[keys[i]];
+                    values = constraint.Select(v => v.ToString()).ToList();
+                }
+                else
+                {
+                    string[] valueArray = (string[])trial.user_attrs[keys[i]];
+                    values = valueArray.ToList();
+                }
+                attributes.Add(keys[i], values);
             }
-
             return attributes;
         }
     }

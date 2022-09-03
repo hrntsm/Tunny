@@ -43,7 +43,7 @@ namespace Tunny.Util
                     case GH_Mesh mesh:
                         return mesh.Value.ToJSON(option);
                     case GH_Brep brep:
-                        return brep.Value.ToJSON(option);
+                        return brep.IsValid ? brep.Value.ToJSON(option) : string.Empty;
                     case GH_Curve curve:
                         return curve.Value.ToJSON(option);
                     case GH_Surface surface:

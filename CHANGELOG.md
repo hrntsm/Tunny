@@ -6,6 +6,47 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [0.5.0] -2022-09-03
+
+### Added
+
+- Hypervolume visualization
+  - It is useful for determining convergence in multi-objective optimization.
+- Clustering visualization
+  - Clustering of results during multi-objective optimization makes it easier to evaluate solutions.
+- BoTorch Sampler
+  - This sampler use Gaussian Process and support multi-objective optimization.
+- Quasi-MonteCarlo Sampler
+  - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html) about this sampler.
+- Support Constraint.
+  - Only TPE, GP, NSGAII can use constraint.
+- Sampler detail settings UI
+  - Previously it was necessary to change the JSON file of the settings, but now it can be changed in the UI
+- Enable Text Bake in the FishMarket component.
+- Allows selection of NSGA-II crossover methods.
+  - `Uniform`, `BLXAlpha`, `SPX`, `SBX`, `VSBX`, `UNDX`
+- Ability to set Popsize on CMA-ES restart
+- Run GC after trial when has geometry attribute or setting always run.
+  - **This change probably make optimize slower before**
+  - If you want to cut this setting, set the value of "GcAfterTrial" to 2 in Settings.json.
+- Show LICENSE button in Tunny UI.
+
+### Changed
+
+- When genepool is an input, it now creates variable names using nicknames.
+- The output of the Pareto solution was made to consider the constraints.
+- Multivariate in TPE sampler default option is false to true
+- Updated Optuna used to v3.0.0
+  - Use `suggest_int` and `suggest_float` instead of `suggest_uniform` for more accurate variable generation in optimization
+  - Random and Grid samplers now support multi-objective optimization
+  - The format of the db file in which the results are saved has changed. Please note that it is not compatible with the previous one.
+
+### Fixed
+
+- The PythonInstaller window now has no text on the progress bar.
+- When more than one Study exists, another Study Name is set and RunOpt no longer causes a Solver Error.
+- The error does not occur when the Brep of Geometry of Attribute is null.
+
 ## [0.4.0] -2022-07-09
 
 ### Added
@@ -54,7 +95,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Use json to set sampler detail settings
   - Since the settings are saved in Json, the previous values set in the UI remain saved when the window is closed and reopened.
-- UI for above detail settings 
+- UI for above detail settings
 - If input "-10" in restore model number, Tunny output all result
 - Fish component
   - Special GH_Param component for Tunny result to handle its result easier.

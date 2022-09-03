@@ -7,6 +7,7 @@ using Python.Runtime;
 
 using Tunny.Optimization;
 using Tunny.Settings;
+using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver.Optuna
@@ -14,6 +15,7 @@ namespace Tunny.Solver.Optuna
     public class Algorithm
     {
         private List<Variable> Variables { get; set; }
+        private bool HasConstraints { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
@@ -22,11 +24,12 @@ namespace Tunny.Solver.Optuna
         public EndState EndState { get; set; }
 
         public Algorithm(
-            List<Variable> variables, string[] objNickName,
+            List<Variable> variables, bool hasConstraint, string[] objNickName,
             TunnySettings settings,
             Func<double[], int, EvaluatedGHResult> evalFunc)
         {
             Variables = variables;
+            HasConstraints = hasConstraint;
             ObjNickName = objNickName;
             Settings = settings;
             EvalFunc = evalFunc;
@@ -46,7 +49,7 @@ namespace Tunny.Solver.Optuna
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna);
+                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
 
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
@@ -95,16 +98,14 @@ namespace Tunny.Solver.Optuna
         private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
         {
             PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
-            var directions = new Dictionary<string, int>();
+            var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
             {
-                directions.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
+                studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
             }
 
-            return directions.ContainsKey(Settings.StudyName)
-                ? CheckDirections(nObjective, directions)
-                : directions.Count == 0;
+            return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
         }
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
@@ -187,7 +188,9 @@ namespace Tunny.Solver.Optuna
                 {
                     for (int j = 0; j < Variables.Count; j++)
                     {
-                        xTest[j] = trial.suggest_uniform(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond);
+                        xTest[j] = Variables[j].IsInteger
+                        ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
+                        : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                     }
                     result = EvalFunc(xTest, progress);
 
@@ -210,7 +213,23 @@ namespace Tunny.Solver.Optuna
                 catch
                 {
                 }
+                finally
+                {
+                    RunGC(result);
+                }
                 trialNum++;
+            }
+        }
+
+        private void RunGC(EvaluatedGHResult result)
+        {
+            GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
+            if (gcAfterTrial == GcAfterTrial.Always ||
+                (result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry)
+            )
+            {
+                dynamic gc = Py.Import("gc");
+                gc.collect();
             }
         }
 
@@ -234,40 +253,65 @@ namespace Tunny.Solver.Optuna
 
             if (result.Attribute != null)
             {
-                foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+                SetNonGeometricAttr(result, trial);
+            }
+        }
+
+        private static void SetNonGeometricAttr(EvaluatedGHResult result, dynamic trial)
+        {
+            foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
+            {
+                var pyList = new PyList();
+                if (pair.Key == "Constraint")
                 {
-                    var pyList = new PyList();
+                    foreach (string str in pair.Value)
+                    {
+                        pyList.Append(new PyFloat(double.Parse(str)));
+                    }
+                }
+                else
+                {
                     foreach (string str in pair.Value)
                     {
                         pyList.Append(new PyString(str));
                     }
-                    trial.set_user_attr(pair.Key, pyList);
                 }
+                trial.set_user_attr(pair.Key, pyList);
             }
         }
 
-        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna)
+        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna, bool hasConstraints)
         {
             dynamic sampler;
             switch (samplerType)
             {
                 case 0:
-                    sampler = Sampler.TPE(optuna, Settings);
+                    sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
                 case 1:
-                    sampler = Sampler.NSGAII(optuna, Settings);
+                    sampler = Sampler.BoTorch(optuna, Settings, hasConstraints);
                     break;
                 case 2:
-                    sampler = Sampler.CmaEs(optuna, Settings);
+                    sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
                     break;
                 case 3:
-                    sampler = Sampler.Random(optuna, Settings);
+                    sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 4:
+                    sampler = Sampler.QMC(optuna, Settings);
+                    break;
+                case 5:
+                    sampler = Sampler.Random(optuna, Settings);
+                    break;
+                case 6:
                     sampler = Sampler.Grid(optuna, Variables, ref nTrials);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
+            }
+            if (samplerType > 2 && hasConstraints)
+            {
+                TunnyMessageBox.Show("Only TPE, GP and NSGAII support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return sampler;
         }
@@ -284,13 +328,10 @@ namespace Tunny.Solver.Optuna
 
     }
 
-    public enum EndState
+    public enum GcAfterTrial
     {
-        AllTrialCompleted,
-        Timeout,
-        StoppedByUser,
-        DirectionNumNotMatch,
-        UseExitStudyWithoutLoading,
-        Error
+        Always,
+        HasGeometry,
+        NoExecute,
     }
 }

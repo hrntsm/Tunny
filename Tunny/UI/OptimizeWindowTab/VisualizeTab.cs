@@ -26,8 +26,14 @@ namespace Tunny.UI
 
         private void SelectedTypePlotButton_Click(object sender, EventArgs e)
         {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings);
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
             optuna.ShowSelectedTypePlot(visualizeTypeComboBox.Text, studyNameTextBox.Text);
+        }
+
+        private void VisualizeClusteringPlotButton_Click(object sender, EventArgs e)
+        {
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
+            optuna.ShowClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value);
         }
     }
 }

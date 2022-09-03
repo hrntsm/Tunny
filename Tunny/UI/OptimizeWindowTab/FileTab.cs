@@ -16,5 +16,14 @@ namespace Tunny.UI
         {
             File.Delete(_settings.Storage);
         }
+
+        private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/hrntsm/Tunny/blob/main/LICENSE");
+        }
+        private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
+        }
     }
 }

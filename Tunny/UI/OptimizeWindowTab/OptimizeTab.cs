@@ -17,11 +17,7 @@ namespace Tunny.UI
             ghCanvas.DisableUI();
 
             optimizeRunButton.Enabled = false;
-            _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
-            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
-            _settings.StudyName = studyNameTextBox.Text;
-            _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
-            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            GetUIValues();
             OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
@@ -47,10 +43,10 @@ namespace Tunny.UI
                 return false;
             }
             else if (objectiveValues.Count > 1
-                     && (samplerComboBox.Text == "CMA-ES" || samplerComboBox.Text == "Random" || samplerComboBox.Text == "Grid"))
+                     && (samplerComboBox.Text == "EvolutionStrategy (CMA-ES)"))
             {
                 TunnyMessageBox.Show(
-                    "CMA-ES, Random and Grid samplers only support single objective optimization.",
+                    "CMA-ES samplers only support single objective optimization.",
                     "Tunny",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error

@@ -39,48 +39,52 @@ namespace Tunny.UI
             // 
             // installProgressBar
             // 
-            this.installProgressBar.Location = new System.Drawing.Point(12, 72);
+            this.installProgressBar.Location = new System.Drawing.Point(22, 144);
+            this.installProgressBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.installProgressBar.Name = "installProgressBar";
-            this.installProgressBar.Size = new System.Drawing.Size(334, 23);
+            this.installProgressBar.Size = new System.Drawing.Size(501, 34);
             this.installProgressBar.TabIndex = 0;
             // 
             // installerTitleLabel
             // 
             this.installerTitleLabel.AutoSize = true;
-            this.installerTitleLabel.Location = new System.Drawing.Point(12, 9);
+            this.installerTitleLabel.Location = new System.Drawing.Point(18, 14);
+            this.installerTitleLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.installerTitleLabel.Name = "installerTitleLabel";
-            this.installerTitleLabel.Size = new System.Drawing.Size(282, 15);
+            this.installerTitleLabel.Size = new System.Drawing.Size(427, 23);
             this.installerTitleLabel.TabIndex = 1;
             this.installerTitleLabel.Text = "Installing Python packages depending on Tunny";
             // 
             // installItemLabel
             // 
-            this.installItemLabel.Location = new System.Drawing.Point(35, 39);
+            this.installItemLabel.Location = new System.Drawing.Point(52, 58);
+            this.installItemLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.installItemLabel.Name = "installItemLabel";
-            this.installItemLabel.Size = new System.Drawing.Size(288, 30);
+            this.installItemLabel.Size = new System.Drawing.Size(432, 45);
             this.installItemLabel.TabIndex = 2;
             this.installItemLabel.Text = "Now Installing: ";
             // 
             // notificationLabel
             // 
-            this.notificationLabel.Location = new System.Drawing.Point(12, 109);
+            this.notificationLabel.Location = new System.Drawing.Point(18, 197);
+            this.notificationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.notificationLabel.Name = "notificationLabel";
-            this.notificationLabel.Size = new System.Drawing.Size(334, 53);
+            this.notificationLabel.Size = new System.Drawing.Size(494, 80);
             this.notificationLabel.TabIndex = 3;
             this.notificationLabel.Text = "**This process runs only when Tunny is launched for the first time.**";
             // 
             // PythonInstallDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(358, 161);
+            this.ClientSize = new System.Drawing.Size(537, 286);
             this.Controls.Add(this.notificationLabel);
             this.Controls.Add(this.installItemLabel);
             this.Controls.Add(this.installerTitleLabel);
             this.Controls.Add(this.installProgressBar);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "PythonInstallDialog";
             this.Text = "PythonInstaller";
             this.TopMost = true;

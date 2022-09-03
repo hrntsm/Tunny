@@ -32,7 +32,7 @@ namespace Tunny.Optimization
 
             var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings);
+            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
             ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
             if (modelResult.Length == 0)
             {
@@ -104,7 +104,10 @@ namespace Tunny.Optimization
                     var geometries = new List<GeometryBase>();
                     foreach (string json in attr.Value)
                     {
-                        geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
+                        }
                     }
                     attribute.Add(attr.Key, geometries);
                 }

@@ -11,8 +11,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Rhino.FileIO;
-
 using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
@@ -31,6 +29,7 @@ namespace Tunny.Util
         public List<GH_NumberSlider> Sliders { get; set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; set; }
+        public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
 
@@ -120,7 +119,7 @@ namespace Tunny.Util
                 {
                     nickName = "param" + i++;
                 }
-
+                double eps = Convert.ToDouble(slider.Slider.Epsilon);
                 switch (slider.Slider.Type)
                 {
                     case Grasshopper.GUI.Base.GH_SliderAccuracy.Even:
@@ -145,24 +144,26 @@ namespace Tunny.Util
                         break;
                 }
 
-                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
+                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName, eps));
             }
         }
 
         private void SetInputGenePoolValues(ICollection<Variable> variables)
         {
-            int count = 0;
-
-            foreach (GalapagosGeneListObject genePool in _genePool)
+            var nickNames = new List<string>();
+            for (int i = 0; i < _genePool.Count; i++)
             {
+                GalapagosGeneListObject genePool = _genePool[i];
+                string nickName = nickNames.Contains(genePool.NickName) ? genePool.NickName + i + "-" : genePool.NickName;
+                nickNames.Add(nickName);
                 bool isInteger = genePool.Decimals == 0;
                 decimal lowerBond = genePool.Minimum;
                 decimal upperBond = genePool.Maximum;
-
+                double eps = Math.Pow(10, -genePool.Decimals);
                 for (int j = 0; j < genePool.Count; j++)
                 {
-                    string nickName = "genepool" + count++;
-                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName));
+                    string name = nickNames[i] + j;
+                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name, eps));
                 }
             }
         }
@@ -222,6 +223,7 @@ namespace Tunny.Util
                 if (goo is GH_FishAttribute fishAttr)
                 {
                     _attributes = fishAttr;
+                    HasConstraint = fishAttr.Value.ContainsKey("Constraint");
                     break;
                 }
             }
@@ -374,14 +376,26 @@ namespace Tunny.Util
                 }
 
                 var value = new List<string>();
-                var objList = _attributes.Value[key] as List<object>;
-                foreach (object param in objList)
+                if (key == "Constraint")
                 {
-                    if (param is IGH_Goo goo)
+                    object obj = _attributes.Value[key];
+                    if (obj is double val)
                     {
-                        value.Add(Converter.GooToString(goo, true));
+                        value.Add(val.ToString());
                     }
                 }
+                else
+                {
+                    var objList = _attributes.Value[key] as List<object>;
+                    foreach (object param in objList)
+                    {
+                        if (param is IGH_Goo goo)
+                        {
+                            value.Add(Converter.GooToString(goo, true));
+                        }
+                    }
+                }
+
                 attrs.Add(key, value);
             }
 
