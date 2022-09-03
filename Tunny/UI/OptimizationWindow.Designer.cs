@@ -50,10 +50,8 @@ namespace Tunny.UI
             this.visualizeClusteringPlotButton = new System.Windows.Forms.Button();
             this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
             this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
-            this.visualizeClusteringLabel = new System.Windows.Forms.Label();
             this.dashboardButton = new System.Windows.Forms.Button();
             this.visualizeButton = new System.Windows.Forms.Button();
-            this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.outputTabPage = new System.Windows.Forms.TabPage();
             this.outputAllTrialsButton = new System.Windows.Forms.Button();
@@ -98,6 +96,8 @@ namespace Tunny.UI
             this.nsgaCrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsgaMutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
+            this.cmaEsPopulationSizeLabel = new System.Windows.Forms.Label();
             this.cmaEsDefaultButton = new System.Windows.Forms.Button();
             this.cmaEsRestartCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsUseSaparableCmaCheckBox = new System.Windows.Forms.CheckBox();
@@ -117,12 +117,16 @@ namespace Tunny.UI
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.fileTabPage = new System.Windows.Forms.TabPage();
-            this.openResultFolderButton = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.clearResultButton = new System.Windows.Forms.Button();
+            this.openResultFolderButton = new System.Windows.Forms.Button();
+            this.licenseGroupBox = new System.Windows.Forms.GroupBox();
+            this.showThirdPartyLicenseButton = new System.Windows.Forms.Button();
+            this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cmaEsPopulationSizeLabel = new System.Windows.Forms.Label();
-            this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
+            this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
+            this.kMeansClusteringGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -144,12 +148,16 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.nsgaCrossoverProbUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nsgaMutationProbUpDown)).BeginInit();
             this.CMAES.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsStartupNumUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsIncPopSizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsSigmaNumUpDown)).BeginInit();
             this.QMC.SuspendLayout();
             this.fileTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.licenseGroupBox.SuspendLayout();
+            this.visualizeTypeGroupBox.SuspendLayout();
+            this.kMeansClusteringGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -337,14 +345,9 @@ namespace Tunny.UI
             // 
             // visualizeTabPage
             // 
-            this.visualizeTabPage.Controls.Add(this.visualizeClusteringPlotButton);
-            this.visualizeTabPage.Controls.Add(this.visualizeNumClusterLabel);
-            this.visualizeTabPage.Controls.Add(this.visualizeClusterNumUpDown);
-            this.visualizeTabPage.Controls.Add(this.visualizeClusteringLabel);
+            this.visualizeTabPage.Controls.Add(this.kMeansClusteringGroupBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTypeGroupBox);
             this.visualizeTabPage.Controls.Add(this.dashboardButton);
-            this.visualizeTabPage.Controls.Add(this.visualizeButton);
-            this.visualizeTabPage.Controls.Add(this.visualizeTypeLabel);
-            this.visualizeTabPage.Controls.Add(this.visualizeTypeComboBox);
             this.visualizeTabPage.Location = new System.Drawing.Point(4, 32);
             this.visualizeTabPage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTabPage.Name = "visualizeTabPage";
@@ -356,7 +359,7 @@ namespace Tunny.UI
             // 
             // visualizeClusteringPlotButton
             // 
-            this.visualizeClusteringPlotButton.Location = new System.Drawing.Point(54, 343);
+            this.visualizeClusteringPlotButton.Location = new System.Drawing.Point(29, 80);
             this.visualizeClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeClusteringPlotButton.Name = "visualizeClusteringPlotButton";
             this.visualizeClusteringPlotButton.Size = new System.Drawing.Size(323, 39);
@@ -368,7 +371,7 @@ namespace Tunny.UI
             // visualizeNumClusterLabel
             // 
             this.visualizeNumClusterLabel.AutoSize = true;
-            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(50, 306);
+            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(25, 43);
             this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
             this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
             this.visualizeNumClusterLabel.TabIndex = 14;
@@ -376,7 +379,7 @@ namespace Tunny.UI
             // 
             // visualizeClusterNumUpDown
             // 
-            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(284, 304);
+            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(259, 41);
             this.visualizeClusterNumUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -391,17 +394,6 @@ namespace Tunny.UI
             0,
             0});
             // 
-            // visualizeClusteringLabel
-            // 
-            this.visualizeClusteringLabel.AutoSize = true;
-            this.visualizeClusteringLabel.Location = new System.Drawing.Point(25, 261);
-            this.visualizeClusteringLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.visualizeClusteringLabel.Name = "visualizeClusteringLabel";
-            this.visualizeClusteringLabel.Size = new System.Drawing.Size(175, 23);
-            this.visualizeClusteringLabel.TabIndex = 12;
-            this.visualizeClusteringLabel.Text = "k-means clustering";
-            this.toolTip1.SetToolTip(this.visualizeClusteringLabel, "Cluster the multi-objective optimization results using the k-means method.");
-            // 
             // dashboardButton
             // 
             this.dashboardButton.Location = new System.Drawing.Point(54, 40);
@@ -415,7 +407,7 @@ namespace Tunny.UI
             // 
             // visualizeButton
             // 
-            this.visualizeButton.Location = new System.Drawing.Point(54, 191);
+            this.visualizeButton.Location = new System.Drawing.Point(29, 80);
             this.visualizeButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeButton.Name = "visualizeButton";
             this.visualizeButton.Size = new System.Drawing.Size(323, 39);
@@ -423,16 +415,6 @@ namespace Tunny.UI
             this.visualizeButton.Text = "Show selected type of plots";
             this.visualizeButton.UseVisualStyleBackColor = true;
             this.visualizeButton.Click += new System.EventHandler(this.SelectedTypePlotButton_Click);
-            // 
-            // visualizeTypeLabel
-            // 
-            this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(25, 109);
-            this.visualizeTypeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
-            this.visualizeTypeLabel.Size = new System.Drawing.Size(130, 23);
-            this.visualizeTypeLabel.TabIndex = 1;
-            this.visualizeTypeLabel.Text = "Visualize type";
             // 
             // visualizeTypeComboBox
             // 
@@ -447,7 +429,7 @@ namespace Tunny.UI
             "pareto front",
             "slice",
             "hypervolume"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(54, 148);
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(29, 32);
             this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(323, 31);
@@ -1061,6 +1043,35 @@ namespace Tunny.UI
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
             // 
+            // cmaEsPopulationSizeUpDown
+            // 
+            this.cmaEsPopulationSizeUpDown.Enabled = false;
+            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 235);
+            this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.cmaEsPopulationSizeUpDown.Name = "cmaEsPopulationSizeUpDown";
+            this.cmaEsPopulationSizeUpDown.Size = new System.Drawing.Size(94, 30);
+            this.cmaEsPopulationSizeUpDown.TabIndex = 35;
+            this.cmaEsPopulationSizeUpDown.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // cmaEsPopulationSizeLabel
+            // 
+            this.cmaEsPopulationSizeLabel.AutoSize = true;
+            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(7, 237);
+            this.cmaEsPopulationSizeLabel.Name = "cmaEsPopulationSizeLabel";
+            this.cmaEsPopulationSizeLabel.Size = new System.Drawing.Size(144, 23);
+            this.cmaEsPopulationSizeLabel.TabIndex = 34;
+            this.cmaEsPopulationSizeLabel.Text = "Population Size";
+            this.toolTip1.SetToolTip(this.cmaEsPopulationSizeLabel, "A population size of CMA-ES. \r\nWhen set restart_strategy is checked,\r\nthis is use" +
+        "d as the initial population size.");
+            // 
             // cmaEsDefaultButton
             // 
             this.cmaEsDefaultButton.Location = new System.Drawing.Point(300, 349);
@@ -1302,8 +1313,8 @@ namespace Tunny.UI
             // 
             // fileTabPage
             // 
-            this.fileTabPage.Controls.Add(this.openResultFolderButton);
-            this.fileTabPage.Controls.Add(this.clearResultButton);
+            this.fileTabPage.Controls.Add(this.groupBox1);
+            this.fileTabPage.Controls.Add(this.licenseGroupBox);
             this.fileTabPage.Location = new System.Drawing.Point(4, 32);
             this.fileTabPage.Name = "fileTabPage";
             this.fileTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -1312,20 +1323,20 @@ namespace Tunny.UI
             this.fileTabPage.Text = "File";
             this.fileTabPage.UseVisualStyleBackColor = true;
             // 
-            // openResultFolderButton
+            // groupBox1
             // 
-            this.openResultFolderButton.Location = new System.Drawing.Point(80, 29);
-            this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.openResultFolderButton.Name = "openResultFolderButton";
-            this.openResultFolderButton.Size = new System.Drawing.Size(264, 39);
-            this.openResultFolderButton.TabIndex = 6;
-            this.openResultFolderButton.Text = "Open result file folder";
-            this.openResultFolderButton.UseVisualStyleBackColor = true;
-            this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
+            this.groupBox1.Controls.Add(this.clearResultButton);
+            this.groupBox1.Controls.Add(this.openResultFolderButton);
+            this.groupBox1.Location = new System.Drawing.Point(22, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(378, 171);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Result";
             // 
             // clearResultButton
             // 
-            this.clearResultButton.Location = new System.Drawing.Point(80, 94);
+            this.clearResultButton.Location = new System.Drawing.Point(58, 96);
             this.clearResultButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(264, 42);
@@ -1334,34 +1345,72 @@ namespace Tunny.UI
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
-            // cmaEsPopulationSizeLabel
+            // openResultFolderButton
             // 
-            this.cmaEsPopulationSizeLabel.AutoSize = true;
-            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(7, 237);
-            this.cmaEsPopulationSizeLabel.Name = "cmaEsPopulationSizeLabel";
-            this.cmaEsPopulationSizeLabel.Size = new System.Drawing.Size(144, 23);
-            this.cmaEsPopulationSizeLabel.TabIndex = 34;
-            this.cmaEsPopulationSizeLabel.Text = "Population Size";
-            this.toolTip1.SetToolTip(this.cmaEsPopulationSizeLabel, "A population size of CMA-ES. \r\nWhen set restart_strategy is checked,\r\nthis is use" +
-        "d as the initial population size.");
+            this.openResultFolderButton.Location = new System.Drawing.Point(58, 45);
+            this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.openResultFolderButton.Name = "openResultFolderButton";
+            this.openResultFolderButton.Size = new System.Drawing.Size(264, 39);
+            this.openResultFolderButton.TabIndex = 6;
+            this.openResultFolderButton.Text = "Open result file folder";
+            this.openResultFolderButton.UseVisualStyleBackColor = true;
+            this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
             // 
-            // cmaEsPopulationSizeUpDown
+            // licenseGroupBox
             // 
-            this.cmaEsPopulationSizeUpDown.Enabled = false;
-            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 235);
-            this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmaEsPopulationSizeUpDown.Name = "cmaEsPopulationSizeUpDown";
-            this.cmaEsPopulationSizeUpDown.Size = new System.Drawing.Size(94, 30);
-            this.cmaEsPopulationSizeUpDown.TabIndex = 35;
-            this.cmaEsPopulationSizeUpDown.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+            this.licenseGroupBox.Controls.Add(this.showThirdPartyLicenseButton);
+            this.licenseGroupBox.Controls.Add(this.showTunnyLicenseButton);
+            this.licenseGroupBox.Location = new System.Drawing.Point(22, 214);
+            this.licenseGroupBox.Name = "licenseGroupBox";
+            this.licenseGroupBox.Size = new System.Drawing.Size(378, 181);
+            this.licenseGroupBox.TabIndex = 8;
+            this.licenseGroupBox.TabStop = false;
+            this.licenseGroupBox.Text = "License";
+            // 
+            // showThirdPartyLicenseButton
+            // 
+            this.showThirdPartyLicenseButton.Location = new System.Drawing.Point(58, 98);
+            this.showThirdPartyLicenseButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.showThirdPartyLicenseButton.Name = "showThirdPartyLicenseButton";
+            this.showThirdPartyLicenseButton.Size = new System.Drawing.Size(264, 42);
+            this.showThirdPartyLicenseButton.TabIndex = 8;
+            this.showThirdPartyLicenseButton.Text = "Show Third Party License";
+            this.showThirdPartyLicenseButton.UseVisualStyleBackColor = true;
+            this.showThirdPartyLicenseButton.Click += new System.EventHandler(this.ShowThirdPartyLicenseButton_Click);
+            // 
+            // showTunnyLicenseButton
+            // 
+            this.showTunnyLicenseButton.Location = new System.Drawing.Point(58, 44);
+            this.showTunnyLicenseButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.showTunnyLicenseButton.Name = "showTunnyLicenseButton";
+            this.showTunnyLicenseButton.Size = new System.Drawing.Size(264, 42);
+            this.showTunnyLicenseButton.TabIndex = 7;
+            this.showTunnyLicenseButton.Text = "Show Tunny License";
+            this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
+            this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
+            // 
+            // visualizeTypeGroupBox
+            // 
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeButton);
+            this.visualizeTypeGroupBox.Location = new System.Drawing.Point(25, 111);
+            this.visualizeTypeGroupBox.Name = "visualizeTypeGroupBox";
+            this.visualizeTypeGroupBox.Size = new System.Drawing.Size(373, 138);
+            this.visualizeTypeGroupBox.TabIndex = 16;
+            this.visualizeTypeGroupBox.TabStop = false;
+            this.visualizeTypeGroupBox.Text = "Visualize type";
+            // 
+            // kMeansClusteringGroupBox
+            // 
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusterNumUpDown);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeNumClusterLabel);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusteringPlotButton);
+            this.kMeansClusteringGroupBox.Location = new System.Drawing.Point(25, 270);
+            this.kMeansClusteringGroupBox.Name = "kMeansClusteringGroupBox";
+            this.kMeansClusteringGroupBox.Size = new System.Drawing.Size(373, 147);
+            this.kMeansClusteringGroupBox.TabIndex = 17;
+            this.kMeansClusteringGroupBox.TabStop = false;
+            this.kMeansClusteringGroupBox.Text = "k-means clustering";
             // 
             // OptimizationWindow
             // 
@@ -1382,7 +1431,6 @@ namespace Tunny.UI
             this.optimizeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
-            this.visualizeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).EndInit();
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
@@ -1404,13 +1452,18 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.nsgaMutationProbUpDown)).EndInit();
             this.CMAES.ResumeLayout(false);
             this.CMAES.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsStartupNumUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsIncPopSizeUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsSigmaNumUpDown)).EndInit();
             this.QMC.ResumeLayout(false);
             this.QMC.PerformLayout();
             this.fileTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cmaEsPopulationSizeUpDown)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.licenseGroupBox.ResumeLayout(false);
+            this.visualizeTypeGroupBox.ResumeLayout(false);
+            this.kMeansClusteringGroupBox.ResumeLayout(false);
+            this.kMeansClusteringGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1432,7 +1485,6 @@ namespace Tunny.UI
         private System.Windows.Forms.TabPage optimizeTabPage;
         private System.Windows.Forms.TabPage visualizeTabPage;
         private System.Windows.Forms.Button visualizeButton;
-        private System.Windows.Forms.Label visualizeTypeLabel;
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.ComponentModel.BackgroundWorker outputResultBackgroundWorker;
         private System.Windows.Forms.TabPage settingsTabPage;
@@ -1503,12 +1555,17 @@ namespace Tunny.UI
         private System.Windows.Forms.Button qmcDefaultButton;
         private System.Windows.Forms.Label visualizeNumClusterLabel;
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
-        private System.Windows.Forms.Label visualizeClusteringLabel;
         private System.Windows.Forms.Button visualizeClusteringPlotButton;
         private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
         private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
         private System.Windows.Forms.NumericUpDown cmaEsPopulationSizeUpDown;
         private System.Windows.Forms.Label cmaEsPopulationSizeLabel;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox licenseGroupBox;
+        private System.Windows.Forms.Button showThirdPartyLicenseButton;
+        private System.Windows.Forms.Button showTunnyLicenseButton;
+        private System.Windows.Forms.GroupBox kMeansClusteringGroupBox;
+        private System.Windows.Forms.GroupBox visualizeTypeGroupBox;
     }
 }
 

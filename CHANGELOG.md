@@ -17,7 +17,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - BoTorch Sampler
   - This sampler use Gaussian Process and support multi-objective optimization.
 - Quasi-MonteCarlo Sampler
-  - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html)
+  - [Detail](https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html) about this sampler.
 - Support Constraint.
   - Only TPE, GP, NSGAII can use constraint.
 - Sampler detail settings UI
@@ -29,6 +29,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Run GC after trial when has geometry attribute or setting always run.
   - **This change probably make optimize slower before**
   - If you want to cut this setting, set the value of "GcAfterTrial" to 2 in Settings.json.
+- Show LICENSE button in Tunny UI.
 
 ### Changed
 
