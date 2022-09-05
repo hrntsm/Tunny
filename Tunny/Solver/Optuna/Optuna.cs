@@ -188,6 +188,12 @@ namespace Tunny.Solver.Optuna
                 "        for i, original_label in enumerate(fig.data[scatter_id]['text']):\n" +
                 "            json_label = json.loads(original_label.replace('<br>', '\\n'))\n" +
                 "            json_label['user_attrs'].pop('Geometry')\n" +
+                "            param_len = len(json_label['params'])\n" +
+                "            while len(json_label['params']) > 10:\n" +
+                "                keys = list(json_label['params'].keys())\n" +
+                "                json_label['params'].pop(keys.pop())\n" +
+                "            if param_len > 10:\n" +
+                "                json_label['params']['__Omit_values__'] = 'True'\n" +
                 "            new_texts.append(json.dumps(json_label, indent=2).replace('\\n', '<br>'))\n" +
                 "        fig.data[scatter_id]['text'] = new_texts\n" +
                 "    return fig\n"
