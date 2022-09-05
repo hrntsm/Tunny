@@ -109,7 +109,7 @@ namespace Tunny.Solver.Optuna
 
         }
 
-        public void ShowSelectedTypePlot(string visualize, string studyName)
+        public void Plot(string visualize, string studyName, PlotType pType)
         {
             string storage = "sqlite:///" + _settings.Storage;
             PythonEngine.Initialize();
@@ -125,7 +125,15 @@ namespace Tunny.Solver.Optuna
                 string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
                 try
                 {
-                    ShowPlot(optuna, visualize, study, nickNames);
+                    dynamic fig = CreateFigure(optuna, visualize, study, nickNames);
+                    if (fig != null && pType == PlotType.Show)
+                    {
+                        fig.show();
+                    }
+                    else if (fig != null && pType == PlotType.Save)
+                    {
+                        SaveFigure(fig, visualize);
+                    }
                 }
                 catch (Exception)
                 {
@@ -135,41 +143,46 @@ namespace Tunny.Solver.Optuna
             PythonEngine.Shutdown();
         }
 
-        private void ShowPlot(dynamic optuna, string visualize, dynamic study, string[] nickNames)
+        private static void SaveFigure(dynamic fig, string name)
+        {
+            var sfd = new SaveFileDialog
+            {
+                FileName = name + ".html",
+                Filter = "HTML file(*.html)|*.html",
+                Title = "Save"
+            };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                fig.write_html(sfd.FileName);
+            }
+        }
+
+        private dynamic CreateFigure(dynamic optuna, string visualize, dynamic study, string[] nickNames)
         {
             switch (visualize)
             {
                 case "contour":
-                    optuna.visualization.plot_contour(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_contour(study, target_name: nickNames[0]);
                 case "EDF":
-                    optuna.visualization.plot_edf(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_edf(study, target_name: nickNames[0]);
                 case "intermediate values":
-                    optuna.visualization.plot_intermediate_values(study).show();
-                    break;
+                    return optuna.visualization.plot_intermediate_values(study);
                 case "optimization history":
-                    optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_optimization_history(study, target_name: nickNames[0]);
                 case "parallel coordinate":
-                    optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_parallel_coordinate(study, target_name: nickNames[0]);
                 case "param importances":
-                    optuna.visualization.plot_param_importances(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_param_importances(study, target_name: nickNames[0]);
                 case "pareto front":
                     dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
-                    TruncateParetoFrontPlotHover(fig, study).show();
-                    break;
+                    return TruncateParetoFrontPlotHover(fig, study);
                 case "slice":
-                    optuna.visualization.plot_slice(study, target_name: nickNames[0]).show();
-                    break;
+                    return optuna.visualization.plot_slice(study, target_name: nickNames[0]);
                 case "hypervolume":
-                    Hypervolume.CreateFigure(optuna, study).show();
-                    break;
+                    return Hypervolume.CreateFigure(optuna, study);
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
-                    return;
+                    return null;
             }
         }
 
@@ -202,7 +215,7 @@ namespace Tunny.Solver.Optuna
             return truncate(fig, study);
         }
 
-        public void ShowClusteringPlot(string studyName, int numCluster)
+        public void ClusteringPlot(string studyName, int numCluster, PlotType pType)
         {
             string storage = "sqlite:///" + _settings.Storage;
             PythonEngine.Initialize();
@@ -222,24 +235,33 @@ namespace Tunny.Solver.Optuna
                 }
                 else
                 {
-                    ShowCluster(optuna, study, nickNames, numCluster);
+                    dynamic fig = CreateClusterFigure(optuna, study, nickNames, numCluster);
+                    if (fig != null && pType == PlotType.Show)
+                    {
+                        fig.show();
+                    }
+                    else if (fig != null && pType == PlotType.Save)
+                    {
+                        SaveFigure(fig, "cluster");
+                    }
                 }
             }
             PythonEngine.Shutdown();
         }
 
-        private void ShowCluster(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
+        private dynamic CreateClusterFigure(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
         {
             try
             {
                 dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
                 fig = TruncateParetoFrontPlotHover(fig, study);
-                ClusteringParetoFrontPlot(fig, study, numCluster).show();
+                return ClusteringParetoFrontPlot(fig, study, numCluster);
             }
             catch (Exception)
             {
                 TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            return null;
         }
 
         private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)

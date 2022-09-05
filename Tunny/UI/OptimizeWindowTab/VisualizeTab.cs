@@ -24,16 +24,43 @@ namespace Tunny.UI
             browser.Start();
         }
 
-        private void SelectedTypePlotButton_Click(object sender, EventArgs e)
+        private void VisualizeShowPlotButton_Click(object sender, EventArgs e)
         {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
-            optuna.ShowSelectedTypePlot(visualizeTypeComboBox.Text, studyNameTextBox.Text);
+            Plot(PlotType.Show);
         }
 
-        private void VisualizeClusteringPlotButton_Click(object sender, EventArgs e)
+        private void VisualizeSavePlotButton_Click(object sender, EventArgs e)
+        {
+            Plot(PlotType.Save);
+        }
+
+        private void Plot(PlotType plotType)
         {
             var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
-            optuna.ShowClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value);
+            optuna.Plot(visualizeTypeComboBox.Text, studyNameTextBox.Text, plotType);
         }
+
+        private void VisualizeShowClusteringPlotButton_Click(object sender, EventArgs e)
+        {
+            ClusteringPlot(PlotType.Show);
+        }
+
+        private void VisualizeSaveClusteringPlotButton_Click(object sender, EventArgs e)
+        {
+            ClusteringPlot(PlotType.Save);
+        }
+
+        private void ClusteringPlot(PlotType plotType)
+        {
+            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
+            optuna.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, plotType);
+        }
+
+    }
+
+    public enum PlotType
+    {
+        Save,
+        Show,
     }
 }
