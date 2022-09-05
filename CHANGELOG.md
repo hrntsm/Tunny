@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -20xx-xx-xx
+
+### Added
+
+### Changed
+
+- When there are more than 10 params, the value of "Omit_values" is used instead of "params" to improve the visibility of the ParetoFront plot.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [0.5.0] -2022-09-03
 
 ### Added
