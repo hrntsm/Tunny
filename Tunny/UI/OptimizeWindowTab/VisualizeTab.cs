@@ -36,8 +36,8 @@ namespace Tunny.UI
 
         private void Plot(PlotType plotType)
         {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
-            optuna.Plot(visualizeTypeComboBox.Text, studyNameTextBox.Text, plotType);
+            var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
+            optunaVis.Plot(visualizeTypeComboBox.Text, studyNameTextBox.Text, plotType);
         }
 
         private void VisualizeShowClusteringPlotButton_Click(object sender, EventArgs e)
@@ -52,10 +52,9 @@ namespace Tunny.UI
 
         private void ClusteringPlot(PlotType plotType)
         {
-            var optuna = new Optuna(_component.GhInOut.ComponentFolder, _settings, _component.GhInOut.HasConstraint);
-            optuna.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, plotType);
+            var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
+            optunaVis.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, plotType);
         }
-
     }
 
     public enum PlotType
