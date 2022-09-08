@@ -47,12 +47,16 @@ namespace Tunny.UI
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
-            this.visualizeClusteringPlotButton = new System.Windows.Forms.Button();
-            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
+            this.kMeansClusteringGroupBox = new System.Windows.Forms.GroupBox();
+            this.visualizeSaveClusteringPlotButton = new System.Windows.Forms.Button();
             this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
-            this.dashboardButton = new System.Windows.Forms.Button();
-            this.visualizeButton = new System.Windows.Forms.Button();
+            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
+            this.visualizeShowClusteringPlotButton = new System.Windows.Forms.Button();
+            this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
+            this.visualizeSavePlotButton = new System.Windows.Forms.Button();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.visualizeShowPlotButton = new System.Windows.Forms.Button();
+            this.dashboardButton = new System.Windows.Forms.Button();
             this.outputTabPage = new System.Windows.Forms.TabPage();
             this.outputAllTrialsButton = new System.Windows.Forms.Button();
             this.outputParatoSolutionButton = new System.Windows.Forms.Button();
@@ -125,14 +129,14 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
-            this.kMeansClusteringGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
+            this.kMeansClusteringGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).BeginInit();
+            this.visualizeTypeGroupBox.SuspendLayout();
             this.outputTabPage.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.settingsTabControl.SuspendLayout();
@@ -156,8 +160,6 @@ namespace Tunny.UI
             this.fileTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.licenseGroupBox.SuspendLayout();
-            this.visualizeTypeGroupBox.SuspendLayout();
-            this.kMeansClusteringGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -357,25 +359,28 @@ namespace Tunny.UI
             this.visualizeTabPage.Text = "Visualize";
             this.visualizeTabPage.UseVisualStyleBackColor = true;
             // 
-            // visualizeClusteringPlotButton
+            // kMeansClusteringGroupBox
             // 
-            this.visualizeClusteringPlotButton.Location = new System.Drawing.Point(29, 80);
-            this.visualizeClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeClusteringPlotButton.Name = "visualizeClusteringPlotButton";
-            this.visualizeClusteringPlotButton.Size = new System.Drawing.Size(323, 39);
-            this.visualizeClusteringPlotButton.TabIndex = 15;
-            this.visualizeClusteringPlotButton.Text = "Show clustering plot";
-            this.visualizeClusteringPlotButton.UseVisualStyleBackColor = true;
-            this.visualizeClusteringPlotButton.Click += new System.EventHandler(this.VisualizeClusteringPlotButton_Click);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeSaveClusteringPlotButton);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusterNumUpDown);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeNumClusterLabel);
+            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeShowClusteringPlotButton);
+            this.kMeansClusteringGroupBox.Location = new System.Drawing.Point(25, 270);
+            this.kMeansClusteringGroupBox.Name = "kMeansClusteringGroupBox";
+            this.kMeansClusteringGroupBox.Size = new System.Drawing.Size(373, 147);
+            this.kMeansClusteringGroupBox.TabIndex = 17;
+            this.kMeansClusteringGroupBox.TabStop = false;
+            this.kMeansClusteringGroupBox.Text = "k-means clustering";
             // 
-            // visualizeNumClusterLabel
+            // visualizeSaveClusteringPlotButton
             // 
-            this.visualizeNumClusterLabel.AutoSize = true;
-            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(25, 43);
-            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
-            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
-            this.visualizeNumClusterLabel.TabIndex = 14;
-            this.visualizeNumClusterLabel.Text = "Number of cluster";
+            this.visualizeSaveClusteringPlotButton.Location = new System.Drawing.Point(202, 80);
+            this.visualizeSaveClusteringPlotButton.Name = "visualizeSaveClusteringPlotButton";
+            this.visualizeSaveClusteringPlotButton.Size = new System.Drawing.Size(150, 40);
+            this.visualizeSaveClusteringPlotButton.TabIndex = 16;
+            this.visualizeSaveClusteringPlotButton.Text = "Save";
+            this.visualizeSaveClusteringPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeSaveClusteringPlotButton.Click += new System.EventHandler(this.VisualizeSaveClusteringPlotButton_Click);
             // 
             // visualizeClusterNumUpDown
             // 
@@ -394,27 +399,47 @@ namespace Tunny.UI
             0,
             0});
             // 
-            // dashboardButton
+            // visualizeNumClusterLabel
             // 
-            this.dashboardButton.Location = new System.Drawing.Point(54, 40);
-            this.dashboardButton.Margin = new System.Windows.Forms.Padding(4);
-            this.dashboardButton.Name = "dashboardButton";
-            this.dashboardButton.Size = new System.Drawing.Size(323, 39);
-            this.dashboardButton.TabIndex = 11;
-            this.dashboardButton.Text = "Open Optuna-Dashboard";
-            this.dashboardButton.UseVisualStyleBackColor = true;
-            this.dashboardButton.Click += new System.EventHandler(this.DashboardButton_Click);
+            this.visualizeNumClusterLabel.AutoSize = true;
+            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(25, 43);
+            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
+            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
+            this.visualizeNumClusterLabel.TabIndex = 14;
+            this.visualizeNumClusterLabel.Text = "Number of cluster";
             // 
-            // visualizeButton
+            // visualizeShowClusteringPlotButton
             // 
-            this.visualizeButton.Location = new System.Drawing.Point(29, 80);
-            this.visualizeButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeButton.Name = "visualizeButton";
-            this.visualizeButton.Size = new System.Drawing.Size(323, 39);
-            this.visualizeButton.TabIndex = 2;
-            this.visualizeButton.Text = "Show selected type of plots";
-            this.visualizeButton.UseVisualStyleBackColor = true;
-            this.visualizeButton.Click += new System.EventHandler(this.SelectedTypePlotButton_Click);
+            this.visualizeShowClusteringPlotButton.Location = new System.Drawing.Point(29, 80);
+            this.visualizeShowClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeShowClusteringPlotButton.Name = "visualizeShowClusteringPlotButton";
+            this.visualizeShowClusteringPlotButton.Size = new System.Drawing.Size(150, 40);
+            this.visualizeShowClusteringPlotButton.TabIndex = 15;
+            this.visualizeShowClusteringPlotButton.Text = "Show";
+            this.visualizeShowClusteringPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeShowClusteringPlotButton.Click += new System.EventHandler(this.VisualizeShowClusteringPlotButton_Click);
+            // 
+            // visualizeTypeGroupBox
+            // 
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeSavePlotButton);
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeShowPlotButton);
+            this.visualizeTypeGroupBox.Location = new System.Drawing.Point(25, 111);
+            this.visualizeTypeGroupBox.Name = "visualizeTypeGroupBox";
+            this.visualizeTypeGroupBox.Size = new System.Drawing.Size(373, 138);
+            this.visualizeTypeGroupBox.TabIndex = 16;
+            this.visualizeTypeGroupBox.TabStop = false;
+            this.visualizeTypeGroupBox.Text = "Visualize type";
+            // 
+            // visualizeSavePlotButton
+            // 
+            this.visualizeSavePlotButton.Location = new System.Drawing.Point(202, 80);
+            this.visualizeSavePlotButton.Name = "visualizeSavePlotButton";
+            this.visualizeSavePlotButton.Size = new System.Drawing.Size(150, 40);
+            this.visualizeSavePlotButton.TabIndex = 3;
+            this.visualizeSavePlotButton.Text = "Save";
+            this.visualizeSavePlotButton.UseVisualStyleBackColor = true;
+            this.visualizeSavePlotButton.Click += new System.EventHandler(this.VisualizeSavePlotButton_Click);
             // 
             // visualizeTypeComboBox
             // 
@@ -434,6 +459,28 @@ namespace Tunny.UI
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(323, 31);
             this.visualizeTypeComboBox.TabIndex = 0;
+            // 
+            // visualizeShowPlotButton
+            // 
+            this.visualizeShowPlotButton.Location = new System.Drawing.Point(29, 80);
+            this.visualizeShowPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeShowPlotButton.Name = "visualizeShowPlotButton";
+            this.visualizeShowPlotButton.Size = new System.Drawing.Size(150, 40);
+            this.visualizeShowPlotButton.TabIndex = 2;
+            this.visualizeShowPlotButton.Text = "Show";
+            this.visualizeShowPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeShowPlotButton.Click += new System.EventHandler(this.VisualizeShowPlotButton_Click);
+            // 
+            // dashboardButton
+            // 
+            this.dashboardButton.Location = new System.Drawing.Point(54, 40);
+            this.dashboardButton.Margin = new System.Windows.Forms.Padding(4);
+            this.dashboardButton.Name = "dashboardButton";
+            this.dashboardButton.Size = new System.Drawing.Size(323, 39);
+            this.dashboardButton.TabIndex = 11;
+            this.dashboardButton.Text = "Open Optuna-Dashboard";
+            this.dashboardButton.UseVisualStyleBackColor = true;
+            this.dashboardButton.Click += new System.EventHandler(this.DashboardButton_Click);
             // 
             // outputTabPage
             // 
@@ -1389,29 +1436,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
-            // visualizeTypeGroupBox
-            // 
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeButton);
-            this.visualizeTypeGroupBox.Location = new System.Drawing.Point(25, 111);
-            this.visualizeTypeGroupBox.Name = "visualizeTypeGroupBox";
-            this.visualizeTypeGroupBox.Size = new System.Drawing.Size(373, 138);
-            this.visualizeTypeGroupBox.TabIndex = 16;
-            this.visualizeTypeGroupBox.TabStop = false;
-            this.visualizeTypeGroupBox.Text = "Visualize type";
-            // 
-            // kMeansClusteringGroupBox
-            // 
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusterNumUpDown);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeNumClusterLabel);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusteringPlotButton);
-            this.kMeansClusteringGroupBox.Location = new System.Drawing.Point(25, 270);
-            this.kMeansClusteringGroupBox.Name = "kMeansClusteringGroupBox";
-            this.kMeansClusteringGroupBox.Size = new System.Drawing.Size(373, 147);
-            this.kMeansClusteringGroupBox.TabIndex = 17;
-            this.kMeansClusteringGroupBox.TabStop = false;
-            this.kMeansClusteringGroupBox.Text = "k-means clustering";
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1431,7 +1455,10 @@ namespace Tunny.UI
             this.optimizeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
+            this.kMeansClusteringGroupBox.ResumeLayout(false);
+            this.kMeansClusteringGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).EndInit();
+            this.visualizeTypeGroupBox.ResumeLayout(false);
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
@@ -1461,9 +1488,6 @@ namespace Tunny.UI
             this.fileTabPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.licenseGroupBox.ResumeLayout(false);
-            this.visualizeTypeGroupBox.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1484,7 +1508,7 @@ namespace Tunny.UI
         private System.Windows.Forms.TabControl optimizeTabControl;
         private System.Windows.Forms.TabPage optimizeTabPage;
         private System.Windows.Forms.TabPage visualizeTabPage;
-        private System.Windows.Forms.Button visualizeButton;
+        private System.Windows.Forms.Button visualizeShowPlotButton;
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.ComponentModel.BackgroundWorker outputResultBackgroundWorker;
         private System.Windows.Forms.TabPage settingsTabPage;
@@ -1555,7 +1579,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Button qmcDefaultButton;
         private System.Windows.Forms.Label visualizeNumClusterLabel;
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
-        private System.Windows.Forms.Button visualizeClusteringPlotButton;
+        private System.Windows.Forms.Button visualizeShowClusteringPlotButton;
         private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
         private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
         private System.Windows.Forms.NumericUpDown cmaEsPopulationSizeUpDown;
@@ -1566,6 +1590,8 @@ namespace Tunny.UI
         private System.Windows.Forms.Button showTunnyLicenseButton;
         private System.Windows.Forms.GroupBox kMeansClusteringGroupBox;
         private System.Windows.Forms.GroupBox visualizeTypeGroupBox;
+        private System.Windows.Forms.Button visualizeSaveClusteringPlotButton;
+        private System.Windows.Forms.Button visualizeSavePlotButton;
     }
 }
 
