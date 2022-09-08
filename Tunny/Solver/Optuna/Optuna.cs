@@ -126,14 +126,7 @@ namespace Tunny.Solver.Optuna
                 try
                 {
                     dynamic fig = CreateFigure(optuna, visualize, study, nickNames);
-                    if (fig != null && pType == PlotType.Show)
-                    {
-                        fig.show();
-                    }
-                    else if (fig != null && pType == PlotType.Save)
-                    {
-                        SaveFigure(fig, visualize);
-                    }
+                    FigureActions(pType, fig, visualize);
                 }
                 catch (Exception)
                 {
@@ -236,17 +229,22 @@ namespace Tunny.Solver.Optuna
                 else
                 {
                     dynamic fig = CreateClusterFigure(optuna, study, nickNames, numCluster);
-                    if (fig != null && pType == PlotType.Show)
-                    {
-                        fig.show();
-                    }
-                    else if (fig != null && pType == PlotType.Save)
-                    {
-                        SaveFigure(fig, "cluster");
-                    }
+                    FigureActions(pType, fig, "cluster");
                 }
             }
             PythonEngine.Shutdown();
+        }
+
+        private void FigureActions(PlotType pType, dynamic fig, string name)
+        {
+            if (fig != null && pType == PlotType.Show)
+            {
+                fig.show();
+            }
+            else if (fig != null && pType == PlotType.Save)
+            {
+                SaveFigure(fig, name);
+            }
         }
 
         private dynamic CreateClusterFigure(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
@@ -369,8 +367,16 @@ namespace Tunny.Solver.Optuna
                 {
                     break;
                 }
-                dynamic trial = study.trials[res];
-                ParseTrial(modelResult, trial);
+
+                try
+                {
+                    dynamic trial = study.trials[res];
+                    ParseTrial(modelResult, trial);
+                }
+                catch (Exception e)
+                {
+                    TunnyMessageBox.Show("Error\n\n" + e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 worker.ReportProgress(i * 100 / resultNum.Length);
             }
         }
