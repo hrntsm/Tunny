@@ -143,7 +143,7 @@ namespace Tunny.Solver
             for (int i = 0; i < resultNum.Length; i++)
             {
                 int res = resultNum[i];
-                if (Output.IsForcedStopOutput)
+                if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
@@ -167,7 +167,7 @@ namespace Tunny.Solver
             for (int i = 0; i < trials.Length; i++)
             {
                 dynamic trial = trials[i];
-                if (Output.IsForcedStopOutput)
+                if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
@@ -183,7 +183,7 @@ namespace Tunny.Solver
             {
                 dynamic trial = bestTrials[i];
                 bool isFeasible = CheckFeasible(trial);
-                if (Output.IsForcedStopOutput)
+                if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }

@@ -13,7 +13,7 @@ using Tunny.Util;
 
 namespace Tunny.Handler
 {
-    internal static class Optimize
+    internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;

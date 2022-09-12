@@ -37,7 +37,7 @@ namespace Tunny.Solver
         public void Solve()
         {
             EndState = EndState.Error;
-            Handler.Optimize.IsForcedStopOptimize = false;
+            Handler.OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
@@ -171,10 +171,10 @@ namespace Tunny.Solver
                     EndState = EndState.Timeout;
                     break;
                 }
-                else if (Handler.Optimize.IsForcedStopOptimize)
+                else if (Handler.OptimizeLoop.IsForcedStopOptimize)
                 {
                     EndState = EndState.StoppedByUser;
-                    Handler.Optimize.IsForcedStopOptimize = false;
+                    Handler.OptimizeLoop.IsForcedStopOptimize = false;
                     break;
                 }
 

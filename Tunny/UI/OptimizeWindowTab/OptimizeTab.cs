@@ -18,7 +18,7 @@ namespace Tunny.UI
 
             optimizeRunButton.Enabled = false;
             GetUIValues();
-            Optimize.Settings = _settings;
+            OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
             {
@@ -63,7 +63,7 @@ namespace Tunny.UI
         {
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
-            Optimize.IsForcedStopOptimize = true;
+            OptimizeLoop.IsForcedStopOptimize = true;
 
             if (optimizeBackgroundWorker != null)
             {

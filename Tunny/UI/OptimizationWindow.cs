@@ -43,13 +43,13 @@ namespace Tunny.UI
                 installer.Show(Owner);
             }
 
-            optimizeBackgroundWorker.DoWork += Handler.Optimize.RunMultiple;
+            optimizeBackgroundWorker.DoWork += Handler.OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
             optimizeBackgroundWorker.WorkerReportsProgress = true;
             optimizeBackgroundWorker.WorkerSupportsCancellation = true;
 
-            outputResultBackgroundWorker.DoWork += Output.Run;
+            outputResultBackgroundWorker.DoWork += OutputLoop.Run;
             outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
             outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;
             outputResultBackgroundWorker.WorkerReportsProgress = true;

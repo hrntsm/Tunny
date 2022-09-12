@@ -14,7 +14,7 @@ using Tunny.Util;
 
 namespace Tunny.Handler
 {
-    internal static class Output
+    internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;
