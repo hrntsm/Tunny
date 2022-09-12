@@ -8,12 +8,12 @@ using Grasshopper.Kernel;
 
 using Python.Runtime;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public class Optuna
     {

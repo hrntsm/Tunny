@@ -6,7 +6,7 @@ using Python.Runtime;
 using Tunny.Settings;
 using Tunny.UI;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public class Visualize
     {

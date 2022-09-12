@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 using Tunny.Util;
 
 namespace Tunny.UI

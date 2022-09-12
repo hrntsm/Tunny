@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tunny.Optimization
+namespace Tunny.Util
 {
     public class EvaluatedGHResult
     {

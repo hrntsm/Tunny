@@ -5,12 +5,11 @@ using System.Text;
 
 using Python.Runtime;
 
-using Tunny.Optimization;
 using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public class Algorithm
     {
@@ -38,7 +37,7 @@ namespace Tunny.Solver.Optuna
         public void Solve()
         {
             EndState = EndState.Error;
-            OptimizeLoop.IsForcedStopOptimize = false;
+            Handler.OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
@@ -172,10 +171,10 @@ namespace Tunny.Solver.Optuna
                     EndState = EndState.Timeout;
                     break;
                 }
-                else if (OptimizeLoop.IsForcedStopOptimize)
+                else if (Handler.OptimizeLoop.IsForcedStopOptimize)
                 {
                     EndState = EndState.StoppedByUser;
-                    OptimizeLoop.IsForcedStopOptimize = false;
+                    Handler.OptimizeLoop.IsForcedStopOptimize = false;
                     break;
                 }
 
@@ -210,8 +209,9 @@ namespace Tunny.Solver.Optuna
                 {
                     study.tell(trial, result.ObjectiveValues.ToArray());
                 }
-                catch
+                catch (Exception e)
                 {
+                    throw new ArgumentException(e.Message);
                 }
                 finally
                 {
@@ -225,7 +225,7 @@ namespace Tunny.Solver.Optuna
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
             if (gcAfterTrial == GcAfterTrial.Always ||
-                (result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry)
+                result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry
             )
             {
                 dynamic gc = Py.Import("gc");
