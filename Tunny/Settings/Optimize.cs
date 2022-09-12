@@ -1,4 +1,4 @@
-using Tunny.Solver.Optuna;
+using Tunny.Solver;
 
 namespace Tunny.Settings
 {

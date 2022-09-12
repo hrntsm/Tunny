@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 
 namespace Tunny.UI
 {
@@ -18,7 +18,7 @@ namespace Tunny.UI
 
             optimizeRunButton.Enabled = false;
             GetUIValues();
-            OptimizeLoop.Settings = _settings;
+            Optimize.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
             {
@@ -63,7 +63,7 @@ namespace Tunny.UI
         {
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
-            OptimizeLoop.IsForcedStopOptimize = true;
+            Optimize.IsForcedStopOptimize = true;
 
             if (optimizeBackgroundWorker != null)
             {

@@ -7,13 +7,13 @@ using Grasshopper.Kernel;
 
 using Tunny.Component;
 using Tunny.Settings;
-using Tunny.Solver.Optuna;
+using Tunny.Solver;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Optimization
+namespace Tunny.Handler
 {
-    internal static class OptimizeLoop
+    internal static class Optimize
     {
         private static BackgroundWorker s_worker;
         private static TunnyComponent s_component;

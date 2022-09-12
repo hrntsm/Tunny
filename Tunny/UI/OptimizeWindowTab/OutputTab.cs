@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -34,10 +34,10 @@ namespace Tunny.UI
         private void RunOutputLoop(OutputMode mode)
         {
             outputStopButton.Enabled = true;
-            OutputLoop.Mode = mode;
-            OutputLoop.Settings = _settings;
-            OutputLoop.StudyName = studyNameTextBox.Text;
-            OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
+            Output.Mode = mode;
+            Output.Settings = _settings;
+            Output.StudyName = studyNameTextBox.Text;
+            Output.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             bool result = SetOutputIndices(mode);
             if (result)
             {
@@ -52,16 +52,16 @@ namespace Tunny.UI
             switch (mode)
             {
                 case OutputMode.ParatoSolutions:
-                    OutputLoop.Indices = new[] { -1 };
+                    Output.Indices = new[] { -1 };
                     break;
                 case OutputMode.AllTrials:
-                    OutputLoop.Indices = new[] { -10 };
+                    Output.Indices = new[] { -10 };
                     break;
                 case OutputMode.ModelNumber:
                     result = ParseModelNumberInput(ref indices);
                     if (result)
                     {
-                        OutputLoop.Indices = indices.ToArray();
+                        Output.Indices = indices.ToArray();
                     }
                     break;
                 case OutputMode.ReflectToSliders:
@@ -69,7 +69,7 @@ namespace Tunny.UI
                     if (result)
                     {
                         CheckIndicesLength(indices.ToArray());
-                        OutputLoop.Indices = new[] { indices[0] };
+                        Output.Indices = new[] { indices[0] };
                     }
                     break;
                 default:
@@ -110,8 +110,8 @@ namespace Tunny.UI
             {
                 outputResultBackgroundWorker.Dispose();
             }
-            OutputLoop.IsForcedStopOutput = true;
-            switch (OutputLoop.Mode)
+            Output.IsForcedStopOutput = true;
+            switch (Output.Mode)
             {
                 case OutputMode.ParatoSolutions:
                 case OutputMode.AllTrials:
@@ -128,7 +128,7 @@ namespace Tunny.UI
             }
 
             outputStopButton.Enabled = false;
-            OutputLoop.IsForcedStopOutput = false;
+            Output.IsForcedStopOutput = false;
         }
 
         private void OutputProgressChangedHandler(object sender, ProgressChangedEventArgs e)

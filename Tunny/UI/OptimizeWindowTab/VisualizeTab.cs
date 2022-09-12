@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-using Tunny.Solver.Optuna;
+using Tunny.Solver;
 using Tunny.Util;
 
 namespace Tunny.UI

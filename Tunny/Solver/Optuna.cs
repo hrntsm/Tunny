@@ -8,12 +8,12 @@ using Grasshopper.Kernel;
 
 using Python.Runtime;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public class Optuna
     {
@@ -143,7 +143,7 @@ namespace Tunny.Solver.Optuna
             for (int i = 0; i < resultNum.Length; i++)
             {
                 int res = resultNum[i];
-                if (OutputLoop.IsForcedStopOutput)
+                if (Output.IsForcedStopOutput)
                 {
                     break;
                 }
@@ -167,7 +167,7 @@ namespace Tunny.Solver.Optuna
             for (int i = 0; i < trials.Length; i++)
             {
                 dynamic trial = trials[i];
-                if (OutputLoop.IsForcedStopOutput)
+                if (Output.IsForcedStopOutput)
                 {
                     break;
                 }
@@ -183,7 +183,7 @@ namespace Tunny.Solver.Optuna
             {
                 dynamic trial = bestTrials[i];
                 bool isFeasible = CheckFeasible(trial);
-                if (OutputLoop.IsForcedStopOutput)
+                if (Output.IsForcedStopOutput)
                 {
                     break;
                 }

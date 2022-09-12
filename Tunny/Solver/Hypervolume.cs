@@ -3,7 +3,7 @@ using System.Linq;
 
 using Python.Runtime;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public static class Hypervolume
     {
