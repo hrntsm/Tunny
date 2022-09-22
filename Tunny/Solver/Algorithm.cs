@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -53,7 +54,7 @@ namespace Tunny.Solver
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
                     dynamic study = CreateStudy(directions, optuna, sampler);
-                    SetStudyUserAttr(study, ObjectNicknameToAttr());
+                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
                     RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
@@ -61,10 +62,10 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        private StringBuilder ObjectNicknameToAttr()
+        private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
         {
             var name = new StringBuilder();
-            foreach (string objName in ObjNickName)
+            foreach (string objName in nicknames)
             {
                 name.Append(objName + ",");
             }
@@ -233,9 +234,10 @@ namespace Tunny.Solver
             }
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder name)
+        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
         {
-            study.set_user_attr("objective_names", name.ToString());
+            study.set_user_attr("variable_names", variableName.ToString());
+            study.set_user_attr("objective_names", objectiveName.ToString());
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
