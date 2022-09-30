@@ -10,7 +10,7 @@ colorama==0.4.5
 colorlog==6.6.0
 gpytorch==1.8.0
 greenlet==1.1.2
-joblib==1.1.0
+joblib==1.2.0
 Mako==1.2.0
 MarkupSafe==2.1.1
 multipledispatch==0.6.0
