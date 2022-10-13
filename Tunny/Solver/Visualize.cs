@@ -5,6 +5,7 @@ using Python.Runtime;
 
 using Tunny.Settings;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -17,6 +18,8 @@ namespace Tunny.Solver
         {
             _settings = settings;
             _hasConstraint = hasConstraint;
+            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
+            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
