@@ -34,14 +34,13 @@ namespace Tunny.Solver
         public bool RunSolver(
             List<Variable> variables,
             IEnumerable<IGH_Param> objectives,
-            Func<IList<decimal>, int, EvaluatedGHResult> evaluate)
+            Func<ProgressState, int, EvaluatedGHResult> evaluate)
         {
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
 
-            EvaluatedGHResult Eval(double[] x, int progress)
+            EvaluatedGHResult Eval(ProgressState pState, int progress)
             {
-                var decimals = x.Select(Convert.ToDecimal).ToList();
-                return evaluate(decimals, progress);
+                return evaluate(pState, progress);
             }
 
             try

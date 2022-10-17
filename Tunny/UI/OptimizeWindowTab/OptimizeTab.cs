@@ -77,8 +77,18 @@ namespace Tunny.UI
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
-            var parameters = (IList<decimal>)e.UserState;
-            UpdateGrasshopper(parameters);
+            var pState = (ProgressState)e.UserState;
+            UpdateGrasshopper(pState.Values);
+            string trialNumLabel = "Trial: ";
+            optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
+                ? trialNumLabel + "#"
+                : trialNumLabel + pState.TrialNumber;
+
+            optimizeBestValueLabel.Text = pState.ObjectiveNum == 1 && pState.BestValues.Length > 0
+                ? e.ProgressPercentage == 100
+                    ? "BestValue: #"
+                    : "BestValue: " + pState.BestValues[0][0]
+                : "BestValue: #";
 
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
