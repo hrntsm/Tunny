@@ -12,6 +12,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Enable to save each figure.
   - Interactive operations on the figure are kept because it is saved in html format, not as an image.
+- Real-time display of trial number, best value, and Hypervolume in the UI.
 
 ### Changed
 
