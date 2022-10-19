@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -74,6 +75,58 @@ namespace Tunny.Solver
             fig.update_yaxes(title_text: "Hypervolume");
 
             return fig;
+        }
+
+        public static double Compute2dHypervolumeRatio(dynamic study)
+        {
+            var trials = (dynamic[])study.trials;
+            var trialValues = new List<double[]>();
+            for (int i = 0; i < trials.Length - 1; i++)
+            {
+                dynamic trial = trials[i];
+                trialValues.Add((double[])trial.values);
+            }
+            double[] maxObjectiveValues = new double[2];
+            for (int i = 0; i < 2; i++)
+            {
+                maxObjectiveValues[i] = trialValues.Select(v => v[i]).Max();
+            }
+
+            return ComputeRatio(trials, trialValues.Count - 1, trialValues.Count, maxObjectiveValues);
+        }
+
+        private static double ComputeRatio(dynamic[] trials, int baseIndex, int targetIndex, double[] maxObjectiveValues)
+        {
+            dynamic np = Py.Import("numpy");
+            var rpObj = new PyList();
+
+            foreach (double max in maxObjectiveValues)
+            {
+                rpObj.Append(new PyFloat(max));
+            }
+            dynamic referencePoint = np.array(rpObj);
+
+            double baseHypervolume = Wfg(trials, baseIndex, referencePoint);
+            double targetHypervolume = Wfg(trials, targetIndex, referencePoint);
+
+            return Math.Round(targetHypervolume / baseHypervolume, 3);
+        }
+
+        private static double Wfg(dynamic[] trials, int baseIndex, dynamic referencePoint)
+        {
+            dynamic optuna = Py.Import("optuna");
+            dynamic np = Py.Import("numpy");
+
+            var vectors = new PyList();
+            dynamic wfg = optuna._hypervolume.WFG();
+            for (int j = 0; j < baseIndex; j++)
+            {
+                var vector = new PyList();
+                vector.Append(trials[j].values[0]);
+                vector.Append(trials[j].values[1]);
+                vectors.Append(vector);
+            }
+            return (double)wfg.compute(np.array(vectors), referencePoint);
         }
     }
 }

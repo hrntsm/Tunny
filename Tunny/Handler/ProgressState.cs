@@ -8,6 +8,6 @@ namespace Tunny.Handler
         public int TrialNumber { get; set; }
         public int ObjectiveNum { get; set; }
         public double[][] BestValues { get; set; }
-        public double Hypervolume { get; set; }
+        public double HypervolumeRatio { get; set; }
     }
 }
