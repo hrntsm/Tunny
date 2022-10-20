@@ -96,7 +96,7 @@ namespace Tunny.Solver
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
         {
-            string storage = "sqlite:///" + _settings.Storage;
+            string storage = "sqlite:///" + _settings.StoragePath;
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())

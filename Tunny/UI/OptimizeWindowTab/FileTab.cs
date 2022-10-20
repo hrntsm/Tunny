@@ -14,7 +14,7 @@ namespace Tunny.UI
 
         private void ClearResultButton_Click(object sender, EventArgs e)
         {
-            File.Delete(_settings.Storage);
+            File.Delete(_settings.StoragePath);
         }
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
@@ -30,14 +30,14 @@ namespace Tunny.UI
         {
             var sfd = new SaveFileDialog
             {
-                FileName = Path.GetFileName(_settings.Storage),
+                FileName = Path.GetFileName(_settings.StoragePath),
                 Filter = "SQLite database(*.db)|*.db",
                 Title = "Set Tunny result file path",
 
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                _settings.Storage = sfd.FileName;
+                _settings.StoragePath = sfd.FileName;
             }
         }
     }

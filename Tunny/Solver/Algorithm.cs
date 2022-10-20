@@ -79,7 +79,7 @@ namespace Tunny.Solver
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
-                storage: "sqlite:///" + Settings.Storage,
+                storage: "sqlite:///" + Settings.StoragePath,
                 study_name: Settings.StudyName,
                 load_if_exists: Settings.Optimize.LoadExistStudy
             );
@@ -98,7 +98,7 @@ namespace Tunny.Solver
 
         private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
         {
-            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
+            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.StoragePath);
             var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
