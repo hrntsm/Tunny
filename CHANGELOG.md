@@ -13,10 +13,12 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Enable to save each figure.
   - Interactive operations on the figure are kept because it is saved in html format, not as an image.
 - Real-time display of trial number, best value, and Hypervolume in the UI.
+- Created UI to set where to save optimization result files.
 
 ### Changed
 
 - When there are more than 10 params, the value of "Omit_values" is used instead of "params" to improve the visibility of the ParetoFront plot.
+- Default name of optimization result file changed from "Tunny_Opt_Result.db" to "Fish.db".
 
 ### Deprecated
 
