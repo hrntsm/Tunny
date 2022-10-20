@@ -44,7 +44,10 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.optimizeBestValueLabel = new System.Windows.Forms.Label();
+            this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.optimizeCopyStudyCheckBox = new System.Windows.Forms.CheckBox();
             this.existedStudyNameCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
@@ -125,13 +128,12 @@ namespace Tunny.UI
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.openResutlStoragePathButton = new System.Windows.Forms.Button();
             this.miscDefaultButton = new System.Windows.Forms.Button();
-            this.resultStoragePathLabel = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.runGarbageCollectionLabel = new System.Windows.Forms.Label();
             this.fileTabPage = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.setResultFilePathButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.licenseGroupBox = new System.Windows.Forms.GroupBox();
@@ -139,9 +141,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
-            this.optimizeBestValueLabel = new System.Windows.Forms.Label();
-            this.optimizeCopyStudyCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -332,6 +331,24 @@ namespace Tunny.UI
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
             // 
+            // optimizeBestValueLabel
+            // 
+            this.optimizeBestValueLabel.AutoSize = true;
+            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 411);
+            this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
+            this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
+            this.optimizeBestValueLabel.TabIndex = 15;
+            this.optimizeBestValueLabel.Text = "BestValue: # ";
+            // 
+            // optimizeTrialNumLabel
+            // 
+            this.optimizeTrialNumLabel.AutoSize = true;
+            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(43, 411);
+            this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
+            this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
+            this.optimizeTrialNumLabel.TabIndex = 14;
+            this.optimizeTrialNumLabel.Text = "Trial: # ";
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.optimizeCopyStudyCheckBox);
@@ -345,6 +362,16 @@ namespace Tunny.UI
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Study Name";
+            // 
+            // optimizeCopyStudyCheckBox
+            // 
+            this.optimizeCopyStudyCheckBox.AutoSize = true;
+            this.optimizeCopyStudyCheckBox.Location = new System.Drawing.Point(166, 76);
+            this.optimizeCopyStudyCheckBox.Name = "optimizeCopyStudyCheckBox";
+            this.optimizeCopyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
+            this.optimizeCopyStudyCheckBox.TabIndex = 12;
+            this.optimizeCopyStudyCheckBox.Text = "Copy";
+            this.optimizeCopyStudyCheckBox.UseVisualStyleBackColor = true;
             // 
             // existedStudyNameCheckedListBox
             // 
@@ -1417,9 +1444,7 @@ namespace Tunny.UI
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.openResutlStoragePathButton);
             this.tabPage1.Controls.Add(this.miscDefaultButton);
-            this.tabPage1.Controls.Add(this.resultStoragePathLabel);
             this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.runGarbageCollectionLabel);
             this.tabPage1.Location = new System.Drawing.Point(4, 32);
@@ -1430,15 +1455,6 @@ namespace Tunny.UI
             this.tabPage1.Text = "Misc";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // openResutlStoragePathButton
-            // 
-            this.openResutlStoragePathButton.Location = new System.Drawing.Point(303, 53);
-            this.openResutlStoragePathButton.Name = "openResutlStoragePathButton";
-            this.openResutlStoragePathButton.Size = new System.Drawing.Size(100, 38);
-            this.openResutlStoragePathButton.TabIndex = 37;
-            this.openResutlStoragePathButton.Text = "Open";
-            this.openResutlStoragePathButton.UseVisualStyleBackColor = true;
-            // 
             // miscDefaultButton
             // 
             this.miscDefaultButton.Location = new System.Drawing.Point(300, 349);
@@ -1448,15 +1464,6 @@ namespace Tunny.UI
             this.miscDefaultButton.Text = "Default";
             this.toolTip1.SetToolTip(this.miscDefaultButton, "Set to Tunny\'s default value.");
             this.miscDefaultButton.UseVisualStyleBackColor = true;
-            // 
-            // resultStoragePathLabel
-            // 
-            this.resultStoragePathLabel.AutoSize = true;
-            this.resultStoragePathLabel.Location = new System.Drawing.Point(6, 61);
-            this.resultStoragePathLabel.Name = "resultStoragePathLabel";
-            this.resultStoragePathLabel.Size = new System.Drawing.Size(182, 23);
-            this.resultStoragePathLabel.TabIndex = 35;
-            this.resultStoragePathLabel.Text = "Result Storage Path";
             // 
             // comboBox1
             // 
@@ -1496,34 +1503,46 @@ namespace Tunny.UI
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.setResultFilePathButton);
             this.groupBox1.Controls.Add(this.clearResultButton);
             this.groupBox1.Controls.Add(this.openResultFolderButton);
             this.groupBox1.Location = new System.Drawing.Point(22, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(378, 171);
+            this.groupBox1.Size = new System.Drawing.Size(378, 200);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Result";
             // 
+            // setResultFilePathButton
+            // 
+            this.setResultFilePathButton.Location = new System.Drawing.Point(58, 35);
+            this.setResultFilePathButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.setResultFilePathButton.Name = "setResultFilePathButton";
+            this.setResultFilePathButton.Size = new System.Drawing.Size(264, 39);
+            this.setResultFilePathButton.TabIndex = 7;
+            this.setResultFilePathButton.Text = "Set file path";
+            this.setResultFilePathButton.UseVisualStyleBackColor = true;
+            this.setResultFilePathButton.Click += new System.EventHandler(this.SetResultFilePathButton_Click);
+            // 
             // clearResultButton
             // 
-            this.clearResultButton.Location = new System.Drawing.Point(58, 96);
+            this.clearResultButton.Location = new System.Drawing.Point(58, 137);
             this.clearResultButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(264, 42);
             this.clearResultButton.TabIndex = 5;
-            this.clearResultButton.Text = "Clear result flie";
+            this.clearResultButton.Text = "Clear flie";
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
             // openResultFolderButton
             // 
-            this.openResultFolderButton.Location = new System.Drawing.Point(58, 45);
+            this.openResultFolderButton.Location = new System.Drawing.Point(58, 86);
             this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.openResultFolderButton.Name = "openResultFolderButton";
             this.openResultFolderButton.Size = new System.Drawing.Size(264, 39);
             this.openResultFolderButton.TabIndex = 6;
-            this.openResultFolderButton.Text = "Open result file folder";
+            this.openResultFolderButton.Text = "Open folder";
             this.openResultFolderButton.UseVisualStyleBackColor = true;
             this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
             // 
@@ -1531,7 +1550,7 @@ namespace Tunny.UI
             // 
             this.licenseGroupBox.Controls.Add(this.showThirdPartyLicenseButton);
             this.licenseGroupBox.Controls.Add(this.showTunnyLicenseButton);
-            this.licenseGroupBox.Location = new System.Drawing.Point(22, 214);
+            this.licenseGroupBox.Location = new System.Drawing.Point(22, 235);
             this.licenseGroupBox.Name = "licenseGroupBox";
             this.licenseGroupBox.Size = new System.Drawing.Size(378, 181);
             this.licenseGroupBox.TabIndex = 8;
@@ -1559,34 +1578,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.Text = "Show Tunny License";
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
-            // 
-            // optimizeTrialNumLabel
-            // 
-            this.optimizeTrialNumLabel.AutoSize = true;
-            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(43, 411);
-            this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
-            this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
-            this.optimizeTrialNumLabel.TabIndex = 14;
-            this.optimizeTrialNumLabel.Text = "Trial: # ";
-            // 
-            // optimizeBestValueLabel
-            // 
-            this.optimizeBestValueLabel.AutoSize = true;
-            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 411);
-            this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
-            this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
-            this.optimizeBestValueLabel.TabIndex = 15;
-            this.optimizeBestValueLabel.Text = "BestValue: # ";
-            // 
-            // optimizeCopyStudyCheckBox
-            // 
-            this.optimizeCopyStudyCheckBox.AutoSize = true;
-            this.optimizeCopyStudyCheckBox.Location = new System.Drawing.Point(166, 76);
-            this.optimizeCopyStudyCheckBox.Name = "optimizeCopyStudyCheckBox";
-            this.optimizeCopyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
-            this.optimizeCopyStudyCheckBox.TabIndex = 12;
-            this.optimizeCopyStudyCheckBox.Text = "Copy";
-            this.optimizeCopyStudyCheckBox.UseVisualStyleBackColor = true;
             // 
             // OptimizationWindow
             // 
@@ -1751,9 +1742,7 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckedListBox checkedListBox2;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Button openResutlStoragePathButton;
         private System.Windows.Forms.Button miscDefaultButton;
-        private System.Windows.Forms.Label resultStoragePathLabel;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label runGarbageCollectionLabel;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -1761,6 +1750,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Label optimizeBestValueLabel;
         private System.Windows.Forms.Label optimizeTrialNumLabel;
         private System.Windows.Forms.CheckBox optimizeCopyStudyCheckBox;
+        private System.Windows.Forms.Button setResultFilePathButton;
     }
 }
 
