@@ -11,6 +11,36 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
+        private void ContinueStudyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (continueStudyCheckBox.Checked)
+            {
+                existedStudyNameCheckedListBox.Enabled = true;
+                studyNameTextBox.Enabled = false;
+                copyStudyCheckBox.Checked = false;
+            }
+            else
+            {
+                existedStudyNameCheckedListBox.Enabled = false;
+                studyNameTextBox.Enabled = true;
+            }
+        }
+
+        private void CopyStudyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (copyStudyCheckBox.Checked)
+            {
+                existedStudyNameCheckedListBox.Enabled = true;
+                studyNameTextBox.Enabled = true;
+                continueStudyCheckBox.Checked = false;
+            }
+            else
+            {
+                existedStudyNameCheckedListBox.Enabled = false;
+            }
+
+        }
+
         private void OptimizeRunButton_Click(object sender, EventArgs e)
         {
             var ghCanvas = Owner as GH_DocumentEditor;
