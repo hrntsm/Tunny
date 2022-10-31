@@ -40,7 +40,7 @@ namespace Tunny.UI
             // installProgressBar
             // 
             this.installProgressBar.Location = new System.Drawing.Point(22, 144);
-            this.installProgressBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.installProgressBar.Margin = new System.Windows.Forms.Padding(4);
             this.installProgressBar.Name = "installProgressBar";
             this.installProgressBar.Size = new System.Drawing.Size(501, 34);
             this.installProgressBar.TabIndex = 0;
@@ -60,7 +60,7 @@ namespace Tunny.UI
             this.installItemLabel.Location = new System.Drawing.Point(52, 58);
             this.installItemLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.installItemLabel.Name = "installItemLabel";
-            this.installItemLabel.Size = new System.Drawing.Size(432, 45);
+            this.installItemLabel.Size = new System.Drawing.Size(432, 82);
             this.installItemLabel.TabIndex = 2;
             this.installItemLabel.Text = "Now Installing: ";
             // 
@@ -69,7 +69,7 @@ namespace Tunny.UI
             this.notificationLabel.Location = new System.Drawing.Point(18, 197);
             this.notificationLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.notificationLabel.Name = "notificationLabel";
-            this.notificationLabel.Size = new System.Drawing.Size(494, 80);
+            this.notificationLabel.Size = new System.Drawing.Size(505, 122);
             this.notificationLabel.TabIndex = 3;
             this.notificationLabel.Text = "**This process runs only when Tunny is launched for the first time.**";
             // 
@@ -77,7 +77,7 @@ namespace Tunny.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(537, 286);
+            this.ClientSize = new System.Drawing.Size(537, 328);
             this.Controls.Add(this.notificationLabel);
             this.Controls.Add(this.installItemLabel);
             this.Controls.Add(this.installerTitleLabel);
@@ -86,7 +86,7 @@ namespace Tunny.UI
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "PythonInstallDialog";
-            this.Text = "PythonInstaller";
+            this.Text = "Python Installer";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosingXButton);
             this.Load += new System.EventHandler(this.OptimizationWindow_Load);
