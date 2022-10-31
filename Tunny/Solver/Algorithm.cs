@@ -202,7 +202,7 @@ namespace Tunny.Solver
                         ObjectiveNum = ObjNickName.Length,
                         BestValues = bestValues,
                         Values = xTest.Select(v => (decimal)v).ToList(),
-                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
+                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
                     };
                     result = EvalFunc(pState, progress);
 

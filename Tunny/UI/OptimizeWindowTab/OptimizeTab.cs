@@ -84,13 +84,18 @@ namespace Tunny.UI
                 ? trialNumLabel + "#"
                 : trialNumLabel + (pState.TrialNumber + 1);
 
-            optimizeBestValueLabel.Text = pState.ObjectiveNum == 1 && pState.BestValues.Length > 0
-                ? e.ProgressPercentage == 100
+            if (e.ProgressPercentage == 0 || e.ProgressPercentage == 100)
+            {
+                optimizeBestValueLabel.Text = pState.ObjectiveNum == 1
                     ? "BestValue: #"
-                    : "BestValue: " + pState.BestValues[0][0]
-                : e.ProgressPercentage == 100
-                    ? "Hypervolume Ratio: #"
-                    : "Hypervolume Ratio: " + pState.HypervolumeRatio.ToString("0.000");
+                    : "Hypervolume Ratio: #";
+            }
+            else if (pState.BestValues.Length > 0)
+            {
+                optimizeBestValueLabel.Text = pState.ObjectiveNum == 1
+                    ? "BestValue: " + pState.BestValues[0][0]
+                    : $"Hypervolume Ratio: {pState.HypervolumeRatio:0.000}";
+            }
 
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
