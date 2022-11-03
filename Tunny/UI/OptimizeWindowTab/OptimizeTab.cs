@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -11,6 +12,27 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
+        private void ContinueStudyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (continueStudyCheckBox.Checked)
+            {
+                existingStudyComboBox.Enabled = true;
+                copyStudyCheckBox.Enabled = true;
+                studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
+            }
+            else if (!continueStudyCheckBox.Checked)
+            {
+                copyStudyCheckBox.Enabled = false;
+                existingStudyComboBox.Enabled = false;
+                studyNameTextBox.Enabled = true;
+            }
+        }
+
+        private void CopyStudyCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
+        }
+
         private void OptimizeRunButton_Click(object sender, EventArgs e)
         {
             var ghCanvas = Owner as GH_DocumentEditor;
@@ -31,6 +53,11 @@ namespace Tunny.UI
             }
             optimizeBackgroundWorker.RunWorkerAsync(_component);
             optimizeStopButton.Enabled = true;
+            if (!existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            {
+                existingStudyComboBox.Items.Add(studyNameTextBox.Text);
+            }
+            existingStudyComboBox.SelectedIndex = existingStudyComboBox.Items.Count - 1;
         }
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
@@ -56,6 +83,29 @@ namespace Tunny.UI
                 return false;
             }
 
+            if (studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            {
+                TunnyMessageBox.Show(
+                    "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
+                    "Tunny",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                ghCanvas.EnableUI();
+                optimizeRunButton.Enabled = true;
+                return false;
+            }
+            else if (copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
+            {
+                var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
+                _settings.StudyName = studyNameTextBox.Text;
+            }
+            else if (continueStudyCheckBox.Checked)
+            {
+                _settings.StudyName = existingStudyComboBox.Text;
+            }
+
             return true;
         }
 
@@ -73,6 +123,25 @@ namespace Tunny.UI
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+        }
+
+        private void UpdateExistingStudiesComboBox()
+        {
+            existingStudyComboBox.SelectedIndex = -1;
+            existingStudyComboBox.Items.Clear();
+
+            var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+            Solver.StudySummary[] summaries = study.GetAllStudySummaries();
+            existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+            if (existingStudyComboBox.Items.Count > 0)
+            {
+                existingStudyComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                existingStudyComboBox.Text = string.Empty;
+                continueStudyCheckBox.Checked = false;
+            }
         }
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)

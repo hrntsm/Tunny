@@ -84,8 +84,15 @@ namespace Tunny.UI
             samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
             nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
             timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
-            loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
+
+            // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;
+            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
+            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
+            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
+            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
+            UpdateExistingStudiesComboBox();
+
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
             visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
@@ -132,7 +139,8 @@ namespace Tunny.UI
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
-            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
+            _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;

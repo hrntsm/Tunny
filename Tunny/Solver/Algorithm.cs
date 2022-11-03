@@ -81,7 +81,7 @@ namespace Tunny.Solver
                 directions: directions,
                 storage: "sqlite:///" + Settings.StoragePath,
                 study_name: Settings.StudyName,
-                load_if_exists: Settings.Optimize.LoadExistStudy
+                load_if_exists: Settings.Optimize.ContinueStudy
             );
         }
 
@@ -111,7 +111,7 @@ namespace Tunny.Solver
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
         {
-            if (!Settings.Optimize.LoadExistStudy)
+            if (!Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutLoading;
                 return false;
