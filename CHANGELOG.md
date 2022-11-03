@@ -19,6 +19,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - When there are more than 10 params, the value of "Omit_values" is used instead of "params" to improve the visibility of the ParetoFront plot.
 - Default name of optimization result file changed from "Tunny_Opt_Result.db" to "Fish.db".
+- Easy-to-understand UI for creating study.
+  - Study Create, Continue, and Copy are now clearly separated in the UI.
 
 ### Deprecated
 
