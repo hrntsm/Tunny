@@ -48,7 +48,6 @@ namespace Tunny.UI
             this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.copyStudyCheckBox = new System.Windows.Forms.CheckBox();
-            this.existedStudyNameCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
@@ -141,6 +140,8 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.existingStudyComboBox = new System.Windows.Forms.ComboBox();
+            this.existedStudyNameLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -231,7 +232,7 @@ namespace Tunny.UI
             // continueStudyCheckBox
             // 
             this.continueStudyCheckBox.AutoSize = true;
-            this.continueStudyCheckBox.Location = new System.Drawing.Point(10, 62);
+            this.continueStudyCheckBox.Location = new System.Drawing.Point(12, 69);
             this.continueStudyCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.continueStudyCheckBox.Name = "continueStudyCheckBox";
             this.continueStudyCheckBox.Size = new System.Drawing.Size(114, 27);
@@ -351,14 +352,15 @@ namespace Tunny.UI
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.existedStudyNameLabel);
+            this.groupBox2.Controls.Add(this.existingStudyComboBox);
             this.groupBox2.Controls.Add(this.copyStudyCheckBox);
-            this.groupBox2.Controls.Add(this.existedStudyNameCheckedListBox);
             this.groupBox2.Controls.Add(this.studyNameLabel);
             this.groupBox2.Controls.Add(this.continueStudyCheckBox);
             this.groupBox2.Controls.Add(this.studyNameTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(20, 134);
+            this.groupBox2.Location = new System.Drawing.Point(20, 150);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(390, 163);
+            this.groupBox2.Size = new System.Drawing.Size(390, 153);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Study Name";
@@ -366,21 +368,13 @@ namespace Tunny.UI
             // copyStudyCheckBox
             // 
             this.copyStudyCheckBox.AutoSize = true;
-            this.copyStudyCheckBox.Location = new System.Drawing.Point(166, 62);
+            this.copyStudyCheckBox.Location = new System.Drawing.Point(155, 69);
             this.copyStudyCheckBox.Name = "copyStudyCheckBox";
             this.copyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
             this.copyStudyCheckBox.TabIndex = 12;
             this.copyStudyCheckBox.Text = "Copy";
             this.copyStudyCheckBox.UseVisualStyleBackColor = true;
             this.copyStudyCheckBox.CheckedChanged += new System.EventHandler(this.CopyStudyCheckBox_CheckedChanged);
-            // 
-            // existedStudyNameCheckedListBox
-            // 
-            this.existedStudyNameCheckedListBox.FormattingEnabled = true;
-            this.existedStudyNameCheckedListBox.Location = new System.Drawing.Point(10, 94);
-            this.existedStudyNameCheckedListBox.Name = "existedStudyNameCheckedListBox";
-            this.existedStudyNameCheckedListBox.Size = new System.Drawing.Size(373, 58);
-            this.existedStudyNameCheckedListBox.TabIndex = 11;
             // 
             // timeoutNumUpDown
             // 
@@ -1580,6 +1574,23 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
+            // existingStudyComboBox
+            // 
+            this.existingStudyComboBox.FormattingEnabled = true;
+            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 105);
+            this.existingStudyComboBox.Name = "existingStudyComboBox";
+            this.existingStudyComboBox.Size = new System.Drawing.Size(180, 31);
+            this.existingStudyComboBox.TabIndex = 13;
+            // 
+            // existedStudyNameLabel
+            // 
+            this.existedStudyNameLabel.AutoSize = true;
+            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 113);
+            this.existedStudyNameLabel.Name = "existedStudyNameLabel";
+            this.existedStudyNameLabel.Size = new System.Drawing.Size(135, 23);
+            this.existedStudyNameLabel.TabIndex = 14;
+            this.existedStudyNameLabel.Text = "Existing Study";
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1747,11 +1758,12 @@ namespace Tunny.UI
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label runGarbageCollectionLabel;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckedListBox existedStudyNameCheckedListBox;
         private System.Windows.Forms.Label optimizeBestValueLabel;
         private System.Windows.Forms.Label optimizeTrialNumLabel;
         private System.Windows.Forms.CheckBox copyStudyCheckBox;
         private System.Windows.Forms.Button setResultFilePathButton;
+        private System.Windows.Forms.Label existedStudyNameLabel;
+        private System.Windows.Forms.ComboBox existingStudyComboBox;
     }
 }
 

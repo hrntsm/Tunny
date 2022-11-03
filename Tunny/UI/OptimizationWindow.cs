@@ -88,9 +88,10 @@ namespace Tunny.UI
             // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;
             continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
-            existedStudyNameCheckedListBox.Enabled = continueStudyCheckBox.Checked;
+            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
             studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
-            copyStudyCheckBox.Checked = _settings.Optimize.CopyStudy;
+            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
+            UpdateExistingStudiesComboBox();
 
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;

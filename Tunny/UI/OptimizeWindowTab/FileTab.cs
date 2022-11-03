@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Tunny.UI
@@ -38,6 +39,25 @@ namespace Tunny.UI
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 _settings.StoragePath = sfd.FileName;
+                existingStudyComboBox.SelectedIndex = -1;
+                existingStudyComboBox.Items.Clear();
+
+                var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+                if (!File.Exists(_settings.StoragePath))
+                {
+                    study.CreateNewStorage();
+                }
+                Solver.StudySummary[] summaries = study.GetAllStudySummaries();
+                existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+                if (existingStudyComboBox.Items.Count > 0)
+                {
+                    existingStudyComboBox.SelectedIndex = 0;
+                }
+                else
+                {
+                    existingStudyComboBox.Text = string.Empty;
+                    continueStudyCheckBox.Checked = false;
+                }
             }
         }
     }

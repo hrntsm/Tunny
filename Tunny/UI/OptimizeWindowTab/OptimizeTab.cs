@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -15,30 +16,21 @@ namespace Tunny.UI
         {
             if (continueStudyCheckBox.Checked)
             {
-                existedStudyNameCheckedListBox.Enabled = true;
-                studyNameTextBox.Enabled = false;
-                copyStudyCheckBox.Checked = false;
+                existingStudyComboBox.Enabled = true;
+                copyStudyCheckBox.Enabled = true;
+                studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
             }
-            else
+            else if (!continueStudyCheckBox.Checked)
             {
-                existedStudyNameCheckedListBox.Enabled = false;
+                copyStudyCheckBox.Enabled = false;
+                existingStudyComboBox.Enabled = false;
                 studyNameTextBox.Enabled = true;
             }
         }
 
         private void CopyStudyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (copyStudyCheckBox.Checked)
-            {
-                existedStudyNameCheckedListBox.Enabled = true;
-                studyNameTextBox.Enabled = true;
-                continueStudyCheckBox.Checked = false;
-            }
-            else
-            {
-                existedStudyNameCheckedListBox.Enabled = false;
-            }
-
+            studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
         }
 
         private void OptimizeRunButton_Click(object sender, EventArgs e)
@@ -61,6 +53,11 @@ namespace Tunny.UI
             }
             optimizeBackgroundWorker.RunWorkerAsync(_component);
             optimizeStopButton.Enabled = true;
+            if (!existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            {
+                existingStudyComboBox.Items.Add(studyNameTextBox.Text);
+            }
+            existingStudyComboBox.SelectedIndex = existingStudyComboBox.Items.Count - 1;
         }
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
@@ -77,6 +74,23 @@ namespace Tunny.UI
             {
                 TunnyMessageBox.Show(
                     "CMA-ES samplers only support single objective optimization.",
+                    "Tunny",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                ghCanvas.EnableUI();
+                optimizeRunButton.Enabled = true;
+                return false;
+            }
+
+            if (continueStudyCheckBox.Checked)
+            {
+                _settings.StudyName = existingStudyComboBox.Text;
+            }
+            else if (existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            {
+                TunnyMessageBox.Show(
+                    "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
                     "Tunny",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
@@ -103,6 +117,25 @@ namespace Tunny.UI
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+        }
+
+        private void UpdateExistingStudiesComboBox()
+        {
+            existingStudyComboBox.SelectedIndex = -1;
+            existingStudyComboBox.Items.Clear();
+
+            var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+            Solver.StudySummary[] summaries = study.GetAllStudySummaries();
+            existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+            if (existingStudyComboBox.Items.Count > 0)
+            {
+                existingStudyComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                existingStudyComboBox.Text = string.Empty;
+                continueStudyCheckBox.Checked = false;
+            }
         }
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
