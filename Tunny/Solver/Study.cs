@@ -56,6 +56,18 @@ namespace Tunny.Solver
             }
             PythonEngine.Shutdown();
         }
+
+        public void Copy(string fromStudyName, string toStudyName)
+        {
+            string storage = "sqlite:///" + _settings.StoragePath;
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                dynamic optuna = Py.Import("optuna");
+                optuna.copy_study(from_study_name: fromStudyName, to_study_name: toStudyName, from_storage: storage, to_storage: storage);
+            }
+            PythonEngine.Shutdown();
+        }
     }
 
     public class StudySummary

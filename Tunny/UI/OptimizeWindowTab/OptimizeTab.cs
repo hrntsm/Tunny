@@ -83,11 +83,7 @@ namespace Tunny.UI
                 return false;
             }
 
-            if (continueStudyCheckBox.Checked)
-            {
-                _settings.StudyName = existingStudyComboBox.Text;
-            }
-            else if (existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            if (studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
             {
                 TunnyMessageBox.Show(
                     "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
@@ -98,6 +94,16 @@ namespace Tunny.UI
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
                 return false;
+            }
+            else if (copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
+            {
+                var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
+                _settings.StudyName = studyNameTextBox.Text;
+            }
+            else if (continueStudyCheckBox.Checked)
+            {
+                _settings.StudyName = existingStudyComboBox.Text;
             }
 
             return true;
