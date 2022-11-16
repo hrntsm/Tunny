@@ -1,6 +1,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
 
 using Python.Runtime;
 
@@ -22,7 +24,125 @@ namespace Tunny.Solver
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
-        public StudySummary[] GetAllStudySummaries()
+        public StudySummary[] GetAllStudySummariesCS()
+        {
+            var studySummaries = new List<StudySummary>();
+            if (!File.Exists(_settings.StoragePath))
+            {
+                return studySummaries.ToArray();
+            }
+
+            var sqliteConnection = new SQLiteConnectionStringBuilder
+            {
+                DataSource = _settings.StoragePath,
+                Version = 3
+            };
+
+            using (var connection = new SQLiteConnection(sqliteConnection.ToString()))
+            {
+                connection.Open();
+
+                if (!CheckTableExist(connection))
+                {
+                    return studySummaries.ToArray();
+                }
+                GetStudy(studySummaries, connection);
+                GetStudyUserAttributes(studySummaries, connection);
+                // GetTrials(studySummaries, connection);
+            }
+
+            return studySummaries.ToArray();
+        }
+
+        private static bool CheckTableExist(SQLiteConnection connection)
+        {
+            int hasStudiesTable = 0;
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='studies';";
+                hasStudiesTable = Convert.ToInt32(command.ExecuteScalar());
+            }
+            return hasStudiesTable > 0;
+        }
+
+        private static void GetTrials(List<StudySummary> studySummaries, SQLiteConnection connection)
+        {
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "SELECT * FROM trials";
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        long studyId = (long)reader["study_id"];
+                        _ = Enum.TryParse((string)reader["state"], out TrialState trialState);
+
+                        studySummaries.Find(x => x.StudyId == studyId).Trials.Add(new Trial
+                        {
+                            TrialId = (int)(long)reader["trial_id"],
+                            Number = (int)(long)reader["number"],
+                            State = trialState,
+                            DatetimeStart = (DateTime)reader["datetime_start"],
+                            DatetimeComplete = (DateTime)reader["datetime_complete"],
+                        });
+                    }
+                }
+            }
+
+            foreach (StudySummary summary in studySummaries)
+            {
+                summary.NTrials = summary.Trials.Count;
+            }
+        }
+
+        private static void GetStudyUserAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)
+        {
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "SELECT * FROM study_user_attributes";
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        long studyId = (long)reader["study_id"];
+                        string key = (string)reader["key"];
+
+                        if (key == "objectives" || key == "variables")
+                        {
+                            string valueJson = (string)reader["value_json"];
+                            string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');
+                            studySummaries.Find(x => x.StudyId == studyId).UserAttributes.Add(key, values);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void GetStudy(List<StudySummary> studySummaries, SQLiteConnection connection)
+        {
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "SELECT * FROM studies";
+                using (SQLiteDataReader studyReader = command.ExecuteReader())
+                {
+                    while (studyReader.Read())
+                    {
+                        long studyId = (long)studyReader["study_id"];
+                        string studyName = (string)studyReader["study_name"];
+
+                        studySummaries.Add(new StudySummary
+                        {
+                            StudyId = (int)studyId,
+                            StudyName = studyName,
+                            SystemAttributes = new Dictionary<string, string[]>(),
+                            UserAttributes = new Dictionary<string, string[]>()
+                        });
+                    }
+                }
+            }
+        }
+
+        public StudySummary[] GetAllStudySummariesPY()
         {
             var studySummaries = new List<StudySummary>();
             string storage = "sqlite:///" + _settings.StoragePath;
@@ -68,13 +188,34 @@ namespace Tunny.Solver
             }
             PythonEngine.Shutdown();
         }
+
     }
 
     public class StudySummary
     {
+        public int StudyId { get; set; }
         public string StudyName { get; set; }
         public Dictionary<string, string[]> UserAttributes { get; set; }
         public Dictionary<string, string[]> SystemAttributes { get; set; }
         public int NTrials { get; set; }
+        public List<Trial> Trials { get; set; }
+    }
+
+    public class Trial
+    {
+        public int TrialId { get; set; }
+        public int Number { get; set; }
+        public TrialState State { get; set; }
+        public DateTime DatetimeStart { get; set; }
+        public DateTime DatetimeComplete { get; set; }
+    }
+
+    public enum TrialState
+    {
+        RUNNING,
+        WAITING,
+        COMPLETE,
+        PRUNED,
+        FAIL
     }
 }

@@ -115,10 +115,7 @@ namespace Tunny.UI
             optimizeStopButton.Enabled = false;
             OptimizeLoop.IsForcedStopOptimize = true;
 
-            if (optimizeBackgroundWorker != null)
-            {
-                optimizeBackgroundWorker.Dispose();
-            }
+            optimizeBackgroundWorker?.Dispose();
 
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
@@ -131,7 +128,7 @@ namespace Tunny.UI
             existingStudyComboBox.Items.Clear();
 
             var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
-            Solver.StudySummary[] summaries = study.GetAllStudySummaries();
+            Solver.StudySummary[] summaries = study.GetAllStudySummariesCS();
             existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
             if (existingStudyComboBox.Items.Count > 0)
             {
