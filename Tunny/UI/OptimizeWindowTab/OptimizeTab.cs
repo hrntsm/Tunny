@@ -53,11 +53,6 @@ namespace Tunny.UI
             }
             optimizeBackgroundWorker.RunWorkerAsync(_component);
             optimizeStopButton.Enabled = true;
-            if (!existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
-            {
-                existingStudyComboBox.Items.Add(studyNameTextBox.Text);
-            }
-            existingStudyComboBox.SelectedIndex = existingStudyComboBox.Items.Count - 1;
         }
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
@@ -116,6 +111,8 @@ namespace Tunny.UI
             OptimizeLoop.IsForcedStopOptimize = true;
 
             optimizeBackgroundWorker?.Dispose();
+
+            UpdateExistingStudiesComboBox();
 
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
