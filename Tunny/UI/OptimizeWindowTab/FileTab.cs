@@ -47,7 +47,7 @@ namespace Tunny.UI
                 {
                     study.CreateNewStorage();
                 }
-                Solver.StudySummary[] summaries = study.GetAllStudySummaries();
+                Solver.StudySummary[] summaries = study.GetAllStudySummariesCS();
                 existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
                 if (existingStudyComboBox.Items.Count > 0)
                 {
