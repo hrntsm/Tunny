@@ -91,7 +91,7 @@ namespace Tunny.UI
             existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
             studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
             copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
-            UpdateExistingStudiesComboBox();
+            UpdateStudyComboBox();
 
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
@@ -124,14 +124,8 @@ namespace Tunny.UI
             _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
 
             //TODO: use cancelAsync to stop the background worker safely
-            if (optimizeBackgroundWorker != null)
-            {
-                optimizeBackgroundWorker.Dispose();
-            }
-            if (outputResultBackgroundWorker != null)
-            {
-                outputResultBackgroundWorker.Dispose();
-            }
+            optimizeBackgroundWorker?.Dispose();
+            outputResultBackgroundWorker?.Dispose();
         }
 
         private void GetUIValues()

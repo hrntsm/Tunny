@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 using Tunny.Solver;
@@ -22,6 +23,24 @@ namespace Tunny.UI
             browser.StartInfo.FileName = @"http://127.0.0.1:8080/";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
+        }
+
+        private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
+        {
+            UpdateVisualizeListBox();
+        }
+
+        private void UpdateVisualizeListBox()
+        {
+            StudySummary visualizeStudySummary = _summaries.FirstOrDefault(s => s.StudyName == visualizeTargetStudyComboBox.Text);
+            if (visualizeStudySummary != null)
+            {
+                visualizeVariableListBox.Items.Clear();
+                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.UserAttributes["objective_names"].ToArray());
+
+                visualizeObjectiveListBox.Items.Clear();
+                visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
+            }
         }
 
         private void VisualizeShowPlotButton_Click(object sender, EventArgs e)

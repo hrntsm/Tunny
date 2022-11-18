@@ -7,11 +7,14 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Handler;
+using Tunny.Solver;
 
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
+        private StudySummary[] _summaries;
+
         private void ContinueStudyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (continueStudyCheckBox.Checked)
@@ -92,7 +95,7 @@ namespace Tunny.UI
             }
             else if (copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
             {
-                var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
                 study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
                 _settings.StudyName = studyNameTextBox.Text;
             }
@@ -109,26 +112,26 @@ namespace Tunny.UI
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
             OptimizeLoop.IsForcedStopOptimize = true;
-
             optimizeBackgroundWorker?.Dispose();
 
-            UpdateExistingStudiesComboBox();
+            UpdateStudyComboBox();
 
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
         }
 
-        private void UpdateExistingStudiesComboBox()
+        private void UpdateStudyComboBox()
         {
             existingStudyComboBox.Items.Clear();
+            visualizeTargetStudyComboBox.Items.Clear();
 
-            var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
-            Solver.StudySummary[] summaries = study.GetAllStudySummariesCS();
+            var study = new Study(_component.GhInOut.ComponentFolder, _settings);
+            _summaries = study.GetAllStudySummariesCS();
 
-            if (summaries.Length > 0)
+            if (_summaries.Length > 0)
             {
-                existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+                existingStudyComboBox.Items.AddRange(_summaries.Select(summary => summary.StudyName).ToArray());
                 if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
                 {
                     existingStudyComboBox.SelectedIndex = 0;
@@ -139,19 +142,22 @@ namespace Tunny.UI
                     continueStudyCheckBox.Checked = false;
                 }
 
-                if (!summaries[0].UserAttributes.ContainsKey("objective_names") || !summaries[0].UserAttributes.ContainsKey("variable_names"))
+                visualizeTargetStudyComboBox.Items.AddRange(_summaries.Select(summary => summary.StudyName).ToArray());
+                if (visualizeTargetStudyComboBox.Items.Count > 0 && visualizeTargetStudyComboBox.Items.Count - 1 < visualizeTargetStudyComboBox.SelectedIndex)
+                {
+                    visualizeTargetStudyComboBox.SelectedIndex = 0;
+                }
+                else if (visualizeTargetStudyComboBox.Items.Count == 0)
+                {
+                    visualizeTargetStudyComboBox.Text = string.Empty;
+                }
+
+                if (!_summaries[0].UserAttributes.ContainsKey("objective_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
                 {
                     return;
                 }
-                Solver.StudySummary visualizeStudySummary = summaries.FirstOrDefault(s => s.StudyName == studyNameTextBox.Text);
-                if (visualizeStudySummary != null)
-                {
-                    visualizeVariableListBox.Items.Clear();
-                    visualizeVariableListBox.Items.AddRange(visualizeStudySummary.UserAttributes["objective_names"].ToArray());
 
-                    visualizeObjectiveListBox.Items.Clear();
-                    visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
-                }
+                UpdateVisualizeListBox();
             }
         }
 

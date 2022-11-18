@@ -59,6 +59,13 @@ namespace Tunny.UI
             this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
             this.visualizeShowClusteringPlotButton = new System.Windows.Forms.Button();
             this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
+            this.visualizeObjectiveListBox = new System.Windows.Forms.ListBox();
+            this.visualizeVariableListBox = new System.Windows.Forms.ListBox();
+            this.visualizeTargetVariableLabel = new System.Windows.Forms.Label();
+            this.visualizeTargetObjectiveLabel = new System.Windows.Forms.Label();
+            this.visualizeTypeLabel = new System.Windows.Forms.Label();
+            this.visualizeTargetStudyNameLabel = new System.Windows.Forms.Label();
+            this.visualizeTargetStudyComboBox = new System.Windows.Forms.ComboBox();
             this.visualizeSavePlotButton = new System.Windows.Forms.Button();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
             this.visualizeShowPlotButton = new System.Windows.Forms.Button();
@@ -140,13 +147,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.visualizeTargetStudyNameComboBox = new System.Windows.Forms.ComboBox();
-            this.visualizeTargetStudyNameLabel = new System.Windows.Forms.Label();
-            this.visualizeTypeLabel = new System.Windows.Forms.Label();
-            this.visualizeTargetObjectiveLabel = new System.Windows.Forms.Label();
-            this.visualizeTargetVariableLabel = new System.Windows.Forms.Label();
-            this.visualizeVariableListBox = new System.Windows.Forms.ListBox();
-            this.visualizeObjectiveListBox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -506,7 +506,7 @@ namespace Tunny.UI
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetObjectiveLabel);
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeLabel);
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetStudyNameLabel);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetStudyNameComboBox);
+            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetStudyComboBox);
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeSavePlotButton);
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
             this.visualizeTypeGroupBox.Controls.Add(this.visualizeShowPlotButton);
@@ -516,6 +516,81 @@ namespace Tunny.UI
             this.visualizeTypeGroupBox.TabIndex = 16;
             this.visualizeTypeGroupBox.TabStop = false;
             this.visualizeTypeGroupBox.Text = "Visualize type";
+            // 
+            // visualizeObjectiveListBox
+            // 
+            this.visualizeObjectiveListBox.FormattingEnabled = true;
+            this.visualizeObjectiveListBox.ItemHeight = 23;
+            this.visualizeObjectiveListBox.Items.AddRange(new object[] {
+            "aaa",
+            "bbb",
+            "ccc"});
+            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(202, 134);
+            this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
+            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
+            this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeObjectiveListBox.Size = new System.Drawing.Size(165, 73);
+            this.visualizeObjectiveListBox.TabIndex = 26;
+            // 
+            // visualizeVariableListBox
+            // 
+            this.visualizeVariableListBox.FormattingEnabled = true;
+            this.visualizeVariableListBox.ItemHeight = 23;
+            this.visualizeVariableListBox.Items.AddRange(new object[] {
+            "aaa",
+            "bbb",
+            "ccc"});
+            this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 134);
+            this.visualizeVariableListBox.Name = "visualizeVariableListBox";
+            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
+            this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeVariableListBox.Size = new System.Drawing.Size(165, 73);
+            this.visualizeVariableListBox.TabIndex = 25;
+            // 
+            // visualizeTargetVariableLabel
+            // 
+            this.visualizeTargetVariableLabel.AutoSize = true;
+            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(207, 100);
+            this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
+            this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
+            this.visualizeTargetVariableLabel.TabIndex = 24;
+            this.visualizeTargetVariableLabel.Text = "Target Variable";
+            // 
+            // visualizeTargetObjectiveLabel
+            // 
+            this.visualizeTargetObjectiveLabel.AutoSize = true;
+            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(17, 100);
+            this.visualizeTargetObjectiveLabel.Name = "visualizeTargetObjectiveLabel";
+            this.visualizeTargetObjectiveLabel.Size = new System.Drawing.Size(152, 23);
+            this.visualizeTargetObjectiveLabel.TabIndex = 23;
+            this.visualizeTargetObjectiveLabel.Text = "Target Objective";
+            // 
+            // visualizeTypeLabel
+            // 
+            this.visualizeTypeLabel.AutoSize = true;
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(207, 28);
+            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
+            this.visualizeTypeLabel.Size = new System.Drawing.Size(50, 23);
+            this.visualizeTypeLabel.TabIndex = 22;
+            this.visualizeTypeLabel.Text = "Type";
+            // 
+            // visualizeTargetStudyNameLabel
+            // 
+            this.visualizeTargetStudyNameLabel.AutoSize = true;
+            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(17, 28);
+            this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
+            this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
+            this.visualizeTargetStudyNameLabel.TabIndex = 21;
+            this.visualizeTargetStudyNameLabel.Text = "Target Study";
+            // 
+            // visualizeTargetStudyComboBox
+            // 
+            this.visualizeTargetStudyComboBox.FormattingEnabled = true;
+            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(17, 63);
+            this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
+            this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(165, 31);
+            this.visualizeTargetStudyComboBox.TabIndex = 20;
+            this.visualizeTargetStudyComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeTargetStudy_Changed);
             // 
             // visualizeSavePlotButton
             // 
@@ -1583,80 +1658,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
-            // visualizeTargetStudyNameComboBox
-            // 
-            this.visualizeTargetStudyNameComboBox.FormattingEnabled = true;
-            this.visualizeTargetStudyNameComboBox.Location = new System.Drawing.Point(17, 63);
-            this.visualizeTargetStudyNameComboBox.Name = "visualizeTargetStudyNameComboBox";
-            this.visualizeTargetStudyNameComboBox.Size = new System.Drawing.Size(165, 31);
-            this.visualizeTargetStudyNameComboBox.TabIndex = 20;
-            // 
-            // visualizeTargetStudyNameLabel
-            // 
-            this.visualizeTargetStudyNameLabel.AutoSize = true;
-            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(17, 28);
-            this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
-            this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
-            this.visualizeTargetStudyNameLabel.TabIndex = 21;
-            this.visualizeTargetStudyNameLabel.Text = "Target Study";
-            // 
-            // visualizeTypeLabel
-            // 
-            this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(207, 28);
-            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
-            this.visualizeTypeLabel.Size = new System.Drawing.Size(50, 23);
-            this.visualizeTypeLabel.TabIndex = 22;
-            this.visualizeTypeLabel.Text = "Type";
-            // 
-            // visualizeTargetObjectiveLabel
-            // 
-            this.visualizeTargetObjectiveLabel.AutoSize = true;
-            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(17, 100);
-            this.visualizeTargetObjectiveLabel.Name = "visualizeTargetObjectiveLabel";
-            this.visualizeTargetObjectiveLabel.Size = new System.Drawing.Size(152, 23);
-            this.visualizeTargetObjectiveLabel.TabIndex = 23;
-            this.visualizeTargetObjectiveLabel.Text = "Target Objective";
-            // 
-            // visualizeTargetVariableLabel
-            // 
-            this.visualizeTargetVariableLabel.AutoSize = true;
-            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(207, 100);
-            this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
-            this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
-            this.visualizeTargetVariableLabel.TabIndex = 24;
-            this.visualizeTargetVariableLabel.Text = "Target Variable";
-            // 
-            // visualizeVariableListBox
-            // 
-            this.visualizeVariableListBox.FormattingEnabled = true;
-            this.visualizeVariableListBox.ItemHeight = 23;
-            this.visualizeVariableListBox.Items.AddRange(new object[] {
-            "aaa",
-            "bbb",
-            "ccc"});
-            this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 134);
-            this.visualizeVariableListBox.Name = "visualizeVariableListBox";
-            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
-            this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.visualizeVariableListBox.Size = new System.Drawing.Size(165, 73);
-            this.visualizeVariableListBox.TabIndex = 25;
-            // 
-            // visualizeObjectiveListBox
-            // 
-            this.visualizeObjectiveListBox.FormattingEnabled = true;
-            this.visualizeObjectiveListBox.ItemHeight = 23;
-            this.visualizeObjectiveListBox.Items.AddRange(new object[] {
-            "aaa",
-            "bbb",
-            "ccc"});
-            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(202, 134);
-            this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
-            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
-            this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.visualizeObjectiveListBox.Size = new System.Drawing.Size(165, 73);
-            this.visualizeObjectiveListBox.TabIndex = 26;
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1833,7 +1834,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Label visualizeTargetObjectiveLabel;
         private System.Windows.Forms.Label visualizeTypeLabel;
         private System.Windows.Forms.Label visualizeTargetStudyNameLabel;
-        private System.Windows.Forms.ComboBox visualizeTargetStudyNameComboBox;
+        private System.Windows.Forms.ComboBox visualizeTargetStudyComboBox;
         private System.Windows.Forms.ListBox visualizeVariableListBox;
         private System.Windows.Forms.ListBox visualizeObjectiveListBox;
     }
