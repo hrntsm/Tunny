@@ -14,6 +14,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Interactive operations on the figure are kept because it is saved in html format, not as an image.
 - Real-time display of trial number, best value, and Hypervolume in the UI.
 - Created UI to set where to save optimization result files.
+- SQLite handling in C#
+  - Optimize result handling more smooth some case.
+  - Previously, it used to read and handle python, which was sometimes slow, but now it calls SQLite directly from CS
 
 ### Changed
 
