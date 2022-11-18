@@ -107,7 +107,7 @@ namespace Tunny.Solver
                         long studyId = (long)reader["study_id"];
                         string key = (string)reader["key"];
 
-                        if (key == "objectives" || key == "variables")
+                        if (key == "objective_names" || key == "variable_names")
                         {
                             string valueJson = (string)reader["value_json"];
                             string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');

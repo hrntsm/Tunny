@@ -121,20 +121,37 @@ namespace Tunny.UI
 
         private void UpdateExistingStudiesComboBox()
         {
-            existingStudyComboBox.SelectedIndex = -1;
             existingStudyComboBox.Items.Clear();
 
             var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
             Solver.StudySummary[] summaries = study.GetAllStudySummariesCS();
-            existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
-            if (existingStudyComboBox.Items.Count > 0)
+
+            if (summaries.Length > 0)
             {
-                existingStudyComboBox.SelectedIndex = 0;
-            }
-            else
-            {
-                existingStudyComboBox.Text = string.Empty;
-                continueStudyCheckBox.Checked = false;
+                existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+                if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
+                {
+                    existingStudyComboBox.SelectedIndex = 0;
+                }
+                else if (existingStudyComboBox.Items.Count == 0)
+                {
+                    existingStudyComboBox.Text = string.Empty;
+                    continueStudyCheckBox.Checked = false;
+                }
+
+                if (!summaries[0].UserAttributes.ContainsKey("objective_names") || !summaries[0].UserAttributes.ContainsKey("variable_names"))
+                {
+                    return;
+                }
+                Solver.StudySummary visualizeStudySummary = summaries.FirstOrDefault(s => s.StudyName == studyNameTextBox.Text);
+                if (visualizeStudySummary != null)
+                {
+                    visualizeVariableListBox.Items.Clear();
+                    visualizeVariableListBox.Items.AddRange(visualizeStudySummary.UserAttributes["objective_names"].ToArray());
+
+                    visualizeObjectiveListBox.Items.Clear();
+                    visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
+                }
             }
         }
 
