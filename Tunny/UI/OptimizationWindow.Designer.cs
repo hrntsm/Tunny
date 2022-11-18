@@ -1637,6 +1637,7 @@ namespace Tunny.UI
             "ccc"});
             this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 134);
             this.visualizeVariableListBox.Name = "visualizeVariableListBox";
+            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
             this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.visualizeVariableListBox.Size = new System.Drawing.Size(165, 73);
             this.visualizeVariableListBox.TabIndex = 25;
@@ -1651,6 +1652,7 @@ namespace Tunny.UI
             "ccc"});
             this.visualizeObjectiveListBox.Location = new System.Drawing.Point(202, 134);
             this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
+            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
             this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.visualizeObjectiveListBox.Size = new System.Drawing.Size(165, 73);
             this.visualizeObjectiveListBox.TabIndex = 26;
