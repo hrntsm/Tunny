@@ -4,13 +4,14 @@ using System.Linq;
 
 using Python.Runtime;
 
+using Tunny.UI;
+
 namespace Tunny.Solver
 {
     public static class Hypervolume
     {
-        public static dynamic CreateFigure(dynamic optuna, dynamic study)
+        public static dynamic CreateFigure(dynamic study, PlotSettings pSettings)
         {
-
             var trials = (dynamic[])study.trials;
             int objectivesCount = ((double[])trials[0].values).Length;
             var trialValues = new List<double[]>();
@@ -24,12 +25,13 @@ namespace Tunny.Solver
                 maxObjectiveValues[i] = trialValues.Select(v => v[i]).Max();
             }
 
-            PyList hvs = ComputeHypervolume(optuna, trials, maxObjectiveValues, out PyList trialNumbers);
+            PyList hvs = ComputeHypervolume(trials, maxObjectiveValues, pSettings, out PyList trialNumbers);
             return CreateHypervolumeFigure(trials, hvs, trialNumbers);
         }
 
-        private static PyList ComputeHypervolume(dynamic optuna, dynamic[] trials, double[] maxObjectiveValues, out PyList trialNumbers)
+        private static PyList ComputeHypervolume(dynamic[] trials, double[] maxObjectiveValues, PlotSettings pSettings, out PyList trialNumbers)
         {
+            dynamic optuna = Py.Import("optuna");
             dynamic np = Py.Import("numpy");
 
             var hvs = new PyList();

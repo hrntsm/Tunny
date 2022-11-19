@@ -43,6 +43,25 @@ namespace Tunny.UI
             }
         }
 
+        private void VisualizeType_Changed(object sender, EventArgs e)
+        {
+            if (visualizeTypeComboBox.SelectedItem.ToString() == "clustering")
+            {
+                visualizeClusterNumUpDown.Enabled = true;
+                visualizeIncludeDominatedCheckBox.Enabled = false;
+            }
+            else if (visualizeTypeComboBox.SelectedItem.ToString() == "pareto front")
+            {
+                visualizeClusterNumUpDown.Enabled = false;
+                visualizeIncludeDominatedCheckBox.Enabled = true;
+            }
+            else
+            {
+                visualizeClusterNumUpDown.Enabled = false;
+                visualizeIncludeDominatedCheckBox.Enabled = false;
+            }
+        }
+
         private void VisualizeShowPlotButton_Click(object sender, EventArgs e)
         {
             Plot(PlotActionType.Show);
@@ -53,36 +72,127 @@ namespace Tunny.UI
             Plot(PlotActionType.Save);
         }
 
-        private void Plot(PlotActionType plotActionType)
+        private void Plot(PlotActionType pActionType)
         {
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            var plotSettings = new PlotSettings
+            var pSettings = new PlotSettings
             {
                 TargetStudyName = visualizeTargetStudyComboBox.Text,
-                PlotActionType = plotActionType,
+                PlotActionType = pActionType,
                 PlotTypeName = visualizeTypeComboBox.Text,
                 TargetObjectiveName = visualizeVariableListBox.SelectedItems.Cast<string>().ToArray(),
                 TargetObjectiveIndex = visualizeVariableListBox.SelectedIndices.Cast<int>().ToArray(),
                 TargetVariableName = visualizeObjectiveListBox.SelectedItems.Cast<string>().ToArray(),
                 TargetVariableIndex = visualizeObjectiveListBox.SelectedIndices.Cast<int>().ToArray(),
+                ClusterCount = (int)visualizeClusterNumUpDown.Value,
+                IncludeDominatedTrials = visualizeIncludeDominatedCheckBox.Checked,
             };
-            optunaVis.Plot(plotSettings);
+
+            if (!CheckTargetValues(pSettings))
+            {
+                return;
+            }
+
+            if (visualizeTypeComboBox.Text == "clustering")
+            {
+                optunaVis.ClusteringPlot(pSettings);
+            }
+            else
+            {
+                optunaVis.Plot(pSettings);
+            }
         }
 
-        private void VisualizeShowClusteringPlotButton_Click(object sender, EventArgs e)
+        private static bool CheckTargetValues(PlotSettings pSettings)
         {
-            ClusteringPlot(PlotActionType.Show);
+            switch (pSettings.PlotTypeName)
+            {
+                case "contour":
+                    return CheckContourTargets(pSettings);
+                case "parallel coordinate":
+                case "slice":
+                    return CheckOneObjSomeVarTargets(pSettings);
+                case "pareto front":
+                case "clustering":
+                    return CheckParetoFrontTargets(pSettings);
+                case "hypervolume":
+                    return CheckHypervolumeTargets(pSettings);
+                default:
+                    return CheckOneObjectives(pSettings);
+            }
         }
 
-        private void VisualizeSaveClusteringPlotButton_Click(object sender, EventArgs e)
+        private static bool CheckOneObjectives(PlotSettings pSettings)
         {
-            ClusteringPlot(PlotActionType.Save);
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length > 1)
+            {
+                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
+                result = false;
+            }
+            else if (pSettings.TargetVariableName.Length == 0)
+            {
+
+            }
+
+            return result;
         }
 
-        private void ClusteringPlot(PlotActionType pActionType)
+        private static bool CheckHypervolumeTargets(PlotSettings pSettings)
         {
-            var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            optunaVis.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, pActionType);
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length > 2 || pSettings.TargetObjectiveName.Length == 0)
+            {
+                TunnyMessageBox.Show("This plot can only handle 2 objective function.", "Tunny");
+                result = false;
+            }
+            return result;
+        }
+
+        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
+        {
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
+            {
+                TunnyMessageBox.Show("This plot can only handle 2 or 3 objective function.", "Tunny");
+                result = false;
+            }
+
+            return result;
+        }
+
+        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
+        {
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length > 1)
+            {
+                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
+                result = false;
+            }
+            else if (pSettings.TargetVariableName.Length == 0)
+            {
+                TunnyMessageBox.Show("This plot requires at least one variables.", "Tunny");
+                result = false;
+            }
+
+            return result;
+        }
+
+        private static bool CheckContourTargets(PlotSettings pSettings)
+        {
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length > 1)
+            {
+                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
+                result = false;
+            }
+            else if (pSettings.TargetVariableName.Length < 2)
+            {
+                TunnyMessageBox.Show("Contour requires at least two variables.", "Tunny");
+                result = false;
+            }
+
+            return result;
         }
     }
 
@@ -101,6 +211,7 @@ namespace Tunny.UI
         public int[] TargetObjectiveIndex { get; set; }
         public string[] TargetVariableName { get; set; }
         public int[] TargetVariableIndex { get; set; }
-        public int ClusterNumber { get; set; }
+        public int ClusterCount { get; set; }
+        public bool IncludeDominatedTrials { get; set; }
     }
 }

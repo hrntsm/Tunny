@@ -53,23 +53,20 @@ namespace Tunny.UI
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
-            this.kMeansClusteringGroupBox = new System.Windows.Forms.GroupBox();
-            this.visualizeSaveClusteringPlotButton = new System.Windows.Forms.Button();
-            this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
-            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
-            this.visualizeShowClusteringPlotButton = new System.Windows.Forms.Button();
-            this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
-            this.visualizeObjectiveListBox = new System.Windows.Forms.ListBox();
-            this.visualizeVariableListBox = new System.Windows.Forms.ListBox();
-            this.visualizeTargetVariableLabel = new System.Windows.Forms.Label();
-            this.visualizeTargetObjectiveLabel = new System.Windows.Forms.Label();
+            this.visualizeIncludeDominatedCheckBox = new System.Windows.Forms.CheckBox();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
             this.visualizeTargetStudyNameLabel = new System.Windows.Forms.Label();
+            this.visualizeObjectiveListBox = new System.Windows.Forms.ListBox();
             this.visualizeTargetStudyComboBox = new System.Windows.Forms.ComboBox();
-            this.visualizeSavePlotButton = new System.Windows.Forms.Button();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.visualizeShowPlotButton = new System.Windows.Forms.Button();
+            this.visualizeVariableListBox = new System.Windows.Forms.ListBox();
+            this.visualizeTargetVariableLabel = new System.Windows.Forms.Label();
+            this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.visualizeTargetObjectiveLabel = new System.Windows.Forms.Label();
             this.dashboardButton = new System.Windows.Forms.Button();
+            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
+            this.visualizeShowPlotButton = new System.Windows.Forms.Button();
+            this.visualizeSavePlotButton = new System.Windows.Forms.Button();
             this.outputTabPage = new System.Windows.Forms.TabPage();
             this.outputAllTrialsButton = new System.Windows.Forms.Button();
             this.outputParatoSolutionButton = new System.Windows.Forms.Button();
@@ -153,9 +150,7 @@ namespace Tunny.UI
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
-            this.kMeansClusteringGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).BeginInit();
-            this.visualizeTypeGroupBox.SuspendLayout();
             this.outputTabPage.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.settingsTabControl.SuspendLayout();
@@ -426,9 +421,20 @@ namespace Tunny.UI
             // 
             // visualizeTabPage
             // 
-            this.visualizeTabPage.Controls.Add(this.kMeansClusteringGroupBox);
-            this.visualizeTabPage.Controls.Add(this.visualizeTypeGroupBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeIncludeDominatedCheckBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTypeLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetStudyNameLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeObjectiveListBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetStudyComboBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTypeComboBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeVariableListBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetVariableLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeClusterNumUpDown);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetObjectiveLabel);
             this.visualizeTabPage.Controls.Add(this.dashboardButton);
+            this.visualizeTabPage.Controls.Add(this.visualizeNumClusterLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeShowPlotButton);
+            this.visualizeTabPage.Controls.Add(this.visualizeSavePlotButton);
             this.visualizeTabPage.Location = new System.Drawing.Point(4, 32);
             this.visualizeTabPage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTabPage.Name = "visualizeTabPage";
@@ -438,32 +444,101 @@ namespace Tunny.UI
             this.visualizeTabPage.Text = "Visualize";
             this.visualizeTabPage.UseVisualStyleBackColor = true;
             // 
-            // kMeansClusteringGroupBox
+            // visualizeIncludeDominatedCheckBox
             // 
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeSaveClusteringPlotButton);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusterNumUpDown);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeNumClusterLabel);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeShowClusteringPlotButton);
-            this.kMeansClusteringGroupBox.Location = new System.Drawing.Point(26, 328);
-            this.kMeansClusteringGroupBox.Name = "kMeansClusteringGroupBox";
-            this.kMeansClusteringGroupBox.Size = new System.Drawing.Size(374, 103);
-            this.kMeansClusteringGroupBox.TabIndex = 17;
-            this.kMeansClusteringGroupBox.TabStop = false;
-            this.kMeansClusteringGroupBox.Text = "k-means clustering";
+            this.visualizeIncludeDominatedCheckBox.AutoSize = true;
+            this.visualizeIncludeDominatedCheckBox.Checked = true;
+            this.visualizeIncludeDominatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.visualizeIncludeDominatedCheckBox.Enabled = false;
+            this.visualizeIncludeDominatedCheckBox.Location = new System.Drawing.Point(26, 404);
+            this.visualizeIncludeDominatedCheckBox.Name = "visualizeIncludeDominatedCheckBox";
+            this.visualizeIncludeDominatedCheckBox.Size = new System.Drawing.Size(380, 27);
+            this.visualizeIncludeDominatedCheckBox.TabIndex = 27;
+            this.visualizeIncludeDominatedCheckBox.Text = "Include dominated trials in pareto front";
+            this.visualizeIncludeDominatedCheckBox.UseVisualStyleBackColor = true;
             // 
-            // visualizeSaveClusteringPlotButton
+            // visualizeTypeLabel
             // 
-            this.visualizeSaveClusteringPlotButton.Location = new System.Drawing.Point(202, 60);
-            this.visualizeSaveClusteringPlotButton.Name = "visualizeSaveClusteringPlotButton";
-            this.visualizeSaveClusteringPlotButton.Size = new System.Drawing.Size(165, 35);
-            this.visualizeSaveClusteringPlotButton.TabIndex = 16;
-            this.visualizeSaveClusteringPlotButton.Text = "Save";
-            this.visualizeSaveClusteringPlotButton.UseVisualStyleBackColor = true;
-            this.visualizeSaveClusteringPlotButton.Click += new System.EventHandler(this.VisualizeSaveClusteringPlotButton_Click);
+            this.visualizeTypeLabel.AutoSize = true;
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(22, 109);
+            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
+            this.visualizeTypeLabel.Size = new System.Drawing.Size(132, 23);
+            this.visualizeTypeLabel.TabIndex = 22;
+            this.visualizeTypeLabel.Text = "Visualize Type";
+            // 
+            // visualizeTargetStudyNameLabel
+            // 
+            this.visualizeTargetStudyNameLabel.AutoSize = true;
+            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(22, 62);
+            this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
+            this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
+            this.visualizeTargetStudyNameLabel.TabIndex = 21;
+            this.visualizeTargetStudyNameLabel.Text = "Target Study";
+            // 
+            // visualizeObjectiveListBox
+            // 
+            this.visualizeObjectiveListBox.FormattingEnabled = true;
+            this.visualizeObjectiveListBox.ItemHeight = 23;
+            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(222, 200);
+            this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
+            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
+            this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeObjectiveListBox.Size = new System.Drawing.Size(190, 96);
+            this.visualizeObjectiveListBox.TabIndex = 26;
+            // 
+            // visualizeTargetStudyComboBox
+            // 
+            this.visualizeTargetStudyComboBox.FormattingEnabled = true;
+            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(185, 59);
+            this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
+            this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(216, 31);
+            this.visualizeTargetStudyComboBox.TabIndex = 20;
+            this.visualizeTargetStudyComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeTargetStudy_Changed);
+            // 
+            // visualizeTypeComboBox
+            // 
+            this.visualizeTypeComboBox.FormattingEnabled = true;
+            this.visualizeTypeComboBox.Items.AddRange(new object[] {
+            "contour",
+            "EDF",
+            "optimization history",
+            "parallel coordinate",
+            "param importances",
+            "pareto front",
+            "slice",
+            "hypervolume",
+            "clustering"});
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(185, 109);
+            this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
+            this.visualizeTypeComboBox.Size = new System.Drawing.Size(216, 31);
+            this.visualizeTypeComboBox.TabIndex = 0;
+            this.visualizeTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeType_Changed);
+            // 
+            // visualizeVariableListBox
+            // 
+            this.visualizeVariableListBox.FormattingEnabled = true;
+            this.visualizeVariableListBox.ItemHeight = 23;
+            this.visualizeVariableListBox.Location = new System.Drawing.Point(26, 200);
+            this.visualizeVariableListBox.Name = "visualizeVariableListBox";
+            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
+            this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeVariableListBox.Size = new System.Drawing.Size(190, 96);
+            this.visualizeVariableListBox.TabIndex = 25;
+            // 
+            // visualizeTargetVariableLabel
+            // 
+            this.visualizeTargetVariableLabel.AutoSize = true;
+            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(218, 162);
+            this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
+            this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
+            this.visualizeTargetVariableLabel.TabIndex = 24;
+            this.visualizeTargetVariableLabel.Text = "Target Variable";
             // 
             // visualizeClusterNumUpDown
             // 
-            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(257, 24);
+            this.visualizeClusterNumUpDown.Enabled = false;
+            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(308, 359);
             this.visualizeClusterNumUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -478,150 +553,14 @@ namespace Tunny.UI
             0,
             0});
             // 
-            // visualizeNumClusterLabel
-            // 
-            this.visualizeNumClusterLabel.AutoSize = true;
-            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(24, 26);
-            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
-            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
-            this.visualizeNumClusterLabel.TabIndex = 14;
-            this.visualizeNumClusterLabel.Text = "Number of cluster";
-            // 
-            // visualizeShowClusteringPlotButton
-            // 
-            this.visualizeShowClusteringPlotButton.Location = new System.Drawing.Point(17, 60);
-            this.visualizeShowClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeShowClusteringPlotButton.Name = "visualizeShowClusteringPlotButton";
-            this.visualizeShowClusteringPlotButton.Size = new System.Drawing.Size(165, 35);
-            this.visualizeShowClusteringPlotButton.TabIndex = 15;
-            this.visualizeShowClusteringPlotButton.Text = "Show";
-            this.visualizeShowClusteringPlotButton.UseVisualStyleBackColor = true;
-            this.visualizeShowClusteringPlotButton.Click += new System.EventHandler(this.VisualizeShowClusteringPlotButton_Click);
-            // 
-            // visualizeTypeGroupBox
-            // 
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeObjectiveListBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeVariableListBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetVariableLabel);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetObjectiveLabel);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeLabel);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetStudyNameLabel);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTargetStudyComboBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeSavePlotButton);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeShowPlotButton);
-            this.visualizeTypeGroupBox.Location = new System.Drawing.Point(26, 50);
-            this.visualizeTypeGroupBox.Name = "visualizeTypeGroupBox";
-            this.visualizeTypeGroupBox.Size = new System.Drawing.Size(374, 272);
-            this.visualizeTypeGroupBox.TabIndex = 16;
-            this.visualizeTypeGroupBox.TabStop = false;
-            this.visualizeTypeGroupBox.Text = "Visualize type";
-            // 
-            // visualizeObjectiveListBox
-            // 
-            this.visualizeObjectiveListBox.FormattingEnabled = true;
-            this.visualizeObjectiveListBox.ItemHeight = 23;
-            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(202, 134);
-            this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
-            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
-            this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.visualizeObjectiveListBox.Size = new System.Drawing.Size(165, 73);
-            this.visualizeObjectiveListBox.TabIndex = 26;
-            // 
-            // visualizeVariableListBox
-            // 
-            this.visualizeVariableListBox.FormattingEnabled = true;
-            this.visualizeVariableListBox.ItemHeight = 23;
-            this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 134);
-            this.visualizeVariableListBox.Name = "visualizeVariableListBox";
-            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
-            this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.visualizeVariableListBox.Size = new System.Drawing.Size(165, 73);
-            this.visualizeVariableListBox.TabIndex = 25;
-            // 
-            // visualizeTargetVariableLabel
-            // 
-            this.visualizeTargetVariableLabel.AutoSize = true;
-            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(207, 100);
-            this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
-            this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
-            this.visualizeTargetVariableLabel.TabIndex = 24;
-            this.visualizeTargetVariableLabel.Text = "Target Variable";
-            // 
             // visualizeTargetObjectiveLabel
             // 
             this.visualizeTargetObjectiveLabel.AutoSize = true;
-            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(17, 100);
+            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(22, 162);
             this.visualizeTargetObjectiveLabel.Name = "visualizeTargetObjectiveLabel";
             this.visualizeTargetObjectiveLabel.Size = new System.Drawing.Size(152, 23);
             this.visualizeTargetObjectiveLabel.TabIndex = 23;
             this.visualizeTargetObjectiveLabel.Text = "Target Objective";
-            // 
-            // visualizeTypeLabel
-            // 
-            this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(207, 28);
-            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
-            this.visualizeTypeLabel.Size = new System.Drawing.Size(50, 23);
-            this.visualizeTypeLabel.TabIndex = 22;
-            this.visualizeTypeLabel.Text = "Type";
-            // 
-            // visualizeTargetStudyNameLabel
-            // 
-            this.visualizeTargetStudyNameLabel.AutoSize = true;
-            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(17, 28);
-            this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
-            this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
-            this.visualizeTargetStudyNameLabel.TabIndex = 21;
-            this.visualizeTargetStudyNameLabel.Text = "Target Study";
-            // 
-            // visualizeTargetStudyComboBox
-            // 
-            this.visualizeTargetStudyComboBox.FormattingEnabled = true;
-            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(17, 63);
-            this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
-            this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(165, 31);
-            this.visualizeTargetStudyComboBox.TabIndex = 20;
-            this.visualizeTargetStudyComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeTargetStudy_Changed);
-            // 
-            // visualizeSavePlotButton
-            // 
-            this.visualizeSavePlotButton.Location = new System.Drawing.Point(202, 228);
-            this.visualizeSavePlotButton.Name = "visualizeSavePlotButton";
-            this.visualizeSavePlotButton.Size = new System.Drawing.Size(165, 35);
-            this.visualizeSavePlotButton.TabIndex = 3;
-            this.visualizeSavePlotButton.Text = "Save";
-            this.visualizeSavePlotButton.UseVisualStyleBackColor = true;
-            this.visualizeSavePlotButton.Click += new System.EventHandler(this.VisualizeSavePlotButton_Click);
-            // 
-            // visualizeTypeComboBox
-            // 
-            this.visualizeTypeComboBox.FormattingEnabled = true;
-            this.visualizeTypeComboBox.Items.AddRange(new object[] {
-            "contour",
-            "EDF",
-            "optimization history",
-            "parallel coordinate",
-            "param importances",
-            "pareto front",
-            "slice",
-            "hypervolume"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(202, 63);
-            this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
-            this.visualizeTypeComboBox.Size = new System.Drawing.Size(165, 31);
-            this.visualizeTypeComboBox.TabIndex = 0;
-            // 
-            // visualizeShowPlotButton
-            // 
-            this.visualizeShowPlotButton.Location = new System.Drawing.Point(17, 228);
-            this.visualizeShowPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeShowPlotButton.Name = "visualizeShowPlotButton";
-            this.visualizeShowPlotButton.Size = new System.Drawing.Size(165, 35);
-            this.visualizeShowPlotButton.TabIndex = 2;
-            this.visualizeShowPlotButton.Text = "Show";
-            this.visualizeShowPlotButton.UseVisualStyleBackColor = true;
-            this.visualizeShowPlotButton.Click += new System.EventHandler(this.VisualizeShowPlotButton_Click);
             // 
             // dashboardButton
             // 
@@ -633,6 +572,36 @@ namespace Tunny.UI
             this.dashboardButton.Text = "Open Optuna-Dashboard";
             this.dashboardButton.UseVisualStyleBackColor = true;
             this.dashboardButton.Click += new System.EventHandler(this.DashboardButton_Click);
+            // 
+            // visualizeNumClusterLabel
+            // 
+            this.visualizeNumClusterLabel.AutoSize = true;
+            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(22, 366);
+            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
+            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
+            this.visualizeNumClusterLabel.TabIndex = 14;
+            this.visualizeNumClusterLabel.Text = "Number of cluster";
+            // 
+            // visualizeShowPlotButton
+            // 
+            this.visualizeShowPlotButton.Location = new System.Drawing.Point(36, 305);
+            this.visualizeShowPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeShowPlotButton.Name = "visualizeShowPlotButton";
+            this.visualizeShowPlotButton.Size = new System.Drawing.Size(165, 35);
+            this.visualizeShowPlotButton.TabIndex = 2;
+            this.visualizeShowPlotButton.Text = "Show";
+            this.visualizeShowPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeShowPlotButton.Click += new System.EventHandler(this.VisualizeShowPlotButton_Click);
+            // 
+            // visualizeSavePlotButton
+            // 
+            this.visualizeSavePlotButton.Location = new System.Drawing.Point(236, 305);
+            this.visualizeSavePlotButton.Name = "visualizeSavePlotButton";
+            this.visualizeSavePlotButton.Size = new System.Drawing.Size(165, 35);
+            this.visualizeSavePlotButton.TabIndex = 3;
+            this.visualizeSavePlotButton.Text = "Save";
+            this.visualizeSavePlotButton.UseVisualStyleBackColor = true;
+            this.visualizeSavePlotButton.Click += new System.EventHandler(this.VisualizeSavePlotButton_Click);
             // 
             // outputTabPage
             // 
@@ -1671,11 +1640,8 @@ namespace Tunny.UI
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.PerformLayout();
+            this.visualizeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).EndInit();
-            this.visualizeTypeGroupBox.ResumeLayout(false);
-            this.visualizeTypeGroupBox.PerformLayout();
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
@@ -1798,7 +1764,6 @@ namespace Tunny.UI
         private System.Windows.Forms.Button qmcDefaultButton;
         private System.Windows.Forms.Label visualizeNumClusterLabel;
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
-        private System.Windows.Forms.Button visualizeShowClusteringPlotButton;
         private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
         private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
         private System.Windows.Forms.NumericUpDown cmaEsPopulationSizeUpDown;
@@ -1807,9 +1772,6 @@ namespace Tunny.UI
         private System.Windows.Forms.GroupBox licenseGroupBox;
         private System.Windows.Forms.Button showThirdPartyLicenseButton;
         private System.Windows.Forms.Button showTunnyLicenseButton;
-        private System.Windows.Forms.GroupBox kMeansClusteringGroupBox;
-        private System.Windows.Forms.GroupBox visualizeTypeGroupBox;
-        private System.Windows.Forms.Button visualizeSaveClusteringPlotButton;
         private System.Windows.Forms.Button visualizeSavePlotButton;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button miscDefaultButton;
@@ -1829,6 +1791,7 @@ namespace Tunny.UI
         private System.Windows.Forms.ComboBox visualizeTargetStudyComboBox;
         private System.Windows.Forms.ListBox visualizeVariableListBox;
         private System.Windows.Forms.ListBox visualizeObjectiveListBox;
+        private System.Windows.Forms.CheckBox visualizeIncludeDominatedCheckBox;
     }
 }
 

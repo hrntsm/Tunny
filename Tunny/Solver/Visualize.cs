@@ -123,7 +123,8 @@ namespace Tunny.Solver
                          (pSettings.TargetObjectiveIndex.Length == 2
                             ? "lambda t: [t.values[objective_index[0]], t.values[objective_index[1]]],\n"
                             : "lambda t: [t.values[objective_index[0]], t.values[objective_index[1]], t.values[objective_index[2]]],\n") +
-                "        constraints_func=" + (_hasConstraint ? "constraints" : "None") + "\n" +
+                "        constraints_func=" + (_hasConstraint ? "constraints" : "None") + ",\n" +
+                "        include_dominated_trials=" + (pSettings.IncludeDominatedTrials ? "True" : "False") + "\n" +
                 "    )\n" +
                 "    return fig\n"
             );
@@ -273,14 +274,14 @@ namespace Tunny.Solver
             }
         }
 
-        public void ClusteringPlot(string studyName, int numCluster, PlotActionType pType)
+        public void ClusteringPlot(PlotSettings pSettings)
         {
             string storage = "sqlite:///" + _settings.StoragePath;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic study = LoadStudy(optuna, storage, studyName);
+                dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
                     return;
@@ -293,20 +294,20 @@ namespace Tunny.Solver
                 }
                 else
                 {
-                    dynamic fig = CreateClusterFigure(optuna, study, nickNames, numCluster);
-                    // FigureActions(pType, fig, "cluster");
+                    dynamic fig = CreateClusterFigure(study, pSettings);
+                    FigureActions(fig, pSettings);
                 }
             }
             PythonEngine.Shutdown();
         }
 
-        private dynamic CreateClusterFigure(dynamic optuna, dynamic study, string[] nickNames, int numCluster)
+        private dynamic CreateClusterFigure(dynamic study, PlotSettings pSettings)
         {
             try
             {
-                dynamic fig = optuna.visualization.plot_pareto_front(study, target_names: nickNames, constraints_func: _hasConstraint ? Sampler.ConstraintFunc() : null);
+                dynamic fig = VisualizeParetoFront(study, pSettings);
                 fig = TruncateParetoFrontPlotHover(fig, study);
-                return ClusteringParetoFrontPlot(fig, study, numCluster);
+                return ClusteringParetoFrontPlot(fig, study, pSettings.ClusterCount);
             }
             catch (Exception)
             {
