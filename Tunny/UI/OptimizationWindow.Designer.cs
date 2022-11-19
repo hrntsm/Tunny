@@ -521,10 +521,6 @@ namespace Tunny.UI
             // 
             this.visualizeObjectiveListBox.FormattingEnabled = true;
             this.visualizeObjectiveListBox.ItemHeight = 23;
-            this.visualizeObjectiveListBox.Items.AddRange(new object[] {
-            "aaa",
-            "bbb",
-            "ccc"});
             this.visualizeObjectiveListBox.Location = new System.Drawing.Point(202, 134);
             this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
             this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
@@ -536,10 +532,6 @@ namespace Tunny.UI
             // 
             this.visualizeVariableListBox.FormattingEnabled = true;
             this.visualizeVariableListBox.ItemHeight = 23;
-            this.visualizeVariableListBox.Items.AddRange(new object[] {
-            "aaa",
-            "bbb",
-            "ccc"});
             this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 134);
             this.visualizeVariableListBox.Name = "visualizeVariableListBox";
             this.visualizeVariableListBox.ScrollAlwaysVisible = true;

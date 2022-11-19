@@ -45,40 +45,62 @@ namespace Tunny.UI
 
         private void VisualizeShowPlotButton_Click(object sender, EventArgs e)
         {
-            Plot(PlotType.Show);
+            Plot(PlotActionType.Show);
         }
 
         private void VisualizeSavePlotButton_Click(object sender, EventArgs e)
         {
-            Plot(PlotType.Save);
+            Plot(PlotActionType.Save);
         }
 
-        private void Plot(PlotType plotType)
+        private void Plot(PlotActionType plotActionType)
         {
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            optunaVis.Plot(visualizeTypeComboBox.Text, studyNameTextBox.Text, plotType);
+            var plotSettings = new PlotSettings
+            {
+                TargetStudyName = visualizeTargetStudyComboBox.Text,
+                PlotActionType = plotActionType,
+                PlotTypeName = visualizeTypeComboBox.Text,
+                TargetObjectiveName = visualizeVariableListBox.SelectedItems.Cast<string>().ToArray(),
+                TargetObjectiveIndex = visualizeVariableListBox.SelectedIndices.Cast<int>().ToArray(),
+                TargetVariableName = visualizeObjectiveListBox.SelectedItems.Cast<string>().ToArray(),
+                TargetVariableIndex = visualizeObjectiveListBox.SelectedIndices.Cast<int>().ToArray(),
+            };
+            optunaVis.Plot(plotSettings);
         }
 
         private void VisualizeShowClusteringPlotButton_Click(object sender, EventArgs e)
         {
-            ClusteringPlot(PlotType.Show);
+            ClusteringPlot(PlotActionType.Show);
         }
 
         private void VisualizeSaveClusteringPlotButton_Click(object sender, EventArgs e)
         {
-            ClusteringPlot(PlotType.Save);
+            ClusteringPlot(PlotActionType.Save);
         }
 
-        private void ClusteringPlot(PlotType plotType)
+        private void ClusteringPlot(PlotActionType pActionType)
         {
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            optunaVis.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, plotType);
+            optunaVis.ClusteringPlot(studyNameTextBox.Text, (int)visualizeClusterNumUpDown.Value, pActionType);
         }
     }
 
-    public enum PlotType
+    public enum PlotActionType
     {
         Save,
         Show,
+    }
+
+    public class PlotSettings
+    {
+        public PlotActionType PlotActionType { get; set; }
+        public string PlotTypeName { get; set; }
+        public string TargetStudyName { get; set; }
+        public string[] TargetObjectiveName { get; set; }
+        public int[] TargetObjectiveIndex { get; set; }
+        public string[] TargetVariableName { get; set; }
+        public int[] TargetVariableIndex { get; set; }
+        public int ClusterNumber { get; set; }
     }
 }
