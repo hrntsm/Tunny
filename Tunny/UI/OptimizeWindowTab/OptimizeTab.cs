@@ -101,6 +101,18 @@ namespace Tunny.UI
             }
             else if (continueStudyCheckBox.Checked)
             {
+                if (existingStudyComboBox.Text == string.Empty)
+                {
+                    TunnyMessageBox.Show(
+                        "Please choose any study name.",
+                        "Tunny",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    ghCanvas.EnableUI();
+                    optimizeRunButton.Enabled = true;
+                    return false;
+                }
                 _settings.StudyName = existingStudyComboBox.Text;
             }
 
