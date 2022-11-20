@@ -10,13 +10,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
-- Enable to save each figure.
+- Enable to save each visualize figure.
   - Interactive operations on the figure are kept because it is saved in html format, not as an image.
 - Real-time display of trial number, best value, and Hypervolume in the UI.
 - Created UI to set where to save optimization result files.
 - SQLite handling in C#
   - Optimize result handling more smooth some case.
-  - Previously, it used to read and handle python, which was sometimes slow, but now it calls SQLite directly from CS
+  - Previously, it used to read and handle python, which was sometimes slow, but now it calls SQLite directly from CS.
+- Only non-dominated trial plot in pareto front.
 
 ### Changed
 
@@ -24,6 +25,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Default name of optimization result file changed from "Tunny_Opt_Result.db" to "Fish.db".
 - Easy-to-understand UI for creating study.
   - Study Create, Continue, and Copy are now clearly separated in the UI.
+- Update visualize UI
+  - Previously, the target objective function and variables could not be specified, but now they can be specified.
 
 ### Deprecated
 
