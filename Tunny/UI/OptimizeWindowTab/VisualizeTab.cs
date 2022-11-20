@@ -141,7 +141,7 @@ namespace Tunny.UI
         private static bool CheckHypervolumeTargets(PlotSettings pSettings)
         {
             bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 2 || pSettings.TargetObjectiveName.Length == 0)
+            if (pSettings.TargetObjectiveName.Length != 2)
             {
                 TunnyMessageBox.Show("This plot can only handle 2 objective function.", "Tunny");
                 result = false;

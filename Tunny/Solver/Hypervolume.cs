@@ -13,23 +13,31 @@ namespace Tunny.Solver
         public static dynamic CreateFigure(dynamic study, PlotSettings pSettings)
         {
             var trials = (dynamic[])study.trials;
-            int objectivesCount = ((double[])trials[0].values).Length;
+            int[] objIndex = pSettings.TargetObjectiveIndex;
+
             var trialValues = new List<double[]>();
             foreach (dynamic trial in trials)
             {
-                trialValues.Add((double[])trial.values);
-            }
-            double[] maxObjectiveValues = new double[objectivesCount];
-            for (int i = 0; i < objectivesCount; i++)
-            {
-                maxObjectiveValues[i] = trialValues.Select(v => v[i]).Max();
+                double[] values = (double[])trial.values;
+                double[] targetValues = new double[objIndex.Length];
+                for (int i = 0; i < objIndex.Length; i++)
+                {
+                    targetValues[i] = values[objIndex[i]];
+                }
+                trialValues.Add(targetValues);
             }
 
-            PyList hvs = ComputeHypervolume(trials, maxObjectiveValues, pSettings, out PyList trialNumbers);
-            return CreateHypervolumeFigure(trials, hvs, trialNumbers);
+            double[] maxObjValues = new double[objIndex.Length];
+            for (int i = 0; i < objIndex.Length; i++)
+            {
+                maxObjValues[i] = trialValues.Select(v => v[i]).Max();
+            }
+
+            PyList hvs = ComputeHypervolume(trialValues, maxObjValues, out PyList trialNumbers);
+            return CreateHypervolumeFigure(trials.Length, hvs, trialNumbers);
         }
 
-        private static PyList ComputeHypervolume(dynamic[] trials, double[] maxObjectiveValues, PlotSettings pSettings, out PyList trialNumbers)
+        private static PyList ComputeHypervolume(List<double[]> trialValues, double[] maxObjValues, out PyList trialNumbers)
         {
             dynamic optuna = Py.Import("optuna");
             dynamic np = Py.Import("numpy");
@@ -38,19 +46,19 @@ namespace Tunny.Solver
             var rpObj = new PyList();
             trialNumbers = new PyList();
 
-            foreach (double max in maxObjectiveValues)
+            foreach (double max in maxObjValues)
             {
                 rpObj.Append(new PyFloat(max));
             }
             dynamic referencePoint = np.array(rpObj);
 
             dynamic wfg = optuna._hypervolume.WFG();
-            for (int i = 1; i < trials.Length + 1; i++)
+            for (int i = 1; i < trialValues.Count + 1; i++)
             {
                 var vector = new PyList();
                 for (int j = 0; j < i; j++)
                 {
-                    vector.Append(trials[j].values);
+                    vector.Append(trialValues[j].ToPython());
                 }
                 hvs.Append(wfg.compute(np.array(vector), referencePoint));
                 trialNumbers.Append(new PyInt(i));
@@ -58,7 +66,7 @@ namespace Tunny.Solver
             return hvs;
         }
 
-        private static dynamic CreateHypervolumeFigure(dynamic[] trials, PyList hvs, PyList trialNumbers)
+        private static dynamic CreateHypervolumeFigure(int trialLength, PyList hvs, PyList trialNumbers)
         {
             dynamic go = Py.Import("plotly.graph_objects");
 
@@ -67,7 +75,7 @@ namespace Tunny.Solver
             plotItems.SetItem("y", hvs);
 
             var plotRange = new PyDict();
-            var rangeObj = new PyObject[] { new PyFloat(0), new PyFloat(trials.Length + 1) };
+            var rangeObj = new PyObject[] { new PyFloat(0), new PyFloat(trialLength + 1) };
             plotRange.SetItem("range", new PyList(rangeObj));
 
             dynamic fig = go.Figure();
