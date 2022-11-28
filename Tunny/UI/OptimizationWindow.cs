@@ -8,7 +8,6 @@ using Grasshopper.GUI;
 using Tunny.Component;
 using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {

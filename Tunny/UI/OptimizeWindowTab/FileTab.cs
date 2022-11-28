@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
+using Tunny.Solver;
+
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
@@ -42,22 +44,27 @@ namespace Tunny.UI
                 existingStudyComboBox.SelectedIndex = -1;
                 existingStudyComboBox.Items.Clear();
 
-                var study = new Solver.Study(_component.GhInOut.ComponentFolder, _settings);
+                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
                 if (!File.Exists(_settings.StoragePath))
                 {
                     study.CreateNewStorage();
                 }
-                Solver.StudySummary[] summaries = study.GetAllStudySummariesCS();
-                existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
-                if (existingStudyComboBox.Items.Count > 0)
-                {
-                    existingStudyComboBox.SelectedIndex = 0;
-                }
-                else
-                {
-                    existingStudyComboBox.Text = string.Empty;
-                    continueStudyCheckBox.Checked = false;
-                }
+                UpdateStudyComboBox(study);
+            }
+        }
+
+        private void UpdateStudyComboBox(Study study)
+        {
+            StudySummary[] summaries = study.GetAllStudySummariesCS();
+            existingStudyComboBox.Items.AddRange(summaries.Select(summary => summary.StudyName).ToArray());
+            if (existingStudyComboBox.Items.Count > 0)
+            {
+                existingStudyComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                existingStudyComboBox.Text = string.Empty;
+                continueStudyCheckBox.Checked = false;
             }
         }
     }

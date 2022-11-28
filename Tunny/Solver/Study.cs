@@ -6,8 +6,8 @@ using System.IO;
 
 using Python.Runtime;
 
+using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -77,14 +77,7 @@ namespace Tunny.Solver
                         long studyId = (long)reader["study_id"];
                         _ = Enum.TryParse((string)reader["state"], out TrialState trialState);
 
-                        studySummaries.Find(x => x.StudyId == studyId).Trials.Add(new Trial
-                        {
-                            TrialId = (int)(long)reader["trial_id"],
-                            Number = (int)(long)reader["number"],
-                            State = trialState,
-                            DatetimeStart = (DateTime)reader["datetime_start"],
-                            DatetimeComplete = (DateTime)reader["datetime_complete"],
-                        });
+                        SetTrialInfoFromStudySummaries(studySummaries, reader, studyId, trialState);
                     }
                 }
             }
@@ -93,6 +86,18 @@ namespace Tunny.Solver
             {
                 summary.NTrials = summary.Trials.Count;
             }
+        }
+
+        private static void SetTrialInfoFromStudySummaries(List<StudySummary> studySummaries, SQLiteDataReader reader, long studyId, TrialState trialState)
+        {
+            studySummaries.Find(x => x.StudyId == studyId).Trials.Add(new Trial
+            {
+                TrialId = (int)(long)reader["trial_id"],
+                Number = (int)(long)reader["number"],
+                State = trialState,
+                DatetimeStart = (DateTime)reader["datetime_start"],
+                DatetimeComplete = (DateTime)reader["datetime_complete"],
+            });
         }
 
         private static void GetStudyUserAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)

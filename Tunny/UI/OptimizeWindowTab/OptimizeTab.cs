@@ -60,6 +60,42 @@ namespace Tunny.UI
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
         {
+            bool checkResult = true;
+            if (!CheckObjectivesCount(ghCanvas))
+            {
+                checkResult = false;
+            }
+
+            if (checkResult && studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            {
+                checkResult = NameAlreadyExistMessage(ghCanvas);
+            }
+            else if (checkResult && copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
+            {
+                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
+                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
+                _settings.StudyName = studyNameTextBox.Text;
+            }
+            else if (checkResult && continueStudyCheckBox.Checked)
+            {
+                checkResult = CheckSameStudyName(ghCanvas);
+            }
+            return checkResult;
+        }
+
+        private bool CheckSameStudyName(GH_DocumentEditor ghCanvas)
+        {
+            if (existingStudyComboBox.Text == string.Empty)
+            {
+                return SameStudyNameMassage(ghCanvas);
+            }
+            _settings.StudyName = existingStudyComboBox.Text;
+
+            return true;
+        }
+
+        private bool CheckObjectivesCount(GH_DocumentEditor ghCanvas)
+        {
             List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
             if (objectiveValues.Count == 0)
             {
@@ -67,56 +103,51 @@ namespace Tunny.UI
                 optimizeRunButton.Enabled = true;
                 return false;
             }
-            else if (objectiveValues.Count > 1
-                     && (samplerComboBox.Text == "EvolutionStrategy (CMA-ES)"))
+            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == "EvolutionStrategy (CMA-ES)"))
             {
-                TunnyMessageBox.Show(
-                    "CMA-ES samplers only support single objective optimization.",
-                    "Tunny",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-                ghCanvas.EnableUI();
-                optimizeRunButton.Enabled = true;
-                return false;
-            }
-
-            if (studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
-            {
-                TunnyMessageBox.Show(
-                    "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
-                    "Tunny",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-                ghCanvas.EnableUI();
-                optimizeRunButton.Enabled = true;
-                return false;
-            }
-            else if (copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
-            {
-                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
-                _settings.StudyName = studyNameTextBox.Text;
-            }
-            else if (continueStudyCheckBox.Checked)
-            {
-                if (existingStudyComboBox.Text == string.Empty)
-                {
-                    TunnyMessageBox.Show(
-                        "Please choose any study name.",
-                        "Tunny",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    ghCanvas.EnableUI();
-                    optimizeRunButton.Enabled = true;
-                    return false;
-                }
-                _settings.StudyName = existingStudyComboBox.Text;
+                return CmaEsSupportOneObjectiveMessage(ghCanvas);
             }
 
             return true;
+        }
+
+        private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
+        {
+            TunnyMessageBox.Show(
+                "CMA-ES samplers only support single objective optimization.",
+                "Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+            ghCanvas.EnableUI();
+            optimizeRunButton.Enabled = true;
+            return false;
+        }
+
+        private bool SameStudyNameMassage(GH_DocumentEditor ghCanvas)
+        {
+            TunnyMessageBox.Show(
+                "Please choose any study name.",
+                "Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+            ghCanvas.EnableUI();
+            optimizeRunButton.Enabled = true;
+            return false;
+        }
+
+        private bool NameAlreadyExistMessage(GH_DocumentEditor ghCanvas)
+        {
+            TunnyMessageBox.Show(
+                "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
+                "Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+            ghCanvas.EnableUI();
+            optimizeRunButton.Enabled = true;
+            return false;
         }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)
@@ -143,26 +174,12 @@ namespace Tunny.UI
 
             if (_summaries.Length > 0)
             {
-                existingStudyComboBox.Items.AddRange(_summaries.Select(summary => summary.StudyName).ToArray());
-                if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
-                {
-                    existingStudyComboBox.SelectedIndex = 0;
-                }
-                else if (existingStudyComboBox.Items.Count == 0)
-                {
-                    existingStudyComboBox.Text = string.Empty;
-                    continueStudyCheckBox.Checked = false;
-                }
+                string[] studyNames = _summaries.Select(summary => summary.StudyName).ToArray();
+                existingStudyComboBox.Items.AddRange(studyNames);
+                UpdateExistingStudyComboBox();
 
-                visualizeTargetStudyComboBox.Items.AddRange(_summaries.Select(summary => summary.StudyName).ToArray());
-                if (visualizeTargetStudyComboBox.Items.Count > 0 && visualizeTargetStudyComboBox.Items.Count - 1 < visualizeTargetStudyComboBox.SelectedIndex)
-                {
-                    visualizeTargetStudyComboBox.SelectedIndex = 0;
-                }
-                else if (visualizeTargetStudyComboBox.Items.Count == 0)
-                {
-                    visualizeTargetStudyComboBox.Text = string.Empty;
-                }
+                visualizeTargetStudyComboBox.Items.AddRange(studyNames);
+                UpdateVisualizeTargetStudyComboBox();
 
                 if (!_summaries[0].UserAttributes.ContainsKey("objective_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
                 {
@@ -170,6 +187,31 @@ namespace Tunny.UI
                 }
 
                 UpdateVisualizeListBox();
+            }
+        }
+
+        private void UpdateVisualizeTargetStudyComboBox()
+        {
+            if (visualizeTargetStudyComboBox.Items.Count > 0 && visualizeTargetStudyComboBox.Items.Count - 1 < visualizeTargetStudyComboBox.SelectedIndex)
+            {
+                visualizeTargetStudyComboBox.SelectedIndex = 0;
+            }
+            else if (visualizeTargetStudyComboBox.Items.Count == 0)
+            {
+                visualizeTargetStudyComboBox.Text = string.Empty;
+            }
+        }
+
+        private void UpdateExistingStudyComboBox()
+        {
+            if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
+            {
+                existingStudyComboBox.SelectedIndex = 0;
+            }
+            else if (existingStudyComboBox.Items.Count == 0)
+            {
+                existingStudyComboBox.Text = string.Empty;
+                continueStudyCheckBox.Checked = false;
             }
         }
 

@@ -6,7 +6,7 @@ using System.Linq;
 
 using Python.Included;
 
-namespace Tunny.Util
+namespace Tunny.Handler
 {
     public static class PythonInstaller
     {

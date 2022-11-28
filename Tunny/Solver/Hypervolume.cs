@@ -4,7 +4,7 @@ using System.Linq;
 
 using Python.Runtime;
 
-using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
