@@ -42,7 +42,7 @@ namespace Tunny.UI
                 installer.Show(Owner);
             }
 
-            optimizeBackgroundWorker.DoWork += Handler.OptimizeLoop.RunMultiple;
+            optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
             optimizeBackgroundWorker.WorkerReportsProgress = true;

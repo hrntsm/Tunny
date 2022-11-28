@@ -166,10 +166,16 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
+            var study = new Study(_component.GhInOut.ComponentFolder, _settings);
+            UpdateStudyComboBox(study);
+        }
+
+        private void UpdateStudyComboBox(Study study)
+        {
             existingStudyComboBox.Items.Clear();
             visualizeTargetStudyComboBox.Items.Clear();
+            outputTargetStudyComboBox.Items.Clear();
 
-            var study = new Study(_component.GhInOut.ComponentFolder, _settings);
             _summaries = study.GetAllStudySummariesCS();
 
             if (_summaries.Length > 0)
@@ -180,6 +186,8 @@ namespace Tunny.UI
 
                 visualizeTargetStudyComboBox.Items.AddRange(studyNames);
                 UpdateVisualizeTargetStudyComboBox();
+
+                outputTargetStudyComboBox.Items.AddRange(studyNames);
 
                 if (!_summaries[0].UserAttributes.ContainsKey("objective_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
                 {

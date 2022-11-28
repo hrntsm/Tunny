@@ -25,8 +25,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Default name of optimization result file changed from "Tunny_Opt_Result.db" to "Fish.db".
 - Easy-to-understand UI for creating study.
   - Study Create, Continue, and Copy are now clearly separated in the UI.
-- Update visualize UI
-  - Previously, the target objective function and variables could not be specified, but now they can be specified.
+- Update visualize & output UI
+  - Previously, the target study and objective function, variables could not be specified, but now they can be specified.
 
 ### Deprecated
 

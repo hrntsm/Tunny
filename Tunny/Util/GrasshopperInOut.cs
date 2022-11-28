@@ -191,7 +191,19 @@ namespace Tunny.Util
                 return;
             }
 
+            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())){ return; }
             Objectives = _component.Params.Input[1].Sources.ToList();
+        }
+
+        private static bool CheckObjectiveNicknameDuplication(IGH_Param[] objectives)
+        {
+            var nickname = objectives.Select(x => x.NickName).GroupBy(name => name).Where(name => name.Count() > 1).Select(group => group.Key).ToList();
+            if (nickname.Count > 0)
+            {
+                TunnyMessageBox.Show("Objective nicknames must be unique.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
         }
 
         private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> noNumberObjectives)

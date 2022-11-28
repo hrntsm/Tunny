@@ -89,7 +89,14 @@ namespace Tunny.Handler
             }
             for (int i = 0; i < model.Objectives.Length; i++)
             {
-                objectives.Add(nickNames[i], model.Objectives[i]);
+                if (objectives.ContainsKey(nickNames[i]))
+                {
+                    objectives.Add(nickNames[i] + i, model.Objectives[i]);
+                }
+                else
+                {
+                    objectives.Add(nickNames[i], model.Objectives[i]);
+                }
             }
             return objectives;
         }
