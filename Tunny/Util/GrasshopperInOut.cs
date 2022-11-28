@@ -192,6 +192,12 @@ namespace Tunny.Util
             }
 
             Objectives = _component.Params.Input[1].Sources.ToList();
+            var nickname = Objectives.Select(x => x.NickName).GroupBy(name => name).Where(name => name.Count() > 1).Select(group => group.Key).ToList();
+            if (nickname.Count > 0)
+            {
+                TunnyMessageBox.Show("Objective nicknames must be unique.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> noNumberObjectives)
