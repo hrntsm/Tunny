@@ -26,15 +26,20 @@ namespace Tunny.Handler
             s_component = e.Argument as TunnyComponent;
             s_component.GhInOutInstantiate();
 
+            //FIXME: Make return value to ProgressState
             double[] result = RunOptimizationLoop(s_worker);
             if (result == null || double.IsNaN(result[0]))
             {
                 return;
             }
             var decimalResults = result.Select(Convert.ToDecimal).ToList();
+            var pState = new ProgressState
+            {
+                Values = decimalResults
+            };
 
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
-            s_worker.ReportProgress(100, decimalResults);
+            s_worker.ReportProgress(100, pState);
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /* just wait until the cows come home */}
 
@@ -44,6 +49,7 @@ namespace Tunny.Handler
             }
         }
 
+        //FIXME: Make return value to ProgressState
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
@@ -61,11 +67,11 @@ namespace Tunny.Handler
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
 
-        private static EvaluatedGHResult EvaluateFunction(IList<decimal> values, int progress)
+        private static EvaluatedGHResult EvaluateFunction(ProgressState pState, int progress)
         {
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
 
-            s_worker.ReportProgress(progress, values);
+            s_worker.ReportProgress(progress, pState);
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 

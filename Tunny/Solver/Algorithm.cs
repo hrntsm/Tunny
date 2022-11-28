@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 using Python.Runtime;
 
+using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
@@ -17,7 +19,7 @@ namespace Tunny.Solver
         private bool HasConstraints { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
-        private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
+        private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
@@ -25,7 +27,7 @@ namespace Tunny.Solver
         public Algorithm(
             List<Variable> variables, bool hasConstraint, string[] objNickName,
             TunnySettings settings,
-            Func<double[], int, EvaluatedGHResult> evalFunc)
+            Func<ProgressState, int, EvaluatedGHResult> evalFunc)
         {
             Variables = variables;
             HasConstraints = hasConstraint;
@@ -37,7 +39,7 @@ namespace Tunny.Solver
         public void Solve()
         {
             EndState = EndState.Error;
-            Handler.OptimizeLoop.IsForcedStopOptimize = false;
+            OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
@@ -53,7 +55,7 @@ namespace Tunny.Solver
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
                     dynamic study = CreateStudy(directions, optuna, sampler);
-                    SetStudyUserAttr(study, ObjectNicknameToAttr());
+                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
                     RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
@@ -61,10 +63,10 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        private StringBuilder ObjectNicknameToAttr()
+        private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
         {
             var name = new StringBuilder();
-            foreach (string objName in ObjNickName)
+            foreach (string objName in nicknames)
             {
                 name.Append(objName + ",");
             }
@@ -77,9 +79,9 @@ namespace Tunny.Solver
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
-                storage: "sqlite:///" + Settings.Storage,
+                storage: "sqlite:///" + Settings.StoragePath,
                 study_name: Settings.StudyName,
-                load_if_exists: Settings.Optimize.LoadExistStudy
+                load_if_exists: Settings.Optimize.ContinueStudy
             );
         }
 
@@ -96,7 +98,7 @@ namespace Tunny.Solver
 
         private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
         {
-            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
+            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.StoragePath);
             var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
@@ -109,7 +111,7 @@ namespace Tunny.Solver
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
         {
-            if (!Settings.Optimize.LoadExistStudy)
+            if (!Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutLoading;
                 return false;
@@ -171,10 +173,10 @@ namespace Tunny.Solver
                     EndState = EndState.Timeout;
                     break;
                 }
-                else if (Handler.OptimizeLoop.IsForcedStopOptimize)
+                else if (OptimizeLoop.IsForcedStopOptimize)
                 {
                     EndState = EndState.StoppedByUser;
-                    Handler.OptimizeLoop.IsForcedStopOptimize = false;
+                    OptimizeLoop.IsForcedStopOptimize = false;
                     break;
                 }
 
@@ -191,7 +193,18 @@ namespace Tunny.Solver
                         ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
                         : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                     }
-                    result = EvalFunc(xTest, progress);
+
+                    dynamic[] bestTrials = study.best_trials;
+                    double[][] bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
+                    var pState = new ProgressState
+                    {
+                        TrialNumber = trialNum,
+                        ObjectiveNum = ObjNickName.Length,
+                        BestValues = bestValues,
+                        Values = xTest.Select(v => (decimal)v).ToList(),
+                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
+                    };
+                    result = EvalFunc(pState, progress);
 
                     if (result.ObjectiveValues.Contains(double.NaN))
                     {
@@ -233,9 +246,10 @@ namespace Tunny.Solver
             }
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder name)
+        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
         {
-            study.set_user_attr("objective_names", name.ToString());
+            study.set_user_attr("variable_names", variableName.ToString());
+            study.set_user_attr("objective_names", objectiveName.ToString());
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 

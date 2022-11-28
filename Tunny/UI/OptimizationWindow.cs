@@ -8,7 +8,6 @@ using Grasshopper.GUI;
 using Tunny.Component;
 using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -73,7 +72,7 @@ namespace Tunny.UI
             {
                 _settings = new TunnySettings
                 {
-                    Storage = _component.GhInOut.ComponentFolder + @"\Tunny_Opt_Result.db"
+                    StoragePath = _component.GhInOut.ComponentFolder + @"\Fish.db"
                 };
                 _settings.CreateNewSettingsFile(settingsPath);
             }
@@ -84,8 +83,15 @@ namespace Tunny.UI
             samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
             nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
             timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
-            loadIfExistsCheckBox.Checked = _settings.Optimize.LoadExistStudy;
+
+            // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;
+            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
+            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
+            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
+            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
+            UpdateStudyComboBox();
+
             outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
             visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
@@ -117,14 +123,8 @@ namespace Tunny.UI
             _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
 
             //TODO: use cancelAsync to stop the background worker safely
-            if (optimizeBackgroundWorker != null)
-            {
-                optimizeBackgroundWorker.Dispose();
-            }
-            if (outputResultBackgroundWorker != null)
-            {
-                outputResultBackgroundWorker.Dispose();
-            }
+            optimizeBackgroundWorker?.Dispose();
+            outputResultBackgroundWorker?.Dispose();
         }
 
         private void GetUIValues()
@@ -132,7 +132,8 @@ namespace Tunny.UI
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
-            _settings.Optimize.LoadExistStudy = loadIfExistsCheckBox.Checked;
+            _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
+            _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
