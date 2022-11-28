@@ -36,7 +36,7 @@ namespace Tunny.UI
             outputStopButton.Enabled = true;
             OutputLoop.Mode = mode;
             OutputLoop.Settings = _settings;
-            OutputLoop.StudyName = studyNameTextBox.Text;
+            OutputLoop.StudyName = outputTargetStudyComboBox.Text;
             OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             bool result = SetOutputIndices(mode);
             if (result)
@@ -106,10 +106,7 @@ namespace Tunny.UI
 
         private void OutputStopButton_Click(object sender, EventArgs e)
         {
-            if (outputResultBackgroundWorker != null)
-            {
-                outputResultBackgroundWorker.Dispose();
-            }
+            outputResultBackgroundWorker?.Dispose();
             OutputLoop.IsForcedStopOutput = true;
             switch (OutputLoop.Mode)
             {

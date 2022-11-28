@@ -75,7 +75,6 @@ namespace Tunny.UI
             this.outputProgressBar = new System.Windows.Forms.ProgressBar();
             this.outputModelNumberButton = new System.Windows.Forms.Button();
             this.outputModelNumTextBox = new System.Windows.Forms.TextBox();
-            this.outputModelLabel = new System.Windows.Forms.Label();
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.TPE = new System.Windows.Forms.TabPage();
@@ -144,6 +143,9 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.outputTargetStudyLabel = new System.Windows.Forms.Label();
+            this.outputTargetStudyComboBox = new System.Windows.Forms.ComboBox();
+            this.outputUseModelNumberGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -175,6 +177,7 @@ namespace Tunny.UI
             this.fileTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.licenseGroupBox.SuspendLayout();
+            this.outputUseModelNumberGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -605,14 +608,13 @@ namespace Tunny.UI
             // 
             // outputTabPage
             // 
+            this.outputTabPage.Controls.Add(this.outputUseModelNumberGroupBox);
+            this.outputTabPage.Controls.Add(this.outputTargetStudyComboBox);
+            this.outputTabPage.Controls.Add(this.outputTargetStudyLabel);
             this.outputTabPage.Controls.Add(this.outputAllTrialsButton);
             this.outputTabPage.Controls.Add(this.outputParatoSolutionButton);
-            this.outputTabPage.Controls.Add(this.reflectToSliderButton);
             this.outputTabPage.Controls.Add(this.outputStopButton);
             this.outputTabPage.Controls.Add(this.outputProgressBar);
-            this.outputTabPage.Controls.Add(this.outputModelNumberButton);
-            this.outputTabPage.Controls.Add(this.outputModelNumTextBox);
-            this.outputTabPage.Controls.Add(this.outputModelLabel);
             this.outputTabPage.Location = new System.Drawing.Point(4, 32);
             this.outputTabPage.Name = "outputTabPage";
             this.outputTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -623,10 +625,10 @@ namespace Tunny.UI
             // 
             // outputAllTrialsButton
             // 
-            this.outputAllTrialsButton.Location = new System.Drawing.Point(64, 76);
+            this.outputAllTrialsButton.Location = new System.Drawing.Point(214, 84);
             this.outputAllTrialsButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputAllTrialsButton.Name = "outputAllTrialsButton";
-            this.outputAllTrialsButton.Size = new System.Drawing.Size(297, 34);
+            this.outputAllTrialsButton.Size = new System.Drawing.Size(175, 35);
             this.outputAllTrialsButton.TabIndex = 18;
             this.outputAllTrialsButton.Text = "All trials";
             this.outputAllTrialsButton.UseVisualStyleBackColor = true;
@@ -634,10 +636,10 @@ namespace Tunny.UI
             // 
             // outputParatoSolutionButton
             // 
-            this.outputParatoSolutionButton.Location = new System.Drawing.Point(64, 24);
+            this.outputParatoSolutionButton.Location = new System.Drawing.Point(29, 84);
             this.outputParatoSolutionButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputParatoSolutionButton.Name = "outputParatoSolutionButton";
-            this.outputParatoSolutionButton.Size = new System.Drawing.Size(297, 34);
+            this.outputParatoSolutionButton.Size = new System.Drawing.Size(175, 35);
             this.outputParatoSolutionButton.TabIndex = 17;
             this.outputParatoSolutionButton.Text = "Pareto solutions";
             this.outputParatoSolutionButton.UseVisualStyleBackColor = true;
@@ -645,10 +647,10 @@ namespace Tunny.UI
             // 
             // reflectToSliderButton
             // 
-            this.reflectToSliderButton.Location = new System.Drawing.Point(64, 232);
+            this.reflectToSliderButton.Location = new System.Drawing.Point(21, 94);
             this.reflectToSliderButton.Margin = new System.Windows.Forms.Padding(4);
             this.reflectToSliderButton.Name = "reflectToSliderButton";
-            this.reflectToSliderButton.Size = new System.Drawing.Size(326, 40);
+            this.reflectToSliderButton.Size = new System.Drawing.Size(175, 83);
             this.reflectToSliderButton.TabIndex = 16;
             this.reflectToSliderButton.Text = "Reflect the result on the sliders";
             this.reflectToSliderButton.UseVisualStyleBackColor = true;
@@ -657,10 +659,10 @@ namespace Tunny.UI
             // outputStopButton
             // 
             this.outputStopButton.Enabled = false;
-            this.outputStopButton.Location = new System.Drawing.Point(326, 322);
+            this.outputStopButton.Location = new System.Drawing.Point(326, 372);
             this.outputStopButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputStopButton.Name = "outputStopButton";
-            this.outputStopButton.Size = new System.Drawing.Size(75, 40);
+            this.outputStopButton.Size = new System.Drawing.Size(75, 34);
             this.outputStopButton.TabIndex = 15;
             this.outputStopButton.Text = "Stop";
             this.outputStopButton.UseVisualStyleBackColor = true;
@@ -668,41 +670,31 @@ namespace Tunny.UI
             // 
             // outputProgressBar
             // 
-            this.outputProgressBar.Location = new System.Drawing.Point(64, 322);
+            this.outputProgressBar.Location = new System.Drawing.Point(29, 372);
             this.outputProgressBar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.outputProgressBar.Name = "outputProgressBar";
-            this.outputProgressBar.Size = new System.Drawing.Size(238, 40);
+            this.outputProgressBar.Size = new System.Drawing.Size(273, 34);
             this.outputProgressBar.TabIndex = 14;
             // 
             // outputModelNumberButton
             // 
-            this.outputModelNumberButton.Location = new System.Drawing.Point(272, 182);
+            this.outputModelNumberButton.Location = new System.Drawing.Point(206, 94);
             this.outputModelNumberButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputModelNumberButton.Name = "outputModelNumberButton";
-            this.outputModelNumberButton.Size = new System.Drawing.Size(117, 30);
+            this.outputModelNumberButton.Size = new System.Drawing.Size(175, 83);
             this.outputModelNumberButton.TabIndex = 13;
-            this.outputModelNumberButton.Text = "Output";
+            this.outputModelNumberButton.Text = "Output the above number models";
             this.outputModelNumberButton.UseVisualStyleBackColor = true;
             this.outputModelNumberButton.Click += new System.EventHandler(this.OutputModelNumberButton_Click);
             // 
             // outputModelNumTextBox
             // 
-            this.outputModelNumTextBox.Location = new System.Drawing.Point(64, 182);
+            this.outputModelNumTextBox.Location = new System.Drawing.Point(21, 45);
             this.outputModelNumTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.outputModelNumTextBox.Name = "outputModelNumTextBox";
-            this.outputModelNumTextBox.Size = new System.Drawing.Size(200, 30);
+            this.outputModelNumTextBox.Size = new System.Drawing.Size(360, 30);
             this.outputModelNumTextBox.TabIndex = 12;
             this.outputModelNumTextBox.Text = "0";
-            // 
-            // outputModelLabel
-            // 
-            this.outputModelLabel.AutoSize = true;
-            this.outputModelLabel.Location = new System.Drawing.Point(68, 154);
-            this.outputModelLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.outputModelLabel.Name = "outputModelLabel";
-            this.outputModelLabel.Size = new System.Drawing.Size(175, 23);
-            this.outputModelLabel.TabIndex = 11;
-            this.outputModelLabel.Text = "Use model number";
             // 
             // settingsTabPage
             // 
@@ -1619,6 +1611,35 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
+            // outputTargetStudyLabel
+            // 
+            this.outputTargetStudyLabel.AutoSize = true;
+            this.outputTargetStudyLabel.Location = new System.Drawing.Point(35, 27);
+            this.outputTargetStudyLabel.Name = "outputTargetStudyLabel";
+            this.outputTargetStudyLabel.Size = new System.Drawing.Size(120, 23);
+            this.outputTargetStudyLabel.TabIndex = 19;
+            this.outputTargetStudyLabel.Text = "Target Study";
+            // 
+            // outputTargetStudyComboBox
+            // 
+            this.outputTargetStudyComboBox.FormattingEnabled = true;
+            this.outputTargetStudyComboBox.Location = new System.Drawing.Point(169, 24);
+            this.outputTargetStudyComboBox.Name = "outputTargetStudyComboBox";
+            this.outputTargetStudyComboBox.Size = new System.Drawing.Size(220, 31);
+            this.outputTargetStudyComboBox.TabIndex = 20;
+            // 
+            // outputUseModelNumberGroupBox
+            // 
+            this.outputUseModelNumberGroupBox.Controls.Add(this.outputModelNumTextBox);
+            this.outputUseModelNumberGroupBox.Controls.Add(this.outputModelNumberButton);
+            this.outputUseModelNumberGroupBox.Controls.Add(this.reflectToSliderButton);
+            this.outputUseModelNumberGroupBox.Location = new System.Drawing.Point(8, 145);
+            this.outputUseModelNumberGroupBox.Name = "outputUseModelNumberGroupBox";
+            this.outputUseModelNumberGroupBox.Size = new System.Drawing.Size(393, 203);
+            this.outputUseModelNumberGroupBox.TabIndex = 21;
+            this.outputUseModelNumberGroupBox.TabStop = false;
+            this.outputUseModelNumberGroupBox.Text = "Use Model Number";
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1673,6 +1694,8 @@ namespace Tunny.UI
             this.fileTabPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.licenseGroupBox.ResumeLayout(false);
+            this.outputUseModelNumberGroupBox.ResumeLayout(false);
+            this.outputUseModelNumberGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1706,7 +1729,6 @@ namespace Tunny.UI
         private System.Windows.Forms.ProgressBar outputProgressBar;
         private System.Windows.Forms.Button outputModelNumberButton;
         private System.Windows.Forms.TextBox outputModelNumTextBox;
-        private System.Windows.Forms.Label outputModelLabel;
         private System.Windows.Forms.TabPage fileTabPage;
         private System.Windows.Forms.Button openResultFolderButton;
         private System.Windows.Forms.Button clearResultButton;
@@ -1792,6 +1814,9 @@ namespace Tunny.UI
         private System.Windows.Forms.ListBox visualizeVariableListBox;
         private System.Windows.Forms.ListBox visualizeObjectiveListBox;
         private System.Windows.Forms.CheckBox visualizeIncludeDominatedCheckBox;
+        private System.Windows.Forms.GroupBox outputUseModelNumberGroupBox;
+        private System.Windows.Forms.ComboBox outputTargetStudyComboBox;
+        private System.Windows.Forms.Label outputTargetStudyLabel;
     }
 }
 
