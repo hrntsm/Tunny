@@ -191,7 +191,7 @@ namespace Tunny.Util
                 return;
             }
 
-            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())){ return; }
+            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return; }
             Objectives = _component.Params.Input[1].Sources.ToList();
         }
 
