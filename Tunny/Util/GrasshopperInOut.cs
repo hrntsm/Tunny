@@ -11,7 +11,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -21,7 +20,7 @@ namespace Tunny.Util
     {
         private readonly GH_Document _document;
         private readonly List<Guid> _inputGuids;
-        private readonly TunnyComponent _component;
+        private readonly GH_Component _component;
         private List<GalapagosGeneListObject> _genePool;
         private GH_FishAttribute _attributes;
 
@@ -33,20 +32,22 @@ namespace Tunny.Util
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
 
-        public GrasshopperInOut(TunnyComponent component)
+        public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)
         {
             _component = component;
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
             _document = _component.OnPingDocument();
             _inputGuids = new List<Guid>();
-            SetInputs();
-        }
-
-        private void SetInputs()
-        {
-            SetVariables();
-            SetObjectives();
-            SetAttributes();
+            if (getVariableOnly)
+            {
+                SetVariables();
+            }
+            else
+            {
+                SetVariables();
+                SetObjectives();
+                SetAttributes();
+            }
         }
 
         private void SetVariables()
@@ -110,6 +111,8 @@ namespace Tunny.Util
             {
                 decimal min = slider.Slider.Minimum;
                 decimal max = slider.Slider.Maximum;
+                decimal value = slider.Slider.Value;
+                Guid id = slider.InstanceGuid;
 
                 decimal lowerBond;
                 decimal upperBond;
@@ -144,7 +147,7 @@ namespace Tunny.Util
                         break;
                 }
 
-                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName, eps));
+                variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName, eps, Convert.ToDouble(value), id));
             }
         }
 
@@ -160,10 +163,13 @@ namespace Tunny.Util
                 decimal lowerBond = genePool.Minimum;
                 decimal upperBond = genePool.Maximum;
                 double eps = Math.Pow(10, -genePool.Decimals);
+                Guid id = genePool.InstanceGuid;
                 for (int j = 0; j < genePool.Count; j++)
                 {
+                    IGH_Goo[] goo = genePool.VolatileData.AllData(false).ToArray();
+                    var ghNumber = (GH_Number)goo[j];
                     string name = nickNames[i] + j;
-                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name, eps));
+                    variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, name, eps, ghNumber.Value, id));
                 }
             }
         }
