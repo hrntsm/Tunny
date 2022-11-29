@@ -14,13 +14,11 @@ namespace Tunny.Solver
         {
             var trials = (dynamic[])study.trials;
             int[] objIndex = pSettings.TargetObjectiveIndex;
-            dynamic optuna = Py.Import("optuna");
 
             var trialValues = new List<double[]>();
             foreach (dynamic trial in trials)
             {
-                string state = trial.state.ToString();
-                if (state == "TrialState.COMPLETE")
+                if (trial.state.ToString() == "TrialState.COMPLETE")
                 {
                     double[] values = (double[])trial.values;
                     double[] targetValues = new double[objIndex.Length];
