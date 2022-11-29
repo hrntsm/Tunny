@@ -33,7 +33,7 @@ namespace Tunny.UI
             InitializeUIValues();
 
             PythonInstaller.Path = _component.GhInOut.ComponentFolder;
-            if (!PythonInstaller.CheckPackagesIsInstalled())
+            if (_settings.CheckPythonLibraries && !PythonInstaller.CheckPackagesIsInstalled())
             {
                 var installer = new PythonInstallDialog()
                 {
