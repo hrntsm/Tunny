@@ -18,6 +18,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Optimize result handling more smooth some case.
   - Previously, it used to read and handle python, which was sometimes slow, but now it calls SQLite directly from CS.
 - Only non-dominated trial plot in pareto front.
+- Boolean to skip the behavior of checking if the python library is installed in settings.
+  - For some reason, the installer may be launched every time even if it is installed, so it can be forcibly skipped in the settings.
 
 ### Changed
 
