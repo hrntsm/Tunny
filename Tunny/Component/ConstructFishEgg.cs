@@ -99,16 +99,5 @@ namespace Tunny.Component
             NickName = variable.NickName;
             Values = new List<double> { variable.Value };
         }
-
-        public Dictionary<string, object> ToEnqueueDictionary()
-        {
-            return new Dictionary<string, object>
-            {
-                {"IsInteger", IsInteger},
-                {"NickName", NickName},
-                {"Value", Values},
-            };
-        }
-
     }
 }

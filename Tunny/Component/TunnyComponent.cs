@@ -30,7 +30,7 @@ namespace Tunny.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
             pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
             Params.Input[0].Optional = true;

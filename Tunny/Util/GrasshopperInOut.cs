@@ -11,6 +11,7 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
+using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -28,6 +29,7 @@ namespace Tunny.Util
         public List<GH_NumberSlider> Sliders { get; set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; set; }
+        public Dictionary<string, Egg> EnqueueItems { get; set; }
         public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
@@ -72,7 +74,7 @@ namespace Tunny.Util
         private void SortInputs()
         {
             var errorGuids = new List<Guid>();
-            foreach ((IGH_DocumentObject docObject, int i) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, true), i)))
+            foreach ((IGH_DocumentObject docObject, int i) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, false), i)))
             {
                 switch (docObject)
                 {
@@ -81,6 +83,10 @@ namespace Tunny.Util
                         break;
                     case GalapagosGeneListObject genePool:
                         _genePool.Add(genePool);
+                        break;
+                    case Param_FishEgg fishEgg:
+                        var ghFishEgg = (GH_FishEgg)fishEgg.VolatileData.AllData(true).First();
+                        EnqueueItems = ghFishEgg.Value;
                         break;
                     default:
                         errorGuids.Add(docObject.InstanceGuid);

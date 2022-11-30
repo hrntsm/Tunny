@@ -8,6 +8,7 @@ using Grasshopper.Kernel;
 
 using Python.Runtime;
 
+using Tunny.Component;
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.UI;
@@ -34,6 +35,7 @@ namespace Tunny.Solver
         public bool RunSolver(
             List<Variable> variables,
             IEnumerable<IGH_Param> objectives,
+            Dictionary<string, Egg> eggs,
             Func<ProgressState, int, EvaluatedGHResult> evaluate)
         {
             string[] objNickName = objectives.Select(x => x.NickName).ToArray();
@@ -45,7 +47,7 @@ namespace Tunny.Solver
 
             try
             {
-                var optimize = new Algorithm(variables, _hasConstraint, objNickName, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objNickName, eggs, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.GetXOptimum();
 

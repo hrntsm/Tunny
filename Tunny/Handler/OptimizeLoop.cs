@@ -49,11 +49,11 @@ namespace Tunny.Handler
             }
         }
 
-        //FIXME: Make return value to ProgressState
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
             List<IGH_Param> objectives = s_component.GhInOut.Objectives;
+            Dictionary<string, Egg> enqueueItems = s_component.GhInOut.EnqueueItems;
             bool hasConstraint = s_component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
@@ -62,7 +62,7 @@ namespace Tunny.Handler
             }
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
-            bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
+            bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
