@@ -8,7 +8,7 @@ using Tunny.Util;
 
 namespace Tunny.Component
 {
-    public class ConstructFishEgg : GH_Component
+    public partial class ConstructFishEgg : GH_Component
     {
         public Dictionary<string, FishEgg> FishEggs { get; private set; } = new Dictionary<string, FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -22,7 +22,7 @@ namespace Tunny.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Var", "Variables pair to enqueue optimize.", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Variables", "Vars", "Variables pair to enqueue optimize.", GH_ParamAccess.list);
             pManager.AddBooleanParameter("Lay Egg", "Lay", "If true, add an egg", GH_ParamAccess.item, false);
             pManager.AddBooleanParameter("Clear", "Clear", "If true, clear eggs", GH_ParamAccess.item, false);
         }
@@ -81,6 +81,11 @@ namespace Tunny.Component
             }
 
             DA.SetData(0, FishEggs);
+        }
+
+        public override void CreateAttributes()
+        {
+            m_attributes = new ConstructFishEggAttributes(this);
         }
 
         protected override System.Drawing.Bitmap Icon => null;
