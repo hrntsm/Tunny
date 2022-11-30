@@ -29,7 +29,7 @@ namespace Tunny.Util
         public List<GH_NumberSlider> Sliders { get; set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; set; }
-        public Dictionary<string, Egg> EnqueueItems { get; set; }
+        public Dictionary<string, FishEgg> EnqueueItems { get; set; }
         public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }

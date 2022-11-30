@@ -6,9 +6,9 @@ using System.Text;
 
 using Python.Runtime;
 
-using Tunny.Component;
 using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -24,10 +24,10 @@ namespace Tunny.Solver
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
-        public Dictionary<string, Egg> FishEgg { get; set; }
+        public Dictionary<string, FishEgg> FishEgg { get; set; }
 
         public Algorithm(
-            List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, Egg> fishEgg,
+            List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
             Func<ProgressState, int, EvaluatedGHResult> evalFunc)
         {
@@ -158,7 +158,7 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, Egg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
@@ -240,14 +240,14 @@ namespace Tunny.Solver
             }
         }
 
-        private static dynamic EnqueueTrial(dynamic study, Dictionary<string, Egg> enqueueItems)
+        private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
         {
             if (enqueueItems != null && enqueueItems.Count != 0)
             {
                 for (int i = 0; i < enqueueItems.First().Value.Values.Count; i++)
                 {
                     var enqueueDict = new PyDict();
-                    foreach (KeyValuePair<string, Egg> enqueueItem in enqueueItems)
+                    foreach (KeyValuePair<string, FishEgg> enqueueItem in enqueueItems)
                     {
                         enqueueDict.SetItem(new PyString(enqueueItem.Key), new PyFloat(enqueueItem.Value.Values[i]));
                     }

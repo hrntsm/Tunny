@@ -9,21 +9,19 @@ using GH_IO.Serialization;
 
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
-
 namespace Tunny.Type
 {
-    public class GH_FishEgg : GH_Goo<Dictionary<string, Egg>>
+    public class GH_FishEgg : GH_Goo<Dictionary<string, FishEgg>>
     {
         public GH_FishEgg()
         {
         }
 
-        public GH_FishEgg(Dictionary<string, Egg> internalData) : base(internalData)
+        public GH_FishEgg(Dictionary<string, FishEgg> internalData) : base(internalData)
         {
         }
 
-        public GH_FishEgg(GH_Goo<Dictionary<string, Egg>> other) : base(other)
+        public GH_FishEgg(GH_Goo<Dictionary<string, FishEgg>> other) : base(other)
         {
         }
 
@@ -51,7 +49,7 @@ namespace Tunny.Type
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (KeyValuePair<string, Egg> attr in Value)
+            foreach (KeyValuePair<string, FishEgg> attr in Value)
             {
                 string valueStrings = string.Empty;
                 valueStrings = string.Join(", ", attr.Value.Values.Select(v => string.Format("{0, 6}", v)));
@@ -62,7 +60,7 @@ namespace Tunny.Type
 
         public override bool CastFrom(object source)
         {
-            if (source is Dictionary<string, Egg> dict)
+            if (source is Dictionary<string, FishEgg> dict)
             {
                 Value = dict;
                 return true;
@@ -76,7 +74,7 @@ namespace Tunny.Type
         public override bool CastTo<T>(ref T target)
         {
             target = default;
-            if (typeof(T).IsAssignableFrom(typeof(Dictionary<string, Egg>)))
+            if (typeof(T).IsAssignableFrom(typeof(Dictionary<string, FishEgg>)))
             {
                 target = (T)(object)Value;
                 return true;
@@ -87,16 +85,16 @@ namespace Tunny.Type
             }
         }
 
-        private static Dictionary<string, Egg> FromBase64(string base64)
+        private static Dictionary<string, FishEgg> FromBase64(string base64)
         {
             byte[] bytes = Convert.FromBase64String(base64);
             using (var ms = new MemoryStream(bytes))
             {
-                return (Dictionary<string, Egg>)new BinaryFormatter().Deserialize(ms);
+                return (Dictionary<string, FishEgg>)new BinaryFormatter().Deserialize(ms);
             }
         }
 
-        private static string ToBase64(Dictionary<string, Egg> value)
+        private static string ToBase64(Dictionary<string, FishEgg> value)
         {
             using (var ms = new MemoryStream())
             {

@@ -10,11 +10,11 @@ namespace Tunny.Component
 {
     public class ConstructFishEgg : GH_Component
     {
-        public Dictionary<string, Egg> Eggs { get; private set; } = new Dictionary<string, Egg>();
+        public Dictionary<string, FishEgg> FishEggs { get; private set; } = new Dictionary<string, FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public ConstructFishEgg()
-          : base("Construct Fish Egg", "ConstrEgg",
+          : base("Construct Fish Egg", "ConstrFEgg",
             "Construct Fish Egg.",
             "Tunny", "Tunny")
         {
@@ -29,7 +29,7 @@ namespace Tunny.Component
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Param_FishEgg(), "Egg", "Egg", "These eggs are enqueued for optimization and become fish.", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_FishEgg(), "FishEgg", "FishEgg", "These eggs are enqueued for optimization and become fish.", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -41,7 +41,7 @@ namespace Tunny.Component
 
             if (clear)
             {
-                Eggs.Clear();
+                FishEggs.Clear();
                 return;
             }
 
@@ -51,53 +51,39 @@ namespace Tunny.Component
                 List<Variable> variables = ghIO.Variables;
 
                 bool isContain = false;
-                if (Eggs.Count > 0)
+                if (FishEggs.Count > 0)
                 {
                     int sameValueCount = 0;
                     foreach (Variable variable in variables)
                     {
-                        if (Eggs.TryGetValue(variable.NickName, out Egg egg) && egg.Values.Contains(variable.Value))
+                        if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
                         {
                             sameValueCount++;
                         }
                     }
-                    isContain = sameValueCount == Eggs.Count;
+                    isContain = sameValueCount == FishEggs.Count;
                 }
 
                 if (!isContain)
                 {
                     foreach (Variable variable in variables)
                     {
-                        if (Eggs.TryGetValue(variable.NickName, out Egg egg))
+                        if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg))
                         {
                             egg.Values.Add(variable.Value);
                         }
                         else
                         {
-                            Eggs.Add(variable.NickName, new Egg(variable));
+                            FishEggs.Add(variable.NickName, new FishEgg(variable));
                         }
                     }
                 }
             }
 
-            DA.SetData(0, Eggs);
+            DA.SetData(0, FishEggs);
         }
 
         protected override System.Drawing.Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("00CC0C86-687F-4A28-93CF-30A1E361A7D5");
-    }
-
-    public class Egg
-    {
-        public bool IsInteger { get; set; }
-        public string NickName { get; set; }
-        public List<double> Values { get; set; }
-
-        public Egg(Variable variable)
-        {
-            IsInteger = variable.IsInteger;
-            NickName = variable.NickName;
-            Values = new List<double> { variable.Value };
-        }
     }
 }

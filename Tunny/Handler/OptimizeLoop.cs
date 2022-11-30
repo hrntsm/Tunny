@@ -8,6 +8,7 @@ using Grasshopper.Kernel;
 using Tunny.Component;
 using Tunny.Settings;
 using Tunny.Solver;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -26,7 +27,6 @@ namespace Tunny.Handler
             s_component = e.Argument as TunnyComponent;
             s_component.GhInOutInstantiate();
 
-            //FIXME: Make return value to ProgressState
             double[] result = RunOptimizationLoop(s_worker);
             if (result == null || double.IsNaN(result[0]))
             {
@@ -53,7 +53,7 @@ namespace Tunny.Handler
         {
             List<Variable> variables = s_component.GhInOut.Variables;
             List<IGH_Param> objectives = s_component.GhInOut.Objectives;
-            Dictionary<string, Egg> enqueueItems = s_component.GhInOut.EnqueueItems;
+            Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
             bool hasConstraint = s_component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
