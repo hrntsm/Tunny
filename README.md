@@ -71,7 +71,8 @@ Please see Tunny documentation page.
 
 ## :surfer: Contact information
 
-[![Twitter](https://img.shields.io/twitter/follow/hiron_rgkr?style=social)](https://twitter.com/hiron_rgkr)
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/hiron_rgkr)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/hiroaki-natsume-20a22118b/)
 
 - HP : [https://hiron.dev/](https://hiron.dev/)
 - Mail : support(at)hrntsm.com
