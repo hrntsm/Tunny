@@ -43,10 +43,7 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /* just wait until the cows come home */}
 
-            if (s_worker != null)
-            {
-                s_worker.CancelAsync();
-            }
+            s_worker?.CancelAsync();
         }
 
         private static double[] RunOptimizationLoop(BackgroundWorker worker)

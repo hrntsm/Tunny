@@ -48,10 +48,7 @@ namespace Tunny.Handler
             s_component.Fishes = fishes.ToArray();
             s_worker.ReportProgress(100);
 
-            if (s_worker != null)
-            {
-                s_worker.Dispose();
-            }
+            s_worker?.Dispose();
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 

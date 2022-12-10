@@ -51,7 +51,7 @@ namespace Tunny.Solver
 
                 try
                 {
-                    dynamic fig = CreateFigure(optuna, study, pSettings);
+                    dynamic fig = CreateFigure(study, pSettings);
                     FigureActions(fig, pSettings);
                 }
                 catch (Exception)
@@ -62,7 +62,7 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        private dynamic CreateFigure(dynamic optuna, dynamic study, PlotSettings pSettings)
+        private dynamic CreateFigure(dynamic study, PlotSettings pSettings)
         {
             switch (pSettings.PlotTypeName)
             {

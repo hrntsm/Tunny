@@ -47,22 +47,27 @@ namespace Tunny.Component
 
             if (lay)
             {
-                var ghIO = new GrasshopperInOut(this, true);
-                List<Variable> variables = ghIO.Variables;
-
-                bool isContainedVariableSets = false;
-                if (FishEggs.Count > 0)
-                {
-                    isContainedVariableSets = CheckVariableSetsIsContained(variables);
-                }
-
-                if (!isContainedVariableSets)
-                {
-                    AddVariablesToFishEgg(variables);
-                }
+                LayFishEgg();
             }
 
             DA.SetData(0, FishEggs);
+        }
+
+        private void LayFishEgg()
+        {
+            var ghIO = new GrasshopperInOut(this, getVariableOnly: true);
+            List<Variable> variables = ghIO.Variables;
+
+            bool isContainedVariableSets = false;
+            if (FishEggs.Count > 0)
+            {
+                isContainedVariableSets = CheckVariableSetsIsContained(variables);
+            }
+
+            if (!isContainedVariableSets)
+            {
+                AddVariablesToFishEgg(variables);
+            }
         }
 
         private bool CheckVariableSetsIsContained(List<Variable> variables)
