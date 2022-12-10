@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 using Tunny.Util;
 
 namespace Tunny.Type
 {
+    [Serializable]
     public class FishEgg
     {
         public bool IsInteger { get; set; }
