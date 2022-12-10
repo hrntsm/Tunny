@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -20xx-xx-xx
+## [v0.6.0-wip] -20xx-xx-xx
 
 ### Added
 
@@ -20,6 +20,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Only non-dominated trial plot in pareto front.
 - Boolean to skip the behavior of checking if the python library is installed in settings.
   - For some reason, the installer may be launched every time even if it is installed, so it can be forcibly skipped in the settings.
+- FishEgg component
+  - It is now possible to specify an individual of any variable and have it evaluated in the optimization first and foremost, rather than just setting up a variable completely by the sampler when conducting the optimization.
 
 ### Changed
 

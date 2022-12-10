@@ -13,7 +13,7 @@ using Tunny.Util;
 
 namespace Tunny.Component
 {
-    public partial class TunnyComponent : GH_Component, IDisposable
+    public partial class FishingComponent : GH_Component, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
         internal GrasshopperInOut GhInOut;
@@ -21,7 +21,7 @@ namespace Tunny.Component
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
 
-        public TunnyComponent()
+        public FishingComponent()
           : base("Tunny", "Tunny",
             "Tunny is an optimization component wrapped in optuna.",
             "Tunny", "Tunny")
@@ -30,7 +30,7 @@ namespace Tunny.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
             pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
             Params.Input[0].Optional = true;
@@ -75,7 +75,7 @@ namespace Tunny.Component
 
         public override void CreateAttributes()
         {
-            m_attributes = new TunnyAttributes(this);
+            m_attributes = new FishingComponentAttributes(this);
         }
 
         private void ShowOptimizationWindow()

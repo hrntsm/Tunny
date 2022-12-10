@@ -8,6 +8,7 @@ using Grasshopper.Kernel;
 using Tunny.Component;
 using Tunny.Settings;
 using Tunny.Solver;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -16,17 +17,16 @@ namespace Tunny.Handler
     internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
-        private static TunnyComponent s_component;
+        private static FishingComponent s_component;
         public static TunnySettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as TunnyComponent;
+            s_component = e.Argument as FishingComponent;
             s_component.GhInOutInstantiate();
 
-            //FIXME: Make return value to ProgressState
             double[] result = RunOptimizationLoop(s_worker);
             if (result == null || double.IsNaN(result[0]))
             {
@@ -43,17 +43,14 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /* just wait until the cows come home */}
 
-            if (s_worker != null)
-            {
-                s_worker.CancelAsync();
-            }
+            s_worker?.CancelAsync();
         }
 
-        //FIXME: Make return value to ProgressState
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
             List<IGH_Param> objectives = s_component.GhInOut.Objectives;
+            Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
             bool hasConstraint = s_component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
@@ -62,7 +59,7 @@ namespace Tunny.Handler
             }
 
             var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
-            bool solverStarted = optunaSolver.RunSolver(variables, objectives, EvaluateFunction);
+            bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }

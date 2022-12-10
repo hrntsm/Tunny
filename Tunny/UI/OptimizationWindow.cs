@@ -13,7 +13,7 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private readonly TunnyComponent _component;
+        private readonly FishingComponent _component;
         private TunnySettings _settings;
         internal enum GrasshopperStates
         {
@@ -23,7 +23,7 @@ namespace Tunny.UI
         }
         internal GrasshopperStates GrasshopperStatus;
 
-        public OptimizationWindow(TunnyComponent component)
+        public OptimizationWindow(FishingComponent component)
         {
             InitializeComponent();
 

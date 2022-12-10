@@ -17,7 +17,7 @@ namespace Tunny.Handler
     internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
-        private static TunnyComponent s_component;
+        private static FishingComponent s_component;
         public static TunnySettings Settings;
         public static string StudyName;
         public static string[] NickNames;
@@ -28,7 +28,7 @@ namespace Tunny.Handler
         internal static void Run(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as TunnyComponent;
+            s_component = e.Argument as FishingComponent;
 
             var fishes = new List<Fish>();
 
@@ -48,10 +48,7 @@ namespace Tunny.Handler
             s_component.Fishes = fishes.ToArray();
             s_worker.ReportProgress(100);
 
-            if (s_worker != null)
-            {
-                s_worker.Dispose();
-            }
+            s_worker?.Dispose();
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 

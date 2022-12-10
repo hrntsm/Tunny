@@ -38,6 +38,7 @@ namespace Tunny.Type
         {
             return JsonConvert.DeserializeObject<Fish>(json);
         }
+
         public static string ToBase64(Fish fish)
         {
             using (var ms = new MemoryStream())

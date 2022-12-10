@@ -8,6 +8,7 @@ using Python.Runtime;
 
 using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
@@ -23,15 +24,17 @@ namespace Tunny.Solver
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
+        public Dictionary<string, FishEgg> FishEgg { get; set; }
 
         public Algorithm(
-            List<Variable> variables, bool hasConstraint, string[] objNickName,
+            List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
             Func<ProgressState, int, EvaluatedGHResult> evalFunc)
         {
             Variables = variables;
             HasConstraints = hasConstraint;
             ObjNickName = objNickName;
+            FishEgg = fishEgg;
             Settings = settings;
             EvalFunc = evalFunc;
         }
@@ -56,7 +59,7 @@ namespace Tunny.Solver
                 {
                     dynamic study = CreateStudy(directions, optuna, sampler);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
-                    RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
+                    RunOptimize(nTrials, timeout, study, FishEgg, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
             }
@@ -155,12 +158,15 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
+
+            EnqueueTrial(study, enqueueItems);
+
             while (true)
             {
                 if (trialNum >= nTrials)
@@ -232,6 +238,24 @@ namespace Tunny.Solver
                 }
                 trialNum++;
             }
+        }
+
+        private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
+        {
+            if (enqueueItems != null && enqueueItems.Count != 0)
+            {
+                for (int i = 0; i < enqueueItems.First().Value.Values.Count; i++)
+                {
+                    var enqueueDict = new PyDict();
+                    foreach (KeyValuePair<string, FishEgg> enqueueItem in enqueueItems)
+                    {
+                        enqueueDict.SetItem(new PyString(enqueueItem.Key), new PyFloat(enqueueItem.Value.Values[i]));
+                    }
+                    study.enqueue_trial(enqueueDict, skip_if_exists: true);
+                }
+            }
+
+            return study;
         }
 
         private void RunGC(EvaluatedGHResult result)
