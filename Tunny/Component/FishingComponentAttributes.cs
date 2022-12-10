@@ -1,26 +1,24 @@
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Attributes;
 
 namespace Tunny.Component
 {
-    public partial class TunnyComponent
+    public partial class FishingComponent
     {
-        private class TunnyAttributes : GH_ComponentAttributes
+        private class FishingComponentAttributes : Tunny_ComponentAttributes
         {
-            public TunnyAttributes(IGH_Component component) : base(component)
+            public FishingComponentAttributes(IGH_Component component) : base(component)
             {
             }
 
             public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
             {
-                ((TunnyComponent)Owner).ShowOptimizationWindow();
+                ((FishingComponent)Owner).ShowOptimizationWindow();
                 return GH_ObjectResponse.Handled;
             }
 
@@ -96,65 +94,6 @@ namespace Tunny.Component
                     {
                         RenderBox(graphics, fill[i], edge[i], guid);
                     }
-                }
-            }
-
-            private void RenderBox(Graphics graphics, Brush fill, Pen edge, Guid guid)
-            {
-                GH_Document doc = Owner.OnPingDocument();
-                if (doc == null)
-                {
-                    return;
-                }
-                IGH_DocumentObject obj = doc.FindObject(guid, false);
-                if (obj == null)
-                {
-                    return;
-                }
-                if (!obj.Attributes.IsTopLevel)
-                {
-                    Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
-                    obj = doc.FindObject(topLevelGuid, true);
-                }
-                var rectangle = GH_Convert.ToRectangle(obj.Attributes.Bounds);
-                rectangle.Inflate(5, 5);
-                graphics.FillRectangle(fill, rectangle);
-                graphics.DrawRectangle(edge, rectangle);
-            }
-
-            private static void DrawPath(GH_Canvas canvas, Graphics graphics, IGH_Param param, Wire wire)
-            {
-                PointF p1 = param.Attributes.InputGrip;
-                foreach (IGH_Param source in param.Sources)
-                {
-                    PointF p0 = source.Attributes.OutputGrip;
-                    if (!canvas.Painter.ConnectionVisible(p0, p1))
-                    {
-                        continue;
-                    }
-
-                    GraphicsPath wirePath = GH_Painter.ConnectionPath(p0, p1, GH_WireDirection.right, GH_WireDirection.left);
-                    if (wirePath == null)
-                    {
-                        continue;
-                    }
-
-                    var wirePen = new Pen(wire.Color, wire.Width);
-                    graphics.DrawPath(wirePen, wirePath);
-                    wirePen.Dispose();
-                    wirePath.Dispose();
-                }
-            }
-
-            private class Wire
-            {
-                public int Width;
-                public Color Color;
-
-                public Wire(int wireWidth, Color wireColor)
-                {
-                    Width = wireWidth;
-                    Color = wireColor;
                 }
             }
         }

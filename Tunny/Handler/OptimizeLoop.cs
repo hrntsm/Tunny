@@ -17,14 +17,14 @@ namespace Tunny.Handler
     internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
-        private static TunnyComponent s_component;
+        private static FishingComponent s_component;
         public static TunnySettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as TunnyComponent;
+            s_component = e.Argument as FishingComponent;
             s_component.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);

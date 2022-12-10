@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Attributes;
 
 namespace Tunny.Component
 {
     public partial class ConstructFishEgg
     {
-        private class ConstructFishEggAttributes : GH_ComponentAttributes
+        private class ConstructFishEggAttributes : Tunny_ComponentAttributes
         {
             public ConstructFishEggAttributes(IGH_Component component) : base(component)
             {
@@ -47,29 +44,6 @@ namespace Tunny.Component
                 }
             }
 
-            private void RenderBox(Graphics graphics, Brush fill, Pen edge, Guid guid)
-            {
-                GH_Document doc = Owner.OnPingDocument();
-                if (doc == null)
-                {
-                    return;
-                }
-                IGH_DocumentObject obj = doc.FindObject(guid, false);
-                if (obj == null)
-                {
-                    return;
-                }
-                if (!obj.Attributes.IsTopLevel)
-                {
-                    Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
-                    obj = doc.FindObject(topLevelGuid, true);
-                }
-                var rectangle = GH_Convert.ToRectangle(obj.Attributes.Bounds);
-                rectangle.Inflate(5, 5);
-                graphics.FillRectangle(fill, rectangle);
-                graphics.DrawRectangle(edge, rectangle);
-            }
-
             private void DrawWires(GH_Canvas canvas, Graphics graphics)
             {
                 Wire[] wires = Owner.Attributes.Selected
@@ -93,51 +67,6 @@ namespace Tunny.Component
                 }
             }
 
-            private static void DrawPath(GH_Canvas canvas, Graphics graphics, IGH_Param param, Wire wire)
-            {
-                PointF p1 = param.Attributes.InputGrip;
-                foreach (IGH_Param source in param.Sources)
-                {
-                    PointF p0 = source.Attributes.OutputGrip;
-                    if (!canvas.Painter.ConnectionVisible(p0, p1))
-                    {
-                        continue;
-                    }
-
-                    GraphicsPath wirePath = GH_Painter.ConnectionPath(p0, p1, GH_WireDirection.right, GH_WireDirection.left);
-                    if (wirePath == null)
-                    {
-                        continue;
-                    }
-
-                    var brush = new LinearGradientBrush(p0, p1, wire.ColorEnd, wire.ColorStart);
-
-                    var wirePen = new Pen(brush, wire.Width);
-                    graphics.DrawPath(wirePen, wirePath);
-                    wirePen.Dispose();
-                    wirePath.Dispose();
-                }
-            }
-
-            private class Wire
-            {
-                public int Width;
-                public Color ColorStart;
-                public Color ColorEnd;
-
-                public Wire(int wireWidth, Color wireColor)
-                {
-                    Width = wireWidth;
-                    ColorStart = wireColor;
-                    ColorEnd = wireColor;
-                }
-                public Wire(int wireWidth, Color wireColorStart, Color wireColorEnd)
-                {
-                    Width = wireWidth;
-                    ColorStart = wireColorStart;
-                    ColorEnd = wireColorEnd;
-                }
-            }
         }
     }
 }
