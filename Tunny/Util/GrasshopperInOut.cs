@@ -65,13 +65,13 @@ namespace Tunny.Util
             }
 
             var variables = new List<Variable>();
-            SortInputs();
+            FilterInputVariables();
             SetInputSliderValues(variables);
             SetInputGenePoolValues(variables);
             Variables = variables;
         }
 
-        private void SortInputs()
+        private void FilterInputVariables()
         {
             var errorGuids = new List<Guid>();
             foreach ((IGH_DocumentObject docObject, int i) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, false), i)))
@@ -93,6 +93,11 @@ namespace Tunny.Util
                         break;
                 }
             }
+            CheckHasIncorrectVariableInput(errorGuids);
+        }
+
+        private void CheckHasIncorrectVariableInput(List<Guid> errorGuids)
+        {
             if (errorGuids.Count > 0)
             {
                 ShowIncorrectVariableInputMessage(errorGuids);

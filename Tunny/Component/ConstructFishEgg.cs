@@ -50,37 +50,50 @@ namespace Tunny.Component
                 var ghIO = new GrasshopperInOut(this, true);
                 List<Variable> variables = ghIO.Variables;
 
-                bool isContain = false;
+                bool isContainedVariableSets = false;
                 if (FishEggs.Count > 0)
                 {
-                    int sameValueCount = 0;
-                    foreach (Variable variable in variables)
-                    {
-                        if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
-                        {
-                            sameValueCount++;
-                        }
-                    }
-                    isContain = sameValueCount == FishEggs.Count;
+                    isContainedVariableSets = CheckVariableSetsIsContained(variables);
                 }
 
-                if (!isContain)
+                if (!isContainedVariableSets)
                 {
-                    foreach (Variable variable in variables)
-                    {
-                        if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg))
-                        {
-                            egg.Values.Add(variable.Value);
-                        }
-                        else
-                        {
-                            FishEggs.Add(variable.NickName, new FishEgg(variable));
-                        }
-                    }
+                    AddVariablesToFishEgg(variables);
                 }
             }
 
             DA.SetData(0, FishEggs);
+        }
+
+        private bool CheckVariableSetsIsContained(List<Variable> variables)
+        {
+            bool isContainVariableSets;
+            int sameValueCount = 0;
+            foreach (Variable variable in variables)
+            {
+                if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
+                {
+                    sameValueCount++;
+                }
+            }
+            isContainVariableSets = sameValueCount == FishEggs.Count;
+            return isContainVariableSets;
+        }
+
+
+        private void AddVariablesToFishEgg(List<Variable> variables)
+        {
+            foreach (Variable variable in variables)
+            {
+                if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg))
+                {
+                    egg.Values.Add(variable.Value);
+                }
+                else
+                {
+                    FishEggs.Add(variable.NickName, new FishEgg(variable));
+                }
+            }
         }
 
         public override void CreateAttributes()
