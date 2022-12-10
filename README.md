@@ -27,11 +27,6 @@ Optuna official site
 
 - https://optuna.org/
 
-## How to use
-
-Please see Tunny documentation page.
-
-- https://tunny-docs.deno.dev/
 
 ## :tropical_fish: Install
 
@@ -67,6 +62,12 @@ Please see PYTHON_PACKAGE_LICENSE for more license information.
 ### :speedboat: Quick usage
 
 https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-97b0-840a4f1f329c.mp4
+
+### :whale: More details
+
+Please see Tunny documentation page.
+
+- https://tunny-docs.deno.dev/
 
 ## :surfer: Contact information
 
