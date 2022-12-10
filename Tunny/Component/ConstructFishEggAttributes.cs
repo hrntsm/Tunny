@@ -28,9 +28,6 @@ namespace Tunny.Component
                             RenderInputComponentBoxes(graphics);
                         }
                         break;
-                    case GH_CanvasChannel.Objects:
-                        DrawObjects(canvas, graphics, channel);
-                        break;
                     case GH_CanvasChannel.Wires:
                         DrawWires(canvas, graphics);
                         break;
@@ -73,21 +70,6 @@ namespace Tunny.Component
                 graphics.DrawRectangle(edge, rectangle);
             }
 
-            private void DrawObjects(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
-            {
-                var fill = Color.FromArgb(Convert.ToInt32("FFFFA500", 16));
-                var edge = Color.FromArgb(Convert.ToInt32("FFA56800", 16));
-                GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
-                GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
-                GH_PaletteStyle hiddenStyle = GH_Skin.palette_hidden_standard;
-                GH_Skin.palette_normal_standard = new GH_PaletteStyle(fill, edge, Color.Black);
-                GH_Skin.palette_warning_standard = new GH_PaletteStyle(fill, edge, Color.Black);
-                GH_Skin.palette_hidden_standard = new GH_PaletteStyle(fill, edge, Color.Black);
-                base.Render(canvas, graphics, channel);
-                GH_Skin.palette_normal_standard = normalStyle;
-                GH_Skin.palette_warning_standard = warningStyle;
-                GH_Skin.palette_hidden_standard = hiddenStyle;
-            }
             private void DrawWires(GH_Canvas canvas, Graphics graphics)
             {
                 Wire[] wires = Owner.Attributes.Selected

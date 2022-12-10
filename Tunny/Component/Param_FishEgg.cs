@@ -19,7 +19,7 @@ namespace Tunny.Type
 
         protected override GH_GetterResult Prompt_Singular(ref GH_FishEgg value) => GH_GetterResult.success;
         protected override GH_GetterResult Prompt_Plural(ref List<GH_FishEgg> values) => GH_GetterResult.success;
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resources.Resource.ParamFishEgg;
         public override Guid ComponentGuid => new Guid("62103679-967c-4255-921f-a1300d6a3b25");
     }
 }

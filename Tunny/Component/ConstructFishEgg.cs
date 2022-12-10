@@ -15,7 +15,7 @@ namespace Tunny.Component
 
         public ConstructFishEgg()
           : base("Construct Fish Egg", "ConstrFEgg",
-            "Construct Fish Egg.",
+            "You can specify the initial individual that Tunny will run. Try your golden egg!",
             "Tunny", "Tunny")
         {
         }
@@ -88,7 +88,7 @@ namespace Tunny.Component
             m_attributes = new ConstructFishEggAttributes(this);
         }
 
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Resources.Resource.ConstructFishEgg;
         public override Guid ComponentGuid => new Guid("00CC0C86-687F-4A28-93CF-30A1E361A7D5");
     }
 }
