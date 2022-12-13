@@ -209,6 +209,8 @@ namespace Tunny.UI
                 RestartStrategy = cmaEsRestartCheckBox.Checked ? "ipop" : string.Empty,
                 IncPopsize = (int)cmaEsIncPopSizeUpDown.Value,
                 PopulationSize = cmaEsRestartCheckBox.Checked ? (int?)cmaEsPopulationSizeUpDown.Value : null,
+                UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked,
+                WarmStartStudyName = cmaEsWarmStartComboBox.Text
             };
         }
 
