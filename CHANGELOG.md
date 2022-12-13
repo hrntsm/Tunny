@@ -22,6 +22,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - For some reason, the installer may be launched every time even if it is installed, so it can be forcibly skipped in the settings.
 - FishEgg component
   - It is now possible to specify an individual of any variable and have it evaluated in the optimization first and foremost, rather than just setting up a variable completely by the sampler when conducting the optimization.
+- Warn start CMA-ES support
+  - The warm start CMA-ES setting has been added to the CMA-ES settings so that the information from the previous trials can be used.
 
 ### Changed
 
