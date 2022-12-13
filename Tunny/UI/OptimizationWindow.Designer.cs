@@ -112,6 +112,8 @@ namespace Tunny.UI
             this.nsgaCrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsgaMutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsWarmStartComboBox = new System.Windows.Forms.ComboBox();
+            this.cmaEsWarmStartCmaEsCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.cmaEsPopulationSizeLabel = new System.Windows.Forms.Label();
             this.cmaEsDefaultButton = new System.Windows.Forms.Button();
@@ -146,8 +148,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cmaEsWarmStartCmaEsCheckBox = new System.Windows.Forms.CheckBox();
-            this.cmaEsWarmStartComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -363,9 +363,9 @@ namespace Tunny.UI
             this.groupBox2.Controls.Add(this.continueStudyCheckBox);
             this.groupBox2.Controls.Add(this.studyNameTextBox);
             this.groupBox2.Location = new System.Drawing.Point(13, 100);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox2.Size = new System.Drawing.Size(260, 102);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
@@ -385,7 +385,7 @@ namespace Tunny.UI
             // 
             this.existingStudyComboBox.FormattingEnabled = true;
             this.existingStudyComboBox.Location = new System.Drawing.Point(135, 70);
-            this.existingStudyComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.existingStudyComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.existingStudyComboBox.Name = "existingStudyComboBox";
             this.existingStudyComboBox.Size = new System.Drawing.Size(121, 23);
             this.existingStudyComboBox.TabIndex = 13;
@@ -394,7 +394,7 @@ namespace Tunny.UI
             // 
             this.copyStudyCheckBox.AutoSize = true;
             this.copyStudyCheckBox.Location = new System.Drawing.Point(103, 46);
-            this.copyStudyCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.copyStudyCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.copyStudyCheckBox.Name = "copyStudyCheckBox";
             this.copyStudyCheckBox.Size = new System.Drawing.Size(55, 19);
             this.copyStudyCheckBox.TabIndex = 12;
@@ -459,7 +459,7 @@ namespace Tunny.UI
             this.visualizeIncludeDominatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.visualizeIncludeDominatedCheckBox.Enabled = false;
             this.visualizeIncludeDominatedCheckBox.Location = new System.Drawing.Point(17, 269);
-            this.visualizeIncludeDominatedCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeIncludeDominatedCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeIncludeDominatedCheckBox.Name = "visualizeIncludeDominatedCheckBox";
             this.visualizeIncludeDominatedCheckBox.Size = new System.Drawing.Size(255, 19);
             this.visualizeIncludeDominatedCheckBox.TabIndex = 27;
@@ -491,7 +491,7 @@ namespace Tunny.UI
             this.visualizeObjectiveListBox.FormattingEnabled = true;
             this.visualizeObjectiveListBox.ItemHeight = 15;
             this.visualizeObjectiveListBox.Location = new System.Drawing.Point(148, 133);
-            this.visualizeObjectiveListBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeObjectiveListBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
             this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
             this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
@@ -502,7 +502,7 @@ namespace Tunny.UI
             // 
             this.visualizeTargetStudyComboBox.FormattingEnabled = true;
             this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(123, 39);
-            this.visualizeTargetStudyComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeTargetStudyComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
             this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(145, 23);
             this.visualizeTargetStudyComboBox.TabIndex = 20;
@@ -533,7 +533,7 @@ namespace Tunny.UI
             this.visualizeVariableListBox.FormattingEnabled = true;
             this.visualizeVariableListBox.ItemHeight = 15;
             this.visualizeVariableListBox.Location = new System.Drawing.Point(17, 133);
-            this.visualizeVariableListBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeVariableListBox.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeVariableListBox.Name = "visualizeVariableListBox";
             this.visualizeVariableListBox.ScrollAlwaysVisible = true;
             this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
@@ -554,7 +554,7 @@ namespace Tunny.UI
             // 
             this.visualizeClusterNumUpDown.Enabled = false;
             this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(205, 239);
-            this.visualizeClusterNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeClusterNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeClusterNumUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -613,7 +613,7 @@ namespace Tunny.UI
             // visualizeSavePlotButton
             // 
             this.visualizeSavePlotButton.Location = new System.Drawing.Point(157, 203);
-            this.visualizeSavePlotButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.visualizeSavePlotButton.Margin = new System.Windows.Forms.Padding(2);
             this.visualizeSavePlotButton.Name = "visualizeSavePlotButton";
             this.visualizeSavePlotButton.Size = new System.Drawing.Size(110, 23);
             this.visualizeSavePlotButton.TabIndex = 3;
@@ -631,9 +631,9 @@ namespace Tunny.UI
             this.outputTabPage.Controls.Add(this.outputStopButton);
             this.outputTabPage.Controls.Add(this.outputProgressBar);
             this.outputTabPage.Location = new System.Drawing.Point(4, 24);
-            this.outputTabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.outputTabPage.Margin = new System.Windows.Forms.Padding(2);
             this.outputTabPage.Name = "outputTabPage";
-            this.outputTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.outputTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.outputTabPage.Size = new System.Drawing.Size(277, 289);
             this.outputTabPage.TabIndex = 3;
             this.outputTabPage.Text = "Output";
@@ -645,9 +645,9 @@ namespace Tunny.UI
             this.outputUseModelNumberGroupBox.Controls.Add(this.outputModelNumberButton);
             this.outputUseModelNumberGroupBox.Controls.Add(this.reflectToSliderButton);
             this.outputUseModelNumberGroupBox.Location = new System.Drawing.Point(5, 97);
-            this.outputUseModelNumberGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.outputUseModelNumberGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.outputUseModelNumberGroupBox.Name = "outputUseModelNumberGroupBox";
-            this.outputUseModelNumberGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.outputUseModelNumberGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.outputUseModelNumberGroupBox.Size = new System.Drawing.Size(262, 135);
             this.outputUseModelNumberGroupBox.TabIndex = 21;
             this.outputUseModelNumberGroupBox.TabStop = false;
@@ -685,7 +685,7 @@ namespace Tunny.UI
             // 
             this.outputTargetStudyComboBox.FormattingEnabled = true;
             this.outputTargetStudyComboBox.Location = new System.Drawing.Point(113, 16);
-            this.outputTargetStudyComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.outputTargetStudyComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.outputTargetStudyComboBox.Name = "outputTargetStudyComboBox";
             this.outputTargetStudyComboBox.Size = new System.Drawing.Size(148, 23);
             this.outputTargetStudyComboBox.TabIndex = 20;
@@ -758,7 +758,7 @@ namespace Tunny.UI
             this.settingsTabControl.Controls.Add(this.QMC);
             this.settingsTabControl.Controls.Add(this.tabPage1);
             this.settingsTabControl.Location = new System.Drawing.Point(2, 2);
-            this.settingsTabControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.settingsTabControl.Margin = new System.Windows.Forms.Padding(2);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
             this.settingsTabControl.Size = new System.Drawing.Size(276, 286);
@@ -781,9 +781,9 @@ namespace Tunny.UI
             this.TPE.Controls.Add(this.tpeConsiderMagicClipCheckBox);
             this.TPE.Controls.Add(this.tpeConsiderPriorCheckBox);
             this.TPE.Location = new System.Drawing.Point(4, 24);
-            this.TPE.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TPE.Margin = new System.Windows.Forms.Padding(2);
             this.TPE.Name = "TPE";
-            this.TPE.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TPE.Padding = new System.Windows.Forms.Padding(2);
             this.TPE.Size = new System.Drawing.Size(268, 258);
             this.TPE.TabIndex = 0;
             this.TPE.Text = "TPE";
@@ -792,7 +792,7 @@ namespace Tunny.UI
             // tpeDefaultButton
             // 
             this.tpeDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.tpeDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.tpeDefaultButton.Name = "tpeDefaultButton";
             this.tpeDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.tpeDefaultButton.TabIndex = 13;
@@ -838,7 +838,7 @@ namespace Tunny.UI
             // tpeEINumUpDown
             // 
             this.tpeEINumUpDown.Location = new System.Drawing.Point(204, 28);
-            this.tpeEINumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeEINumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.tpeEINumUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -856,7 +856,7 @@ namespace Tunny.UI
             // tpeStartupNumUpDown
             // 
             this.tpeStartupNumUpDown.Location = new System.Drawing.Point(204, 4);
-            this.tpeStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.tpeStartupNumUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -885,7 +885,7 @@ namespace Tunny.UI
             0,
             65536});
             this.tpePriorNumUpDown.Location = new System.Drawing.Point(204, 52);
-            this.tpePriorNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpePriorNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.tpePriorNumUpDown.Name = "tpePriorNumUpDown";
             this.tpePriorNumUpDown.Size = new System.Drawing.Size(63, 23);
             this.tpePriorNumUpDown.TabIndex = 7;
@@ -899,7 +899,7 @@ namespace Tunny.UI
             // 
             this.tpeConstantLiarCheckBox.AutoSize = true;
             this.tpeConstantLiarCheckBox.Location = new System.Drawing.Point(161, 135);
-            this.tpeConstantLiarCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeConstantLiarCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeConstantLiarCheckBox.Name = "tpeConstantLiarCheckBox";
             this.tpeConstantLiarCheckBox.Size = new System.Drawing.Size(104, 19);
             this.tpeConstantLiarCheckBox.TabIndex = 6;
@@ -914,7 +914,7 @@ namespace Tunny.UI
             this.tpeWarnIndependentSamplingCheckBox.Checked = true;
             this.tpeWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tpeWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(3, 159);
-            this.tpeWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeWarnIndependentSamplingCheckBox.Name = "tpeWarnIndependentSamplingCheckBox";
             this.tpeWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(191, 19);
             this.tpeWarnIndependentSamplingCheckBox.TabIndex = 5;
@@ -928,7 +928,7 @@ namespace Tunny.UI
             // 
             this.tpeGroupCheckBox.AutoSize = true;
             this.tpeGroupCheckBox.Location = new System.Drawing.Point(161, 113);
-            this.tpeGroupCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeGroupCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeGroupCheckBox.Name = "tpeGroupCheckBox";
             this.tpeGroupCheckBox.Size = new System.Drawing.Size(61, 19);
             this.tpeGroupCheckBox.TabIndex = 4;
@@ -943,7 +943,7 @@ namespace Tunny.UI
             this.tpeMultivariateCheckBox.Checked = true;
             this.tpeMultivariateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tpeMultivariateCheckBox.Location = new System.Drawing.Point(161, 91);
-            this.tpeMultivariateCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeMultivariateCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeMultivariateCheckBox.Name = "tpeMultivariateCheckBox";
             this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(95, 19);
             this.tpeMultivariateCheckBox.TabIndex = 3;
@@ -956,7 +956,7 @@ namespace Tunny.UI
             // 
             this.tpeConsiderEndpointsCheckBox.AutoSize = true;
             this.tpeConsiderEndpointsCheckBox.Location = new System.Drawing.Point(3, 113);
-            this.tpeConsiderEndpointsCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeConsiderEndpointsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeConsiderEndpointsCheckBox.Name = "tpeConsiderEndpointsCheckBox";
             this.tpeConsiderEndpointsCheckBox.Size = new System.Drawing.Size(136, 19);
             this.tpeConsiderEndpointsCheckBox.TabIndex = 2;
@@ -971,7 +971,7 @@ namespace Tunny.UI
             this.tpeConsiderMagicClipCheckBox.Checked = true;
             this.tpeConsiderMagicClipCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tpeConsiderMagicClipCheckBox.Location = new System.Drawing.Point(3, 135);
-            this.tpeConsiderMagicClipCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeConsiderMagicClipCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeConsiderMagicClipCheckBox.Name = "tpeConsiderMagicClipCheckBox";
             this.tpeConsiderMagicClipCheckBox.Size = new System.Drawing.Size(138, 19);
             this.tpeConsiderMagicClipCheckBox.TabIndex = 1;
@@ -986,7 +986,7 @@ namespace Tunny.UI
             this.tpeConsiderPriorCheckBox.Checked = true;
             this.tpeConsiderPriorCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tpeConsiderPriorCheckBox.Location = new System.Drawing.Point(3, 91);
-            this.tpeConsiderPriorCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tpeConsiderPriorCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.tpeConsiderPriorCheckBox.Name = "tpeConsiderPriorCheckBox";
             this.tpeConsiderPriorCheckBox.Size = new System.Drawing.Size(107, 19);
             this.tpeConsiderPriorCheckBox.TabIndex = 0;
@@ -1001,9 +1001,9 @@ namespace Tunny.UI
             this.GP.Controls.Add(this.boTorchNStartupTrialsLabel);
             this.GP.Controls.Add(this.boTorchStartupNumUpDown);
             this.GP.Location = new System.Drawing.Point(4, 24);
-            this.GP.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GP.Margin = new System.Windows.Forms.Padding(2);
             this.GP.Name = "GP";
-            this.GP.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GP.Padding = new System.Windows.Forms.Padding(2);
             this.GP.Size = new System.Drawing.Size(268, 258);
             this.GP.TabIndex = 1;
             this.GP.Text = "GP";
@@ -1012,7 +1012,7 @@ namespace Tunny.UI
             // boTorchDefaultButton
             // 
             this.boTorchDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.boTorchDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.boTorchDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.boTorchDefaultButton.Name = "boTorchDefaultButton";
             this.boTorchDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.boTorchDefaultButton.TabIndex = 14;
@@ -1036,7 +1036,7 @@ namespace Tunny.UI
             // boTorchStartupNumUpDown
             // 
             this.boTorchStartupNumUpDown.Location = new System.Drawing.Point(204, 4);
-            this.boTorchStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.boTorchStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.boTorchStartupNumUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -1070,7 +1070,7 @@ namespace Tunny.UI
             this.NSGAII.Controls.Add(this.nsgaCrossoverProbUpDown);
             this.NSGAII.Controls.Add(this.nsgaMutationProbUpDown);
             this.NSGAII.Location = new System.Drawing.Point(4, 24);
-            this.NSGAII.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.NSGAII.Margin = new System.Windows.Forms.Padding(2);
             this.NSGAII.Name = "NSGAII";
             this.NSGAII.Size = new System.Drawing.Size(268, 258);
             this.NSGAII.TabIndex = 3;
@@ -1098,7 +1098,7 @@ namespace Tunny.UI
             // 
             this.nsgaCrossoverCheckBox.AutoSize = true;
             this.nsgaCrossoverCheckBox.Location = new System.Drawing.Point(9, 103);
-            this.nsgaCrossoverCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaCrossoverCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaCrossoverCheckBox.Name = "nsgaCrossoverCheckBox";
             this.nsgaCrossoverCheckBox.Size = new System.Drawing.Size(84, 19);
             this.nsgaCrossoverCheckBox.TabIndex = 24;
@@ -1110,7 +1110,7 @@ namespace Tunny.UI
             // nsgaDefaultButton
             // 
             this.nsgaDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.nsgaDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaDefaultButton.Name = "nsgaDefaultButton";
             this.nsgaDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.nsgaDefaultButton.TabIndex = 23;
@@ -1123,7 +1123,7 @@ namespace Tunny.UI
             // 
             this.nsgaMutationProbCheckBox.AutoSize = true;
             this.nsgaMutationProbCheckBox.Location = new System.Drawing.Point(9, 5);
-            this.nsgaMutationProbCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaMutationProbCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaMutationProbCheckBox.Name = "nsgaMutationProbCheckBox";
             this.nsgaMutationProbCheckBox.Size = new System.Drawing.Size(142, 19);
             this.nsgaMutationProbCheckBox.TabIndex = 22;
@@ -1146,7 +1146,7 @@ namespace Tunny.UI
             // nsgaPopulationSizeUpDown
             // 
             this.nsgaPopulationSizeUpDown.Location = new System.Drawing.Point(206, 77);
-            this.nsgaPopulationSizeUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaPopulationSizeUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaPopulationSizeUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -1186,7 +1186,7 @@ namespace Tunny.UI
             0,
             131072});
             this.nsgaSwappingProbUpDown.Location = new System.Drawing.Point(206, 53);
-            this.nsgaSwappingProbUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaSwappingProbUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaSwappingProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1222,7 +1222,7 @@ namespace Tunny.UI
             0,
             131072});
             this.nsgaCrossoverProbUpDown.Location = new System.Drawing.Point(206, 29);
-            this.nsgaCrossoverProbUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaCrossoverProbUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaCrossoverProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1247,7 +1247,7 @@ namespace Tunny.UI
             0,
             131072});
             this.nsgaMutationProbUpDown.Location = new System.Drawing.Point(206, 5);
-            this.nsgaMutationProbUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nsgaMutationProbUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.nsgaMutationProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1275,18 +1275,38 @@ namespace Tunny.UI
             this.CMAES.Controls.Add(this.cmaEsSigmaCheckBox);
             this.CMAES.Controls.Add(this.cmaEsSigmaNumUpDown);
             this.CMAES.Location = new System.Drawing.Point(4, 24);
-            this.CMAES.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CMAES.Margin = new System.Windows.Forms.Padding(2);
             this.CMAES.Name = "CMAES";
             this.CMAES.Size = new System.Drawing.Size(268, 258);
             this.CMAES.TabIndex = 2;
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
             // 
+            // cmaEsWarmStartComboBox
+            // 
+            this.cmaEsWarmStartComboBox.Enabled = false;
+            this.cmaEsWarmStartComboBox.FormattingEnabled = true;
+            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(146, 206);
+            this.cmaEsWarmStartComboBox.Name = "cmaEsWarmStartComboBox";
+            this.cmaEsWarmStartComboBox.Size = new System.Drawing.Size(121, 23);
+            this.cmaEsWarmStartComboBox.TabIndex = 37;
+            // 
+            // cmaEsWarmStartCmaEsCheckBox
+            // 
+            this.cmaEsWarmStartCmaEsCheckBox.AutoSize = true;
+            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(7, 190);
+            this.cmaEsWarmStartCmaEsCheckBox.Name = "cmaEsWarmStartCmaEsCheckBox";
+            this.cmaEsWarmStartCmaEsCheckBox.Size = new System.Drawing.Size(145, 19);
+            this.cmaEsWarmStartCmaEsCheckBox.TabIndex = 36;
+            this.cmaEsWarmStartCmaEsCheckBox.Text = "Warm Start CMA-ES";
+            this.cmaEsWarmStartCmaEsCheckBox.UseVisualStyleBackColor = true;
+            this.cmaEsWarmStartCmaEsCheckBox.CheckedChanged += new System.EventHandler(this.CmaEsWarmStartCmaEsCheckBox_CheckedChanged);
+            // 
             // cmaEsPopulationSizeUpDown
             // 
             this.cmaEsPopulationSizeUpDown.Enabled = false;
             this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(206, 138);
-            this.cmaEsPopulationSizeUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsPopulationSizeUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1316,7 +1336,7 @@ namespace Tunny.UI
             // cmaEsDefaultButton
             // 
             this.cmaEsDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.cmaEsDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsDefaultButton.Name = "cmaEsDefaultButton";
             this.cmaEsDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.cmaEsDefaultButton.TabIndex = 33;
@@ -1329,7 +1349,7 @@ namespace Tunny.UI
             // 
             this.cmaEsRestartCheckBox.AutoSize = true;
             this.cmaEsRestartCheckBox.Location = new System.Drawing.Point(7, 116);
-            this.cmaEsRestartCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsRestartCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsRestartCheckBox.Name = "cmaEsRestartCheckBox";
             this.cmaEsRestartCheckBox.Size = new System.Drawing.Size(120, 19);
             this.cmaEsRestartCheckBox.TabIndex = 32;
@@ -1343,7 +1363,7 @@ namespace Tunny.UI
             // 
             this.cmaEsUseSaparableCmaCheckBox.AutoSize = true;
             this.cmaEsUseSaparableCmaCheckBox.Location = new System.Drawing.Point(7, 93);
-            this.cmaEsUseSaparableCmaCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsUseSaparableCmaCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsUseSaparableCmaCheckBox.Name = "cmaEsUseSaparableCmaCheckBox";
             this.cmaEsUseSaparableCmaCheckBox.Size = new System.Drawing.Size(140, 19);
             this.cmaEsUseSaparableCmaCheckBox.TabIndex = 31;
@@ -1366,7 +1386,7 @@ namespace Tunny.UI
             // cmaEsStartupNumUpDown
             // 
             this.cmaEsStartupNumUpDown.Location = new System.Drawing.Point(206, 3);
-            this.cmaEsStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsStartupNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsStartupNumUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -1390,7 +1410,7 @@ namespace Tunny.UI
             // 
             this.cmaEsConsiderPruneTrialsCheckBox.AutoSize = true;
             this.cmaEsConsiderPruneTrialsCheckBox.Location = new System.Drawing.Point(7, 71);
-            this.cmaEsConsiderPruneTrialsCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsConsiderPruneTrialsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsConsiderPruneTrialsCheckBox.Name = "cmaEsConsiderPruneTrialsCheckBox";
             this.cmaEsConsiderPruneTrialsCheckBox.Size = new System.Drawing.Size(155, 19);
             this.cmaEsConsiderPruneTrialsCheckBox.TabIndex = 28;
@@ -1404,7 +1424,7 @@ namespace Tunny.UI
             this.cmaEsWarnIndependentSamplingCheckBox.Checked = true;
             this.cmaEsWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(7, 49);
-            this.cmaEsWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsWarnIndependentSamplingCheckBox.Name = "cmaEsWarnIndependentSamplingCheckBox";
             this.cmaEsWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(191, 19);
             this.cmaEsWarnIndependentSamplingCheckBox.TabIndex = 27;
@@ -1428,7 +1448,7 @@ namespace Tunny.UI
             // 
             this.cmaEsIncPopSizeUpDown.Enabled = false;
             this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(206, 162);
-            this.cmaEsIncPopSizeUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsIncPopSizeUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsIncPopSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1447,7 +1467,7 @@ namespace Tunny.UI
             // 
             this.cmaEsSigmaCheckBox.AutoSize = true;
             this.cmaEsSigmaCheckBox.Location = new System.Drawing.Point(7, 26);
-            this.cmaEsSigmaCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsSigmaCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsSigmaCheckBox.Name = "cmaEsSigmaCheckBox";
             this.cmaEsSigmaCheckBox.Size = new System.Drawing.Size(70, 19);
             this.cmaEsSigmaCheckBox.TabIndex = 24;
@@ -1468,7 +1488,7 @@ namespace Tunny.UI
             0,
             131072});
             this.cmaEsSigmaNumUpDown.Location = new System.Drawing.Point(206, 25);
-            this.cmaEsSigmaNumUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmaEsSigmaNumUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.cmaEsSigmaNumUpDown.Name = "cmaEsSigmaNumUpDown";
             this.cmaEsSigmaNumUpDown.Size = new System.Drawing.Size(63, 23);
             this.cmaEsSigmaNumUpDown.TabIndex = 23;
@@ -1482,7 +1502,7 @@ namespace Tunny.UI
             this.QMC.Controls.Add(this.qmcScrambleCheckBox);
             this.QMC.Controls.Add(this.qmcWarnIndependentSamplingCheckBox);
             this.QMC.Location = new System.Drawing.Point(4, 24);
-            this.QMC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.QMC.Margin = new System.Windows.Forms.Padding(2);
             this.QMC.Name = "QMC";
             this.QMC.Size = new System.Drawing.Size(268, 258);
             this.QMC.TabIndex = 4;
@@ -1492,7 +1512,7 @@ namespace Tunny.UI
             // qmcDefaultButton
             // 
             this.qmcDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.qmcDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.qmcDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.qmcDefaultButton.Name = "qmcDefaultButton";
             this.qmcDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.qmcDefaultButton.TabIndex = 33;
@@ -1531,7 +1551,7 @@ namespace Tunny.UI
             this.qmcWarnAsyncSeedingCheckBox.Checked = true;
             this.qmcWarnAsyncSeedingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.qmcWarnAsyncSeedingCheckBox.Location = new System.Drawing.Point(5, 81);
-            this.qmcWarnAsyncSeedingCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.qmcWarnAsyncSeedingCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.qmcWarnAsyncSeedingCheckBox.Name = "qmcWarnAsyncSeedingCheckBox";
             this.qmcWarnAsyncSeedingCheckBox.Size = new System.Drawing.Size(190, 19);
             this.qmcWarnAsyncSeedingCheckBox.TabIndex = 30;
@@ -1545,7 +1565,7 @@ namespace Tunny.UI
             // 
             this.qmcScrambleCheckBox.AutoSize = true;
             this.qmcScrambleCheckBox.Location = new System.Drawing.Point(5, 37);
-            this.qmcScrambleCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.qmcScrambleCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.qmcScrambleCheckBox.Name = "qmcScrambleCheckBox";
             this.qmcScrambleCheckBox.Size = new System.Drawing.Size(81, 19);
             this.qmcScrambleCheckBox.TabIndex = 29;
@@ -1560,7 +1580,7 @@ namespace Tunny.UI
             this.qmcWarnIndependentSamplingCheckBox.Checked = true;
             this.qmcWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.qmcWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(5, 59);
-            this.qmcWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.qmcWarnIndependentSamplingCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.qmcWarnIndependentSamplingCheckBox.Name = "qmcWarnIndependentSamplingCheckBox";
             this.qmcWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(191, 19);
             this.qmcWarnIndependentSamplingCheckBox.TabIndex = 28;
@@ -1575,9 +1595,9 @@ namespace Tunny.UI
             this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.runGarbageCollectionLabel);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(268, 258);
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "Misc";
@@ -1586,7 +1606,7 @@ namespace Tunny.UI
             // miscDefaultButton
             // 
             this.miscDefaultButton.Location = new System.Drawing.Point(200, 233);
-            this.miscDefaultButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.miscDefaultButton.Margin = new System.Windows.Forms.Padding(2);
             this.miscDefaultButton.Name = "miscDefaultButton";
             this.miscDefaultButton.Size = new System.Drawing.Size(67, 25);
             this.miscDefaultButton.TabIndex = 36;
@@ -1624,9 +1644,9 @@ namespace Tunny.UI
             this.fileTabPage.Controls.Add(this.groupBox1);
             this.fileTabPage.Controls.Add(this.licenseGroupBox);
             this.fileTabPage.Location = new System.Drawing.Point(4, 24);
-            this.fileTabPage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.fileTabPage.Margin = new System.Windows.Forms.Padding(2);
             this.fileTabPage.Name = "fileTabPage";
-            this.fileTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.fileTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.fileTabPage.Size = new System.Drawing.Size(277, 289);
             this.fileTabPage.TabIndex = 4;
             this.fileTabPage.Text = "File";
@@ -1638,9 +1658,9 @@ namespace Tunny.UI
             this.groupBox1.Controls.Add(this.clearResultButton);
             this.groupBox1.Controls.Add(this.openResultFolderButton);
             this.groupBox1.Location = new System.Drawing.Point(15, 4);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(252, 133);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
@@ -1684,9 +1704,9 @@ namespace Tunny.UI
             this.licenseGroupBox.Controls.Add(this.showThirdPartyLicenseButton);
             this.licenseGroupBox.Controls.Add(this.showTunnyLicenseButton);
             this.licenseGroupBox.Location = new System.Drawing.Point(15, 157);
-            this.licenseGroupBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.licenseGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.licenseGroupBox.Name = "licenseGroupBox";
-            this.licenseGroupBox.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.licenseGroupBox.Padding = new System.Windows.Forms.Padding(2);
             this.licenseGroupBox.Size = new System.Drawing.Size(252, 121);
             this.licenseGroupBox.TabIndex = 8;
             this.licenseGroupBox.TabStop = false;
@@ -1713,24 +1733,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.Text = "Show Tunny License";
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
-            // 
-            // cmaEsWarmStartCmaEsCheckBox
-            // 
-            this.cmaEsWarmStartCmaEsCheckBox.AutoSize = true;
-            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(7, 190);
-            this.cmaEsWarmStartCmaEsCheckBox.Name = "cmaEsWarmStartCmaEsCheckBox";
-            this.cmaEsWarmStartCmaEsCheckBox.Size = new System.Drawing.Size(145, 19);
-            this.cmaEsWarmStartCmaEsCheckBox.TabIndex = 36;
-            this.cmaEsWarmStartCmaEsCheckBox.Text = "Warm Start CMA-ES";
-            this.cmaEsWarmStartCmaEsCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // cmaEsWarmStartComboBox
-            // 
-            this.cmaEsWarmStartComboBox.FormattingEnabled = true;
-            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(146, 206);
-            this.cmaEsWarmStartComboBox.Name = "cmaEsWarmStartComboBox";
-            this.cmaEsWarmStartComboBox.Size = new System.Drawing.Size(121, 23);
-            this.cmaEsWarmStartComboBox.TabIndex = 37;
             // 
             // OptimizationWindow
             // 
