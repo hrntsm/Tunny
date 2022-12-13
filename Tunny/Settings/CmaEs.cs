@@ -14,5 +14,7 @@ namespace Tunny.Settings
         public int IncPopsize { get; set; } = 2;
         public int? PopulationSize { get; set; }
         public bool UseSeparableCma { get; set; }
+        public bool UseWarmStart { get; set; }
+        public string WarmStartStudyName { get; set; } = string.Empty;
     }
 }
