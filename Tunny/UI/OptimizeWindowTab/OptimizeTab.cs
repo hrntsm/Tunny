@@ -183,13 +183,11 @@ namespace Tunny.UI
             {
                 string[] studyNames = _summaries.Select(summary => summary.StudyName).ToArray();
                 existingStudyComboBox.Items.AddRange(studyNames);
+                cmaEsWarmStartComboBox.Items.AddRange(studyNames);
                 UpdateExistingStudyComboBox();
 
                 visualizeTargetStudyComboBox.Items.AddRange(studyNames);
                 UpdateVisualizeTargetStudyComboBox();
-
-                cmaEsWarmStartComboBox.Items.AddRange(studyNames);
-                UpdateCmaEsWarmStartComboBox();
 
                 outputTargetStudyComboBox.Items.AddRange(studyNames);
 
@@ -199,19 +197,6 @@ namespace Tunny.UI
                 }
 
                 UpdateVisualizeListBox();
-            }
-        }
-
-        private void UpdateCmaEsWarmStartComboBox()
-        {
-            if (cmaEsWarmStartComboBox.Items.Count > 0 && cmaEsWarmStartComboBox.Items.Count - 1 < cmaEsWarmStartComboBox.SelectedIndex)
-            {
-                cmaEsWarmStartComboBox.SelectedIndex = 0;
-            }
-            else if (cmaEsWarmStartComboBox.Items.Count == 0)
-            {
-                cmaEsWarmStartComboBox.Text = string.Empty;
-                cmaEsWarmStartCmaEsCheckBox.Checked = false;
             }
         }
 
@@ -232,11 +217,14 @@ namespace Tunny.UI
             if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
             {
                 existingStudyComboBox.SelectedIndex = 0;
+                cmaEsWarmStartComboBox.SelectedIndex = 0;
             }
             else if (existingStudyComboBox.Items.Count == 0)
             {
                 existingStudyComboBox.Text = string.Empty;
                 continueStudyCheckBox.Checked = false;
+                cmaEsWarmStartComboBox.Text = string.Empty;
+                cmaEsWarmStartCmaEsCheckBox.Checked = false;
             }
         }
 
