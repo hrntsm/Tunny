@@ -40,6 +40,12 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Fixed
 
+- Even if there was an error in the input to the Tunny component, a window could be launched and the button to perform optimization could be pressed, so we made sure that this would not happen.
+  - Subject to the following.
+    - No input for variable and objective.
+    - The name of the objective is not unique.
+    - Multiple items entered in Attr.
+
 ### Security
 
 ## [0.5.0] -2022-09-03
