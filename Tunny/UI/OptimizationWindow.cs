@@ -29,9 +29,19 @@ namespace Tunny.UI
 
             _component = component;
             _component.GhInOutInstantiate();
+            if (!_component.GhInOut.IsLoadCorrectly)
+            {
+                FormClosingXButton(this, null);
+            }
             LoadSettingJson();
             InitializeUIValues();
+            RunPythonInstaller();
+            SetOptimizeBackgroundWorker();
+            SetOutputResultBackgroundWorker();
+        }
 
+        private void RunPythonInstaller()
+        {
             PythonInstaller.Path = _component.GhInOut.ComponentFolder;
             if (_settings.CheckPythonLibraries && !PythonInstaller.CheckPackagesIsInstalled())
             {
@@ -41,13 +51,19 @@ namespace Tunny.UI
                 };
                 installer.Show(Owner);
             }
+        }
 
+        private void SetOptimizeBackgroundWorker()
+        {
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
             optimizeBackgroundWorker.WorkerReportsProgress = true;
             optimizeBackgroundWorker.WorkerSupportsCancellation = true;
+        }
 
+        private void SetOutputResultBackgroundWorker()
+        {
             outputResultBackgroundWorker.DoWork += OutputLoop.Run;
             outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
             outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;

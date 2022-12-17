@@ -80,6 +80,10 @@ namespace Tunny.Component
 
         private void ShowOptimizationWindow()
         {
+            if (!GhInOut.IsLoadCorrectly)
+            {
+                return;
+            }
             GH_DocumentEditor owner = Instances.DocumentEditor;
 
             if (OptimizationWindow == null || OptimizationWindow.IsDisposed)

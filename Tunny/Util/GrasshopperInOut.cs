@@ -11,7 +11,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -33,6 +32,7 @@ namespace Tunny.Util
         public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
+        public bool IsLoadCorrectly { get; set; }
 
         public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)
         {
@@ -40,6 +40,7 @@ namespace Tunny.Util
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
             _document = _component.OnPingDocument();
             _inputGuids = new List<Guid>();
+
             if (getVariableOnly)
             {
                 SetVariables();
@@ -47,7 +48,7 @@ namespace Tunny.Util
             else
             {
                 SetVariables();
-                SetObjectives();
+                IsLoadCorrectly = SetObjectives();
                 SetAttributes();
             }
         }
@@ -185,12 +186,12 @@ namespace Tunny.Util
             }
         }
 
-        private void SetObjectives()
+        private bool SetObjectives()
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
                 TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             var noNumberObjectives = new List<IGH_Param>();
@@ -205,11 +206,12 @@ namespace Tunny.Util
             if (noNumberObjectives.Count > 0)
             {
                 ShowIncorrectObjectiveInputMessage(noNumberObjectives);
-                return;
+                return false;
             }
 
-            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return; }
+            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return false; }
             Objectives = _component.Params.Input[1].Sources.ToList();
+            return true;
         }
 
         private static bool CheckObjectiveNicknameDuplication(IGH_Param[] objectives)
