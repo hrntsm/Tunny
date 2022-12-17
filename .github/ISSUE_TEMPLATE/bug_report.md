@@ -31,6 +31,7 @@ If applicable, add screenshots to help explain your problem.
 
 - OS: [e.g. Windows]
 - Rhino Version [e.g. v7.14]
+- Tunny Version [e.g. v0.5.0]
 
 ## Additional context
 

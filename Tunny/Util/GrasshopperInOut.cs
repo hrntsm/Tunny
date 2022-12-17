@@ -11,7 +11,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -33,6 +32,7 @@ namespace Tunny.Util
         public bool HasConstraint { get; set; }
         public string DocumentPath { get; set; }
         public string DocumentName { get; set; }
+        public bool IsLoadCorrectly { get; set; }
 
         public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)
         {
@@ -40,19 +40,13 @@ namespace Tunny.Util
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
             _document = _component.OnPingDocument();
             _inputGuids = new List<Guid>();
-            if (getVariableOnly)
-            {
-                SetVariables();
-            }
-            else
-            {
-                SetVariables();
-                SetObjectives();
-                SetAttributes();
-            }
+
+            IsLoadCorrectly = getVariableOnly
+                ? SetVariables()
+                : SetVariables() && SetObjectives() && SetAttributes();
         }
 
-        private void SetVariables()
+        private bool SetVariables()
         {
             Sliders = new List<GH_NumberSlider>();
             _genePool = new List<GalapagosGeneListObject>();
@@ -60,20 +54,21 @@ namespace Tunny.Util
             _inputGuids.AddRange(_component.Params.Input[0].Sources.Select(source => source.InstanceGuid));
             if (_inputGuids.Count == 0)
             {
-                TunnyMessageBox.Show("No input variables found. Please connect a number slider to the input of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                TunnyMessageBox.Show("No input variables found. \nPlease connect a number slider to the input of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
             var variables = new List<Variable>();
-            FilterInputVariables();
+            if (!FilterInputVariables()) { return false; }
             SetInputSliderValues(variables);
             SetInputGenePoolValues(variables);
             Variables = variables;
+            return true;
         }
 
-        private void FilterInputVariables()
+        private bool FilterInputVariables()
         {
-            var errorGuids = new List<Guid>();
+            var errorInputGuids = new List<Guid>();
             foreach ((IGH_DocumentObject docObject, int i) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, false), i)))
             {
                 switch (docObject)
@@ -89,22 +84,19 @@ namespace Tunny.Util
                         EnqueueItems = ghFishEgg.Value;
                         break;
                     default:
-                        errorGuids.Add(docObject.InstanceGuid);
+                        errorInputGuids.Add(docObject.InstanceGuid);
                         break;
                 }
             }
-            CheckHasIncorrectVariableInput(errorGuids);
+            return CheckHasIncorrectVariableInput(errorInputGuids);
         }
 
-        private void CheckHasIncorrectVariableInput(List<Guid> errorGuids)
+        private bool CheckHasIncorrectVariableInput(List<Guid> errorInputGuids)
         {
-            if (errorGuids.Count > 0)
-            {
-                ShowIncorrectVariableInputMessage(errorGuids);
-            }
+            return errorInputGuids.Count <= 0 || ShowIncorrectVariableInputMessage(errorInputGuids);
         }
 
-        private void ShowIncorrectVariableInputMessage(List<Guid> errorGuids)
+        private bool ShowIncorrectVariableInputMessage(List<Guid> errorGuids)
         {
             TunnyMessageBox.Show("Input variables must be either a number slider or a gene pool.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             foreach (Guid guid in errorGuids)
@@ -112,6 +104,7 @@ namespace Tunny.Util
                 _component.Params.Input[0].RemoveSource(guid);
             }
             _component.ExpireSolution(true);
+            return false;
         }
 
         private void SetInputSliderValues(ICollection<Variable> variables)
@@ -185,12 +178,12 @@ namespace Tunny.Util
             }
         }
 
-        private void SetObjectives()
+        private bool SetObjectives()
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
-                TunnyMessageBox.Show("No objective found. Please connect a number to the objective of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                TunnyMessageBox.Show("No objective found.\nPlease connect a number to the objective of the component.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
             var noNumberObjectives = new List<IGH_Param>();
@@ -205,11 +198,12 @@ namespace Tunny.Util
             if (noNumberObjectives.Count > 0)
             {
                 ShowIncorrectObjectiveInputMessage(noNumberObjectives);
-                return;
+                return false;
             }
 
-            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return; }
+            if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return false; }
             Objectives = _component.Params.Input[1].Sources.ToList();
+            return true;
         }
 
         private static bool CheckObjectiveNicknameDuplication(IGH_Param[] objectives)
@@ -233,17 +227,16 @@ namespace Tunny.Util
             _component.ExpireSolution(true);
         }
 
-        private void SetAttributes()
+        private bool SetAttributes()
         {
             _attributes = new GH_FishAttribute();
             if (_component.Params.Input[2].SourceCount == 0)
             {
-                return;
+                return true;
             }
-            else if (_component.Params.Input[2].SourceCount >= 2)
+            else if (_component.Params.Input[2].SourceCount >= 2 || _component.Params.Input[2].VolatileDataCount > 1)
             {
-                ShowIncorrectAttributeInputMessage();
-                return;
+                return ShowIncorrectAttributeInputMessage();
             }
 
             IGH_StructureEnumerator enumerator = _component.Params.Input[2].Sources[0].VolatileData.AllData(true);
@@ -256,16 +249,13 @@ namespace Tunny.Util
                     break;
                 }
             }
+            return true;
         }
 
-        private void ShowIncorrectAttributeInputMessage()
+        private static bool ShowIncorrectAttributeInputMessage()
         {
-            TunnyMessageBox.Show("Inputs to Attribute should be grouped together into a single input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            while (_component.Params.Input[2].SourceCount > 1)
-            {
-                _component.Params.Input[2].RemoveSource(_component.Params.Input[2].Sources[1]);
-            }
-            _component.ExpireSolution(true);
+            TunnyMessageBox.Show("Inputs to Attribute should be grouped together into one FishAttribute.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
 
         private bool SetSliderValues(IList<decimal> parameters)
@@ -344,7 +334,7 @@ namespace Tunny.Util
                 if (ghEnumerator.Count() > 1)
                 {
                     TunnyMessageBox.Show(
-                        "Tunny doesn't handle list output.\n Separate each objective if you want multiple objectives",
+                        "Tunny doesn't handle list output.\nSeparate each objective if you want multiple objectives",
                         "Tunny",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
@@ -387,7 +377,6 @@ namespace Tunny.Util
 
             return json;
         }
-
 
         public Dictionary<string, List<string>> GetAttributes()
         {
