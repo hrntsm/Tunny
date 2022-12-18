@@ -33,6 +33,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Study Create, Continue, and Copy are now clearly separated in the UI.
 - Update visualize & output UI
   - Previously, the target study and objective function, variables could not be specified, but now they can be specified.
+- Update optuna-dashboard to 0.8.0
 
 ### Deprecated
 
@@ -47,6 +48,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
     - Multiple items entered in Attr.
 
 ### Security
+
+- Bump joblib from 1.1.0 to 1.2.0 in /Tunny/Lib
+- Bump mako from 1.2.0 to 1.2.2 in /Tunny/Lib
 
 ## [0.5.0] -2022-09-03
 
