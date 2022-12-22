@@ -37,6 +37,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Deprecated
 
+- Disable unused setting tab ui items
+
 ### Removed
 
 ### Fixed
