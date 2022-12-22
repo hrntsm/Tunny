@@ -46,6 +46,8 @@ namespace Tunny.UI
         private void CmaEsWarmStartCmaEsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             cmaEsWarmStartComboBox.Enabled = cmaEsWarmStartCmaEsCheckBox.Checked;
+            cmaEsSigmaCheckBox.Enabled = !cmaEsWarmStartCmaEsCheckBox.Checked;
+            cmaEsUseSaparableCmaCheckBox.Enabled = !cmaEsWarmStartCmaEsCheckBox.Checked;
         }
 
         private void BoTorchDefaultButton_Click(object sender, EventArgs e)
