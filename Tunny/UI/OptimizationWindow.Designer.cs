@@ -36,7 +36,7 @@ namespace Tunny.UI
             this.optimizeStopButton = new System.Windows.Forms.Button();
             this.nTrialNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.nTrialText = new System.Windows.Forms.Label();
-            this.loadIfExistsCheckBox = new System.Windows.Forms.CheckBox();
+            this.continueStudyCheckBox = new System.Windows.Forms.CheckBox();
             this.optimizeProgressBar = new System.Windows.Forms.ProgressBar();
             this.samplerComboBox = new System.Windows.Forms.ComboBox();
             this.samplerTypeText = new System.Windows.Forms.Label();
@@ -44,24 +44,40 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.optimizeBestValueLabel = new System.Windows.Forms.Label();
+            this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.existedStudyNameLabel = new System.Windows.Forms.Label();
+            this.existingStudyComboBox = new System.Windows.Forms.ComboBox();
+            this.copyStudyCheckBox = new System.Windows.Forms.CheckBox();
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
-            this.visualizeClusteringPlotButton = new System.Windows.Forms.Button();
-            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
-            this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
-            this.dashboardButton = new System.Windows.Forms.Button();
-            this.visualizeButton = new System.Windows.Forms.Button();
+            this.visualizeIncludeDominatedCheckBox = new System.Windows.Forms.CheckBox();
+            this.visualizeTypeLabel = new System.Windows.Forms.Label();
+            this.visualizeTargetStudyNameLabel = new System.Windows.Forms.Label();
+            this.visualizeObjectiveListBox = new System.Windows.Forms.ListBox();
+            this.visualizeTargetStudyComboBox = new System.Windows.Forms.ComboBox();
             this.visualizeTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.visualizeVariableListBox = new System.Windows.Forms.ListBox();
+            this.visualizeTargetVariableLabel = new System.Windows.Forms.Label();
+            this.visualizeClusterNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.visualizeTargetObjectiveLabel = new System.Windows.Forms.Label();
+            this.dashboardButton = new System.Windows.Forms.Button();
+            this.visualizeNumClusterLabel = new System.Windows.Forms.Label();
+            this.visualizeShowPlotButton = new System.Windows.Forms.Button();
+            this.visualizeSavePlotButton = new System.Windows.Forms.Button();
             this.outputTabPage = new System.Windows.Forms.TabPage();
+            this.outputUseModelNumberGroupBox = new System.Windows.Forms.GroupBox();
+            this.outputModelNumTextBox = new System.Windows.Forms.TextBox();
+            this.outputModelNumberButton = new System.Windows.Forms.Button();
+            this.reflectToSliderButton = new System.Windows.Forms.Button();
+            this.outputTargetStudyComboBox = new System.Windows.Forms.ComboBox();
+            this.outputTargetStudyLabel = new System.Windows.Forms.Label();
             this.outputAllTrialsButton = new System.Windows.Forms.Button();
             this.outputParatoSolutionButton = new System.Windows.Forms.Button();
-            this.reflectToSliderButton = new System.Windows.Forms.Button();
             this.outputStopButton = new System.Windows.Forms.Button();
             this.outputProgressBar = new System.Windows.Forms.ProgressBar();
-            this.outputModelNumberButton = new System.Windows.Forms.Button();
-            this.outputModelNumTextBox = new System.Windows.Forms.TextBox();
-            this.outputModelLabel = new System.Windows.Forms.Label();
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.TPE = new System.Windows.Forms.TabPage();
@@ -96,6 +112,8 @@ namespace Tunny.UI
             this.nsgaCrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsgaMutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsWarmStartComboBox = new System.Windows.Forms.ComboBox();
+            this.cmaEsWarmStartCmaEsCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.cmaEsPopulationSizeLabel = new System.Windows.Forms.Label();
             this.cmaEsDefaultButton = new System.Windows.Forms.Button();
@@ -116,8 +134,13 @@ namespace Tunny.UI
             this.qmcWarnAsyncSeedingCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.miscDefaultButton = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.runGarbageCollectionLabel = new System.Windows.Forms.Label();
             this.fileTabPage = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.setResultFilePathButton = new System.Windows.Forms.Button();
             this.clearResultButton = new System.Windows.Forms.Button();
             this.openResultFolderButton = new System.Windows.Forms.Button();
             this.licenseGroupBox = new System.Windows.Forms.GroupBox();
@@ -125,15 +148,15 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.visualizeTypeGroupBox = new System.Windows.Forms.GroupBox();
-            this.kMeansClusteringGroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).BeginInit();
             this.outputTabPage.SuspendLayout();
+            this.outputUseModelNumberGroupBox.SuspendLayout();
             this.settingsTabPage.SuspendLayout();
             this.settingsTabControl.SuspendLayout();
             this.TPE.SuspendLayout();
@@ -153,19 +176,18 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsIncPopSizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsSigmaNumUpDown)).BeginInit();
             this.QMC.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.fileTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.licenseGroupBox.SuspendLayout();
-            this.visualizeTypeGroupBox.SuspendLayout();
-            this.kMeansClusteringGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // optimizeRunButton
             // 
-            this.optimizeRunButton.Location = new System.Drawing.Point(20, 277);
+            this.optimizeRunButton.Location = new System.Drawing.Point(48, 312);
             this.optimizeRunButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeRunButton.Name = "optimizeRunButton";
-            this.optimizeRunButton.Size = new System.Drawing.Size(180, 44);
+            this.optimizeRunButton.Size = new System.Drawing.Size(153, 34);
             this.optimizeRunButton.TabIndex = 0;
             this.optimizeRunButton.Text = "RunOptimize";
             this.optimizeRunButton.UseVisualStyleBackColor = true;
@@ -174,10 +196,10 @@ namespace Tunny.UI
             // optimizeStopButton
             // 
             this.optimizeStopButton.Enabled = false;
-            this.optimizeStopButton.Location = new System.Drawing.Point(246, 277);
+            this.optimizeStopButton.Location = new System.Drawing.Point(246, 312);
             this.optimizeStopButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeStopButton.Name = "optimizeStopButton";
-            this.optimizeStopButton.Size = new System.Drawing.Size(163, 44);
+            this.optimizeStopButton.Size = new System.Drawing.Size(126, 34);
             this.optimizeStopButton.TabIndex = 1;
             this.optimizeStopButton.Text = "Stop";
             this.optimizeStopButton.UseVisualStyleBackColor = true;
@@ -185,7 +207,7 @@ namespace Tunny.UI
             // 
             // nTrialNumUpDown
             // 
-            this.nTrialNumUpDown.Location = new System.Drawing.Point(246, 61);
+            this.nTrialNumUpDown.Location = new System.Drawing.Point(246, 52);
             this.nTrialNumUpDown.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.nTrialNumUpDown.Maximum = new decimal(new int[] {
             10000,
@@ -205,32 +227,31 @@ namespace Tunny.UI
             // nTrialText
             // 
             this.nTrialText.AutoSize = true;
-            this.nTrialText.Location = new System.Drawing.Point(15, 63);
+            this.nTrialText.Location = new System.Drawing.Point(15, 56);
             this.nTrialText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.nTrialText.Name = "nTrialText";
             this.nTrialText.Size = new System.Drawing.Size(142, 23);
             this.nTrialText.TabIndex = 3;
             this.nTrialText.Text = "Number of trial";
             // 
-            // loadIfExistsCheckBox
+            // continueStudyCheckBox
             // 
-            this.loadIfExistsCheckBox.AutoSize = true;
-            this.loadIfExistsCheckBox.Checked = true;
-            this.loadIfExistsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.loadIfExistsCheckBox.Location = new System.Drawing.Point(19, 169);
-            this.loadIfExistsCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.loadIfExistsCheckBox.Name = "loadIfExistsCheckBox";
-            this.loadIfExistsCheckBox.Size = new System.Drawing.Size(237, 27);
-            this.loadIfExistsCheckBox.TabIndex = 5;
-            this.loadIfExistsCheckBox.Text = "Load if study file exists";
-            this.loadIfExistsCheckBox.UseVisualStyleBackColor = true;
+            this.continueStudyCheckBox.AutoSize = true;
+            this.continueStudyCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.continueStudyCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.continueStudyCheckBox.Name = "continueStudyCheckBox";
+            this.continueStudyCheckBox.Size = new System.Drawing.Size(114, 27);
+            this.continueStudyCheckBox.TabIndex = 5;
+            this.continueStudyCheckBox.Text = "Continue";
+            this.continueStudyCheckBox.UseVisualStyleBackColor = true;
+            this.continueStudyCheckBox.CheckedChanged += new System.EventHandler(this.ContinueStudyCheckBox_CheckedChanged);
             // 
             // optimizeProgressBar
             // 
-            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 333);
+            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 358);
             this.optimizeProgressBar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeProgressBar.Name = "optimizeProgressBar";
-            this.optimizeProgressBar.Size = new System.Drawing.Size(389, 42);
+            this.optimizeProgressBar.Size = new System.Drawing.Size(388, 34);
             this.optimizeProgressBar.TabIndex = 6;
             // 
             // samplerComboBox
@@ -244,10 +265,10 @@ namespace Tunny.UI
             "Quasi-MonteCarlo",
             "Random",
             "Grid"});
-            this.samplerComboBox.Location = new System.Drawing.Point(104, 13);
+            this.samplerComboBox.Location = new System.Drawing.Point(104, 14);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.samplerComboBox.Name = "samplerComboBox";
-            this.samplerComboBox.Size = new System.Drawing.Size(305, 31);
+            this.samplerComboBox.Size = new System.Drawing.Size(306, 31);
             this.samplerComboBox.TabIndex = 7;
             // 
             // samplerTypeText
@@ -263,19 +284,19 @@ namespace Tunny.UI
             // studyNameLabel
             // 
             this.studyNameLabel.AutoSize = true;
-            this.studyNameLabel.Location = new System.Drawing.Point(14, 206);
+            this.studyNameLabel.Location = new System.Drawing.Point(8, 33);
             this.studyNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.studyNameLabel.Name = "studyNameLabel";
-            this.studyNameLabel.Size = new System.Drawing.Size(116, 23);
+            this.studyNameLabel.Size = new System.Drawing.Size(166, 23);
             this.studyNameLabel.TabIndex = 9;
-            this.studyNameLabel.Text = "Study Name";
+            this.studyNameLabel.Text = "Create New Study";
             // 
             // studyNameTextBox
             // 
-            this.studyNameTextBox.Location = new System.Drawing.Point(211, 203);
+            this.studyNameTextBox.Location = new System.Drawing.Point(202, 30);
             this.studyNameTextBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.studyNameTextBox.Name = "studyNameTextBox";
-            this.studyNameTextBox.Size = new System.Drawing.Size(198, 30);
+            this.studyNameTextBox.Size = new System.Drawing.Size(180, 30);
             this.studyNameTextBox.TabIndex = 10;
             this.studyNameTextBox.Text = "study1";
             // 
@@ -286,9 +307,8 @@ namespace Tunny.UI
             this.optimizeTabControl.Controls.Add(this.outputTabPage);
             this.optimizeTabControl.Controls.Add(this.settingsTabPage);
             this.optimizeTabControl.Controls.Add(this.fileTabPage);
-            this.optimizeTabControl.Location = new System.Drawing.Point(0, -1);
+            this.optimizeTabControl.Location = new System.Drawing.Point(0, -2);
             this.optimizeTabControl.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.optimizeTabControl.Multiline = true;
             this.optimizeTabControl.Name = "optimizeTabControl";
             this.optimizeTabControl.SelectedIndex = 0;
             this.optimizeTabControl.Size = new System.Drawing.Size(428, 476);
@@ -296,18 +316,18 @@ namespace Tunny.UI
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.Controls.Add(this.optimizeBestValueLabel);
+            this.optimizeTabPage.Controls.Add(this.optimizeTrialNumLabel);
+            this.optimizeTabPage.Controls.Add(this.groupBox2);
             this.optimizeTabPage.Controls.Add(this.timeoutNumUpDown);
             this.optimizeTabPage.Controls.Add(this.Timeout);
-            this.optimizeTabPage.Controls.Add(this.studyNameTextBox);
             this.optimizeTabPage.Controls.Add(this.samplerComboBox);
-            this.optimizeTabPage.Controls.Add(this.studyNameLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeRunButton);
             this.optimizeTabPage.Controls.Add(this.samplerTypeText);
             this.optimizeTabPage.Controls.Add(this.optimizeStopButton);
             this.optimizeTabPage.Controls.Add(this.nTrialNumUpDown);
             this.optimizeTabPage.Controls.Add(this.optimizeProgressBar);
             this.optimizeTabPage.Controls.Add(this.nTrialText);
-            this.optimizeTabPage.Controls.Add(this.loadIfExistsCheckBox);
             this.optimizeTabPage.Location = new System.Drawing.Point(4, 32);
             this.optimizeTabPage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeTabPage.Name = "optimizeTabPage";
@@ -317,9 +337,70 @@ namespace Tunny.UI
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
             // 
+            // optimizeBestValueLabel
+            // 
+            this.optimizeBestValueLabel.AutoSize = true;
+            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 398);
+            this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
+            this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
+            this.optimizeBestValueLabel.TabIndex = 15;
+            this.optimizeBestValueLabel.Text = "BestValue: # ";
+            // 
+            // optimizeTrialNumLabel
+            // 
+            this.optimizeTrialNumLabel.AutoSize = true;
+            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(44, 398);
+            this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
+            this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
+            this.optimizeTrialNumLabel.TabIndex = 14;
+            this.optimizeTrialNumLabel.Text = "Trial: # ";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.existedStudyNameLabel);
+            this.groupBox2.Controls.Add(this.existingStudyComboBox);
+            this.groupBox2.Controls.Add(this.copyStudyCheckBox);
+            this.groupBox2.Controls.Add(this.studyNameLabel);
+            this.groupBox2.Controls.Add(this.continueStudyCheckBox);
+            this.groupBox2.Controls.Add(this.studyNameTextBox);
+            this.groupBox2.Location = new System.Drawing.Point(20, 150);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(390, 153);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Study Name";
+            // 
+            // existedStudyNameLabel
+            // 
+            this.existedStudyNameLabel.AutoSize = true;
+            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 112);
+            this.existedStudyNameLabel.Name = "existedStudyNameLabel";
+            this.existedStudyNameLabel.Size = new System.Drawing.Size(135, 23);
+            this.existedStudyNameLabel.TabIndex = 14;
+            this.existedStudyNameLabel.Text = "Existing Study";
+            // 
+            // existingStudyComboBox
+            // 
+            this.existingStudyComboBox.FormattingEnabled = true;
+            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 105);
+            this.existingStudyComboBox.Name = "existingStudyComboBox";
+            this.existingStudyComboBox.Size = new System.Drawing.Size(180, 31);
+            this.existingStudyComboBox.TabIndex = 13;
+            // 
+            // copyStudyCheckBox
+            // 
+            this.copyStudyCheckBox.AutoSize = true;
+            this.copyStudyCheckBox.Location = new System.Drawing.Point(154, 69);
+            this.copyStudyCheckBox.Name = "copyStudyCheckBox";
+            this.copyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
+            this.copyStudyCheckBox.TabIndex = 12;
+            this.copyStudyCheckBox.Text = "Copy";
+            this.copyStudyCheckBox.UseVisualStyleBackColor = true;
+            this.copyStudyCheckBox.CheckedChanged += new System.EventHandler(this.CopyStudyCheckBox_CheckedChanged);
+            // 
             // timeoutNumUpDown
             // 
-            this.timeoutNumUpDown.Location = new System.Drawing.Point(246, 100);
+            this.timeoutNumUpDown.Location = new System.Drawing.Point(246, 94);
             this.timeoutNumUpDown.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.timeoutNumUpDown.Maximum = new decimal(new int[] {
             10000000,
@@ -327,7 +408,7 @@ namespace Tunny.UI
             0,
             0});
             this.timeoutNumUpDown.Name = "timeoutNumUpDown";
-            this.timeoutNumUpDown.Size = new System.Drawing.Size(163, 30);
+            this.timeoutNumUpDown.Size = new System.Drawing.Size(164, 30);
             this.timeoutNumUpDown.TabIndex = 12;
             this.timeoutNumUpDown.ThousandsSeparator = true;
             this.toolTip1.SetToolTip(this.timeoutNumUpDown, "After this time has elapsed, optimization stops.\r\nIf 0 is entered, no stop by tim" +
@@ -336,7 +417,7 @@ namespace Tunny.UI
             // Timeout
             // 
             this.Timeout.AutoSize = true;
-            this.Timeout.Location = new System.Drawing.Point(16, 102);
+            this.Timeout.Location = new System.Drawing.Point(15, 94);
             this.Timeout.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Timeout.Name = "Timeout";
             this.Timeout.Size = new System.Drawing.Size(132, 23);
@@ -345,9 +426,20 @@ namespace Tunny.UI
             // 
             // visualizeTabPage
             // 
-            this.visualizeTabPage.Controls.Add(this.kMeansClusteringGroupBox);
-            this.visualizeTabPage.Controls.Add(this.visualizeTypeGroupBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeIncludeDominatedCheckBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTypeLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetStudyNameLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeObjectiveListBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetStudyComboBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTypeComboBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeVariableListBox);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetVariableLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeClusterNumUpDown);
+            this.visualizeTabPage.Controls.Add(this.visualizeTargetObjectiveLabel);
             this.visualizeTabPage.Controls.Add(this.dashboardButton);
+            this.visualizeTabPage.Controls.Add(this.visualizeNumClusterLabel);
+            this.visualizeTabPage.Controls.Add(this.visualizeShowPlotButton);
+            this.visualizeTabPage.Controls.Add(this.visualizeSavePlotButton);
             this.visualizeTabPage.Location = new System.Drawing.Point(4, 32);
             this.visualizeTabPage.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTabPage.Name = "visualizeTabPage";
@@ -357,29 +449,101 @@ namespace Tunny.UI
             this.visualizeTabPage.Text = "Visualize";
             this.visualizeTabPage.UseVisualStyleBackColor = true;
             // 
-            // visualizeClusteringPlotButton
+            // visualizeIncludeDominatedCheckBox
             // 
-            this.visualizeClusteringPlotButton.Location = new System.Drawing.Point(29, 80);
-            this.visualizeClusteringPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeClusteringPlotButton.Name = "visualizeClusteringPlotButton";
-            this.visualizeClusteringPlotButton.Size = new System.Drawing.Size(323, 39);
-            this.visualizeClusteringPlotButton.TabIndex = 15;
-            this.visualizeClusteringPlotButton.Text = "Show clustering plot";
-            this.visualizeClusteringPlotButton.UseVisualStyleBackColor = true;
-            this.visualizeClusteringPlotButton.Click += new System.EventHandler(this.VisualizeClusteringPlotButton_Click);
+            this.visualizeIncludeDominatedCheckBox.AutoSize = true;
+            this.visualizeIncludeDominatedCheckBox.Checked = true;
+            this.visualizeIncludeDominatedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.visualizeIncludeDominatedCheckBox.Enabled = false;
+            this.visualizeIncludeDominatedCheckBox.Location = new System.Drawing.Point(26, 404);
+            this.visualizeIncludeDominatedCheckBox.Name = "visualizeIncludeDominatedCheckBox";
+            this.visualizeIncludeDominatedCheckBox.Size = new System.Drawing.Size(380, 27);
+            this.visualizeIncludeDominatedCheckBox.TabIndex = 27;
+            this.visualizeIncludeDominatedCheckBox.Text = "Include dominated trials in pareto front";
+            this.visualizeIncludeDominatedCheckBox.UseVisualStyleBackColor = true;
             // 
-            // visualizeNumClusterLabel
+            // visualizeTypeLabel
             // 
-            this.visualizeNumClusterLabel.AutoSize = true;
-            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(25, 43);
-            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
-            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
-            this.visualizeNumClusterLabel.TabIndex = 14;
-            this.visualizeNumClusterLabel.Text = "Number of cluster";
+            this.visualizeTypeLabel.AutoSize = true;
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(22, 110);
+            this.visualizeTypeLabel.Name = "visualizeTypeLabel";
+            this.visualizeTypeLabel.Size = new System.Drawing.Size(132, 23);
+            this.visualizeTypeLabel.TabIndex = 22;
+            this.visualizeTypeLabel.Text = "Visualize Type";
+            // 
+            // visualizeTargetStudyNameLabel
+            // 
+            this.visualizeTargetStudyNameLabel.AutoSize = true;
+            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(22, 62);
+            this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
+            this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
+            this.visualizeTargetStudyNameLabel.TabIndex = 21;
+            this.visualizeTargetStudyNameLabel.Text = "Target Study";
+            // 
+            // visualizeObjectiveListBox
+            // 
+            this.visualizeObjectiveListBox.FormattingEnabled = true;
+            this.visualizeObjectiveListBox.ItemHeight = 23;
+            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(222, 200);
+            this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
+            this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
+            this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeObjectiveListBox.Size = new System.Drawing.Size(190, 73);
+            this.visualizeObjectiveListBox.TabIndex = 26;
+            // 
+            // visualizeTargetStudyComboBox
+            // 
+            this.visualizeTargetStudyComboBox.FormattingEnabled = true;
+            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(184, 58);
+            this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
+            this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(216, 31);
+            this.visualizeTargetStudyComboBox.TabIndex = 20;
+            this.visualizeTargetStudyComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeTargetStudy_Changed);
+            // 
+            // visualizeTypeComboBox
+            // 
+            this.visualizeTypeComboBox.FormattingEnabled = true;
+            this.visualizeTypeComboBox.Items.AddRange(new object[] {
+            "contour",
+            "EDF",
+            "optimization history",
+            "parallel coordinate",
+            "param importances",
+            "pareto front",
+            "slice",
+            "hypervolume",
+            "clustering"});
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(184, 110);
+            this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
+            this.visualizeTypeComboBox.Size = new System.Drawing.Size(216, 31);
+            this.visualizeTypeComboBox.TabIndex = 0;
+            this.visualizeTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.VisualizeType_Changed);
+            // 
+            // visualizeVariableListBox
+            // 
+            this.visualizeVariableListBox.FormattingEnabled = true;
+            this.visualizeVariableListBox.ItemHeight = 23;
+            this.visualizeVariableListBox.Location = new System.Drawing.Point(26, 200);
+            this.visualizeVariableListBox.Name = "visualizeVariableListBox";
+            this.visualizeVariableListBox.ScrollAlwaysVisible = true;
+            this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.visualizeVariableListBox.Size = new System.Drawing.Size(190, 73);
+            this.visualizeVariableListBox.TabIndex = 25;
+            // 
+            // visualizeTargetVariableLabel
+            // 
+            this.visualizeTargetVariableLabel.AutoSize = true;
+            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(218, 162);
+            this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
+            this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
+            this.visualizeTargetVariableLabel.TabIndex = 24;
+            this.visualizeTargetVariableLabel.Text = "Target Variable";
             // 
             // visualizeClusterNumUpDown
             // 
-            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(259, 41);
+            this.visualizeClusterNumUpDown.Enabled = false;
+            this.visualizeClusterNumUpDown.Location = new System.Drawing.Point(308, 358);
             this.visualizeClusterNumUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -394,57 +558,65 @@ namespace Tunny.UI
             0,
             0});
             // 
+            // visualizeTargetObjectiveLabel
+            // 
+            this.visualizeTargetObjectiveLabel.AutoSize = true;
+            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(22, 162);
+            this.visualizeTargetObjectiveLabel.Name = "visualizeTargetObjectiveLabel";
+            this.visualizeTargetObjectiveLabel.Size = new System.Drawing.Size(152, 23);
+            this.visualizeTargetObjectiveLabel.TabIndex = 23;
+            this.visualizeTargetObjectiveLabel.Text = "Target Objective";
+            // 
             // dashboardButton
             // 
-            this.dashboardButton.Location = new System.Drawing.Point(54, 40);
+            this.dashboardButton.Location = new System.Drawing.Point(81, 10);
             this.dashboardButton.Margin = new System.Windows.Forms.Padding(4);
             this.dashboardButton.Name = "dashboardButton";
-            this.dashboardButton.Size = new System.Drawing.Size(323, 39);
+            this.dashboardButton.Size = new System.Drawing.Size(267, 33);
             this.dashboardButton.TabIndex = 11;
             this.dashboardButton.Text = "Open Optuna-Dashboard";
             this.dashboardButton.UseVisualStyleBackColor = true;
             this.dashboardButton.Click += new System.EventHandler(this.DashboardButton_Click);
             // 
-            // visualizeButton
+            // visualizeNumClusterLabel
             // 
-            this.visualizeButton.Location = new System.Drawing.Point(29, 80);
-            this.visualizeButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeButton.Name = "visualizeButton";
-            this.visualizeButton.Size = new System.Drawing.Size(323, 39);
-            this.visualizeButton.TabIndex = 2;
-            this.visualizeButton.Text = "Show selected type of plots";
-            this.visualizeButton.UseVisualStyleBackColor = true;
-            this.visualizeButton.Click += new System.EventHandler(this.SelectedTypePlotButton_Click);
+            this.visualizeNumClusterLabel.AutoSize = true;
+            this.visualizeNumClusterLabel.Location = new System.Drawing.Point(22, 366);
+            this.visualizeNumClusterLabel.Name = "visualizeNumClusterLabel";
+            this.visualizeNumClusterLabel.Size = new System.Drawing.Size(166, 23);
+            this.visualizeNumClusterLabel.TabIndex = 14;
+            this.visualizeNumClusterLabel.Text = "Number of cluster";
             // 
-            // visualizeTypeComboBox
+            // visualizeShowPlotButton
             // 
-            this.visualizeTypeComboBox.FormattingEnabled = true;
-            this.visualizeTypeComboBox.Items.AddRange(new object[] {
-            "contour",
-            "EDF",
-            "intermediate values",
-            "optimization history",
-            "parallel coordinate",
-            "param importances",
-            "pareto front",
-            "slice",
-            "hypervolume"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(29, 32);
-            this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
-            this.visualizeTypeComboBox.Size = new System.Drawing.Size(323, 31);
-            this.visualizeTypeComboBox.TabIndex = 0;
+            this.visualizeShowPlotButton.Location = new System.Drawing.Point(36, 304);
+            this.visualizeShowPlotButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.visualizeShowPlotButton.Name = "visualizeShowPlotButton";
+            this.visualizeShowPlotButton.Size = new System.Drawing.Size(165, 34);
+            this.visualizeShowPlotButton.TabIndex = 2;
+            this.visualizeShowPlotButton.Text = "Show";
+            this.visualizeShowPlotButton.UseVisualStyleBackColor = true;
+            this.visualizeShowPlotButton.Click += new System.EventHandler(this.VisualizeShowPlotButton_Click);
+            // 
+            // visualizeSavePlotButton
+            // 
+            this.visualizeSavePlotButton.Location = new System.Drawing.Point(236, 304);
+            this.visualizeSavePlotButton.Name = "visualizeSavePlotButton";
+            this.visualizeSavePlotButton.Size = new System.Drawing.Size(165, 34);
+            this.visualizeSavePlotButton.TabIndex = 3;
+            this.visualizeSavePlotButton.Text = "Save";
+            this.visualizeSavePlotButton.UseVisualStyleBackColor = true;
+            this.visualizeSavePlotButton.Click += new System.EventHandler(this.VisualizeSavePlotButton_Click);
             // 
             // outputTabPage
             // 
+            this.outputTabPage.Controls.Add(this.outputUseModelNumberGroupBox);
+            this.outputTabPage.Controls.Add(this.outputTargetStudyComboBox);
+            this.outputTabPage.Controls.Add(this.outputTargetStudyLabel);
             this.outputTabPage.Controls.Add(this.outputAllTrialsButton);
             this.outputTabPage.Controls.Add(this.outputParatoSolutionButton);
-            this.outputTabPage.Controls.Add(this.reflectToSliderButton);
             this.outputTabPage.Controls.Add(this.outputStopButton);
             this.outputTabPage.Controls.Add(this.outputProgressBar);
-            this.outputTabPage.Controls.Add(this.outputModelNumberButton);
-            this.outputTabPage.Controls.Add(this.outputModelNumTextBox);
-            this.outputTabPage.Controls.Add(this.outputModelLabel);
             this.outputTabPage.Location = new System.Drawing.Point(4, 32);
             this.outputTabPage.Name = "outputTabPage";
             this.outputTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -453,12 +625,72 @@ namespace Tunny.UI
             this.outputTabPage.Text = "Output";
             this.outputTabPage.UseVisualStyleBackColor = true;
             // 
+            // outputUseModelNumberGroupBox
+            // 
+            this.outputUseModelNumberGroupBox.Controls.Add(this.outputModelNumTextBox);
+            this.outputUseModelNumberGroupBox.Controls.Add(this.outputModelNumberButton);
+            this.outputUseModelNumberGroupBox.Controls.Add(this.reflectToSliderButton);
+            this.outputUseModelNumberGroupBox.Location = new System.Drawing.Point(8, 146);
+            this.outputUseModelNumberGroupBox.Name = "outputUseModelNumberGroupBox";
+            this.outputUseModelNumberGroupBox.Size = new System.Drawing.Size(393, 202);
+            this.outputUseModelNumberGroupBox.TabIndex = 21;
+            this.outputUseModelNumberGroupBox.TabStop = false;
+            this.outputUseModelNumberGroupBox.Text = "Use Model Number";
+            // 
+            // outputModelNumTextBox
+            // 
+            this.outputModelNumTextBox.Location = new System.Drawing.Point(21, 45);
+            this.outputModelNumTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.outputModelNumTextBox.Name = "outputModelNumTextBox";
+            this.outputModelNumTextBox.Size = new System.Drawing.Size(360, 30);
+            this.outputModelNumTextBox.TabIndex = 12;
+            this.outputModelNumTextBox.Text = "0";
+            // 
+            // outputModelNumberButton
+            // 
+            this.outputModelNumberButton.Location = new System.Drawing.Point(206, 94);
+            this.outputModelNumberButton.Margin = new System.Windows.Forms.Padding(4);
+            this.outputModelNumberButton.Name = "outputModelNumberButton";
+            this.outputModelNumberButton.Size = new System.Drawing.Size(176, 82);
+            this.outputModelNumberButton.TabIndex = 13;
+            this.outputModelNumberButton.Text = "Output the above number models";
+            this.outputModelNumberButton.UseVisualStyleBackColor = true;
+            this.outputModelNumberButton.Click += new System.EventHandler(this.OutputModelNumberButton_Click);
+            // 
+            // reflectToSliderButton
+            // 
+            this.reflectToSliderButton.Location = new System.Drawing.Point(21, 94);
+            this.reflectToSliderButton.Margin = new System.Windows.Forms.Padding(4);
+            this.reflectToSliderButton.Name = "reflectToSliderButton";
+            this.reflectToSliderButton.Size = new System.Drawing.Size(176, 82);
+            this.reflectToSliderButton.TabIndex = 16;
+            this.reflectToSliderButton.Text = "Reflect the result on the sliders";
+            this.reflectToSliderButton.UseVisualStyleBackColor = true;
+            this.reflectToSliderButton.Click += new System.EventHandler(this.ReflectToSliderButton_Click);
+            // 
+            // outputTargetStudyComboBox
+            // 
+            this.outputTargetStudyComboBox.FormattingEnabled = true;
+            this.outputTargetStudyComboBox.Location = new System.Drawing.Point(170, 24);
+            this.outputTargetStudyComboBox.Name = "outputTargetStudyComboBox";
+            this.outputTargetStudyComboBox.Size = new System.Drawing.Size(220, 31);
+            this.outputTargetStudyComboBox.TabIndex = 20;
+            // 
+            // outputTargetStudyLabel
+            // 
+            this.outputTargetStudyLabel.AutoSize = true;
+            this.outputTargetStudyLabel.Location = new System.Drawing.Point(34, 27);
+            this.outputTargetStudyLabel.Name = "outputTargetStudyLabel";
+            this.outputTargetStudyLabel.Size = new System.Drawing.Size(120, 23);
+            this.outputTargetStudyLabel.TabIndex = 19;
+            this.outputTargetStudyLabel.Text = "Target Study";
+            // 
             // outputAllTrialsButton
             // 
-            this.outputAllTrialsButton.Location = new System.Drawing.Point(64, 76);
+            this.outputAllTrialsButton.Location = new System.Drawing.Point(214, 84);
             this.outputAllTrialsButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputAllTrialsButton.Name = "outputAllTrialsButton";
-            this.outputAllTrialsButton.Size = new System.Drawing.Size(297, 34);
+            this.outputAllTrialsButton.Size = new System.Drawing.Size(176, 34);
             this.outputAllTrialsButton.TabIndex = 18;
             this.outputAllTrialsButton.Text = "All trials";
             this.outputAllTrialsButton.UseVisualStyleBackColor = true;
@@ -466,33 +698,22 @@ namespace Tunny.UI
             // 
             // outputParatoSolutionButton
             // 
-            this.outputParatoSolutionButton.Location = new System.Drawing.Point(64, 24);
+            this.outputParatoSolutionButton.Location = new System.Drawing.Point(28, 84);
             this.outputParatoSolutionButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputParatoSolutionButton.Name = "outputParatoSolutionButton";
-            this.outputParatoSolutionButton.Size = new System.Drawing.Size(297, 34);
+            this.outputParatoSolutionButton.Size = new System.Drawing.Size(176, 34);
             this.outputParatoSolutionButton.TabIndex = 17;
             this.outputParatoSolutionButton.Text = "Pareto solutions";
             this.outputParatoSolutionButton.UseVisualStyleBackColor = true;
             this.outputParatoSolutionButton.Click += new System.EventHandler(this.OutputParatoSolutionButton_Click);
             // 
-            // reflectToSliderButton
-            // 
-            this.reflectToSliderButton.Location = new System.Drawing.Point(64, 232);
-            this.reflectToSliderButton.Margin = new System.Windows.Forms.Padding(4);
-            this.reflectToSliderButton.Name = "reflectToSliderButton";
-            this.reflectToSliderButton.Size = new System.Drawing.Size(325, 41);
-            this.reflectToSliderButton.TabIndex = 16;
-            this.reflectToSliderButton.Text = "Reflect the result on the sliders";
-            this.reflectToSliderButton.UseVisualStyleBackColor = true;
-            this.reflectToSliderButton.Click += new System.EventHandler(this.ReflectToSliderButton_Click);
-            // 
             // outputStopButton
             // 
             this.outputStopButton.Enabled = false;
-            this.outputStopButton.Location = new System.Drawing.Point(326, 322);
+            this.outputStopButton.Location = new System.Drawing.Point(326, 372);
             this.outputStopButton.Margin = new System.Windows.Forms.Padding(4);
             this.outputStopButton.Name = "outputStopButton";
-            this.outputStopButton.Size = new System.Drawing.Size(75, 40);
+            this.outputStopButton.Size = new System.Drawing.Size(75, 34);
             this.outputStopButton.TabIndex = 15;
             this.outputStopButton.Text = "Stop";
             this.outputStopButton.UseVisualStyleBackColor = true;
@@ -500,41 +721,11 @@ namespace Tunny.UI
             // 
             // outputProgressBar
             // 
-            this.outputProgressBar.Location = new System.Drawing.Point(64, 322);
+            this.outputProgressBar.Location = new System.Drawing.Point(28, 372);
             this.outputProgressBar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.outputProgressBar.Name = "outputProgressBar";
-            this.outputProgressBar.Size = new System.Drawing.Size(238, 40);
+            this.outputProgressBar.Size = new System.Drawing.Size(273, 34);
             this.outputProgressBar.TabIndex = 14;
-            // 
-            // outputModelNumberButton
-            // 
-            this.outputModelNumberButton.Location = new System.Drawing.Point(272, 181);
-            this.outputModelNumberButton.Margin = new System.Windows.Forms.Padding(4);
-            this.outputModelNumberButton.Name = "outputModelNumberButton";
-            this.outputModelNumberButton.Size = new System.Drawing.Size(117, 30);
-            this.outputModelNumberButton.TabIndex = 13;
-            this.outputModelNumberButton.Text = "Output";
-            this.outputModelNumberButton.UseVisualStyleBackColor = true;
-            this.outputModelNumberButton.Click += new System.EventHandler(this.OutputModelNumberButton_Click);
-            // 
-            // outputModelNumTextBox
-            // 
-            this.outputModelNumTextBox.Location = new System.Drawing.Point(64, 181);
-            this.outputModelNumTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.outputModelNumTextBox.Name = "outputModelNumTextBox";
-            this.outputModelNumTextBox.Size = new System.Drawing.Size(200, 30);
-            this.outputModelNumTextBox.TabIndex = 12;
-            this.outputModelNumTextBox.Text = "0";
-            // 
-            // outputModelLabel
-            // 
-            this.outputModelLabel.AutoSize = true;
-            this.outputModelLabel.Location = new System.Drawing.Point(67, 154);
-            this.outputModelLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.outputModelLabel.Name = "outputModelLabel";
-            this.outputModelLabel.Size = new System.Drawing.Size(175, 23);
-            this.outputModelLabel.TabIndex = 11;
-            this.outputModelLabel.Text = "Use model number";
             // 
             // settingsTabPage
             // 
@@ -554,6 +745,7 @@ namespace Tunny.UI
             this.settingsTabControl.Controls.Add(this.NSGAII);
             this.settingsTabControl.Controls.Add(this.CMAES);
             this.settingsTabControl.Controls.Add(this.QMC);
+            this.settingsTabControl.Controls.Add(this.tabPage1);
             this.settingsTabControl.Location = new System.Drawing.Point(3, 3);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
@@ -586,7 +778,7 @@ namespace Tunny.UI
             // 
             // tpeDefaultButton
             // 
-            this.tpeDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.tpeDefaultButton.Location = new System.Drawing.Point(300, 350);
             this.tpeDefaultButton.Name = "tpeDefaultButton";
             this.tpeDefaultButton.Size = new System.Drawing.Size(100, 38);
             this.tpeDefaultButton.TabIndex = 13;
@@ -598,7 +790,7 @@ namespace Tunny.UI
             // tpeNEICandidatesLabel
             // 
             this.tpeNEICandidatesLabel.AutoSize = true;
-            this.tpeNEICandidatesLabel.Location = new System.Drawing.Point(5, 44);
+            this.tpeNEICandidatesLabel.Location = new System.Drawing.Point(4, 44);
             this.tpeNEICandidatesLabel.Name = "tpeNEICandidatesLabel";
             this.tpeNEICandidatesLabel.Size = new System.Drawing.Size(225, 23);
             this.tpeNEICandidatesLabel.TabIndex = 12;
@@ -608,7 +800,7 @@ namespace Tunny.UI
             // tpeNStartupTrialsLabel
             // 
             this.tpeNStartupTrialsLabel.AutoSize = true;
-            this.tpeNStartupTrialsLabel.Location = new System.Drawing.Point(5, 8);
+            this.tpeNStartupTrialsLabel.Location = new System.Drawing.Point(4, 8);
             this.tpeNStartupTrialsLabel.Name = "tpeNStartupTrialsLabel";
             this.tpeNStartupTrialsLabel.Size = new System.Drawing.Size(219, 23);
             this.tpeNStartupTrialsLabel.TabIndex = 11;
@@ -619,7 +811,7 @@ namespace Tunny.UI
             // tpePriorWeightLabel
             // 
             this.tpePriorWeightLabel.AutoSize = true;
-            this.tpePriorWeightLabel.Location = new System.Drawing.Point(5, 80);
+            this.tpePriorWeightLabel.Location = new System.Drawing.Point(4, 80);
             this.tpePriorWeightLabel.Name = "tpePriorWeightLabel";
             this.tpePriorWeightLabel.Size = new System.Drawing.Size(118, 23);
             this.tpePriorWeightLabel.TabIndex = 10;
@@ -686,7 +878,7 @@ namespace Tunny.UI
             // tpeConstantLiarCheckBox
             // 
             this.tpeConstantLiarCheckBox.AutoSize = true;
-            this.tpeConstantLiarCheckBox.Location = new System.Drawing.Point(241, 203);
+            this.tpeConstantLiarCheckBox.Location = new System.Drawing.Point(242, 202);
             this.tpeConstantLiarCheckBox.Name = "tpeConstantLiarCheckBox";
             this.tpeConstantLiarCheckBox.Size = new System.Drawing.Size(152, 27);
             this.tpeConstantLiarCheckBox.TabIndex = 6;
@@ -700,7 +892,8 @@ namespace Tunny.UI
             this.tpeWarnIndependentSamplingCheckBox.AutoSize = true;
             this.tpeWarnIndependentSamplingCheckBox.Checked = true;
             this.tpeWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tpeWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(5, 239);
+            this.tpeWarnIndependentSamplingCheckBox.Enabled = false;
+            this.tpeWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(4, 238);
             this.tpeWarnIndependentSamplingCheckBox.Name = "tpeWarnIndependentSamplingCheckBox";
             this.tpeWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(284, 27);
             this.tpeWarnIndependentSamplingCheckBox.TabIndex = 5;
@@ -713,7 +906,7 @@ namespace Tunny.UI
             // tpeGroupCheckBox
             // 
             this.tpeGroupCheckBox.AutoSize = true;
-            this.tpeGroupCheckBox.Location = new System.Drawing.Point(241, 170);
+            this.tpeGroupCheckBox.Location = new System.Drawing.Point(242, 170);
             this.tpeGroupCheckBox.Name = "tpeGroupCheckBox";
             this.tpeGroupCheckBox.Size = new System.Drawing.Size(89, 27);
             this.tpeGroupCheckBox.TabIndex = 4;
@@ -725,7 +918,9 @@ namespace Tunny.UI
             // tpeMultivariateCheckBox
             // 
             this.tpeMultivariateCheckBox.AutoSize = true;
-            this.tpeMultivariateCheckBox.Location = new System.Drawing.Point(241, 137);
+            this.tpeMultivariateCheckBox.Checked = true;
+            this.tpeMultivariateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tpeMultivariateCheckBox.Location = new System.Drawing.Point(242, 136);
             this.tpeMultivariateCheckBox.Name = "tpeMultivariateCheckBox";
             this.tpeMultivariateCheckBox.Size = new System.Drawing.Size(138, 27);
             this.tpeMultivariateCheckBox.TabIndex = 3;
@@ -737,7 +932,7 @@ namespace Tunny.UI
             // tpeConsiderEndpointsCheckBox
             // 
             this.tpeConsiderEndpointsCheckBox.AutoSize = true;
-            this.tpeConsiderEndpointsCheckBox.Location = new System.Drawing.Point(5, 170);
+            this.tpeConsiderEndpointsCheckBox.Location = new System.Drawing.Point(4, 170);
             this.tpeConsiderEndpointsCheckBox.Name = "tpeConsiderEndpointsCheckBox";
             this.tpeConsiderEndpointsCheckBox.Size = new System.Drawing.Size(205, 27);
             this.tpeConsiderEndpointsCheckBox.TabIndex = 2;
@@ -751,7 +946,7 @@ namespace Tunny.UI
             this.tpeConsiderMagicClipCheckBox.AutoSize = true;
             this.tpeConsiderMagicClipCheckBox.Checked = true;
             this.tpeConsiderMagicClipCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tpeConsiderMagicClipCheckBox.Location = new System.Drawing.Point(5, 203);
+            this.tpeConsiderMagicClipCheckBox.Location = new System.Drawing.Point(4, 202);
             this.tpeConsiderMagicClipCheckBox.Name = "tpeConsiderMagicClipCheckBox";
             this.tpeConsiderMagicClipCheckBox.Size = new System.Drawing.Size(207, 27);
             this.tpeConsiderMagicClipCheckBox.TabIndex = 1;
@@ -765,7 +960,7 @@ namespace Tunny.UI
             this.tpeConsiderPriorCheckBox.AutoSize = true;
             this.tpeConsiderPriorCheckBox.Checked = true;
             this.tpeConsiderPriorCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tpeConsiderPriorCheckBox.Location = new System.Drawing.Point(5, 137);
+            this.tpeConsiderPriorCheckBox.Location = new System.Drawing.Point(4, 136);
             this.tpeConsiderPriorCheckBox.Name = "tpeConsiderPriorCheckBox";
             this.tpeConsiderPriorCheckBox.Size = new System.Drawing.Size(159, 27);
             this.tpeConsiderPriorCheckBox.TabIndex = 0;
@@ -789,7 +984,7 @@ namespace Tunny.UI
             // 
             // boTorchDefaultButton
             // 
-            this.boTorchDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.boTorchDefaultButton.Location = new System.Drawing.Point(300, 350);
             this.boTorchDefaultButton.Name = "boTorchDefaultButton";
             this.boTorchDefaultButton.Size = new System.Drawing.Size(100, 38);
             this.boTorchDefaultButton.TabIndex = 14;
@@ -861,17 +1056,17 @@ namespace Tunny.UI
             "SBX",
             "VSBX",
             "UNDX"});
-            this.nsgaCrossoverComboBox.Location = new System.Drawing.Point(265, 154);
+            this.nsgaCrossoverComboBox.Location = new System.Drawing.Point(266, 154);
             this.nsgaCrossoverComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.nsgaCrossoverComboBox.Name = "nsgaCrossoverComboBox";
-            this.nsgaCrossoverComboBox.Size = new System.Drawing.Size(135, 31);
+            this.nsgaCrossoverComboBox.Size = new System.Drawing.Size(134, 31);
             this.nsgaCrossoverComboBox.TabIndex = 33;
             this.nsgaCrossoverComboBox.Text = "Uniform";
             // 
             // nsgaCrossoverCheckBox
             // 
             this.nsgaCrossoverCheckBox.AutoSize = true;
-            this.nsgaCrossoverCheckBox.Location = new System.Drawing.Point(13, 154);
+            this.nsgaCrossoverCheckBox.Location = new System.Drawing.Point(14, 154);
             this.nsgaCrossoverCheckBox.Name = "nsgaCrossoverCheckBox";
             this.nsgaCrossoverCheckBox.Size = new System.Drawing.Size(122, 27);
             this.nsgaCrossoverCheckBox.TabIndex = 24;
@@ -882,7 +1077,7 @@ namespace Tunny.UI
             // 
             // nsgaDefaultButton
             // 
-            this.nsgaDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.nsgaDefaultButton.Location = new System.Drawing.Point(300, 350);
             this.nsgaDefaultButton.Name = "nsgaDefaultButton";
             this.nsgaDefaultButton.Size = new System.Drawing.Size(100, 38);
             this.nsgaDefaultButton.TabIndex = 23;
@@ -894,7 +1089,7 @@ namespace Tunny.UI
             // nsgaMutationProbCheckBox
             // 
             this.nsgaMutationProbCheckBox.AutoSize = true;
-            this.nsgaMutationProbCheckBox.Location = new System.Drawing.Point(13, 8);
+            this.nsgaMutationProbCheckBox.Location = new System.Drawing.Point(14, 8);
             this.nsgaMutationProbCheckBox.Name = "nsgaMutationProbCheckBox";
             this.nsgaMutationProbCheckBox.Size = new System.Drawing.Size(212, 27);
             this.nsgaMutationProbCheckBox.TabIndex = 22;
@@ -915,7 +1110,7 @@ namespace Tunny.UI
             // 
             // nsgaPopulationSizeUpDown
             // 
-            this.nsgaPopulationSizeUpDown.Location = new System.Drawing.Point(309, 115);
+            this.nsgaPopulationSizeUpDown.Location = new System.Drawing.Point(309, 116);
             this.nsgaPopulationSizeUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -953,7 +1148,7 @@ namespace Tunny.UI
             0,
             0,
             131072});
-            this.nsgaSwappingProbUpDown.Location = new System.Drawing.Point(309, 79);
+            this.nsgaSwappingProbUpDown.Location = new System.Drawing.Point(309, 80);
             this.nsgaSwappingProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -987,7 +1182,7 @@ namespace Tunny.UI
             0,
             0,
             131072});
-            this.nsgaCrossoverProbUpDown.Location = new System.Drawing.Point(309, 43);
+            this.nsgaCrossoverProbUpDown.Location = new System.Drawing.Point(309, 44);
             this.nsgaCrossoverProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1011,7 +1206,7 @@ namespace Tunny.UI
             0,
             0,
             131072});
-            this.nsgaMutationProbUpDown.Location = new System.Drawing.Point(309, 7);
+            this.nsgaMutationProbUpDown.Location = new System.Drawing.Point(309, 8);
             this.nsgaMutationProbUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -1023,6 +1218,8 @@ namespace Tunny.UI
             // 
             // CMAES
             // 
+            this.CMAES.Controls.Add(this.cmaEsWarmStartComboBox);
+            this.CMAES.Controls.Add(this.cmaEsWarmStartCmaEsCheckBox);
             this.CMAES.Controls.Add(this.cmaEsPopulationSizeUpDown);
             this.CMAES.Controls.Add(this.cmaEsPopulationSizeLabel);
             this.CMAES.Controls.Add(this.cmaEsDefaultButton);
@@ -1043,10 +1240,32 @@ namespace Tunny.UI
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
             // 
+            // cmaEsWarmStartComboBox
+            // 
+            this.cmaEsWarmStartComboBox.Enabled = false;
+            this.cmaEsWarmStartComboBox.FormattingEnabled = true;
+            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(220, 240);
+            this.cmaEsWarmStartComboBox.Margin = new System.Windows.Forms.Padding(4);
+            this.cmaEsWarmStartComboBox.Name = "cmaEsWarmStartComboBox";
+            this.cmaEsWarmStartComboBox.Size = new System.Drawing.Size(180, 31);
+            this.cmaEsWarmStartComboBox.TabIndex = 37;
+            // 
+            // cmaEsWarmStartCmaEsCheckBox
+            // 
+            this.cmaEsWarmStartCmaEsCheckBox.AutoSize = true;
+            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(10, 205);
+            this.cmaEsWarmStartCmaEsCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.cmaEsWarmStartCmaEsCheckBox.Name = "cmaEsWarmStartCmaEsCheckBox";
+            this.cmaEsWarmStartCmaEsCheckBox.Size = new System.Drawing.Size(210, 27);
+            this.cmaEsWarmStartCmaEsCheckBox.TabIndex = 36;
+            this.cmaEsWarmStartCmaEsCheckBox.Text = "Warm Start CMA-ES";
+            this.cmaEsWarmStartCmaEsCheckBox.UseVisualStyleBackColor = true;
+            this.cmaEsWarmStartCmaEsCheckBox.CheckedChanged += new System.EventHandler(this.CmaEsWarmStartCmaEsCheckBox_CheckedChanged);
+            // 
             // cmaEsPopulationSizeUpDown
             // 
             this.cmaEsPopulationSizeUpDown.Enabled = false;
-            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 235);
+            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 138);
             this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1064,7 +1283,7 @@ namespace Tunny.UI
             // cmaEsPopulationSizeLabel
             // 
             this.cmaEsPopulationSizeLabel.AutoSize = true;
-            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(7, 237);
+            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(8, 139);
             this.cmaEsPopulationSizeLabel.Name = "cmaEsPopulationSizeLabel";
             this.cmaEsPopulationSizeLabel.Size = new System.Drawing.Size(144, 23);
             this.cmaEsPopulationSizeLabel.TabIndex = 34;
@@ -1074,7 +1293,7 @@ namespace Tunny.UI
             // 
             // cmaEsDefaultButton
             // 
-            this.cmaEsDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.cmaEsDefaultButton.Location = new System.Drawing.Point(300, 350);
             this.cmaEsDefaultButton.Name = "cmaEsDefaultButton";
             this.cmaEsDefaultButton.Size = new System.Drawing.Size(100, 38);
             this.cmaEsDefaultButton.TabIndex = 33;
@@ -1086,7 +1305,7 @@ namespace Tunny.UI
             // cmaEsRestartCheckBox
             // 
             this.cmaEsRestartCheckBox.AutoSize = true;
-            this.cmaEsRestartCheckBox.Location = new System.Drawing.Point(11, 203);
+            this.cmaEsRestartCheckBox.Location = new System.Drawing.Point(10, 105);
             this.cmaEsRestartCheckBox.Name = "cmaEsRestartCheckBox";
             this.cmaEsRestartCheckBox.Size = new System.Drawing.Size(171, 27);
             this.cmaEsRestartCheckBox.TabIndex = 32;
@@ -1099,7 +1318,7 @@ namespace Tunny.UI
             // cmaEsUseSaparableCmaCheckBox
             // 
             this.cmaEsUseSaparableCmaCheckBox.AutoSize = true;
-            this.cmaEsUseSaparableCmaCheckBox.Location = new System.Drawing.Point(11, 152);
+            this.cmaEsUseSaparableCmaCheckBox.Location = new System.Drawing.Point(10, 71);
             this.cmaEsUseSaparableCmaCheckBox.Name = "cmaEsUseSaparableCmaCheckBox";
             this.cmaEsUseSaparableCmaCheckBox.Size = new System.Drawing.Size(204, 27);
             this.cmaEsUseSaparableCmaCheckBox.TabIndex = 31;
@@ -1110,7 +1329,7 @@ namespace Tunny.UI
             // cmaEsNStartupTrialsLabel
             // 
             this.cmaEsNStartupTrialsLabel.AutoSize = true;
-            this.cmaEsNStartupTrialsLabel.Location = new System.Drawing.Point(7, 5);
+            this.cmaEsNStartupTrialsLabel.Location = new System.Drawing.Point(8, 4);
             this.cmaEsNStartupTrialsLabel.Name = "cmaEsNStartupTrialsLabel";
             this.cmaEsNStartupTrialsLabel.Size = new System.Drawing.Size(219, 23);
             this.cmaEsNStartupTrialsLabel.TabIndex = 30;
@@ -1120,7 +1339,7 @@ namespace Tunny.UI
             // 
             // cmaEsStartupNumUpDown
             // 
-            this.cmaEsStartupNumUpDown.Location = new System.Drawing.Point(309, 5);
+            this.cmaEsStartupNumUpDown.Location = new System.Drawing.Point(309, 4);
             this.cmaEsStartupNumUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -1143,7 +1362,8 @@ namespace Tunny.UI
             // cmaEsConsiderPruneTrialsCheckBox
             // 
             this.cmaEsConsiderPruneTrialsCheckBox.AutoSize = true;
-            this.cmaEsConsiderPruneTrialsCheckBox.Location = new System.Drawing.Point(11, 119);
+            this.cmaEsConsiderPruneTrialsCheckBox.Enabled = false;
+            this.cmaEsConsiderPruneTrialsCheckBox.Location = new System.Drawing.Point(10, 325);
             this.cmaEsConsiderPruneTrialsCheckBox.Name = "cmaEsConsiderPruneTrialsCheckBox";
             this.cmaEsConsiderPruneTrialsCheckBox.Size = new System.Drawing.Size(230, 27);
             this.cmaEsConsiderPruneTrialsCheckBox.TabIndex = 28;
@@ -1156,7 +1376,8 @@ namespace Tunny.UI
             this.cmaEsWarnIndependentSamplingCheckBox.AutoSize = true;
             this.cmaEsWarnIndependentSamplingCheckBox.Checked = true;
             this.cmaEsWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(11, 86);
+            this.cmaEsWarnIndependentSamplingCheckBox.Enabled = false;
+            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(10, 292);
             this.cmaEsWarnIndependentSamplingCheckBox.Name = "cmaEsWarnIndependentSamplingCheckBox";
             this.cmaEsWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(284, 27);
             this.cmaEsWarnIndependentSamplingCheckBox.TabIndex = 27;
@@ -1168,7 +1389,7 @@ namespace Tunny.UI
             // cmaEsIncPopsizeLabel
             // 
             this.cmaEsIncPopsizeLabel.AutoSize = true;
-            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(7, 273);
+            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(8, 175);
             this.cmaEsIncPopsizeLabel.Name = "cmaEsIncPopsizeLabel";
             this.cmaEsIncPopsizeLabel.Size = new System.Drawing.Size(240, 23);
             this.cmaEsIncPopsizeLabel.TabIndex = 26;
@@ -1178,7 +1399,7 @@ namespace Tunny.UI
             // cmaEsIncPopSizeUpDown
             // 
             this.cmaEsIncPopSizeUpDown.Enabled = false;
-            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 271);
+            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 174);
             this.cmaEsIncPopSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1196,7 +1417,7 @@ namespace Tunny.UI
             // cmaEsSigmaCheckBox
             // 
             this.cmaEsSigmaCheckBox.AutoSize = true;
-            this.cmaEsSigmaCheckBox.Location = new System.Drawing.Point(11, 39);
+            this.cmaEsSigmaCheckBox.Location = new System.Drawing.Point(10, 39);
             this.cmaEsSigmaCheckBox.Name = "cmaEsSigmaCheckBox";
             this.cmaEsSigmaCheckBox.Size = new System.Drawing.Size(101, 27);
             this.cmaEsSigmaCheckBox.TabIndex = 24;
@@ -1238,7 +1459,7 @@ namespace Tunny.UI
             // 
             // qmcDefaultButton
             // 
-            this.qmcDefaultButton.Location = new System.Drawing.Point(300, 349);
+            this.qmcDefaultButton.Location = new System.Drawing.Point(300, 350);
             this.qmcDefaultButton.Name = "qmcDefaultButton";
             this.qmcDefaultButton.Size = new System.Drawing.Size(100, 38);
             this.qmcDefaultButton.TabIndex = 33;
@@ -1256,14 +1477,14 @@ namespace Tunny.UI
             this.qmcTypeComboBox.Location = new System.Drawing.Point(267, 10);
             this.qmcTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.qmcTypeComboBox.Name = "qmcTypeComboBox";
-            this.qmcTypeComboBox.Size = new System.Drawing.Size(135, 31);
+            this.qmcTypeComboBox.Size = new System.Drawing.Size(134, 31);
             this.qmcTypeComboBox.TabIndex = 32;
             this.qmcTypeComboBox.Text = "sobol";
             // 
             // qmcTypeLabel
             // 
             this.qmcTypeLabel.AutoSize = true;
-            this.qmcTypeLabel.Location = new System.Drawing.Point(3, 13);
+            this.qmcTypeLabel.Location = new System.Drawing.Point(3, 14);
             this.qmcTypeLabel.Name = "qmcTypeLabel";
             this.qmcTypeLabel.Size = new System.Drawing.Size(97, 23);
             this.qmcTypeLabel.TabIndex = 31;
@@ -1275,7 +1496,8 @@ namespace Tunny.UI
             this.qmcWarnAsyncSeedingCheckBox.AutoSize = true;
             this.qmcWarnAsyncSeedingCheckBox.Checked = true;
             this.qmcWarnAsyncSeedingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.qmcWarnAsyncSeedingCheckBox.Location = new System.Drawing.Point(7, 121);
+            this.qmcWarnAsyncSeedingCheckBox.Enabled = false;
+            this.qmcWarnAsyncSeedingCheckBox.Location = new System.Drawing.Point(8, 122);
             this.qmcWarnAsyncSeedingCheckBox.Name = "qmcWarnAsyncSeedingCheckBox";
             this.qmcWarnAsyncSeedingCheckBox.Size = new System.Drawing.Size(284, 27);
             this.qmcWarnAsyncSeedingCheckBox.TabIndex = 30;
@@ -1288,7 +1510,7 @@ namespace Tunny.UI
             // qmcScrambleCheckBox
             // 
             this.qmcScrambleCheckBox.AutoSize = true;
-            this.qmcScrambleCheckBox.Location = new System.Drawing.Point(7, 55);
+            this.qmcScrambleCheckBox.Location = new System.Drawing.Point(8, 56);
             this.qmcScrambleCheckBox.Name = "qmcScrambleCheckBox";
             this.qmcScrambleCheckBox.Size = new System.Drawing.Size(116, 27);
             this.qmcScrambleCheckBox.TabIndex = 29;
@@ -1302,7 +1524,8 @@ namespace Tunny.UI
             this.qmcWarnIndependentSamplingCheckBox.AutoSize = true;
             this.qmcWarnIndependentSamplingCheckBox.Checked = true;
             this.qmcWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.qmcWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(7, 88);
+            this.qmcWarnIndependentSamplingCheckBox.Enabled = false;
+            this.qmcWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(8, 88);
             this.qmcWarnIndependentSamplingCheckBox.Name = "qmcWarnIndependentSamplingCheckBox";
             this.qmcWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(284, 27);
             this.qmcWarnIndependentSamplingCheckBox.TabIndex = 28;
@@ -1310,6 +1533,53 @@ namespace Tunny.UI
             this.toolTip1.SetToolTip(this.qmcWarnIndependentSamplingCheckBox, "If this is True, \r\na warning message is emitted when the value of a parameter\r\nis" +
         " sampled by using an independent sampler.");
             this.qmcWarnIndependentSamplingCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.miscDefaultButton);
+            this.tabPage1.Controls.Add(this.comboBox1);
+            this.tabPage1.Controls.Add(this.runGarbageCollectionLabel);
+            this.tabPage1.Location = new System.Drawing.Point(4, 32);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(406, 393);
+            this.tabPage1.TabIndex = 5;
+            this.tabPage1.Text = "Misc";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // miscDefaultButton
+            // 
+            this.miscDefaultButton.Location = new System.Drawing.Point(300, 350);
+            this.miscDefaultButton.Name = "miscDefaultButton";
+            this.miscDefaultButton.Size = new System.Drawing.Size(100, 38);
+            this.miscDefaultButton.TabIndex = 36;
+            this.miscDefaultButton.Text = "Default";
+            this.toolTip1.SetToolTip(this.miscDefaultButton, "Set to Tunny\'s default value.");
+            this.miscDefaultButton.UseVisualStyleBackColor = true;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Always",
+            "HasGeometry",
+            "NoExecute"});
+            this.comboBox1.Location = new System.Drawing.Point(236, 14);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(169, 31);
+            this.comboBox1.TabIndex = 34;
+            this.comboBox1.Text = "HasGeometry";
+            // 
+            // runGarbageCollectionLabel
+            // 
+            this.runGarbageCollectionLabel.AutoSize = true;
+            this.runGarbageCollectionLabel.Location = new System.Drawing.Point(6, 16);
+            this.runGarbageCollectionLabel.Name = "runGarbageCollectionLabel";
+            this.runGarbageCollectionLabel.Size = new System.Drawing.Size(214, 23);
+            this.runGarbageCollectionLabel.TabIndex = 33;
+            this.runGarbageCollectionLabel.Text = "Run Garbage Collection";
+            this.toolTip1.SetToolTip(this.runGarbageCollectionLabel, "Setting whether or not per-trial data is targeted for garbage collection");
             // 
             // fileTabPage
             // 
@@ -1325,34 +1595,46 @@ namespace Tunny.UI
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.setResultFilePathButton);
             this.groupBox1.Controls.Add(this.clearResultButton);
             this.groupBox1.Controls.Add(this.openResultFolderButton);
             this.groupBox1.Location = new System.Drawing.Point(22, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(378, 171);
+            this.groupBox1.Size = new System.Drawing.Size(378, 200);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Result";
             // 
+            // setResultFilePathButton
+            // 
+            this.setResultFilePathButton.Location = new System.Drawing.Point(58, 34);
+            this.setResultFilePathButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.setResultFilePathButton.Name = "setResultFilePathButton";
+            this.setResultFilePathButton.Size = new System.Drawing.Size(264, 39);
+            this.setResultFilePathButton.TabIndex = 7;
+            this.setResultFilePathButton.Text = "Set file path";
+            this.setResultFilePathButton.UseVisualStyleBackColor = true;
+            this.setResultFilePathButton.Click += new System.EventHandler(this.SetResultFilePathButton_Click);
+            // 
             // clearResultButton
             // 
-            this.clearResultButton.Location = new System.Drawing.Point(58, 96);
+            this.clearResultButton.Location = new System.Drawing.Point(58, 136);
             this.clearResultButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(264, 42);
             this.clearResultButton.TabIndex = 5;
-            this.clearResultButton.Text = "Clear result flie";
+            this.clearResultButton.Text = "Clear flie";
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
             // openResultFolderButton
             // 
-            this.openResultFolderButton.Location = new System.Drawing.Point(58, 45);
+            this.openResultFolderButton.Location = new System.Drawing.Point(58, 86);
             this.openResultFolderButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.openResultFolderButton.Name = "openResultFolderButton";
             this.openResultFolderButton.Size = new System.Drawing.Size(264, 39);
             this.openResultFolderButton.TabIndex = 6;
-            this.openResultFolderButton.Text = "Open result file folder";
+            this.openResultFolderButton.Text = "Open folder";
             this.openResultFolderButton.UseVisualStyleBackColor = true;
             this.openResultFolderButton.Click += new System.EventHandler(this.OpenResultFolderButton_Click);
             // 
@@ -1360,9 +1642,9 @@ namespace Tunny.UI
             // 
             this.licenseGroupBox.Controls.Add(this.showThirdPartyLicenseButton);
             this.licenseGroupBox.Controls.Add(this.showTunnyLicenseButton);
-            this.licenseGroupBox.Location = new System.Drawing.Point(22, 214);
+            this.licenseGroupBox.Location = new System.Drawing.Point(22, 236);
             this.licenseGroupBox.Name = "licenseGroupBox";
-            this.licenseGroupBox.Size = new System.Drawing.Size(378, 181);
+            this.licenseGroupBox.Size = new System.Drawing.Size(378, 182);
             this.licenseGroupBox.TabIndex = 8;
             this.licenseGroupBox.TabStop = false;
             this.licenseGroupBox.Text = "License";
@@ -1389,34 +1671,11 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
-            // visualizeTypeGroupBox
-            // 
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeTypeComboBox);
-            this.visualizeTypeGroupBox.Controls.Add(this.visualizeButton);
-            this.visualizeTypeGroupBox.Location = new System.Drawing.Point(25, 111);
-            this.visualizeTypeGroupBox.Name = "visualizeTypeGroupBox";
-            this.visualizeTypeGroupBox.Size = new System.Drawing.Size(373, 138);
-            this.visualizeTypeGroupBox.TabIndex = 16;
-            this.visualizeTypeGroupBox.TabStop = false;
-            this.visualizeTypeGroupBox.Text = "Visualize type";
-            // 
-            // kMeansClusteringGroupBox
-            // 
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusterNumUpDown);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeNumClusterLabel);
-            this.kMeansClusteringGroupBox.Controls.Add(this.visualizeClusteringPlotButton);
-            this.kMeansClusteringGroupBox.Location = new System.Drawing.Point(25, 270);
-            this.kMeansClusteringGroupBox.Name = "kMeansClusteringGroupBox";
-            this.kMeansClusteringGroupBox.Size = new System.Drawing.Size(373, 147);
-            this.kMeansClusteringGroupBox.TabIndex = 17;
-            this.kMeansClusteringGroupBox.TabStop = false;
-            this.kMeansClusteringGroupBox.Text = "k-means clustering";
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(428, 475);
+            this.ClientSize = new System.Drawing.Size(428, 476);
             this.Controls.Add(this.optimizeTabControl);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1429,11 +1688,16 @@ namespace Tunny.UI
             this.optimizeTabControl.ResumeLayout(false);
             this.optimizeTabPage.ResumeLayout(false);
             this.optimizeTabPage.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
             this.visualizeTabPage.ResumeLayout(false);
+            this.visualizeTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.visualizeClusterNumUpDown)).EndInit();
             this.outputTabPage.ResumeLayout(false);
             this.outputTabPage.PerformLayout();
+            this.outputUseModelNumberGroupBox.ResumeLayout(false);
+            this.outputUseModelNumberGroupBox.PerformLayout();
             this.settingsTabPage.ResumeLayout(false);
             this.settingsTabControl.ResumeLayout(false);
             this.TPE.ResumeLayout(false);
@@ -1458,12 +1722,11 @@ namespace Tunny.UI
             ((System.ComponentModel.ISupportInitialize)(this.cmaEsSigmaNumUpDown)).EndInit();
             this.QMC.ResumeLayout(false);
             this.QMC.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.fileTabPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.licenseGroupBox.ResumeLayout(false);
-            this.visualizeTypeGroupBox.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.ResumeLayout(false);
-            this.kMeansClusteringGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1474,7 +1737,7 @@ namespace Tunny.UI
         private System.ComponentModel.BackgroundWorker optimizeBackgroundWorker;
         private System.Windows.Forms.Button optimizeStopButton;
         private System.Windows.Forms.NumericUpDown nTrialNumUpDown;
-        private System.Windows.Forms.CheckBox loadIfExistsCheckBox;
+        private System.Windows.Forms.CheckBox continueStudyCheckBox;
         private System.Windows.Forms.ProgressBar optimizeProgressBar;
         private System.Windows.Forms.ComboBox samplerComboBox;
         private System.Windows.Forms.Label samplerTypeText;
@@ -1484,7 +1747,7 @@ namespace Tunny.UI
         private System.Windows.Forms.TabControl optimizeTabControl;
         private System.Windows.Forms.TabPage optimizeTabPage;
         private System.Windows.Forms.TabPage visualizeTabPage;
-        private System.Windows.Forms.Button visualizeButton;
+        private System.Windows.Forms.Button visualizeShowPlotButton;
         private System.Windows.Forms.ComboBox visualizeTypeComboBox;
         private System.ComponentModel.BackgroundWorker outputResultBackgroundWorker;
         private System.Windows.Forms.TabPage settingsTabPage;
@@ -1497,7 +1760,6 @@ namespace Tunny.UI
         private System.Windows.Forms.ProgressBar outputProgressBar;
         private System.Windows.Forms.Button outputModelNumberButton;
         private System.Windows.Forms.TextBox outputModelNumTextBox;
-        private System.Windows.Forms.Label outputModelLabel;
         private System.Windows.Forms.TabPage fileTabPage;
         private System.Windows.Forms.Button openResultFolderButton;
         private System.Windows.Forms.Button clearResultButton;
@@ -1555,7 +1817,6 @@ namespace Tunny.UI
         private System.Windows.Forms.Button qmcDefaultButton;
         private System.Windows.Forms.Label visualizeNumClusterLabel;
         private System.Windows.Forms.NumericUpDown visualizeClusterNumUpDown;
-        private System.Windows.Forms.Button visualizeClusteringPlotButton;
         private System.Windows.Forms.ComboBox nsgaCrossoverComboBox;
         private System.Windows.Forms.CheckBox nsgaCrossoverCheckBox;
         private System.Windows.Forms.NumericUpDown cmaEsPopulationSizeUpDown;
@@ -1564,8 +1825,31 @@ namespace Tunny.UI
         private System.Windows.Forms.GroupBox licenseGroupBox;
         private System.Windows.Forms.Button showThirdPartyLicenseButton;
         private System.Windows.Forms.Button showTunnyLicenseButton;
-        private System.Windows.Forms.GroupBox kMeansClusteringGroupBox;
-        private System.Windows.Forms.GroupBox visualizeTypeGroupBox;
+        private System.Windows.Forms.Button visualizeSavePlotButton;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button miscDefaultButton;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label runGarbageCollectionLabel;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label optimizeBestValueLabel;
+        private System.Windows.Forms.Label optimizeTrialNumLabel;
+        private System.Windows.Forms.CheckBox copyStudyCheckBox;
+        private System.Windows.Forms.Button setResultFilePathButton;
+        private System.Windows.Forms.Label existedStudyNameLabel;
+        private System.Windows.Forms.ComboBox existingStudyComboBox;
+        private System.Windows.Forms.Label visualizeTargetVariableLabel;
+        private System.Windows.Forms.Label visualizeTargetObjectiveLabel;
+        private System.Windows.Forms.Label visualizeTypeLabel;
+        private System.Windows.Forms.Label visualizeTargetStudyNameLabel;
+        private System.Windows.Forms.ComboBox visualizeTargetStudyComboBox;
+        private System.Windows.Forms.ListBox visualizeVariableListBox;
+        private System.Windows.Forms.ListBox visualizeObjectiveListBox;
+        private System.Windows.Forms.CheckBox visualizeIncludeDominatedCheckBox;
+        private System.Windows.Forms.GroupBox outputUseModelNumberGroupBox;
+        private System.Windows.Forms.ComboBox outputTargetStudyComboBox;
+        private System.Windows.Forms.Label outputTargetStudyLabel;
+        private System.Windows.Forms.ComboBox cmaEsWarmStartComboBox;
+        private System.Windows.Forms.CheckBox cmaEsWarmStartCmaEsCheckBox;
     }
 }
 

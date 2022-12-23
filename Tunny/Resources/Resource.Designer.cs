@@ -73,6 +73,16 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap ConstructFishEgg {
+            get {
+                object obj = ResourceManager.GetObject("ConstructFishEgg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap DeconstructFish {
             get {
                 object obj = ResourceManager.GetObject("DeconstructFish", resourceCulture);
@@ -106,6 +116,16 @@ namespace Tunny.Resources {
         internal static System.Drawing.Bitmap ParamFishAttribute {
             get {
                 object obj = ResourceManager.GetObject("ParamFishAttribute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ParamFishEgg {
+            get {
+                object obj = ResourceManager.GetObject("ParamFishEgg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

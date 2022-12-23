@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 using Python.Runtime;
 
-using Tunny.Optimization;
+using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public class Algorithm
     {
@@ -18,19 +20,21 @@ namespace Tunny.Solver.Optuna
         private bool HasConstraints { get; set; }
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
-        private Func<double[], int, EvaluatedGHResult> EvalFunc { get; set; }
+        private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
         private double[] XOpt { get; set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
+        public Dictionary<string, FishEgg> FishEgg { get; set; }
 
         public Algorithm(
-            List<Variable> variables, bool hasConstraint, string[] objNickName,
+            List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
-            Func<double[], int, EvaluatedGHResult> evalFunc)
+            Func<ProgressState, int, EvaluatedGHResult> evalFunc)
         {
             Variables = variables;
             HasConstraints = hasConstraint;
             ObjNickName = objNickName;
+            FishEgg = fishEgg;
             Settings = settings;
             EvalFunc = evalFunc;
         }
@@ -54,18 +58,18 @@ namespace Tunny.Solver.Optuna
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
                     dynamic study = CreateStudy(directions, optuna, sampler);
-                    SetStudyUserAttr(study, ObjectNicknameToAttr());
-                    RunOptimize(nTrials, timeout, study, out double[] xTest, out EvaluatedGHResult result);
+                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
+                    RunOptimize(nTrials, timeout, study, FishEgg, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
             }
             PythonEngine.Shutdown();
         }
 
-        private StringBuilder ObjectNicknameToAttr()
+        private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
         {
             var name = new StringBuilder();
-            foreach (string objName in ObjNickName)
+            foreach (string objName in nicknames)
             {
                 name.Append(objName + ",");
             }
@@ -78,9 +82,9 @@ namespace Tunny.Solver.Optuna
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
-                storage: "sqlite:///" + Settings.Storage,
+                storage: "sqlite:///" + Settings.StoragePath,
                 study_name: Settings.StudyName,
-                load_if_exists: Settings.Optimize.LoadExistStudy
+                load_if_exists: Settings.Optimize.ContinueStudy
             );
         }
 
@@ -97,7 +101,7 @@ namespace Tunny.Solver.Optuna
 
         private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
         {
-            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage);
+            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.StoragePath);
             var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
@@ -110,7 +114,7 @@ namespace Tunny.Solver.Optuna
 
         private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
         {
-            if (!Settings.Optimize.LoadExistStudy)
+            if (!Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutLoading;
                 return false;
@@ -154,12 +158,15 @@ namespace Tunny.Solver.Optuna
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
+
+            EnqueueTrial(study, enqueueItems);
+
             while (true)
             {
                 if (trialNum >= nTrials)
@@ -192,7 +199,18 @@ namespace Tunny.Solver.Optuna
                         ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
                         : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                     }
-                    result = EvalFunc(xTest, progress);
+
+                    dynamic[] bestTrials = study.best_trials;
+                    double[][] bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
+                    var pState = new ProgressState
+                    {
+                        TrialNumber = trialNum,
+                        ObjectiveNum = ObjNickName.Length,
+                        BestValues = bestValues,
+                        Values = xTest.Select(v => (decimal)v).ToList(),
+                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
+                    };
+                    result = EvalFunc(pState, progress);
 
                     if (result.ObjectiveValues.Contains(double.NaN))
                     {
@@ -210,8 +228,9 @@ namespace Tunny.Solver.Optuna
                 {
                     study.tell(trial, result.ObjectiveValues.ToArray());
                 }
-                catch
+                catch (Exception e)
                 {
+                    throw new ArgumentException(e.Message);
                 }
                 finally
                 {
@@ -221,11 +240,29 @@ namespace Tunny.Solver.Optuna
             }
         }
 
+        private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
+        {
+            if (enqueueItems != null && enqueueItems.Count != 0)
+            {
+                for (int i = 0; i < enqueueItems.First().Value.Values.Count; i++)
+                {
+                    var enqueueDict = new PyDict();
+                    foreach (KeyValuePair<string, FishEgg> enqueueItem in enqueueItems)
+                    {
+                        enqueueDict.SetItem(new PyString(enqueueItem.Key), new PyFloat(enqueueItem.Value.Values[i]));
+                    }
+                    study.enqueue_trial(enqueueDict, skip_if_exists: true);
+                }
+            }
+
+            return study;
+        }
+
         private void RunGC(EvaluatedGHResult result)
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
             if (gcAfterTrial == GcAfterTrial.Always ||
-                (result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry)
+                result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry
             )
             {
                 dynamic gc = Py.Import("gc");
@@ -233,9 +270,10 @@ namespace Tunny.Solver.Optuna
             }
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder name)
+        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
         {
-            study.set_user_attr("objective_names", name.ToString());
+            study.set_user_attr("variable_names", variableName.ToString());
+            study.set_user_attr("objective_names", objectiveName.ToString());
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 

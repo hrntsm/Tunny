@@ -10,14 +10,14 @@ colorama==0.4.5
 colorlog==6.6.0
 gpytorch==1.8.0
 greenlet==1.1.2
-joblib==1.1.0
-Mako==1.2.0
+joblib==1.2.0
+Mako==1.2.2
 MarkupSafe==2.1.1
 multipledispatch==0.6.0
 numpy==1.23.0
 opt-einsum==3.3.0
 optuna==3.0.0
-optuna-dashboard==0.7.2
+optuna-dashboard==0.8.0
 packaging==21.3
 pbr==5.9.0
 plotly==5.9.0

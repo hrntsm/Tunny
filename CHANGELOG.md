@@ -6,6 +6,54 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.6.0] -2022-12-23
+
+### Added
+
+- Enable to save each visualize figure.
+  - Interactive operations on the figure are kept because it is saved in html format, not as an image.
+- Real-time display of trial number, best value, and Hypervolume in the UI.
+- Created UI to set where to save optimization result files.
+- SQLite handling in C#
+  - Optimize result handling more smooth some case.
+  - Previously, it used to read and handle python, which was sometimes slow, but now it calls SQLite directly from CS.
+- Only non-dominated trial plot in pareto front.
+- Boolean to skip the behavior of checking if the python library is installed in settings.
+  - For some reason, the installer may be launched every time even if it is installed, so it can be forcibly skipped in the settings.
+- FishEgg component
+  - It is now possible to specify an individual of any variable and have it evaluated in the optimization first and foremost, rather than just setting up a variable completely by the sampler when conducting the optimization.
+- Warn start CMA-ES support
+  - The warm start CMA-ES setting has been added to the CMA-ES settings so that the information from the previous trials can be used.
+
+### Changed
+
+- When there are more than 10 params, the value of "Omit_values" is used instead of "params" to improve the visibility of the ParetoFront plot.
+- Default name of optimization result file changed from "Tunny_Opt_Result.db" to "Fish.db".
+- Easy-to-understand UI for creating study.
+  - Study Create, Continue, and Copy are now clearly separated in the UI.
+- Update visualize & output UI
+  - Previously, the target study and objective function, variables could not be specified, but now they can be specified.
+- Update optuna-dashboard to 0.8.0
+
+### Deprecated
+
+- Disable unused setting tab ui items
+
+### Removed
+
+### Fixed
+
+- Even if there was an error in the input to the Tunny component, a window could be launched and the button to perform optimization could be pressed, so we made sure that this would not happen.
+  - Subject to the following.
+    - No input for variable and objective.
+    - The name of the objective is not unique.
+    - Multiple items entered in Attr.
+
+### Security
+
+- Bump joblib from 1.1.0 to 1.2.0 in /Tunny/Lib
+- Bump mako from 1.2.0 to 1.2.2 in /Tunny/Lib
+
 ## [0.5.0] -2022-09-03
 
 ### Added

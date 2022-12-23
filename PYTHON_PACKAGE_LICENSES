@@ -6,7 +6,7 @@ https://docs.python.org/3/license.html
 ----------------------------------------------------------------------------------------------------
 
 Mako
-1.2.0
+1.2.2
 MIT License
 https://www.makotemplates.org/
 Copyright 2006-2021 the Mako authors and contributors <see AUTHORS file>.
@@ -769,7 +769,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 joblib
-1.1.0
+1.2.0
 BSD License
 https://joblib.readthedocs.io
 BSD 3-Clause License
@@ -1829,7 +1829,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 optuna-dashboard
-0.7.2
+0.8.0
 MIT License
 https://github.com/optuna/optuna-dashboard
 MIT License

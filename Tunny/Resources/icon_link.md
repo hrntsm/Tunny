@@ -10,3 +10,5 @@
   - https://icooon-mono.com/14476-%E6%AD%AF%E8%BB%8A%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B310/
 - Deconstruct Fire
   - https://icooon-mono.com/13073-fire-icon/?lang=en
+- Fish Egg
+  - https://icooon-mono.com/15187-%e9%bb%84%e9%87%91%e3%81%ae%e5%8d%b5%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b3/

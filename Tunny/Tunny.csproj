@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	
+
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <Title>Tunny</Title>
     <Description>Tunny is an optimization component wrapped in optuna.</Description>
     <TargetExt>.gha</TargetExt>
@@ -21,18 +21,20 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>TunnyIcon.png</PackageIcon>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Python.Included" Version="3.10.0-preview2" />
+    <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.116" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     <Reference Include="GalapagosComponents">
       <HintPath>Lib\GalapagosComponents.dll</HintPath>
@@ -64,17 +66,17 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  
+
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
     <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
     <StartArguments></StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>

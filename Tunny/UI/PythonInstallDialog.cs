@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using Tunny.Util;
+using Tunny.Handler;
 
 namespace Tunny.UI
 {

@@ -7,17 +7,17 @@ using Rhino.Geometry;
 
 using Tunny.Component;
 using Tunny.Settings;
-using Tunny.Solver.Optuna;
+using Tunny.Solver;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Optimization
+namespace Tunny.Handler
 {
     internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
-        private static TunnyComponent s_component;
+        private static FishingComponent s_component;
         public static TunnySettings Settings;
         public static string StudyName;
         public static string[] NickNames;
@@ -28,7 +28,7 @@ namespace Tunny.Optimization
         internal static void Run(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as TunnyComponent;
+            s_component = e.Argument as FishingComponent;
 
             var fishes = new List<Fish>();
 
@@ -48,10 +48,7 @@ namespace Tunny.Optimization
             s_component.Fishes = fishes.ToArray();
             s_worker.ReportProgress(100);
 
-            if (s_worker != null)
-            {
-                s_worker.Dispose();
-            }
+            s_worker?.Dispose();
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
@@ -89,7 +86,14 @@ namespace Tunny.Optimization
             }
             for (int i = 0; i < model.Objectives.Length; i++)
             {
-                objectives.Add(nickNames[i], model.Objectives[i]);
+                if (objectives.ContainsKey(nickNames[i]))
+                {
+                    objectives.Add(nickNames[i] + i, model.Objectives[i]);
+                }
+                else
+                {
+                    objectives.Add(nickNames[i], model.Objectives[i]);
+                }
             }
             return objectives;
         }

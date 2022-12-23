@@ -7,6 +7,11 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
+        private void TpeDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetTpeSettings(new Tpe());
+        }
+
         private void NsgaMutationProbCheckedChanged(object sender, EventArgs e)
         {
             nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
@@ -15,6 +20,11 @@ namespace Tunny.UI
         private void NsgaCrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             nsgaCrossoverComboBox.Enabled = nsgaCrossoverCheckBox.Checked;
+        }
+
+        private void NsgaDefaultButton_Click(object sender, EventArgs e)
+        {
+            SetNSGAIISettings(new NSGAII());
         }
 
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
@@ -28,19 +38,16 @@ namespace Tunny.UI
             cmaEsPopulationSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
         }
 
-        private void TpeDefaultButton_Click(object sender, EventArgs e)
-        {
-            SetTpeSettings(new Tpe());
-        }
-
-        private void NsgaDefaultButton_Click(object sender, EventArgs e)
-        {
-            SetNSGAIISettings(new NSGAII());
-        }
-
         private void CmaEsDefaultButton_Click(object sender, EventArgs e)
         {
             SetCmaEsSettings(new CmaEs());
+        }
+
+        private void CmaEsWarmStartCmaEsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            cmaEsWarmStartComboBox.Enabled = cmaEsWarmStartCmaEsCheckBox.Checked;
+            cmaEsSigmaCheckBox.Enabled = !cmaEsWarmStartCmaEsCheckBox.Checked;
+            cmaEsUseSaparableCmaCheckBox.Enabled = !cmaEsWarmStartCmaEsCheckBox.Checked;
         }
 
         private void BoTorchDefaultButton_Click(object sender, EventArgs e)
@@ -209,6 +216,8 @@ namespace Tunny.UI
                 RestartStrategy = cmaEsRestartCheckBox.Checked ? "ipop" : string.Empty,
                 IncPopsize = (int)cmaEsIncPopSizeUpDown.Value,
                 PopulationSize = cmaEsRestartCheckBox.Checked ? (int?)cmaEsPopulationSizeUpDown.Value : null,
+                UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked,
+                WarmStartStudyName = cmaEsWarmStartComboBox.Text
             };
         }
 

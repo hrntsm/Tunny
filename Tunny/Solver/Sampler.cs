@@ -6,7 +6,7 @@ using Python.Runtime;
 using Tunny.Settings;
 using Tunny.Util;
 
-namespace Tunny.Solver.Optuna
+namespace Tunny.Solver
 {
     public static class Sampler
     {
@@ -21,17 +21,28 @@ namespace Tunny.Solver.Optuna
         internal static dynamic CmaEs(dynamic optuna, TunnySettings settings)
         {
             CmaEs cmaEs = settings.Optimize.Sampler.CmaEs;
-            return optuna.samplers.CmaEsSampler(
-                sigma0: cmaEs.Sigma0,
-                n_startup_trials: cmaEs.NStartupTrials,
-                warn_independent_sampling: cmaEs.WarnIndependentSampling,
-                seed: cmaEs.Seed,
-                consider_pruned_trials: cmaEs.ConsiderPrunedTrials,
-                restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
-                inc_popsize: cmaEs.IncPopsize,
-                popsize: cmaEs.PopulationSize,
-                use_separable_cma: cmaEs.UseSeparableCma
-            );
+            return cmaEs.UseWarmStart
+                ? optuna.samplers.CmaEsSampler(
+                    n_startup_trials: cmaEs.NStartupTrials,
+                    warn_independent_sampling: cmaEs.WarnIndependentSampling,
+                    seed: cmaEs.Seed,
+                    consider_pruned_trials: cmaEs.ConsiderPrunedTrials,
+                    restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
+                    inc_popsize: cmaEs.IncPopsize,
+                    popsize: cmaEs.PopulationSize,
+                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: "sqlite:///" + settings.StoragePath).get_trials()
+                )
+                : optuna.samplers.CmaEsSampler(
+                    sigma0: cmaEs.Sigma0,
+                    n_startup_trials: cmaEs.NStartupTrials,
+                    warn_independent_sampling: cmaEs.WarnIndependentSampling,
+                    seed: cmaEs.Seed,
+                    consider_pruned_trials: cmaEs.ConsiderPrunedTrials,
+                    restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
+                    inc_popsize: cmaEs.IncPopsize,
+                    popsize: cmaEs.PopulationSize,
+                    use_separable_cma: cmaEs.UseSeparableCma
+                );
         }
 
         internal static dynamic Grid(dynamic optuna, List<Variable> variables, ref int nTrials)
