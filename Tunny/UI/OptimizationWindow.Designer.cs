@@ -44,6 +44,7 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.EstimatedTimeRemainingLabel = new System.Windows.Forms.Label();
             this.optimizeBestValueLabel = new System.Windows.Forms.Label();
             this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -184,7 +185,7 @@ namespace Tunny.UI
             // 
             // optimizeRunButton
             // 
-            this.optimizeRunButton.Location = new System.Drawing.Point(48, 312);
+            this.optimizeRunButton.Location = new System.Drawing.Point(48, 295);
             this.optimizeRunButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeRunButton.Name = "optimizeRunButton";
             this.optimizeRunButton.Size = new System.Drawing.Size(153, 34);
@@ -196,7 +197,7 @@ namespace Tunny.UI
             // optimizeStopButton
             // 
             this.optimizeStopButton.Enabled = false;
-            this.optimizeStopButton.Location = new System.Drawing.Point(246, 312);
+            this.optimizeStopButton.Location = new System.Drawing.Point(246, 295);
             this.optimizeStopButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeStopButton.Name = "optimizeStopButton";
             this.optimizeStopButton.Size = new System.Drawing.Size(126, 34);
@@ -248,10 +249,10 @@ namespace Tunny.UI
             // 
             // optimizeProgressBar
             // 
-            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 358);
+            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 341);
             this.optimizeProgressBar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeProgressBar.Name = "optimizeProgressBar";
-            this.optimizeProgressBar.Size = new System.Drawing.Size(388, 34);
+            this.optimizeProgressBar.Size = new System.Drawing.Size(388, 24);
             this.optimizeProgressBar.TabIndex = 6;
             // 
             // samplerComboBox
@@ -316,6 +317,7 @@ namespace Tunny.UI
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.Controls.Add(this.EstimatedTimeRemainingLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeBestValueLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeTrialNumLabel);
             this.optimizeTabPage.Controls.Add(this.groupBox2);
@@ -337,10 +339,19 @@ namespace Tunny.UI
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
             // 
+            // EstimatedTimeRemainingLabel
+            // 
+            this.EstimatedTimeRemainingLabel.AutoSize = true;
+            this.EstimatedTimeRemainingLabel.Location = new System.Drawing.Point(44, 411);
+            this.EstimatedTimeRemainingLabel.Name = "EstimatedTimeRemainingLabel";
+            this.EstimatedTimeRemainingLabel.Size = new System.Drawing.Size(272, 23);
+            this.EstimatedTimeRemainingLabel.TabIndex = 16;
+            this.EstimatedTimeRemainingLabel.Text = "Estimated Time Remaining: #";
+            // 
             // optimizeBestValueLabel
             // 
             this.optimizeBestValueLabel.AutoSize = true;
-            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 398);
+            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 380);
             this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
             this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
             this.optimizeBestValueLabel.TabIndex = 15;
@@ -349,7 +360,7 @@ namespace Tunny.UI
             // optimizeTrialNumLabel
             // 
             this.optimizeTrialNumLabel.AutoSize = true;
-            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(44, 398);
+            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(44, 380);
             this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
             this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
             this.optimizeTrialNumLabel.TabIndex = 14;
@@ -363,7 +374,7 @@ namespace Tunny.UI
             this.groupBox2.Controls.Add(this.studyNameLabel);
             this.groupBox2.Controls.Add(this.continueStudyCheckBox);
             this.groupBox2.Controls.Add(this.studyNameTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(20, 150);
+            this.groupBox2.Location = new System.Drawing.Point(20, 133);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 153);
             this.groupBox2.TabIndex = 13;
@@ -1850,6 +1861,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Label outputTargetStudyLabel;
         private System.Windows.Forms.ComboBox cmaEsWarmStartComboBox;
         private System.Windows.Forms.CheckBox cmaEsWarmStartCmaEsCheckBox;
+        private System.Windows.Forms.Label EstimatedTimeRemainingLabel;
     }
 }
 

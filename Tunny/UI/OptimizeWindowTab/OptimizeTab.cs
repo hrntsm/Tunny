@@ -250,6 +250,8 @@ namespace Tunny.UI
                     : $"Hypervolume Ratio: {pState.HypervolumeRatio:0.000}";
             }
 
+            EstimatedTimeRemainingLabel.Text = $"Estimated Time Remaining: "
+                + (pState.EstimatedTimeRemaining.TotalSeconds != 0 ? new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss") : "00:00:00");
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
         }
