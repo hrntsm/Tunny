@@ -208,7 +208,10 @@ namespace Tunny.Solver
                         ObjectiveNum = ObjNickName.Length,
                         BestValues = bestValues,
                         Values = xTest.Select(v => (decimal)v).ToList(),
-                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
+                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study),
+                        EstimatedTimeRemaining = timeout == 0
+                            ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum - 1) / (trialNum + 1))
+                            : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
                     };
                     result = EvalFunc(pState, progress);
 
