@@ -45,7 +45,7 @@ namespace Tunny.Solver
             OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
-            double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
+            double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             int nObjective = ObjNickName.Length;
             string[] directions = SetDirectionValues(nObjective);
 
@@ -174,7 +174,7 @@ namespace Tunny.Solver
                     EndState = EndState.AllTrialCompleted;
                     break;
                 }
-                else if ((DateTime.Now - startTime).TotalSeconds >= timeout)
+                else if (timeout > 0 && (DateTime.Now - startTime).TotalSeconds >= timeout)
                 {
                     EndState = EndState.Timeout;
                     break;
@@ -209,8 +209,8 @@ namespace Tunny.Solver
                         BestValues = bestValues,
                         Values = xTest.Select(v => (decimal)v).ToList(),
                         HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study),
-                        EstimatedTimeRemaining = timeout == 0
-                            ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum - 1) / (trialNum + 1))
+                        EstimatedTimeRemaining = timeout <= 0
+                            ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum) / (trialNum + 1))
                             : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
                     };
                     result = EvalFunc(pState, progress);
