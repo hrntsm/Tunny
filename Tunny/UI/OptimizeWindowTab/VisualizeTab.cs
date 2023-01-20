@@ -15,7 +15,7 @@ namespace Tunny.UI
         {
             var dashboard = new Process();
             dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = @"sqlite:///" + _settings.StoragePath;
+            dashboard.StartInfo.Arguments = @"sqlite:///" + $"\"{_settings.StoragePath}\"";
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             dashboard.Start();

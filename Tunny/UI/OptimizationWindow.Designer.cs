@@ -233,7 +233,7 @@ namespace Tunny.UI
             this.nTrialText.Name = "nTrialText";
             this.nTrialText.Size = new System.Drawing.Size(142, 23);
             this.nTrialText.TabIndex = 3;
-            this.nTrialText.Text = "Number of trial";
+            this.nTrialText.Text = "Number of trials";
             // 
             // continueStudyCheckBox
             // 
@@ -1634,7 +1634,7 @@ namespace Tunny.UI
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(264, 42);
             this.clearResultButton.TabIndex = 5;
-            this.clearResultButton.Text = "Clear flie";
+            this.clearResultButton.Text = "Clear file";
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
