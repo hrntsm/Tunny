@@ -149,6 +149,7 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.inMemoryCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -231,14 +232,14 @@ namespace Tunny.UI
             this.nTrialText.Location = new System.Drawing.Point(15, 56);
             this.nTrialText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.nTrialText.Name = "nTrialText";
-            this.nTrialText.Size = new System.Drawing.Size(142, 23);
+            this.nTrialText.Size = new System.Drawing.Size(151, 23);
             this.nTrialText.TabIndex = 3;
             this.nTrialText.Text = "Number of trials";
             // 
             // continueStudyCheckBox
             // 
             this.continueStudyCheckBox.AutoSize = true;
-            this.continueStudyCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.continueStudyCheckBox.Location = new System.Drawing.Point(157, 72);
             this.continueStudyCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.continueStudyCheckBox.Name = "continueStudyCheckBox";
             this.continueStudyCheckBox.Size = new System.Drawing.Size(114, 27);
@@ -285,7 +286,7 @@ namespace Tunny.UI
             // studyNameLabel
             // 
             this.studyNameLabel.AutoSize = true;
-            this.studyNameLabel.Location = new System.Drawing.Point(8, 33);
+            this.studyNameLabel.Location = new System.Drawing.Point(8, 30);
             this.studyNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.studyNameLabel.Name = "studyNameLabel";
             this.studyNameLabel.Size = new System.Drawing.Size(166, 23);
@@ -368,6 +369,7 @@ namespace Tunny.UI
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.inMemoryCheckBox);
             this.groupBox2.Controls.Add(this.existedStudyNameLabel);
             this.groupBox2.Controls.Add(this.existingStudyComboBox);
             this.groupBox2.Controls.Add(this.copyStudyCheckBox);
@@ -384,7 +386,7 @@ namespace Tunny.UI
             // existedStudyNameLabel
             // 
             this.existedStudyNameLabel.AutoSize = true;
-            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 112);
+            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 111);
             this.existedStudyNameLabel.Name = "existedStudyNameLabel";
             this.existedStudyNameLabel.Size = new System.Drawing.Size(135, 23);
             this.existedStudyNameLabel.TabIndex = 14;
@@ -393,7 +395,7 @@ namespace Tunny.UI
             // existingStudyComboBox
             // 
             this.existingStudyComboBox.FormattingEnabled = true;
-            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 105);
+            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 108);
             this.existingStudyComboBox.Name = "existingStudyComboBox";
             this.existingStudyComboBox.Size = new System.Drawing.Size(180, 31);
             this.existingStudyComboBox.TabIndex = 13;
@@ -401,7 +403,7 @@ namespace Tunny.UI
             // copyStudyCheckBox
             // 
             this.copyStudyCheckBox.AutoSize = true;
-            this.copyStudyCheckBox.Location = new System.Drawing.Point(154, 69);
+            this.copyStudyCheckBox.Location = new System.Drawing.Point(304, 69);
             this.copyStudyCheckBox.Name = "copyStudyCheckBox";
             this.copyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
             this.copyStudyCheckBox.TabIndex = 12;
@@ -1682,6 +1684,17 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
+            // inMemoryCheckBox
+            // 
+            this.inMemoryCheckBox.AutoSize = true;
+            this.inMemoryCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.inMemoryCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.inMemoryCheckBox.Name = "inMemoryCheckBox";
+            this.inMemoryCheckBox.Size = new System.Drawing.Size(124, 27);
+            this.inMemoryCheckBox.TabIndex = 15;
+            this.inMemoryCheckBox.Text = "InMemory";
+            this.inMemoryCheckBox.UseVisualStyleBackColor = true;
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
@@ -1862,6 +1875,7 @@ namespace Tunny.UI
         private System.Windows.Forms.ComboBox cmaEsWarmStartComboBox;
         private System.Windows.Forms.CheckBox cmaEsWarmStartCmaEsCheckBox;
         private System.Windows.Forms.Label EstimatedTimeRemainingLabel;
+        private System.Windows.Forms.CheckBox inMemoryCheckBox;
     }
 }
 

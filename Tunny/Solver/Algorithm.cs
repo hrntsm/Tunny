@@ -54,12 +54,15 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
+                dynamic storage = Settings.Storage.Type == StorageType.Sqlite
+                    ? "sqlite:///" + Settings.Storage.Path
+                    : optuna.storages.InMemoryStorage();
 
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
-                    dynamic study = CreateStudy(directions, optuna, sampler);
+                    dynamic study = CreateStudy(directions, sampler, storage);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
-                    RunOptimize(nTrials, timeout, study, FishEgg, out double[] xTest, out EvaluatedGHResult result);
+                    RunOptimize(nTrials, timeout, study, storage, FishEgg, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
             }
@@ -77,12 +80,13 @@ namespace Tunny.Solver
             return name;
         }
 
-        private dynamic CreateStudy(string[] directions, dynamic optuna, dynamic sampler)
+        private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
-                storage: "sqlite:///" + Settings.Storage.Path,
+                storage: storage,
                 study_name: Settings.StudyName,
                 load_if_exists: Settings.Optimize.ContinueStudy
             );
@@ -158,7 +162,7 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(int nTrials, double timeout, dynamic study, dynamic storage, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
@@ -241,6 +245,18 @@ namespace Tunny.Solver
                 }
                 trialNum++;
             }
+
+            if (Settings.Storage.Type == StorageType.InMemory)
+            {
+                CopyInMemoryStudy(storage);
+            }
+        }
+
+        private void CopyInMemoryStudy(dynamic storage)
+        {
+            dynamic optuna = Py.Import("optuna");
+            string studyName = Settings.StudyName;
+            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: "sqlite:///" + Settings.Storage.Path);
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
