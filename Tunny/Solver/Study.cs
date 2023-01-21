@@ -27,14 +27,14 @@ namespace Tunny.Solver
         public StudySummary[] GetAllStudySummariesCS()
         {
             var studySummaries = new List<StudySummary>();
-            if (!File.Exists(_settings.StoragePath))
+            if (!File.Exists(_settings.Storage.Path))
             {
                 return studySummaries.ToArray();
             }
 
             var sqliteConnection = new SQLiteConnectionStringBuilder
             {
-                DataSource = _settings.StoragePath,
+                DataSource = _settings.Storage.Path,
                 Version = 3
             };
 
@@ -150,7 +150,7 @@ namespace Tunny.Solver
         public StudySummary[] GetAllStudySummariesPY()
         {
             var studySummaries = new List<StudySummary>();
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -172,7 +172,7 @@ namespace Tunny.Solver
 
         public void CreateNewStorage()
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -184,7 +184,7 @@ namespace Tunny.Solver
 
         public void Copy(string fromStudyName, string toStudyName)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {

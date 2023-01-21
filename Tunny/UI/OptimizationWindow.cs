@@ -88,7 +88,10 @@ namespace Tunny.UI
             {
                 _settings = new TunnySettings
                 {
-                    StoragePath = _component.GhInOut.ComponentFolder + @"\Fish.db"
+                    Storage = new Storage
+                    {
+                        Path = _component.GhInOut.ComponentFolder + @"\Fish.db",
+                    }
                 };
                 _settings.CreateNewSettingsFile(settingsPath);
             }
