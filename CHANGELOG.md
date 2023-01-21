@@ -24,6 +24,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Fixed
 
+- Enabled Optuna-Dashboard to work even if the filename contains spaces.
 
 ### Security
 
