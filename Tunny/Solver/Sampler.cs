@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Python.Runtime;
 
 using Tunny.Settings;
+using Tunny.Settings.Sampler;
 using Tunny.Util;
 
 namespace Tunny.Solver
@@ -12,7 +13,7 @@ namespace Tunny.Solver
     {
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
-            Settings.Random random = settings.Optimize.Sampler.Random;
+            Settings.Sampler.Random random = settings.Optimize.Sampler.Random;
             return optuna.samplers.RandomSampler(
                 seed: random.Seed
             );
