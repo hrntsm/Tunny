@@ -55,9 +55,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
-                dynamic storage = Settings.Storage.Type == StorageType.Sqlite
-                    ? "sqlite:///" + Settings.Storage.Path
-                    : optuna.storages.InMemoryStorage();
+                dynamic storage = Settings.Storage.Type == StorageType.Sqlite ? "sqlite:///" + Settings.Storage.Path : optuna.storages.InMemoryStorage();
 
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
