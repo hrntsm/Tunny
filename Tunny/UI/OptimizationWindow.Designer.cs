@@ -48,6 +48,7 @@ namespace Tunny.UI
             this.optimizeBestValueLabel = new System.Windows.Forms.Label();
             this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.inMemoryCheckBox = new System.Windows.Forms.CheckBox();
             this.existedStudyNameLabel = new System.Windows.Forms.Label();
             this.existingStudyComboBox = new System.Windows.Forms.ComboBox();
             this.copyStudyCheckBox = new System.Windows.Forms.CheckBox();
@@ -149,7 +150,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.inMemoryCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -239,7 +239,7 @@ namespace Tunny.UI
             // continueStudyCheckBox
             // 
             this.continueStudyCheckBox.AutoSize = true;
-            this.continueStudyCheckBox.Location = new System.Drawing.Point(157, 72);
+            this.continueStudyCheckBox.Location = new System.Drawing.Point(163, 72);
             this.continueStudyCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.continueStudyCheckBox.Name = "continueStudyCheckBox";
             this.continueStudyCheckBox.Size = new System.Drawing.Size(114, 27);
@@ -383,6 +383,18 @@ namespace Tunny.UI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Study Name";
             // 
+            // inMemoryCheckBox
+            // 
+            this.inMemoryCheckBox.AutoSize = true;
+            this.inMemoryCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.inMemoryCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.inMemoryCheckBox.Name = "inMemoryCheckBox";
+            this.inMemoryCheckBox.Size = new System.Drawing.Size(124, 27);
+            this.inMemoryCheckBox.TabIndex = 15;
+            this.inMemoryCheckBox.Text = "InMemory";
+            this.inMemoryCheckBox.UseVisualStyleBackColor = true;
+            this.inMemoryCheckBox.CheckedChanged += new System.EventHandler(this.InMemoryCheckBox_CheckedChanged);
+            // 
             // existedStudyNameLabel
             // 
             this.existedStudyNameLabel.AutoSize = true;
@@ -403,7 +415,7 @@ namespace Tunny.UI
             // copyStudyCheckBox
             // 
             this.copyStudyCheckBox.AutoSize = true;
-            this.copyStudyCheckBox.Location = new System.Drawing.Point(304, 69);
+            this.copyStudyCheckBox.Location = new System.Drawing.Point(304, 72);
             this.copyStudyCheckBox.Name = "copyStudyCheckBox";
             this.copyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
             this.copyStudyCheckBox.TabIndex = 12;
@@ -1683,17 +1695,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.Text = "Show Tunny License";
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
-            // 
-            // inMemoryCheckBox
-            // 
-            this.inMemoryCheckBox.AutoSize = true;
-            this.inMemoryCheckBox.Location = new System.Drawing.Point(12, 69);
-            this.inMemoryCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.inMemoryCheckBox.Name = "inMemoryCheckBox";
-            this.inMemoryCheckBox.Size = new System.Drawing.Size(124, 27);
-            this.inMemoryCheckBox.TabIndex = 15;
-            this.inMemoryCheckBox.Text = "InMemory";
-            this.inMemoryCheckBox.UseVisualStyleBackColor = true;
             // 
             // OptimizationWindow
             // 

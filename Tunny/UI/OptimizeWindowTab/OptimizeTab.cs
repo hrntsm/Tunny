@@ -16,6 +16,22 @@ namespace Tunny.UI
     {
         private StudySummary[] _summaries;
 
+        private void InMemoryCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (inMemoryCheckBox.Checked)
+            {
+                continueStudyCheckBox.Checked = false;
+                continueStudyCheckBox.Enabled = false;
+                copyStudyCheckBox.Checked = false;
+                copyStudyCheckBox.Enabled = false;
+                studyNameTextBox.Enabled = true;
+            }
+            else
+            {
+                continueStudyCheckBox.Enabled = true;
+            }
+        }
+
         private void ContinueStudyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (continueStudyCheckBox.Checked)
