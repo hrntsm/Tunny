@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-using Tunny.Settings;
+using Tunny.Settings.Sampler;
 
 namespace Tunny.UI
 {
@@ -62,7 +62,7 @@ namespace Tunny.UI
 
         private void InitializeSamplerSettings()
         {
-            Sampler sampler = _settings.Optimize.Sampler;
+            SamplerSettings sampler = _settings.Optimize.Sampler;
             SetTpeSettings(sampler.Tpe);
             SetBoTorchSettings(sampler.BoTorch);
             SetNSGAIISettings(sampler.NsgaII);
@@ -152,9 +152,9 @@ namespace Tunny.UI
             qmcWarnAsyncSeedingCheckBox.Checked = qmc.WarnAsynchronousSeeding;
         }
 
-        private Sampler GetSamplerSettings()
+        private SamplerSettings GetSamplerSettings()
         {
-            return new Sampler
+            return new SamplerSettings
             {
                 Tpe = GetTpeSettings(),
                 BoTorch = GetBoTorchSettings(),

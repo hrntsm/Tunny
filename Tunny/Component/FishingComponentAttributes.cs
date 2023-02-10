@@ -10,7 +10,7 @@ namespace Tunny.Component
 {
     public partial class FishingComponent
     {
-        private class FishingComponentAttributes : Tunny_ComponentAttributes
+        private sealed class FishingComponentAttributes : Tunny_ComponentAttributes
         {
             public FishingComponentAttributes(IGH_Component component) : base(component)
             {

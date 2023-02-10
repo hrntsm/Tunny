@@ -1,10 +1,11 @@
+using Tunny.Settings.Sampler;
 using Tunny.Solver;
 
 namespace Tunny.Settings
 {
     public class Optimize
     {
-        public Sampler Sampler { get; set; } = new Sampler();
+        public SamplerSettings Sampler { get; set; } = new SamplerSettings();
         public int NumberOfTrials { get; set; } = 100;
         public bool ContinueStudy { get; set; }
         public bool CopyStudy { get; set; }

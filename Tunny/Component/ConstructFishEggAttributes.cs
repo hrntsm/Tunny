@@ -9,7 +9,7 @@ namespace Tunny.Component
 {
     public partial class ConstructFishEgg
     {
-        private class ConstructFishEggAttributes : Tunny_ComponentAttributes
+        private sealed class ConstructFishEggAttributes : Tunny_ComponentAttributes
         {
             public ConstructFishEggAttributes(IGH_Component component) : base(component)
             {
@@ -60,13 +60,11 @@ namespace Tunny.Component
                         new Wire(3, GH_Skin.wire_default)
                     });
 
-
                 for (int i = 0; i < 3; i++)
                 {
                     DrawPath(canvas, graphics, Owner.Params.Input[i], wires[i]);
                 }
             }
-
         }
     }
 }

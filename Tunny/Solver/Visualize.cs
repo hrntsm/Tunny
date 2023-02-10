@@ -38,7 +38,7 @@ namespace Tunny.Solver
 
         public void Plot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -277,7 +277,7 @@ namespace Tunny.Solver
 
         public void ClusteringPlot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {

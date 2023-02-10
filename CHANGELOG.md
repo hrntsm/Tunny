@@ -12,6 +12,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Display of estimated remaining time during optimization run.
+- In-memory optimization mode.
+  - Mode that works faster instead of saving optimization results during optimization.
 
 ### Changed
 

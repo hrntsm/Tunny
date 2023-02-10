@@ -88,7 +88,10 @@ namespace Tunny.UI
             {
                 _settings = new TunnySettings
                 {
-                    StoragePath = _component.GhInOut.ComponentFolder + @"\Fish.db"
+                    Storage = new Storage
+                    {
+                        Path = _component.GhInOut.ComponentFolder + @"\Fish.db",
+                    }
                 };
                 _settings.CreateNewSettingsFile(settingsPath);
             }
@@ -150,6 +153,7 @@ namespace Tunny.UI
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
             _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
+            _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : StorageType.Sqlite;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
