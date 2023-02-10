@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -250,8 +251,9 @@ namespace Tunny.UI
                     : $"Hypervolume Ratio: {pState.HypervolumeRatio:0.000}";
             }
 
-            EstimatedTimeRemainingLabel.Text = $"Estimated Time Remaining: "
-                + (pState.EstimatedTimeRemaining.TotalSeconds != 0 ? new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss") : "00:00:00");
+            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds != 0
+                ? $"Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
+                : $"Estimated Time Remaining: 00:00:00";
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
         }

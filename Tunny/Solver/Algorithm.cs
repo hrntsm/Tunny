@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -323,7 +324,7 @@ namespace Tunny.Solver
                 {
                     foreach (string str in pair.Value)
                     {
-                        pyList.Append(new PyFloat(double.Parse(str)));
+                        pyList.Append(new PyFloat(double.Parse(str, CultureInfo.InvariantCulture)));
                     }
                 }
                 else

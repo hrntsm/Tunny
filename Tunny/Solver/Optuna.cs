@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -249,7 +250,7 @@ namespace Tunny.Solver
                 if (keys[i] == "Constraint")
                 {
                     double[] constraint = (double[])trial.user_attrs[keys[i]];
-                    values = constraint.Select(v => v.ToString()).ToList();
+                    values = constraint.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToList();
                 }
                 else
                 {

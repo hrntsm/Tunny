@@ -63,7 +63,7 @@ namespace Tunny.Component
             }
         }
 
-        internal class Wire
+        internal sealed class Wire
         {
             public int Width;
             public Color ColorStart;

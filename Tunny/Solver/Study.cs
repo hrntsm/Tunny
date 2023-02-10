@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 
 using Python.Runtime;
@@ -60,7 +61,7 @@ namespace Tunny.Solver
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='studies';";
-                hasStudiesTable = Convert.ToInt32(command.ExecuteScalar());
+                hasStudiesTable = Convert.ToInt32(command.ExecuteScalar(), CultureInfo.InvariantCulture);
             }
             return hasStudiesTable > 0;
         }
