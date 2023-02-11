@@ -1,4 +1,4 @@
-namespace Tunny.Settings
+namespace Tunny.Settings.Sampler
 {
     ///  <summary>
     /// https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.NSGAIISampler.html

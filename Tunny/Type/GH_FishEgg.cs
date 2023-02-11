@@ -52,7 +52,7 @@ namespace Tunny.Type
             foreach (KeyValuePair<string, FishEgg> attr in Value)
             {
                 string valueStrings = string.Empty;
-                valueStrings = string.Join(", ", attr.Value.Values.Select(v => string.Format("{0, 6}", v)));
+                valueStrings = string.Join(", ", attr.Value.Values.Select(v => $"{v,6}"));
                 sb.AppendLine(attr.Key + ":\n  " + valueStrings);
             }
             return sb.ToString();

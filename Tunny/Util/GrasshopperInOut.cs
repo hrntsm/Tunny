@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -399,7 +400,7 @@ namespace Tunny.Util
                     object obj = _attributes.Value[key];
                     if (obj is double val)
                     {
-                        value.Add(val.ToString());
+                        value.Add(val.ToString(CultureInfo.InvariantCulture));
                     }
                 }
                 else

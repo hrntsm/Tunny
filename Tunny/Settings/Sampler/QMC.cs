@@ -1,4 +1,4 @@
-namespace Tunny.Settings
+namespace Tunny.Settings.Sampler
 {
     /// <summary>
     /// https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html

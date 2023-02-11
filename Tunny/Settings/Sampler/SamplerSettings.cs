@@ -1,9 +1,9 @@
-namespace Tunny.Settings
+namespace Tunny.Settings.Sampler
 {
     /// <summary>
     /// https://optuna.readthedocs.io/en/stable/reference/samplers.html
     /// </summary>
-    public class Sampler
+    public class SamplerSettings
     {
         public Random Random { get; set; } = new Random();
         public Tpe Tpe { get; set; } = new Tpe();
