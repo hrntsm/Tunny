@@ -9,7 +9,7 @@ namespace Tunny
 {
     public class TunnyInfo : GH_AssemblyInfo
     {
-        public override string Name => "Tunny Info";
+        public override string Name => "Tunny";
 
         //Return a 24x24 pixel bitmap to represent this GHA library.
         public override Bitmap Icon => Resource.TunnyIcon;
