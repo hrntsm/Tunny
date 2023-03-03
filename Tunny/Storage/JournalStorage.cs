@@ -92,17 +92,24 @@ namespace Tunny.Storage
             {
                 return Array.Empty<StudySummary>();
             }
-            var journalStorage = new List<string>();
+            var journalStorageString = new List<string>();
             foreach (string line in File.ReadLines(storagePath))
             {
-                journalStorage.Add(line);
+                journalStorageString.Add(line);
             }
-            JournalStorage[] res = Deserialize(journalStorage);
-            var studyName = res.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
-            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = res.Where(x => x.OpCode == 2)
+            JournalStorage[] storage = Deserialize(journalStorageString);
+            var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
+            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2)
                 .GroupBy(x => x.StudyId);
             var studySummaries = new StudySummary[studyName.Count];
 
+            SetStudySummaries(studyName, userAttr, studySummaries);
+
+            return studySummaries;
+        }
+
+        private static void SetStudySummaries(List<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, StudySummary[] studySummaries)
+        {
             int i = 0;
             foreach (IGrouping<int?, JournalStorage> group in userAttr)
             {
@@ -117,8 +124,6 @@ namespace Tunny.Storage
                 SetStudySummaryValue(group, studySummary);
                 studySummaries[i++] = studySummary;
             }
-
-            return studySummaries;
         }
 
         private static void SetStudySummaryValue(IGrouping<int?, JournalStorage> group, StudySummary studySummary)
