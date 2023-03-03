@@ -14,10 +14,6 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public SqliteStorage()
-        {
-        }
-
         private static bool CheckTableExist(SQLiteConnection connection)
         {
             int hasStudiesTable = 0;

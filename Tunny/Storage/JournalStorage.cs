@@ -61,10 +61,6 @@ namespace Tunny.Storage
         [JsonIgnore]
         public dynamic Storage { get; set; }
 
-        public JournalStorage()
-        {
-        }
-
         public static JournalStorage Deserialize(string json)
         {
             return JsonConvert.DeserializeObject<JournalStorage>(json);
