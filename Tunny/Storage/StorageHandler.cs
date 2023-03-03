@@ -6,7 +6,7 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(string storagePath = null)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
         {
             ICreateStorage storage;
 
@@ -25,7 +25,7 @@ namespace Tunny.Storage
                 default:
                     throw new ArgumentException("Storage type not supported");
             }
-            Storage = storage.CreateNewStorage(storagePath);
+            Storage = storage.CreateNewStorage(useInnerPythonEngine, storagePath);
             return Storage;
         }
 

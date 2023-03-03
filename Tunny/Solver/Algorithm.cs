@@ -58,7 +58,7 @@ namespace Tunny.Solver
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
                 dynamic storage = CreateNewStorage();
 
-                if (CheckExistStudyParameter(nObjective, optuna))
+                if (CheckExistStudyParameter(nObjective, optuna, storage))
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
@@ -75,13 +75,13 @@ namespace Tunny.Solver
             switch (Settings.Storage.Type)
             {
                 case StorageType.InMemory:
-                    storage = new InMemoryStorage().CreateNewStorage();
+                    storage = new InMemoryStorage().CreateNewStorage(false, string.Empty);
                     break;
                 case StorageType.Sqlite:
-                    storage = new SqliteStorage().CreateNewStorage(Settings.Storage.Path);
+                    storage = new SqliteStorage().CreateNewStorage(false, Settings.Storage.Path);
                     break;
                 case StorageType.Journal:
-                    storage = new JournalStorage().CreateNewStorage(Settings.Storage.Path);
+                    storage = new JournalStorage().CreateNewStorage(false, Settings.Storage.Path);
                     break;
                 default:
                     throw new ArgumentException("Storage type is not defined.");
@@ -124,9 +124,9 @@ namespace Tunny.Solver
             return directions;
         }
 
-        private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
+        private bool CheckExistStudyParameter(int nObjective, dynamic optuna, dynamic storage)
         {
-            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.Storage.Path);
+            PyList studySummaries = optuna.get_all_study_summaries(storage);
             var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
@@ -277,7 +277,7 @@ namespace Tunny.Solver
         {
             dynamic optuna = Py.Import("optuna");
             string studyName = Settings.StudyName;
-            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: "sqlite:///" + Settings.Storage.Path);
+            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage.Path));
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)

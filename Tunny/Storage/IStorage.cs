@@ -9,6 +9,6 @@ namespace Tunny.Storage
     public interface ICreateStorage
     {
         dynamic Storage { get; set; }
-        dynamic CreateNewStorage(string storagePath);
+        dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath);
     }
 }

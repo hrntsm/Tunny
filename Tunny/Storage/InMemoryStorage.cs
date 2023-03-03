@@ -12,17 +12,29 @@ namespace Tunny.Storage
         {
         }
 
-        public dynamic CreateNewStorage(string storagePath = null)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
         {
-            PythonEngine.Initialize();
-            using (Py.GIL())
+            if (useInnerPythonEngine)
             {
-                dynamic optuna = Py.Import("optuna");
-                Storage = optuna.storages.InMemoryStorage();
+                PythonEngine.Initialize();
+                using (Py.GIL())
+                {
+                    CreateStorageProcess();
+                }
+                PythonEngine.Shutdown();
             }
-            PythonEngine.Shutdown();
+            else
+            {
+                CreateStorageProcess();
+            }
 
             return Storage;
+        }
+
+        private void CreateStorageProcess()
+        {
+            dynamic optuna = Py.Import("optuna");
+            Storage = optuna.storages.InMemoryStorage();
         }
     }
 }

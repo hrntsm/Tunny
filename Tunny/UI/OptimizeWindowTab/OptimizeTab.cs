@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
 using Tunny.Handler;
+using Tunny.Settings;
 using Tunny.Storage;
 
 namespace Tunny.UI
@@ -25,10 +27,12 @@ namespace Tunny.UI
                 copyStudyCheckBox.Checked = false;
                 copyStudyCheckBox.Enabled = false;
                 studyNameTextBox.Enabled = true;
+                _settings.Storage.Type = StorageType.InMemory;
             }
             else
             {
                 continueStudyCheckBox.Enabled = true;
+                _settings.Storage.Type = Path.GetExtension(_settings.Storage.Path) == ".log" ? StorageType.Journal : StorageType.Sqlite;
             }
         }
 
@@ -39,12 +43,14 @@ namespace Tunny.UI
                 existingStudyComboBox.Enabled = true;
                 copyStudyCheckBox.Enabled = true;
                 studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
+                inMemoryCheckBox.Enabled = false;
             }
-            else if (!continueStudyCheckBox.Checked)
+            else
             {
                 copyStudyCheckBox.Enabled = false;
                 existingStudyComboBox.Enabled = false;
                 studyNameTextBox.Enabled = true;
+                inMemoryCheckBox.Enabled = true;
             }
         }
 

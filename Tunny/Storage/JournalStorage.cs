@@ -38,7 +38,7 @@ namespace Tunny.Storage
         public int[] Directions { get; set; }
 
         [JsonProperty("system_attr")]
-        public Dictionary<string, string[]> SystemAttr { get; set; }
+        public Dictionary<string, object> SystemAttr { get; set; }
 
         [JsonProperty("user_attr")]
         public Dictionary<string, object> UserAttr { get; set; }
@@ -120,11 +120,26 @@ namespace Tunny.Storage
                     {
                         if (item.Value is string str)
                         {
-                            studySummary.UserAttributes.Add(item.Key, str.Split(','));
+                            string[] values = str.Split(',');
+                            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+                            {
+                                _ = value.Union(values);
+                            }
+                            else
+                            {
+                                studySummary.UserAttributes.Add(item.Key, values);
+                            }
                         }
                         else if (item.Value is string[] strArray)
                         {
-                            studySummary.UserAttributes.Add(item.Key, strArray);
+                            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+                            {
+                                _ = value.Union(strArray);
+                            }
+                            else
+                            {
+                                studySummary.UserAttributes.Add(item.Key, strArray);
+                            }
                         }
                     }
                 }
@@ -134,28 +149,40 @@ namespace Tunny.Storage
             return studySummaries;
         }
 
-        public dynamic CreateNewStorage(string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
         {
-            PythonEngine.Initialize();
-            using (Py.GIL())
+            if (useInnerPythonEngine)
             {
-                dynamic optuna = Py.Import("optuna");
-                string filePath = storagePath;
-                dynamic lockObj = optuna.storages.JournalFileOpenLock(filePath);
-                Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(filePath, lock_obj: lockObj));
+                PythonEngine.Initialize();
+                using (Py.GIL())
+                {
+                    CreateStorageProcess(storagePath);
+                }
+                PythonEngine.Shutdown();
             }
-            PythonEngine.Shutdown();
+            else
+            {
+                CreateStorageProcess(storagePath);
+            }
 
             return Storage;
         }
 
+        private void CreateStorageProcess(string storagePath)
+        {
+            dynamic optuna = Py.Import("optuna");
+            string filePath = storagePath;
+            dynamic lockObj = optuna.storages.JournalFileOpenLock(filePath);
+            Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(filePath, lock_obj: lockObj));
+        }
+
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
         {
-            string storage = "sqlite:///" + storagePath;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
+                dynamic storage = CreateNewStorage(false, storagePath);
                 optuna.copy_study(from_study_name: fromStudyName, to_study_name: toStudyName, from_storage: storage, to_storage: storage);
             }
             PythonEngine.Shutdown();

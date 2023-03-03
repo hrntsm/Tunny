@@ -49,7 +49,7 @@ namespace Tunny.UI
                 string storagePath = _settings.Storage.Path;
                 if (!File.Exists(storagePath))
                 {
-                    new StorageHandler().CreateNewStorage(storagePath);
+                    new StorageHandler().CreateNewStorage(true, storagePath);
                 }
                 UpdateStudyComboBox(storagePath);
             }

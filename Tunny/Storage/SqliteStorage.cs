@@ -134,18 +134,30 @@ namespace Tunny.Storage
             return studySummaries.ToArray();
         }
 
-        public dynamic CreateNewStorage(string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
         {
             string sqlitePath = "sqlite:///" + storagePath;
-            PythonEngine.Initialize();
-            using (Py.GIL())
+            if (useInnerPythonEngine)
             {
-                dynamic optuna = Py.Import("optuna");
-                Storage = optuna.storages.RDBStorage(sqlitePath);
+                PythonEngine.Initialize();
+                using (Py.GIL())
+                {
+                    CreateStorageProcess(sqlitePath);
+                }
+                PythonEngine.Shutdown();
             }
-            PythonEngine.Shutdown();
+            else
+            {
+                CreateStorageProcess(sqlitePath);
+            }
 
             return Storage;
+        }
+
+        private void CreateStorageProcess(string sqlitePath)
+        {
+            dynamic optuna = Py.Import("optuna");
+            Storage = optuna.storages.RDBStorage(sqlitePath);
         }
 
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
@@ -188,11 +200,6 @@ namespace Tunny.Storage
             }
 
             return studySummaries.ToArray();
-        }
-
-        dynamic ICreateStorage.CreateNewStorage(string storagePath)
-        {
-            throw new NotImplementedException();
         }
     }
 }
