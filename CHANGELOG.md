@@ -8,7 +8,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ## [UNRELEASED] -20xx-xx-xx
 
-
 ### Added
 
 - Display of estimated remaining time during optimization run.
@@ -22,12 +21,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Boolean to start only the first time, since the Python installer may start every time.
   - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
 
-
 ### Deprecated
 
-
 ### Removed
-
 
 ### Fixed
 
@@ -35,8 +31,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - The problem of saving the results of optimization in progress, etc., which causes an error and fails to save the results, can now be avoided by using JournalStorage.
 
 ### Security
-
-
 
 ## [v0.6.0] -2022-12-23
 
