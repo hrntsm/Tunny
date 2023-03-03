@@ -17,7 +17,7 @@ using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class Optuna
+    public class Optuna : PythonInit
     {
         public double[] XOpt { get; private set; }
         private readonly string _componentFolder;
@@ -29,8 +29,6 @@ namespace Tunny.Solver
             _componentFolder = componentFolder;
             _settings = settings;
             _hasConstraint = hasConstraint;
-            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
-            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         public bool RunSolver(

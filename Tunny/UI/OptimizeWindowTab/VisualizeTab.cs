@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 using Tunny.Handler;
 using Tunny.Solver;
+using Tunny.Storage;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -13,9 +15,18 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
+            if (File.Exists(_settings.Storage.Path) == false)
+            {
+                TunnyMessageBox.Show("Please set exist result file path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            CheckExistDashboardProcess();
             var dashboard = new Process();
             dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = @"sqlite:///" + $"\"{_settings.Storage.Path}\"";
+            dashboard.StartInfo.Arguments = Path.GetExtension(_settings.Storage.Path) == ".log"
+                ? $"\"{_settings.Storage.Path}\""
+                : @"sqlite:///" + $"\"{_settings.Storage.Path}\"";
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             dashboard.Start();
@@ -24,6 +35,18 @@ namespace Tunny.UI
             browser.StartInfo.FileName = @"http://127.0.0.1:8080/";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
+        }
+
+        private static void CheckExistDashboardProcess()
+        {
+            Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
+            if (dashboardProcess.Length > 0)
+            {
+                foreach (Process p in dashboardProcess)
+                {
+                    p.Kill();
+                }
+            }
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)

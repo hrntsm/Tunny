@@ -137,6 +137,7 @@ namespace Tunny.UI
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkPythonLibrariesCheckBox = new System.Windows.Forms.CheckBox();
             this.miscDefaultButton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.runGarbageCollectionLabel = new System.Windows.Forms.Label();
@@ -1561,6 +1562,7 @@ namespace Tunny.UI
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkPythonLibrariesCheckBox);
             this.tabPage1.Controls.Add(this.miscDefaultButton);
             this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.runGarbageCollectionLabel);
@@ -1571,6 +1573,16 @@ namespace Tunny.UI
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "Misc";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkPythonLibrariesCheckBox
+            // 
+            this.checkPythonLibrariesCheckBox.AutoSize = true;
+            this.checkPythonLibrariesCheckBox.Location = new System.Drawing.Point(10, 69);
+            this.checkPythonLibrariesCheckBox.Name = "checkPythonLibrariesCheckBox";
+            this.checkPythonLibrariesCheckBox.Size = new System.Drawing.Size(377, 27);
+            this.checkPythonLibrariesCheckBox.TabIndex = 37;
+            this.checkPythonLibrariesCheckBox.Text = "Run Python installer at window startup";
+            this.checkPythonLibrariesCheckBox.UseVisualStyleBackColor = true;
             // 
             // miscDefaultButton
             // 
@@ -1877,6 +1889,7 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckBox cmaEsWarmStartCmaEsCheckBox;
         private System.Windows.Forms.Label EstimatedTimeRemainingLabel;
         private System.Windows.Forms.CheckBox inMemoryCheckBox;
+        private System.Windows.Forms.CheckBox checkPythonLibrariesCheckBox;
     }
 }
 

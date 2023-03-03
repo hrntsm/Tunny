@@ -50,6 +50,8 @@ namespace Tunny.UI
                     StartPosition = FormStartPosition.CenterScreen
                 };
                 installer.Show(Owner);
+                _settings.CheckPythonLibraries = false;
+                checkPythonLibrariesCheckBox.Checked = false;
             }
         }
 
@@ -88,7 +90,7 @@ namespace Tunny.UI
             {
                 _settings = new TunnySettings
                 {
-                    Storage = new Storage
+                    Storage = new Settings.Storage
                     {
                         Path = _component.GhInOut.ComponentFolder + @"\Fish.db",
                     }
@@ -153,11 +155,12 @@ namespace Tunny.UI
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
             _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
-            _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : StorageType.Sqlite;
+            _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : _settings.Storage.Type;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
+            _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings();
         }
     }

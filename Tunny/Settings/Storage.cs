@@ -2,8 +2,8 @@
 {
     public class Storage
     {
-        public string Path { get; set; } = "/Fish.db";
-        public StorageType Type { get; set; } = StorageType.Sqlite;
+        public string Path { get; set; } = "/fish.log";
+        public StorageType Type { get; set; } = StorageType.Journal;
     }
 
     public enum StorageType

@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
 using Tunny.Handler;
-using Tunny.Solver;
+using Tunny.Settings;
+using Tunny.Storage;
 
 namespace Tunny.UI
 {
@@ -25,10 +27,12 @@ namespace Tunny.UI
                 copyStudyCheckBox.Checked = false;
                 copyStudyCheckBox.Enabled = false;
                 studyNameTextBox.Enabled = true;
+                _settings.Storage.Type = StorageType.InMemory;
             }
             else
             {
                 continueStudyCheckBox.Enabled = true;
+                _settings.Storage.Type = Path.GetExtension(_settings.Storage.Path) == ".log" ? StorageType.Journal : StorageType.Sqlite;
             }
         }
 
@@ -39,12 +43,14 @@ namespace Tunny.UI
                 existingStudyComboBox.Enabled = true;
                 copyStudyCheckBox.Enabled = true;
                 studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
+                inMemoryCheckBox.Enabled = false;
             }
-            else if (!continueStudyCheckBox.Checked)
+            else
             {
                 copyStudyCheckBox.Enabled = false;
                 existingStudyComboBox.Enabled = false;
                 studyNameTextBox.Enabled = true;
+                inMemoryCheckBox.Enabled = true;
             }
         }
 
@@ -89,8 +95,7 @@ namespace Tunny.UI
             }
             else if (checkResult && copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
             {
-                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
+                new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage.Path);
                 _settings.StudyName = studyNameTextBox.Text;
             }
             else if (checkResult && continueStudyCheckBox.Checked)
@@ -183,18 +188,17 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
-            var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-            UpdateStudyComboBox(study);
+            UpdateStudyComboBox(_settings.Storage.Path);
         }
 
-        private void UpdateStudyComboBox(Study study)
+        private void UpdateStudyComboBox(string storagePath)
         {
             existingStudyComboBox.Items.Clear();
             visualizeTargetStudyComboBox.Items.Clear();
             outputTargetStudyComboBox.Items.Clear();
             cmaEsWarmStartComboBox.Items.Clear();
 
-            _summaries = study.GetAllStudySummariesCS();
+            _summaries = new StorageHandler().GetStudySummaries(storagePath);
 
             if (_summaries.Length > 0)
             {
