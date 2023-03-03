@@ -14,8 +14,13 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Display of estimated remaining time during optimization run.
 - In-memory optimization mode.
   - Mode that works faster instead of saving optimization results during optimization.
+- Support Journal storage.
+  - Since saving to the sqlite storage format that had been used up to now sometimes resulted in errors during optimization, a different storage format was supported.
 
 ### Changed
+
+- Boolean to start only the first time, since the Python installer may start every time.
+  - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
 
 
 ### Deprecated
@@ -27,6 +32,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Fixed
 
 - Enabled Optuna-Dashboard to work even if the filename contains spaces.
+- The problem of saving the results of optimization in progress, etc., which causes an error and fails to save the results, can now be avoided by using JournalStorage.
 
 ### Security
 
