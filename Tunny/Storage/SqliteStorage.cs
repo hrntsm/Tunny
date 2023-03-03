@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -7,52 +6,16 @@ using System.IO;
 
 using Python.Runtime;
 
-using Tunny.Handler;
-using Tunny.Settings;
+using Tunny.Util;
 
-namespace Tunny.Solver
+namespace Tunny.Storage
 {
-    public class Study
+    public class SqliteStorage : PythonInit, IStorage
     {
-        private readonly string _componentFolder;
-        private readonly TunnySettings _settings;
+        public dynamic Storage { get; set; }
 
-        public Study(string componentFolder, TunnySettings settings)
+        public SqliteStorage() : base()
         {
-            _componentFolder = componentFolder;
-            _settings = settings;
-            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
-            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
-        }
-
-        public StudySummary[] GetAllStudySummariesCS()
-        {
-            var studySummaries = new List<StudySummary>();
-            if (!File.Exists(_settings.Storage.Path))
-            {
-                return studySummaries.ToArray();
-            }
-
-            var sqliteConnection = new SQLiteConnectionStringBuilder
-            {
-                DataSource = _settings.Storage.Path,
-                Version = 3
-            };
-
-            using (var connection = new SQLiteConnection(sqliteConnection.ToString()))
-            {
-                connection.Open();
-
-                if (!CheckTableExist(connection))
-                {
-                    return studySummaries.ToArray();
-                }
-                GetStudy(studySummaries, connection);
-                GetStudyUserAttributes(studySummaries, connection);
-                // GetTrials(studySummaries, connection);
-            }
-
-            return studySummaries.ToArray();
         }
 
         private static bool CheckTableExist(SQLiteConnection connection)
@@ -148,10 +111,10 @@ namespace Tunny.Solver
             }
         }
 
-        public StudySummary[] GetAllStudySummariesPY()
+        public static StudySummary[] GetStudySummariesPY(string storagePath)
         {
             var studySummaries = new List<StudySummary>();
-            string storage = "sqlite:///" + _settings.Storage.Path;
+            string storage = "sqlite:///" + storagePath;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -171,21 +134,23 @@ namespace Tunny.Solver
             return studySummaries.ToArray();
         }
 
-        public void CreateNewStorage()
+        public dynamic CreateNewStorage(string storagePath)
         {
-            string storage = "sqlite:///" + _settings.Storage.Path;
+            string sqlitePath = "sqlite:///" + storagePath;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                optuna.storages.RDBStorage(storage);
+                Storage = optuna.storages.RDBStorage(sqlitePath);
             }
             PythonEngine.Shutdown();
+
+            return Storage;
         }
 
-        public void Copy(string fromStudyName, string toStudyName)
+        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
         {
-            string storage = "sqlite:///" + _settings.Storage.Path;
+            string storage = "sqlite:///" + storagePath;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -195,33 +160,39 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-    }
+        public StudySummary[] GetStudySummaries(string storagePath)
+        {
+            var studySummaries = new List<StudySummary>();
+            if (!File.Exists(storagePath))
+            {
+                return studySummaries.ToArray();
+            }
 
-    public class StudySummary
-    {
-        public int StudyId { get; set; }
-        public string StudyName { get; set; }
-        public Dictionary<string, string[]> UserAttributes { get; set; }
-        public Dictionary<string, string[]> SystemAttributes { get; set; }
-        public int NTrials { get; set; }
-        public List<Trial> Trials { get; set; }
-    }
+            var sqliteConnection = new SQLiteConnectionStringBuilder
+            {
+                DataSource = storagePath,
+                Version = 3
+            };
 
-    public class Trial
-    {
-        public int TrialId { get; set; }
-        public int Number { get; set; }
-        public TrialState State { get; set; }
-        public DateTime DatetimeStart { get; set; }
-        public DateTime DatetimeComplete { get; set; }
-    }
+            using (var connection = new SQLiteConnection(sqliteConnection.ToString()))
+            {
+                connection.Open();
 
-    public enum TrialState
-    {
-        RUNNING,
-        WAITING,
-        COMPLETE,
-        PRUNED,
-        FAIL
+                if (!CheckTableExist(connection))
+                {
+                    return studySummaries.ToArray();
+                }
+                GetStudy(studySummaries, connection);
+                GetStudyUserAttributes(studySummaries, connection);
+                // GetTrials(studySummaries, connection);
+            }
+
+            return studySummaries.ToArray();
+        }
+
+        dynamic ICreateStorage.CreateNewStorage(string storagePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Handler;
-using Tunny.Solver;
+using Tunny.Storage;
 
 namespace Tunny.UI
 {
@@ -89,8 +89,7 @@ namespace Tunny.UI
             }
             else if (checkResult && copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
             {
-                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-                study.Copy(existingStudyComboBox.Text, studyNameTextBox.Text);
+                new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage.Path);
                 _settings.StudyName = studyNameTextBox.Text;
             }
             else if (checkResult && continueStudyCheckBox.Checked)
@@ -183,18 +182,17 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
-            var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-            UpdateStudyComboBox(study);
+            UpdateStudyComboBox(_settings.Storage.Path);
         }
 
-        private void UpdateStudyComboBox(Study study)
+        private void UpdateStudyComboBox(string storagePath)
         {
             existingStudyComboBox.Items.Clear();
             visualizeTargetStudyComboBox.Items.Clear();
             outputTargetStudyComboBox.Items.Clear();
             cmaEsWarmStartComboBox.Items.Clear();
 
-            _summaries = study.GetAllStudySummariesCS();
+            _summaries = new StorageHandler().GetStudySummaries(storagePath);
 
             if (_summaries.Length > 0)
             {

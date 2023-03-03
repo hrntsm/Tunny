@@ -9,6 +9,7 @@ using Python.Runtime;
 
 using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
@@ -55,7 +56,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
-                dynamic storage = Settings.Storage.Type == StorageType.Sqlite ? "sqlite:///" + Settings.Storage.Path : optuna.storages.InMemoryStorage();
+                dynamic storage = CreateNewStorage();
 
                 if (CheckExistStudyParameter(nObjective, optuna))
                 {
@@ -66,6 +67,27 @@ namespace Tunny.Solver
                 }
             }
             PythonEngine.Shutdown();
+        }
+
+        private dynamic CreateNewStorage()
+        {
+            dynamic storage;
+            switch (Settings.Storage.Type)
+            {
+                case StorageType.InMemory:
+                    storage = new InMemoryStorage().CreateNewStorage();
+                    break;
+                case StorageType.Sqlite:
+                    storage = new SqliteStorage().CreateNewStorage(Settings.Storage.Path);
+                    break;
+                case StorageType.Journal:
+                    storage = new JournalStorage().CreateNewStorage(Settings.Storage.Path);
+                    break;
+                default:
+                    throw new ArgumentException("Storage type is not defined.");
+            }
+
+            return storage;
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
