@@ -50,6 +50,8 @@ namespace Tunny.UI
                     StartPosition = FormStartPosition.CenterScreen
                 };
                 installer.Show(Owner);
+                _settings.CheckPythonLibraries = false;
+                checkPythonLibrariesCheckBox.Checked = false;
             }
         }
 
@@ -158,6 +160,7 @@ namespace Tunny.UI
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
+            _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings();
         }
     }
