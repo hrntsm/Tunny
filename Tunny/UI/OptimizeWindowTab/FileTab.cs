@@ -34,14 +34,15 @@ namespace Tunny.UI
             var sfd = new SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
-                Filter = "Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db,*.sqlite",
+                Filter = "Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = "Set Tunny result file path",
 
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 _settings.Storage.Path = sfd.FileName;
-                _settings.Storage.Type = Path.GetExtension(sfd.FileName) == ".log" ? StorageType.Journal : StorageType.Sqlite;
+                _settings.Storage.Type = Path.GetExtension(sfd.FileName) == ".log"
+                    ? StorageType.Journal : StorageType.Sqlite;
                 existingStudyComboBox.SelectedIndex = -1;
                 existingStudyComboBox.Items.Clear();
 

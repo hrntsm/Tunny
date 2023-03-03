@@ -153,7 +153,7 @@ namespace Tunny.UI
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
             _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
-            _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : StorageType.Sqlite;
+            _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : _settings.Storage.Type;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;

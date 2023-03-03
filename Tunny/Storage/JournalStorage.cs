@@ -88,6 +88,10 @@ namespace Tunny.Storage
 
         public StudySummary[] GetStudySummaries(string storagePath)
         {
+            if (File.Exists(storagePath) == false)
+            {
+                return Array.Empty<StudySummary>();
+            }
             var journalStorage = new List<string>();
             foreach (string line in File.ReadLines(storagePath))
             {
