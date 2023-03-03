@@ -14,7 +14,7 @@ namespace Tunny.Solver
         private readonly TunnySettings _settings;
         private readonly bool _hasConstraint;
 
-        public Visualize(TunnySettings settings, bool hasConstraint) : base()
+        public Visualize(TunnySettings settings, bool hasConstraint)
         {
             _settings = settings;
             _hasConstraint = hasConstraint;

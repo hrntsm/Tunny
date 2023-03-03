@@ -8,7 +8,7 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public InMemoryStorage() : base()
+        public InMemoryStorage()
         {
         }
 

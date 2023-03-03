@@ -24,7 +24,7 @@ namespace Tunny.Solver
         private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
 
-        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint) : base()
+        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint)
         {
             _componentFolder = componentFolder;
             _settings = settings;

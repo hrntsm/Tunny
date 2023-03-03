@@ -14,7 +14,7 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public SqliteStorage() : base()
+        public SqliteStorage()
         {
         }
 
@@ -196,7 +196,6 @@ namespace Tunny.Storage
                 }
                 GetStudy(studySummaries, connection);
                 GetStudyUserAttributes(studySummaries, connection);
-                // GetTrials(studySummaries, connection);
             }
 
             return studySummaries.ToArray();

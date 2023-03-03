@@ -61,7 +61,7 @@ namespace Tunny.Storage
         [JsonIgnore]
         public dynamic Storage { get; set; }
 
-        public JournalStorage() : base()
+        public JournalStorage()
         {
         }
 
@@ -114,39 +114,39 @@ namespace Tunny.Storage
                     SystemAttributes = new Dictionary<string, string[]>(),
                     Trials = new List<Trial>()
                 };
-                foreach (JournalStorage j in group)
-                {
-                    foreach (KeyValuePair<string, object> item in j.UserAttr)
-                    {
-                        if (item.Value is string str)
-                        {
-                            string[] values = str.Split(',');
-                            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
-                            {
-                                _ = value.Union(values);
-                            }
-                            else
-                            {
-                                studySummary.UserAttributes.Add(item.Key, values);
-                            }
-                        }
-                        else if (item.Value is string[] strArray)
-                        {
-                            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
-                            {
-                                _ = value.Union(strArray);
-                            }
-                            else
-                            {
-                                studySummary.UserAttributes.Add(item.Key, strArray);
-                            }
-                        }
-                    }
-                }
+                SetStudySummaryValue(group, studySummary);
                 studySummaries[i++] = studySummary;
             }
 
             return studySummaries;
+        }
+
+        private static void SetStudySummaryValue(IGrouping<int?, JournalStorage> group, StudySummary studySummary)
+        {
+            foreach (JournalStorage journal in group)
+            {
+                foreach (KeyValuePair<string, object> item in journal.UserAttr)
+                {
+                    string[] values = Array.Empty<string>();
+                    if (item.Value is string str)
+                    {
+                        values = str.Split(',');
+                    }
+                    else if (item.Value is string[] strArray)
+                    {
+                        values = strArray;
+                    }
+
+                    if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+                    {
+                        _ = value.Union(values);
+                    }
+                    else
+                    {
+                        studySummary.UserAttributes.Add(item.Key, values);
+                    }
+                }
+            }
         }
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
