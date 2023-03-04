@@ -89,10 +89,17 @@ namespace Tunny.Storage
                 return Array.Empty<StudySummary>();
             }
             var journalStorageString = new List<string>();
-            foreach (string line in File.ReadLines(storagePath))
+            using (FileStream fs = File.Open(storagePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                journalStorageString.Add(line);
+                using (var sr = new StreamReader(fs))
+                {
+                    while (sr.Peek() >= 0)
+                    {
+                        journalStorageString.Add(sr.ReadLine());
+                    }
+                }
             }
+
             JournalStorage[] storage = Deserialize(journalStorageString);
             var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
             IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2)
