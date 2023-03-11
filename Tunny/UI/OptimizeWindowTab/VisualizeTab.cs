@@ -129,7 +129,6 @@ namespace Tunny.UI
             switch (pSettings.PlotTypeName)
             {
                 case "contour":
-                    return CheckContourTargets(pSettings);
                 case "parallel coordinate":
                 case "slice":
                     return CheckOneObjSomeVarTargets(pSettings);
@@ -182,24 +181,13 @@ namespace Tunny.UI
             {
                 result = HandleOnly1ObjectiveMessage();
             }
+            else if (pSettings.PlotTypeName == "contour" && pSettings.TargetVariableName.Length < 2)
+            {
+                result = RequireLeast2VariableMessage();
+            }
             else if (pSettings.TargetVariableName.Length == 0)
             {
                 result = RequireLeast1VariableMessage();
-            }
-
-            return result;
-        }
-
-        private static bool CheckContourTargets(PlotSettings pSettings)
-        {
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1)
-            {
-                result = HandleOnly1ObjectiveMessage();
-            }
-            else if (pSettings.TargetVariableName.Length < 2)
-            {
-                result = RequireLeast2VariableMessage();
             }
 
             return result;
