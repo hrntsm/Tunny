@@ -23,7 +23,7 @@ namespace Tunny.Solver
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
-        private double[] XOpt { get; set; }
+        public double[] XOpt { get; private set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
         public Dictionary<string, FishEgg> FishEgg { get; set; }
@@ -421,17 +421,6 @@ namespace Tunny.Solver
             }
             return sampler;
         }
-
-        public double[] GetXOptimum()
-        {
-            return XOpt;
-        }
-
-        public double[] GetFxOptimum()
-        {
-            return FxOpt;
-        }
-
     }
 
     public enum GcAfterTrial

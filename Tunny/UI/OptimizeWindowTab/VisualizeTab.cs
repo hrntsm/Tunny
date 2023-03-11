@@ -17,7 +17,7 @@ namespace Tunny.UI
         {
             if (File.Exists(_settings.Storage.Path) == false)
             {
-                TunnyMessageBox.Show("Please set exist result file path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ResultFileNotExistErrorMessage();
                 return;
             }
 
@@ -148,12 +148,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
-            }
-            else if (pSettings.TargetVariableName.Length == 0)
-            {
-
+                result = HandleOnly1ObjectiveMessage();
             }
 
             return result;
@@ -164,8 +159,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length != 2)
             {
-                TunnyMessageBox.Show("This plot can only handle 2 objective function.", "Tunny");
-                result = false;
+                result = HandleOnly2ObjectivesMessage();
             }
             return result;
         }
@@ -175,8 +169,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
             {
-                TunnyMessageBox.Show("This plot can only handle 2 or 3 objective function.", "Tunny");
-                result = false;
+                result = HandleOnly2or3ObjectiveMessage();
             }
 
             return result;
@@ -187,13 +180,11 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
+                result = HandleOnly1ObjectiveMessage();
             }
             else if (pSettings.TargetVariableName.Length == 0)
             {
-                TunnyMessageBox.Show("This plot requires at least one variables.", "Tunny");
-                result = false;
+                result = RequireLeast1VariableMessage();
             }
 
             return result;
@@ -204,13 +195,11 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
+                result = HandleOnly1ObjectiveMessage();
             }
             else if (pSettings.TargetVariableName.Length < 2)
             {
-                TunnyMessageBox.Show("Contour requires at least two variables.", "Tunny");
-                result = false;
+                result = RequireLeast2VariableMessage();
             }
 
             return result;

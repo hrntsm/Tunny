@@ -134,44 +134,6 @@ namespace Tunny.UI
             return true;
         }
 
-        private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "CMA-ES samplers only support single objective optimization.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
-
-        private bool SameStudyNameMassage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "Please choose any study name.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
-
-        private bool NameAlreadyExistMessage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)
         {
