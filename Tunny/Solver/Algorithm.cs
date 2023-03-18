@@ -23,7 +23,7 @@ namespace Tunny.Solver
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
-        private double[] XOpt { get; set; }
+        public double[] XOpt { get; private set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
         public Dictionary<string, FishEgg> FishEgg { get; set; }
@@ -189,28 +189,14 @@ namespace Tunny.Solver
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
-
             EnqueueTrial(study, enqueueItems);
 
             while (true)
             {
-                if (trialNum >= nTrials)
+                if (CheckOptimizeComplete(nTrials, timeout, trialNum, startTime))
                 {
-                    EndState = EndState.AllTrialCompleted;
                     break;
                 }
-                else if (timeout > 0 && (DateTime.Now - startTime).TotalSeconds >= timeout)
-                {
-                    EndState = EndState.Timeout;
-                    break;
-                }
-                else if (OptimizeLoop.IsForcedStopOptimize)
-                {
-                    EndState = EndState.StoppedByUser;
-                    OptimizeLoop.IsForcedStopOptimize = false;
-                    break;
-                }
-
                 int progress = trialNum * 100 / nTrials;
                 dynamic trial = study.ask();
 
@@ -225,19 +211,7 @@ namespace Tunny.Solver
                         : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                     }
 
-                    dynamic[] bestTrials = study.best_trials;
-                    double[][] bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
-                    var pState = new ProgressState
-                    {
-                        TrialNumber = trialNum,
-                        ObjectiveNum = ObjNickName.Length,
-                        BestValues = bestValues,
-                        Values = xTest.Select(v => (decimal)v).ToList(),
-                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study),
-                        EstimatedTimeRemaining = timeout <= 0
-                            ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum) / (trialNum + 1))
-                            : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
-                    };
+                    ProgressState pState = SetProgressState(nTrials, timeout, xTest, trialNum, startTime, study);
                     result = EvalFunc(pState, progress);
 
                     if (result.ObjectiveValues.Contains(double.NaN))
@@ -270,6 +244,60 @@ namespace Tunny.Solver
             if (Settings.Storage.Type == StorageType.InMemory)
             {
                 CopyInMemoryStudy(storage);
+            }
+        }
+
+        private bool CheckOptimizeComplete(int nTrials, double timeout, int trialNum, DateTime startTime)
+        {
+            bool isOptimizeCompleted = false;
+            if (trialNum >= nTrials)
+            {
+                EndState = EndState.AllTrialCompleted;
+                isOptimizeCompleted = true;
+            }
+            else if (timeout > 0 && (DateTime.Now - startTime).TotalSeconds >= timeout)
+            {
+                EndState = EndState.Timeout;
+                isOptimizeCompleted = true;
+            }
+            else if (OptimizeLoop.IsForcedStopOptimize)
+            {
+                EndState = EndState.StoppedByUser;
+                OptimizeLoop.IsForcedStopOptimize = false;
+                isOptimizeCompleted = true;
+            }
+
+            return isOptimizeCompleted;
+        }
+
+        private ProgressState SetProgressState(int nTrials, double timeout, double[] xTest, int trialNum, DateTime startTime, dynamic study)
+        {
+            ComputeBestValues(study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
+            return new ProgressState
+            {
+                TrialNumber = trialNum,
+                ObjectiveNum = ObjNickName.Length,
+                BestValues = bestValues,
+                Values = xTest.Select(v => (decimal)v).ToList(),
+                HypervolumeRatio = hypervolumeRatio,
+                EstimatedTimeRemaining = timeout <= 0
+                    ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum) / (trialNum + 1))
+                    : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
+            };
+        }
+
+        private void ComputeBestValues(dynamic study, int trialNum, out double[][] bestValues, out double hypervolumeRatio)
+        {
+            if (Settings.Optimize.ShowRealtimeResult)
+            {
+                dynamic[] bestTrials = study.best_trials;
+                bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
+                hypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study);
+            }
+            else
+            {
+                bestValues = null;
+                hypervolumeRatio = 0;
             }
         }
 
@@ -393,17 +421,6 @@ namespace Tunny.Solver
             }
             return sampler;
         }
-
-        public double[] GetXOptimum()
-        {
-            return XOpt;
-        }
-
-        public double[] GetFxOptimum()
-        {
-            return FxOpt;
-        }
-
     }
 
     public enum GcAfterTrial

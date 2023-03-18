@@ -48,7 +48,7 @@ namespace Tunny.Solver
             {
                 var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
                 optimize.Solve();
-                XOpt = optimize.GetXOptimum();
+                XOpt = optimize.XOpt;
 
                 ShowEndMessages(optimize);
                 return true;

@@ -44,6 +44,7 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.ShowRealtimeResultCheckBox = new System.Windows.Forms.CheckBox();
             this.EstimatedTimeRemainingLabel = new System.Windows.Forms.Label();
             this.optimizeBestValueLabel = new System.Windows.Forms.Label();
             this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
@@ -319,6 +320,7 @@ namespace Tunny.UI
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.Controls.Add(this.ShowRealtimeResultCheckBox);
             this.optimizeTabPage.Controls.Add(this.EstimatedTimeRemainingLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeBestValueLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeTrialNumLabel);
@@ -341,10 +343,21 @@ namespace Tunny.UI
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
             // 
+            // ShowRealtimeResultCheckBox
+            // 
+            this.ShowRealtimeResultCheckBox.AutoSize = true;
+            this.ShowRealtimeResultCheckBox.Location = new System.Drawing.Point(141, 382);
+            this.ShowRealtimeResultCheckBox.Name = "ShowRealtimeResultCheckBox";
+            this.ShowRealtimeResultCheckBox.Size = new System.Drawing.Size(22, 21);
+            this.ShowRealtimeResultCheckBox.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.ShowRealtimeResultCheckBox, "Enable real-time display of BestValue during optimization.\r\nIf enabled, optimizat" +
+        "ion will slow down as the number of trials increases.");
+            this.ShowRealtimeResultCheckBox.UseVisualStyleBackColor = true;
+            // 
             // EstimatedTimeRemainingLabel
             // 
             this.EstimatedTimeRemainingLabel.AutoSize = true;
-            this.EstimatedTimeRemainingLabel.Location = new System.Drawing.Point(44, 411);
+            this.EstimatedTimeRemainingLabel.Location = new System.Drawing.Point(21, 411);
             this.EstimatedTimeRemainingLabel.Name = "EstimatedTimeRemainingLabel";
             this.EstimatedTimeRemainingLabel.Size = new System.Drawing.Size(272, 23);
             this.EstimatedTimeRemainingLabel.TabIndex = 16;
@@ -353,7 +366,7 @@ namespace Tunny.UI
             // optimizeBestValueLabel
             // 
             this.optimizeBestValueLabel.AutoSize = true;
-            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 380);
+            this.optimizeBestValueLabel.Location = new System.Drawing.Point(169, 380);
             this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
             this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
             this.optimizeBestValueLabel.TabIndex = 15;
@@ -362,7 +375,7 @@ namespace Tunny.UI
             // optimizeTrialNumLabel
             // 
             this.optimizeTrialNumLabel.AutoSize = true;
-            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(44, 380);
+            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(21, 380);
             this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
             this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
             this.optimizeTrialNumLabel.TabIndex = 14;
@@ -1890,6 +1903,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Label EstimatedTimeRemainingLabel;
         private System.Windows.Forms.CheckBox inMemoryCheckBox;
         private System.Windows.Forms.CheckBox checkPythonLibrariesCheckBox;
+        private System.Windows.Forms.CheckBox ShowRealtimeResultCheckBox;
     }
 }
 

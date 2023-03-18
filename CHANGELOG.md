@@ -15,6 +15,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Mode that works faster instead of saving optimization results during optimization.
 - Support Journal storage.
   - Since saving to the sqlite storage format that had been used up to now sometimes resulted in errors during optimization, a different storage format was supported.
+- Checkbox to toggle whether results are shown in the UI in Realtime.
+  - There was a problem that the display of results on the UI in Realtime, which was added in v0.6, caused the optimization speed to gradually slow down.
 
 ### Changed
 
@@ -31,6 +33,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - The problem of saving the results of optimization in progress, etc., which causes an error and fails to save the results, can now be avoided by using JournalStorage.
 
 ### Security
+
+- Bump torch from 1.12.0 to 1.13.1
 
 ## [v0.6.0] -2022-12-23
 

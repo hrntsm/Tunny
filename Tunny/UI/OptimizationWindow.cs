@@ -34,7 +34,7 @@ namespace Tunny.UI
                 FormClosingXButton(this, null);
             }
             LoadSettingJson();
-            InitializeUIValues();
+            SetUIValues();
             RunPythonInstaller();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
@@ -99,26 +99,6 @@ namespace Tunny.UI
             }
         }
 
-        private void InitializeUIValues()
-        {
-            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
-            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
-            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
-
-            // Study Name GroupBox
-            studyNameTextBox.Text = _settings.StudyName;
-            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
-            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
-            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
-            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
-            UpdateStudyComboBox();
-
-            outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
-            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
-            visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
-            InitializeSamplerSettings();
-        }
-
         private void UpdateGrasshopper(IList<decimal> parameters)
         {
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
@@ -148,6 +128,26 @@ namespace Tunny.UI
             outputResultBackgroundWorker?.Dispose();
         }
 
+        private void SetUIValues()
+        {
+            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+
+            // Study Name GroupBox
+            studyNameTextBox.Text = _settings.StudyName;
+            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
+            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
+            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
+            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
+            UpdateStudyComboBox();
+            ShowRealtimeResultCheckBox.Checked = _settings.Optimize.ShowRealtimeResult;
+
+            outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
+            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
+            visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
+            InitializeSamplerSettings();
+        }
         private void GetUIValues()
         {
             _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
@@ -155,6 +155,7 @@ namespace Tunny.UI
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
             _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
+            _settings.Optimize.ShowRealtimeResult = ShowRealtimeResultCheckBox.Checked;
             _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : _settings.Storage.Type;
             _settings.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;

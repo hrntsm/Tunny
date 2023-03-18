@@ -66,6 +66,7 @@ namespace Tunny.UI
 
             optimizeRunButton.Enabled = false;
             GetUIValues();
+            ShowRealtimeResultCheckBox.Enabled = false;
             OptimizeLoop.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
@@ -133,50 +134,13 @@ namespace Tunny.UI
             return true;
         }
 
-        private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "CMA-ES samplers only support single objective optimization.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
-
-        private bool SameStudyNameMassage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "Please choose any study name.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
-
-        private bool NameAlreadyExistMessage(GH_DocumentEditor ghCanvas)
-        {
-            TunnyMessageBox.Show(
-                "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-            ghCanvas.EnableUI();
-            optimizeRunButton.Enabled = true;
-            return false;
-        }
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)
         {
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
             OptimizeLoop.IsForcedStopOptimize = true;
+            ShowRealtimeResultCheckBox.Enabled = true;
             optimizeBackgroundWorker?.Dispose();
 
             UpdateStudyComboBox();
@@ -257,8 +221,22 @@ namespace Tunny.UI
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"
                 : trialNumLabel + (pState.TrialNumber + 1);
+            SetBestValues(e, pState);
 
-            if (e.ProgressPercentage == 0 || e.ProgressPercentage == 100)
+            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds != 0
+                ? $"Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
+                : $"Estimated Time Remaining: 00:00:00";
+            optimizeProgressBar.Value = e.ProgressPercentage;
+            optimizeProgressBar.Update();
+        }
+
+        private void SetBestValues(ProgressChangedEventArgs e, ProgressState pState)
+        {
+            if (pState.BestValues == null)
+            {
+                optimizeBestValueLabel.Text = "BestValue: #";
+            }
+            else if (e.ProgressPercentage == 0 || e.ProgressPercentage == 100)
             {
                 optimizeBestValueLabel.Text = pState.ObjectiveNum == 1
                     ? "BestValue: #"
@@ -267,15 +245,9 @@ namespace Tunny.UI
             else if (pState.BestValues.Length > 0)
             {
                 optimizeBestValueLabel.Text = pState.ObjectiveNum == 1
-                    ? "BestValue: " + pState.BestValues[0][0]
+                    ? $"BestValue: {pState.BestValues[0][0]:e4}"
                     : $"Hypervolume Ratio: {pState.HypervolumeRatio:0.000}";
             }
-
-            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds != 0
-                ? $"Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
-                : $"Estimated Time Remaining: 00:00:00";
-            optimizeProgressBar.Value = e.ProgressPercentage;
-            optimizeProgressBar.Update();
         }
     }
 }
