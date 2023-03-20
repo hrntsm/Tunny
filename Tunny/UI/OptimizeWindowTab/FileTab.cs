@@ -36,7 +36,6 @@ namespace Tunny.UI
                 FileName = Path.GetFileName(_settings.Storage.Path),
                 Filter = "Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = "Set Tunny result file path",
-
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {

@@ -329,8 +329,9 @@ namespace Tunny.Solver
         private void RunGC(EvaluatedGHResult result)
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
-            if (gcAfterTrial == GcAfterTrial.Always ||
-                result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry
+            if ((gcAfterTrial == GcAfterTrial.Always) ||
+                (result.GeometryJson.Count > 0) &&
+                (gcAfterTrial == GcAfterTrial.HasGeometry)
             )
             {
                 dynamic gc = Py.Import("gc");

@@ -85,7 +85,6 @@ namespace Tunny.Component
             return isContainVariableSets;
         }
 
-
         private void AddVariablesToFishEgg(List<Variable> variables)
         {
             foreach (Variable variable in variables)

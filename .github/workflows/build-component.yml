@@ -53,6 +53,6 @@ jobs:
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         uses: actions/upload-artifact@v2
         with:
-          name: Tunny 
+          name: Tunny
           path: |
             ./Release
