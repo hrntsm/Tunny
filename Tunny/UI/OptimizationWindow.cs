@@ -92,7 +92,8 @@ namespace Tunny.UI
                 {
                     Storage = new Settings.Storage
                     {
-                        Path = _component.GhInOut.ComponentFolder + @"\Fish.db",
+                        Path = _component.GhInOut.ComponentFolder + @"\fish.log",
+                        Type = StorageType.Journal
                     }
                 };
                 _settings.CreateNewSettingsFile(settingsPath);
