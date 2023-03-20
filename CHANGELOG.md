@@ -22,6 +22,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Boolean to start only the first time, since the Python installer may start every time.
   - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
+- The most of the dll files are combined into a single gha file to improve usability.
 
 ### Deprecated
 
