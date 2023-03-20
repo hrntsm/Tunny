@@ -134,7 +134,6 @@ namespace Tunny.UI
             return true;
         }
 
-
         private void OptimizeStopButton_Click(object sender, EventArgs e)
         {
             optimizeRunButton.Enabled = true;

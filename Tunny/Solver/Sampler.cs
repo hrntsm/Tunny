@@ -54,7 +54,11 @@ namespace Tunny.Solver
                 var numSpace = new PyList();
                 for (int j = 0; j < nTrials; j++)
                 {
-                    numSpace.Append(new PyFloat(variables[i].LowerBond + (variables[i].UpperBond - variables[i].LowerBond) * j / (nTrials - 1)));
+                    numSpace.Append(new PyFloat(
+                        variables[i].LowerBond +
+                        ((variables[i].UpperBond - variables[i].LowerBond) * (j / (nTrials - 1)))
+                        )
+                    );
                 }
                 searchSpace.SetItem(new PyString(variables[i].NickName), numSpace);
             }
@@ -126,7 +130,6 @@ namespace Tunny.Solver
                 constraints_func: hasConstraints ? ConstraintFunc() : null
             );
         }
-
 
         internal static dynamic QMC(dynamic optuna, TunnySettings settings)
         {

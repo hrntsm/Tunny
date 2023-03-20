@@ -5,6 +5,9 @@
   <a href="https://github.com/hrntsm/Tunny/blob/master/LICENSE"><img src="https://img.shields.io/github/license/hrntsm/Tunny" alt="License"></a>
   <a href="https://github.com/hrntsm/Tunny/releases"><img src="https://img.shields.io/github/v/release/hrntsm/Tunny" alt="Release"></a>
   <a href="https://github.com/hrntsm/Tunny/releases"><img src="https://img.shields.io/github/downloads/hrntsm/Tunny/total" alt="download"></a>
+</p>
+<p align="center">
+  <a href="https://www.codefactor.io/repository/github/hrntsm/tunny"><img src="https://www.codefactor.io/repository/github/hrntsm/tunny/badge" alt="CodeFactor" /></a>
   <a href="https://www.codacy.com/gh/hrntsm/Tunny/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hrntsm/Tunny&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/c7947be6770545e88153125060b41284" alt="Codacy Badge"></a>
   <a href="https://codeclimate.com/github/hrntsm/Tunny/maintainability"><img src="https://api.codeclimate.com/v1/badges/63a5b0a923062d25ad23/maintainability" alt="Maintainability"></a>
   <img src="https://img.shields.io/codeclimate/tech-debt/hrntsm/Tunny" alt="Code Climate technical debt">
