@@ -115,6 +115,7 @@ namespace Tunny.UI
             this.nsgaCrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsgaMutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsWithMarginCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsWarmStartComboBox = new System.Windows.Forms.ComboBox();
             this.cmaEsWarmStartCmaEsCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsPopulationSizeUpDown = new System.Windows.Forms.NumericUpDown();
@@ -1257,6 +1258,7 @@ namespace Tunny.UI
             // 
             // CMAES
             // 
+            this.CMAES.Controls.Add(this.cmaEsWithMarginCheckBox);
             this.CMAES.Controls.Add(this.cmaEsWarmStartComboBox);
             this.CMAES.Controls.Add(this.cmaEsWarmStartCmaEsCheckBox);
             this.CMAES.Controls.Add(this.cmaEsPopulationSizeUpDown);
@@ -1279,11 +1281,24 @@ namespace Tunny.UI
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
             // 
+            // cmaEsWithMarginCheckBox
+            // 
+            this.cmaEsWithMarginCheckBox.AutoSize = true;
+            this.cmaEsWithMarginCheckBox.Checked = true;
+            this.cmaEsWithMarginCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cmaEsWithMarginCheckBox.Location = new System.Drawing.Point(10, 104);
+            this.cmaEsWithMarginCheckBox.Name = "cmaEsWithMarginCheckBox";
+            this.cmaEsWithMarginCheckBox.Size = new System.Drawing.Size(144, 27);
+            this.cmaEsWithMarginCheckBox.TabIndex = 38;
+            this.cmaEsWithMarginCheckBox.Text = "With margin";
+            this.cmaEsWithMarginCheckBox.UseVisualStyleBackColor = true;
+            this.cmaEsWithMarginCheckBox.CheckedChanged += new System.EventHandler(this.CmaEsWithMarginCheckBox_CheckedChanged);
+            // 
             // cmaEsWarmStartComboBox
             // 
             this.cmaEsWarmStartComboBox.Enabled = false;
             this.cmaEsWarmStartComboBox.FormattingEnabled = true;
-            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(220, 240);
+            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(220, 272);
             this.cmaEsWarmStartComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.cmaEsWarmStartComboBox.Name = "cmaEsWarmStartComboBox";
             this.cmaEsWarmStartComboBox.Size = new System.Drawing.Size(180, 31);
@@ -1292,7 +1307,7 @@ namespace Tunny.UI
             // cmaEsWarmStartCmaEsCheckBox
             // 
             this.cmaEsWarmStartCmaEsCheckBox.AutoSize = true;
-            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(10, 205);
+            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(10, 237);
             this.cmaEsWarmStartCmaEsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.cmaEsWarmStartCmaEsCheckBox.Name = "cmaEsWarmStartCmaEsCheckBox";
             this.cmaEsWarmStartCmaEsCheckBox.Size = new System.Drawing.Size(210, 27);
@@ -1304,7 +1319,7 @@ namespace Tunny.UI
             // cmaEsPopulationSizeUpDown
             // 
             this.cmaEsPopulationSizeUpDown.Enabled = false;
-            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 138);
+            this.cmaEsPopulationSizeUpDown.Location = new System.Drawing.Point(309, 170);
             this.cmaEsPopulationSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1322,7 +1337,7 @@ namespace Tunny.UI
             // cmaEsPopulationSizeLabel
             // 
             this.cmaEsPopulationSizeLabel.AutoSize = true;
-            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(8, 139);
+            this.cmaEsPopulationSizeLabel.Location = new System.Drawing.Point(8, 171);
             this.cmaEsPopulationSizeLabel.Name = "cmaEsPopulationSizeLabel";
             this.cmaEsPopulationSizeLabel.Size = new System.Drawing.Size(144, 23);
             this.cmaEsPopulationSizeLabel.TabIndex = 34;
@@ -1344,7 +1359,7 @@ namespace Tunny.UI
             // cmaEsRestartCheckBox
             // 
             this.cmaEsRestartCheckBox.AutoSize = true;
-            this.cmaEsRestartCheckBox.Location = new System.Drawing.Point(10, 105);
+            this.cmaEsRestartCheckBox.Location = new System.Drawing.Point(10, 137);
             this.cmaEsRestartCheckBox.Name = "cmaEsRestartCheckBox";
             this.cmaEsRestartCheckBox.Size = new System.Drawing.Size(171, 27);
             this.cmaEsRestartCheckBox.TabIndex = 32;
@@ -1357,6 +1372,7 @@ namespace Tunny.UI
             // cmaEsUseSaparableCmaCheckBox
             // 
             this.cmaEsUseSaparableCmaCheckBox.AutoSize = true;
+            this.cmaEsUseSaparableCmaCheckBox.Enabled = false;
             this.cmaEsUseSaparableCmaCheckBox.Location = new System.Drawing.Point(10, 71);
             this.cmaEsUseSaparableCmaCheckBox.Name = "cmaEsUseSaparableCmaCheckBox";
             this.cmaEsUseSaparableCmaCheckBox.Size = new System.Drawing.Size(204, 27);
@@ -1364,6 +1380,7 @@ namespace Tunny.UI
             this.cmaEsUseSaparableCmaCheckBox.Text = "Use Separable CMA";
             this.toolTip1.SetToolTip(this.cmaEsUseSaparableCmaCheckBox, resources.GetString("cmaEsUseSaparableCmaCheckBox.ToolTip"));
             this.cmaEsUseSaparableCmaCheckBox.UseVisualStyleBackColor = true;
+            this.cmaEsUseSaparableCmaCheckBox.CheckedChanged += new System.EventHandler(this.CmaEsUseSaparableCmaCheckBox_CheckedChanged);
             // 
             // cmaEsNStartupTrialsLabel
             // 
@@ -1402,7 +1419,7 @@ namespace Tunny.UI
             // 
             this.cmaEsConsiderPruneTrialsCheckBox.AutoSize = true;
             this.cmaEsConsiderPruneTrialsCheckBox.Enabled = false;
-            this.cmaEsConsiderPruneTrialsCheckBox.Location = new System.Drawing.Point(10, 325);
+            this.cmaEsConsiderPruneTrialsCheckBox.Location = new System.Drawing.Point(10, 357);
             this.cmaEsConsiderPruneTrialsCheckBox.Name = "cmaEsConsiderPruneTrialsCheckBox";
             this.cmaEsConsiderPruneTrialsCheckBox.Size = new System.Drawing.Size(230, 27);
             this.cmaEsConsiderPruneTrialsCheckBox.TabIndex = 28;
@@ -1416,7 +1433,7 @@ namespace Tunny.UI
             this.cmaEsWarnIndependentSamplingCheckBox.Checked = true;
             this.cmaEsWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cmaEsWarnIndependentSamplingCheckBox.Enabled = false;
-            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(10, 292);
+            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(10, 324);
             this.cmaEsWarnIndependentSamplingCheckBox.Name = "cmaEsWarnIndependentSamplingCheckBox";
             this.cmaEsWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(284, 27);
             this.cmaEsWarnIndependentSamplingCheckBox.TabIndex = 27;
@@ -1428,7 +1445,7 @@ namespace Tunny.UI
             // cmaEsIncPopsizeLabel
             // 
             this.cmaEsIncPopsizeLabel.AutoSize = true;
-            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(8, 175);
+            this.cmaEsIncPopsizeLabel.Location = new System.Drawing.Point(8, 207);
             this.cmaEsIncPopsizeLabel.Name = "cmaEsIncPopsizeLabel";
             this.cmaEsIncPopsizeLabel.Size = new System.Drawing.Size(240, 23);
             this.cmaEsIncPopsizeLabel.TabIndex = 26;
@@ -1438,7 +1455,7 @@ namespace Tunny.UI
             // cmaEsIncPopSizeUpDown
             // 
             this.cmaEsIncPopSizeUpDown.Enabled = false;
-            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 174);
+            this.cmaEsIncPopSizeUpDown.Location = new System.Drawing.Point(309, 206);
             this.cmaEsIncPopSizeUpDown.Minimum = new decimal(new int[] {
             1,
             0,
@@ -1904,6 +1921,7 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckBox inMemoryCheckBox;
         private System.Windows.Forms.CheckBox checkPythonLibrariesCheckBox;
         private System.Windows.Forms.CheckBox ShowRealtimeResultCheckBox;
+        private System.Windows.Forms.CheckBox cmaEsWithMarginCheckBox;
     }
 }
 
