@@ -44,9 +44,12 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.ShowRealtimeResultCheckBox = new System.Windows.Forms.CheckBox();
+            this.EstimatedTimeRemainingLabel = new System.Windows.Forms.Label();
             this.optimizeBestValueLabel = new System.Windows.Forms.Label();
             this.optimizeTrialNumLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.inMemoryCheckBox = new System.Windows.Forms.CheckBox();
             this.existedStudyNameLabel = new System.Windows.Forms.Label();
             this.existingStudyComboBox = new System.Windows.Forms.ComboBox();
             this.copyStudyCheckBox = new System.Windows.Forms.CheckBox();
@@ -135,6 +138,7 @@ namespace Tunny.UI
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkPythonLibrariesCheckBox = new System.Windows.Forms.CheckBox();
             this.miscDefaultButton = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.runGarbageCollectionLabel = new System.Windows.Forms.Label();
@@ -184,7 +188,7 @@ namespace Tunny.UI
             // 
             // optimizeRunButton
             // 
-            this.optimizeRunButton.Location = new System.Drawing.Point(48, 312);
+            this.optimizeRunButton.Location = new System.Drawing.Point(48, 295);
             this.optimizeRunButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeRunButton.Name = "optimizeRunButton";
             this.optimizeRunButton.Size = new System.Drawing.Size(153, 34);
@@ -196,7 +200,7 @@ namespace Tunny.UI
             // optimizeStopButton
             // 
             this.optimizeStopButton.Enabled = false;
-            this.optimizeStopButton.Location = new System.Drawing.Point(246, 312);
+            this.optimizeStopButton.Location = new System.Drawing.Point(246, 295);
             this.optimizeStopButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeStopButton.Name = "optimizeStopButton";
             this.optimizeStopButton.Size = new System.Drawing.Size(126, 34);
@@ -230,14 +234,14 @@ namespace Tunny.UI
             this.nTrialText.Location = new System.Drawing.Point(15, 56);
             this.nTrialText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.nTrialText.Name = "nTrialText";
-            this.nTrialText.Size = new System.Drawing.Size(142, 23);
+            this.nTrialText.Size = new System.Drawing.Size(151, 23);
             this.nTrialText.TabIndex = 3;
-            this.nTrialText.Text = "Number of trial";
+            this.nTrialText.Text = "Number of trials";
             // 
             // continueStudyCheckBox
             // 
             this.continueStudyCheckBox.AutoSize = true;
-            this.continueStudyCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.continueStudyCheckBox.Location = new System.Drawing.Point(163, 72);
             this.continueStudyCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.continueStudyCheckBox.Name = "continueStudyCheckBox";
             this.continueStudyCheckBox.Size = new System.Drawing.Size(114, 27);
@@ -248,10 +252,10 @@ namespace Tunny.UI
             // 
             // optimizeProgressBar
             // 
-            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 358);
+            this.optimizeProgressBar.Location = new System.Drawing.Point(20, 341);
             this.optimizeProgressBar.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.optimizeProgressBar.Name = "optimizeProgressBar";
-            this.optimizeProgressBar.Size = new System.Drawing.Size(388, 34);
+            this.optimizeProgressBar.Size = new System.Drawing.Size(388, 24);
             this.optimizeProgressBar.TabIndex = 6;
             // 
             // samplerComboBox
@@ -284,7 +288,7 @@ namespace Tunny.UI
             // studyNameLabel
             // 
             this.studyNameLabel.AutoSize = true;
-            this.studyNameLabel.Location = new System.Drawing.Point(8, 33);
+            this.studyNameLabel.Location = new System.Drawing.Point(8, 30);
             this.studyNameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.studyNameLabel.Name = "studyNameLabel";
             this.studyNameLabel.Size = new System.Drawing.Size(166, 23);
@@ -316,6 +320,8 @@ namespace Tunny.UI
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.Controls.Add(this.ShowRealtimeResultCheckBox);
+            this.optimizeTabPage.Controls.Add(this.EstimatedTimeRemainingLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeBestValueLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeTrialNumLabel);
             this.optimizeTabPage.Controls.Add(this.groupBox2);
@@ -337,10 +343,30 @@ namespace Tunny.UI
             this.optimizeTabPage.Text = "Optimize";
             this.optimizeTabPage.UseVisualStyleBackColor = true;
             // 
+            // ShowRealtimeResultCheckBox
+            // 
+            this.ShowRealtimeResultCheckBox.AutoSize = true;
+            this.ShowRealtimeResultCheckBox.Location = new System.Drawing.Point(141, 382);
+            this.ShowRealtimeResultCheckBox.Name = "ShowRealtimeResultCheckBox";
+            this.ShowRealtimeResultCheckBox.Size = new System.Drawing.Size(22, 21);
+            this.ShowRealtimeResultCheckBox.TabIndex = 17;
+            this.toolTip1.SetToolTip(this.ShowRealtimeResultCheckBox, "Enable real-time display of BestValue during optimization.\r\nIf enabled, optimizat" +
+        "ion will slow down as the number of trials increases.");
+            this.ShowRealtimeResultCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // EstimatedTimeRemainingLabel
+            // 
+            this.EstimatedTimeRemainingLabel.AutoSize = true;
+            this.EstimatedTimeRemainingLabel.Location = new System.Drawing.Point(21, 411);
+            this.EstimatedTimeRemainingLabel.Name = "EstimatedTimeRemainingLabel";
+            this.EstimatedTimeRemainingLabel.Size = new System.Drawing.Size(272, 23);
+            this.EstimatedTimeRemainingLabel.TabIndex = 16;
+            this.EstimatedTimeRemainingLabel.Text = "Estimated Time Remaining: #";
+            // 
             // optimizeBestValueLabel
             // 
             this.optimizeBestValueLabel.AutoSize = true;
-            this.optimizeBestValueLabel.Location = new System.Drawing.Point(153, 398);
+            this.optimizeBestValueLabel.Location = new System.Drawing.Point(169, 380);
             this.optimizeBestValueLabel.Name = "optimizeBestValueLabel";
             this.optimizeBestValueLabel.Size = new System.Drawing.Size(129, 23);
             this.optimizeBestValueLabel.TabIndex = 15;
@@ -349,7 +375,7 @@ namespace Tunny.UI
             // optimizeTrialNumLabel
             // 
             this.optimizeTrialNumLabel.AutoSize = true;
-            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(44, 398);
+            this.optimizeTrialNumLabel.Location = new System.Drawing.Point(21, 380);
             this.optimizeTrialNumLabel.Name = "optimizeTrialNumLabel";
             this.optimizeTrialNumLabel.Size = new System.Drawing.Size(80, 23);
             this.optimizeTrialNumLabel.TabIndex = 14;
@@ -357,23 +383,36 @@ namespace Tunny.UI
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.inMemoryCheckBox);
             this.groupBox2.Controls.Add(this.existedStudyNameLabel);
             this.groupBox2.Controls.Add(this.existingStudyComboBox);
             this.groupBox2.Controls.Add(this.copyStudyCheckBox);
             this.groupBox2.Controls.Add(this.studyNameLabel);
             this.groupBox2.Controls.Add(this.continueStudyCheckBox);
             this.groupBox2.Controls.Add(this.studyNameTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(20, 150);
+            this.groupBox2.Location = new System.Drawing.Point(20, 133);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 153);
             this.groupBox2.TabIndex = 13;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Study Name";
             // 
+            // inMemoryCheckBox
+            // 
+            this.inMemoryCheckBox.AutoSize = true;
+            this.inMemoryCheckBox.Location = new System.Drawing.Point(12, 69);
+            this.inMemoryCheckBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.inMemoryCheckBox.Name = "inMemoryCheckBox";
+            this.inMemoryCheckBox.Size = new System.Drawing.Size(124, 27);
+            this.inMemoryCheckBox.TabIndex = 15;
+            this.inMemoryCheckBox.Text = "InMemory";
+            this.inMemoryCheckBox.UseVisualStyleBackColor = true;
+            this.inMemoryCheckBox.CheckedChanged += new System.EventHandler(this.InMemoryCheckBox_CheckedChanged);
+            // 
             // existedStudyNameLabel
             // 
             this.existedStudyNameLabel.AutoSize = true;
-            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 112);
+            this.existedStudyNameLabel.Location = new System.Drawing.Point(8, 111);
             this.existedStudyNameLabel.Name = "existedStudyNameLabel";
             this.existedStudyNameLabel.Size = new System.Drawing.Size(135, 23);
             this.existedStudyNameLabel.TabIndex = 14;
@@ -382,7 +421,7 @@ namespace Tunny.UI
             // existingStudyComboBox
             // 
             this.existingStudyComboBox.FormattingEnabled = true;
-            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 105);
+            this.existingStudyComboBox.Location = new System.Drawing.Point(202, 108);
             this.existingStudyComboBox.Name = "existingStudyComboBox";
             this.existingStudyComboBox.Size = new System.Drawing.Size(180, 31);
             this.existingStudyComboBox.TabIndex = 13;
@@ -390,7 +429,7 @@ namespace Tunny.UI
             // copyStudyCheckBox
             // 
             this.copyStudyCheckBox.AutoSize = true;
-            this.copyStudyCheckBox.Location = new System.Drawing.Point(154, 69);
+            this.copyStudyCheckBox.Location = new System.Drawing.Point(304, 72);
             this.copyStudyCheckBox.Name = "copyStudyCheckBox";
             this.copyStudyCheckBox.Size = new System.Drawing.Size(80, 27);
             this.copyStudyCheckBox.TabIndex = 12;
@@ -1536,6 +1575,7 @@ namespace Tunny.UI
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkPythonLibrariesCheckBox);
             this.tabPage1.Controls.Add(this.miscDefaultButton);
             this.tabPage1.Controls.Add(this.comboBox1);
             this.tabPage1.Controls.Add(this.runGarbageCollectionLabel);
@@ -1546,6 +1586,16 @@ namespace Tunny.UI
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "Misc";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkPythonLibrariesCheckBox
+            // 
+            this.checkPythonLibrariesCheckBox.AutoSize = true;
+            this.checkPythonLibrariesCheckBox.Location = new System.Drawing.Point(10, 69);
+            this.checkPythonLibrariesCheckBox.Name = "checkPythonLibrariesCheckBox";
+            this.checkPythonLibrariesCheckBox.Size = new System.Drawing.Size(377, 27);
+            this.checkPythonLibrariesCheckBox.TabIndex = 37;
+            this.checkPythonLibrariesCheckBox.Text = "Run Python installer at window startup";
+            this.checkPythonLibrariesCheckBox.UseVisualStyleBackColor = true;
             // 
             // miscDefaultButton
             // 
@@ -1623,7 +1673,7 @@ namespace Tunny.UI
             this.clearResultButton.Name = "clearResultButton";
             this.clearResultButton.Size = new System.Drawing.Size(264, 42);
             this.clearResultButton.TabIndex = 5;
-            this.clearResultButton.Text = "Clear flie";
+            this.clearResultButton.Text = "Clear file";
             this.clearResultButton.UseVisualStyleBackColor = true;
             this.clearResultButton.Click += new System.EventHandler(this.ClearResultButton_Click);
             // 
@@ -1850,6 +1900,10 @@ namespace Tunny.UI
         private System.Windows.Forms.Label outputTargetStudyLabel;
         private System.Windows.Forms.ComboBox cmaEsWarmStartComboBox;
         private System.Windows.Forms.CheckBox cmaEsWarmStartCmaEsCheckBox;
+        private System.Windows.Forms.Label EstimatedTimeRemainingLabel;
+        private System.Windows.Forms.CheckBox inMemoryCheckBox;
+        private System.Windows.Forms.CheckBox checkPythonLibrariesCheckBox;
+        private System.Windows.Forms.CheckBox ShowRealtimeResultCheckBox;
     }
 }
 

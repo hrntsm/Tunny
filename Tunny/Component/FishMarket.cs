@@ -111,12 +111,12 @@ namespace Tunny.Component
             Vector3d yVec = _settings.Plane.YAxis * (_settings.YInterval * countY);
             for (int countX = 0; countX < _settings.XNum; countX++)
             {
-                int index = countX + _settings.XNum * countY;
+                int index = countX + (_settings.XNum * countY);
                 if (index == _fishes.Count)
                 {
                     return false;
                 }
-                Vector3d moveVec = _settings.Plane.XAxis * (_settings.XInterval * countX) + yVec;
+                Vector3d moveVec = (_settings.Plane.XAxis * (_settings.XInterval * countX)) + yVec;
                 if (fishGeometries[index] != null)
                 {
                     MoveGeometries(index, moveVec, fishGeometries, arrayedGeometries);
@@ -139,7 +139,12 @@ namespace Tunny.Component
                 movedGeometries[i] = dupGeometry;
             }
             modelMinPt = GetUnionBoundingBoxMinPt(movedGeometries);
-            _tagPlanes.Add(new Plane(modelMinPt - _settings.Plane.YAxis * 2.5 * _size, _settings.Plane.XAxis, _settings.Plane.YAxis));
+            _tagPlanes.Add(new Plane(
+                modelMinPt - (_settings.Plane.YAxis * 2.5 * _size),
+                _settings.Plane.XAxis,
+                _settings.Plane.YAxis
+                )
+            );
         }
 
         private static Point3d GetUnionBoundingBoxMinPt(IEnumerable<GeometryBase> geometryBases)
@@ -201,7 +206,7 @@ namespace Tunny.Component
         protected override Bitmap Icon => Resource.FishMarket;
         public override Guid ComponentGuid => new Guid("46E05DFF-8EFD-418A-AC5B-7C9F24559B2E");
 
-        private class Settings
+        private sealed class Settings
         {
             public Plane Plane { get; set; }
             public int XNum { get; set; }

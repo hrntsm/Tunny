@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.7.0] -2023-03-21
+
+### Added
+
+- Display of estimated remaining time during optimization run.
+- In-memory optimization mode.
+  - Mode that works faster instead of saving optimization results during optimization.
+- Support Journal storage.
+  - Since saving to the sqlite storage format that had been used up to now sometimes resulted in errors during optimization, a different storage format was supported.
+- Checkbox to toggle whether results are shown in the UI in Realtime.
+  - There was a problem that the display of results on the UI in Realtime, which was added in v0.6, caused the optimization speed to gradually slow down.
+
+### Changed
+
+- Boolean to start only the first time, since the Python installer may start every time.
+  - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
+- The most of the dll files are combined into a single gha file to improve usability.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+- Enabled Optuna-Dashboard to work even if the filename contains spaces.
+- The problem of saving the results of optimization in progress, etc., which causes an error and fails to save the results, can now be avoided by using JournalStorage.
+
+### Security
+
+- Bump torch from 1.12.0 to 1.13.1
+
 ## [v0.6.0] -2022-12-23
 
 ### Added

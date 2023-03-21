@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Python.Runtime;
 
 using Tunny.Settings;
+using Tunny.Settings.Sampler;
 using Tunny.Util;
 
 namespace Tunny.Solver
@@ -12,7 +13,7 @@ namespace Tunny.Solver
     {
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
-            Settings.Random random = settings.Optimize.Sampler.Random;
+            Settings.Sampler.Random random = settings.Optimize.Sampler.Random;
             return optuna.samplers.RandomSampler(
                 seed: random.Seed
             );
@@ -30,7 +31,7 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: "sqlite:///" + settings.StoragePath).get_trials()
+                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: "sqlite:///" + settings.Storage.Path).get_trials()
                 )
                 : optuna.samplers.CmaEsSampler(
                     sigma0: cmaEs.Sigma0,
@@ -53,7 +54,11 @@ namespace Tunny.Solver
                 var numSpace = new PyList();
                 for (int j = 0; j < nTrials; j++)
                 {
-                    numSpace.Append(new PyFloat(variables[i].LowerBond + (variables[i].UpperBond - variables[i].LowerBond) * j / (nTrials - 1)));
+                    numSpace.Append(new PyFloat(
+                        variables[i].LowerBond +
+                        ((variables[i].UpperBond - variables[i].LowerBond) * (j / (nTrials - 1)))
+                        )
+                    );
                 }
                 searchSpace.SetItem(new PyString(variables[i].NickName), numSpace);
             }
@@ -125,7 +130,6 @@ namespace Tunny.Solver
                 constraints_func: hasConstraints ? ConstraintFunc() : null
             );
         }
-
 
         internal static dynamic QMC(dynamic optuna, TunnySettings settings)
         {

@@ -10,7 +10,7 @@ namespace Tunny.Settings
         public Optimize Optimize { get; set; } = new Optimize();
         public Result Result { get; set; } = new Result();
         public string StudyName { get; set; } = "study1";
-        public string StoragePath { get; set; } = "/Fish.db";
+        public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
 
         public void Serialize(string path)

@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace Tunny.UI
 {
-    class TunnyMessageBox
+    sealed class TunnyMessageBox
     {
         public static void Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
         {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -16,7 +17,7 @@ using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class Optuna
+    public class Optuna : PythonInit
     {
         public double[] XOpt { get; private set; }
         private readonly string _componentFolder;
@@ -28,8 +29,6 @@ namespace Tunny.Solver
             _componentFolder = componentFolder;
             _settings = settings;
             _hasConstraint = hasConstraint;
-            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
-            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         public bool RunSolver(
@@ -49,7 +48,7 @@ namespace Tunny.Solver
             {
                 var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
                 optimize.Solve();
-                XOpt = optimize.GetXOptimum();
+                XOpt = optimize.XOpt;
 
                 ShowEndMessages(optimize);
                 return true;
@@ -98,7 +97,7 @@ namespace Tunny.Solver
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -249,7 +248,7 @@ namespace Tunny.Solver
                 if (keys[i] == "Constraint")
                 {
                     double[] constraint = (double[])trial.user_attrs[keys[i]];
-                    values = constraint.Select(v => v.ToString()).ToList();
+                    values = constraint.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToList();
                 }
                 else
                 {

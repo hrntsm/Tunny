@@ -3,14 +3,13 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.UI;
 using Tunny.Util;
 
 namespace Tunny.Solver
 {
-    public class Visualize
+    public class Visualize : PythonInit
     {
         private readonly TunnySettings _settings;
         private readonly bool _hasConstraint;
@@ -19,8 +18,6 @@ namespace Tunny.Solver
         {
             _settings = settings;
             _hasConstraint = hasConstraint;
-            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
-            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
 
         private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
@@ -38,7 +35,7 @@ namespace Tunny.Solver
 
         public void Plot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -277,7 +274,7 @@ namespace Tunny.Solver
 
         public void ClusteringPlot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.StoragePath;
+            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {

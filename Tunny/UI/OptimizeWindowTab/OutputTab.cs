@@ -87,8 +87,7 @@ namespace Tunny.UI
             }
             catch (Exception)
             {
-                TunnyMessageBox.Show("The model number format of the input is incorrect. \nPlease use a comma separator as follows.\n\"1,2,3\"", "Tunny");
-                result = false;
+                result = IncorrectParseModeNumberInputMessage();
             }
             return result;
         }
@@ -97,10 +96,7 @@ namespace Tunny.UI
         {
             if (indices.Length > 1)
             {
-                TunnyMessageBox.Show(
-                    "You input multi model numbers, but this function only reflect variables to slider or gene pool to first one.",
-                    "Tunny"
-                );
+                UseFirstModelNumberToReflectMessage();
             }
         }
 

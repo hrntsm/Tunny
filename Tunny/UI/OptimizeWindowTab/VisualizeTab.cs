@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 using Tunny.Handler;
 using Tunny.Solver;
+using Tunny.Storage;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -13,9 +15,18 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
+            if (File.Exists(_settings.Storage.Path) == false)
+            {
+                ResultFileNotExistErrorMessage();
+                return;
+            }
+
+            CheckExistDashboardProcess();
             var dashboard = new Process();
             dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = @"sqlite:///" + _settings.StoragePath;
+            dashboard.StartInfo.Arguments = Path.GetExtension(_settings.Storage.Path) == ".log"
+                ? $"\"{_settings.Storage.Path}\""
+                : @"sqlite:///" + $"\"{_settings.Storage.Path}\"";
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             dashboard.Start();
@@ -24,6 +35,18 @@ namespace Tunny.UI
             browser.StartInfo.FileName = @"http://127.0.0.1:8080/";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
+        }
+
+        private static void CheckExistDashboardProcess()
+        {
+            Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
+            if (dashboardProcess.Length > 0)
+            {
+                foreach (Process p in dashboardProcess)
+                {
+                    p.Kill();
+                }
+            }
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
@@ -106,7 +129,6 @@ namespace Tunny.UI
             switch (pSettings.PlotTypeName)
             {
                 case "contour":
-                    return CheckContourTargets(pSettings);
                 case "parallel coordinate":
                 case "slice":
                     return CheckOneObjSomeVarTargets(pSettings);
@@ -125,12 +147,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
-            }
-            else if (pSettings.TargetVariableName.Length == 0)
-            {
-
+                result = HandleOnly1ObjectiveMessage();
             }
 
             return result;
@@ -141,8 +158,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length != 2)
             {
-                TunnyMessageBox.Show("This plot can only handle 2 objective function.", "Tunny");
-                result = false;
+                result = HandleOnly2ObjectivesMessage();
             }
             return result;
         }
@@ -152,8 +168,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
             {
-                TunnyMessageBox.Show("This plot can only handle 2 or 3 objective function.", "Tunny");
-                result = false;
+                result = HandleOnly2or3ObjectiveMessage();
             }
 
             return result;
@@ -164,30 +179,15 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
+                result = HandleOnly1ObjectiveMessage();
+            }
+            else if (pSettings.PlotTypeName == "contour" && pSettings.TargetVariableName.Length < 2)
+            {
+                result = RequireLeast2VariableMessage();
             }
             else if (pSettings.TargetVariableName.Length == 0)
             {
-                TunnyMessageBox.Show("This plot requires at least one variables.", "Tunny");
-                result = false;
-            }
-
-            return result;
-        }
-
-        private static bool CheckContourTargets(PlotSettings pSettings)
-        {
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1)
-            {
-                TunnyMessageBox.Show("This plot can only handle one objective function.", "Tunny");
-                result = false;
-            }
-            else if (pSettings.TargetVariableName.Length < 2)
-            {
-                TunnyMessageBox.Show("Contour requires at least two variables.", "Tunny");
-                result = false;
+                result = RequireLeast1VariableMessage();
             }
 
             return result;

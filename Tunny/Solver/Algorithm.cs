@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,6 +9,7 @@ using Python.Runtime;
 
 using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
@@ -21,7 +23,7 @@ namespace Tunny.Solver
         private string[] ObjNickName { get; set; }
         private TunnySettings Settings { get; set; }
         private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
-        private double[] XOpt { get; set; }
+        public double[] XOpt { get; private set; }
         private double[] FxOpt { get; set; }
         public EndState EndState { get; set; }
         public Dictionary<string, FishEgg> FishEgg { get; set; }
@@ -45,7 +47,7 @@ namespace Tunny.Solver
             OptimizeLoop.IsForcedStopOptimize = false;
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
-            double timeout = Settings.Optimize.Timeout <= 0 ? double.MaxValue : Settings.Optimize.Timeout;
+            double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             int nObjective = ObjNickName.Length;
             string[] directions = SetDirectionValues(nObjective);
 
@@ -54,16 +56,38 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
+                dynamic storage = CreateNewStorage();
 
-                if (CheckExistStudyParameter(nObjective, optuna))
+                if (CheckExistStudyParameter(nObjective, optuna, storage))
                 {
-                    dynamic study = CreateStudy(directions, optuna, sampler);
+                    dynamic study = CreateStudy(directions, sampler, storage);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
-                    RunOptimize(nTrials, timeout, study, FishEgg, out double[] xTest, out EvaluatedGHResult result);
+                    RunOptimize(nTrials, timeout, study, storage, FishEgg, out double[] xTest, out EvaluatedGHResult result);
                     SetResultValues(nObjective, study, xTest, result);
                 }
             }
             PythonEngine.Shutdown();
+        }
+
+        private dynamic CreateNewStorage()
+        {
+            dynamic storage;
+            switch (Settings.Storage.Type)
+            {
+                case StorageType.InMemory:
+                    storage = new InMemoryStorage().CreateNewStorage(false, string.Empty);
+                    break;
+                case StorageType.Sqlite:
+                    storage = new SqliteStorage().CreateNewStorage(false, Settings.Storage.Path);
+                    break;
+                case StorageType.Journal:
+                    storage = new JournalStorage().CreateNewStorage(false, Settings.Storage.Path);
+                    break;
+                default:
+                    throw new ArgumentException("Storage type is not defined.");
+            }
+
+            return storage;
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
@@ -77,12 +101,13 @@ namespace Tunny.Solver
             return name;
         }
 
-        private dynamic CreateStudy(string[] directions, dynamic optuna, dynamic sampler)
+        private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
-                storage: "sqlite:///" + Settings.StoragePath,
+                storage: storage,
                 study_name: Settings.StudyName,
                 load_if_exists: Settings.Optimize.ContinueStudy
             );
@@ -99,9 +124,9 @@ namespace Tunny.Solver
             return directions;
         }
 
-        private bool CheckExistStudyParameter(int nObjective, dynamic optuna)
+        private bool CheckExistStudyParameter(int nObjective, dynamic optuna, dynamic storage)
         {
-            PyList studySummaries = optuna.get_all_study_summaries("sqlite:///" + Settings.StoragePath);
+            PyList studySummaries = optuna.get_all_study_summaries(storage);
             var studySummaryDict = new Dictionary<string, int>();
 
             foreach (dynamic pyObj in studySummaries)
@@ -158,34 +183,20 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(int nTrials, double timeout, dynamic study, dynamic storage, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
-
             EnqueueTrial(study, enqueueItems);
 
             while (true)
             {
-                if (trialNum >= nTrials)
+                if (CheckOptimizeComplete(nTrials, timeout, trialNum, startTime))
                 {
-                    EndState = EndState.AllTrialCompleted;
                     break;
                 }
-                else if ((DateTime.Now - startTime).TotalSeconds >= timeout)
-                {
-                    EndState = EndState.Timeout;
-                    break;
-                }
-                else if (OptimizeLoop.IsForcedStopOptimize)
-                {
-                    EndState = EndState.StoppedByUser;
-                    OptimizeLoop.IsForcedStopOptimize = false;
-                    break;
-                }
-
                 int progress = trialNum * 100 / nTrials;
                 dynamic trial = study.ask();
 
@@ -200,16 +211,7 @@ namespace Tunny.Solver
                         : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                     }
 
-                    dynamic[] bestTrials = study.best_trials;
-                    double[][] bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
-                    var pState = new ProgressState
-                    {
-                        TrialNumber = trialNum,
-                        ObjectiveNum = ObjNickName.Length,
-                        BestValues = bestValues,
-                        Values = xTest.Select(v => (decimal)v).ToList(),
-                        HypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study)
-                    };
+                    ProgressState pState = SetProgressState(nTrials, timeout, xTest, trialNum, startTime, study);
                     result = EvalFunc(pState, progress);
 
                     if (result.ObjectiveValues.Contains(double.NaN))
@@ -238,6 +240,72 @@ namespace Tunny.Solver
                 }
                 trialNum++;
             }
+
+            if (Settings.Storage.Type == StorageType.InMemory)
+            {
+                CopyInMemoryStudy(storage);
+            }
+        }
+
+        private bool CheckOptimizeComplete(int nTrials, double timeout, int trialNum, DateTime startTime)
+        {
+            bool isOptimizeCompleted = false;
+            if (trialNum >= nTrials)
+            {
+                EndState = EndState.AllTrialCompleted;
+                isOptimizeCompleted = true;
+            }
+            else if (timeout > 0 && (DateTime.Now - startTime).TotalSeconds >= timeout)
+            {
+                EndState = EndState.Timeout;
+                isOptimizeCompleted = true;
+            }
+            else if (OptimizeLoop.IsForcedStopOptimize)
+            {
+                EndState = EndState.StoppedByUser;
+                OptimizeLoop.IsForcedStopOptimize = false;
+                isOptimizeCompleted = true;
+            }
+
+            return isOptimizeCompleted;
+        }
+
+        private ProgressState SetProgressState(int nTrials, double timeout, double[] xTest, int trialNum, DateTime startTime, dynamic study)
+        {
+            ComputeBestValues(study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
+            return new ProgressState
+            {
+                TrialNumber = trialNum,
+                ObjectiveNum = ObjNickName.Length,
+                BestValues = bestValues,
+                Values = xTest.Select(v => (decimal)v).ToList(),
+                HypervolumeRatio = hypervolumeRatio,
+                EstimatedTimeRemaining = timeout <= 0
+                    ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum) / (trialNum + 1))
+                    : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
+            };
+        }
+
+        private void ComputeBestValues(dynamic study, int trialNum, out double[][] bestValues, out double hypervolumeRatio)
+        {
+            if (Settings.Optimize.ShowRealtimeResult)
+            {
+                dynamic[] bestTrials = study.best_trials;
+                bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
+                hypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study);
+            }
+            else
+            {
+                bestValues = null;
+                hypervolumeRatio = 0;
+            }
+        }
+
+        private void CopyInMemoryStudy(dynamic storage)
+        {
+            dynamic optuna = Py.Import("optuna");
+            string studyName = Settings.StudyName;
+            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage.Path));
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
@@ -261,8 +329,9 @@ namespace Tunny.Solver
         private void RunGC(EvaluatedGHResult result)
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
-            if (gcAfterTrial == GcAfterTrial.Always ||
-                result.GeometryJson.Count > 0 && gcAfterTrial == GcAfterTrial.HasGeometry
+            if ((gcAfterTrial == GcAfterTrial.Always) ||
+                (result.GeometryJson.Count > 0) &&
+                (gcAfterTrial == GcAfterTrial.HasGeometry)
             )
             {
                 dynamic gc = Py.Import("gc");
@@ -304,7 +373,7 @@ namespace Tunny.Solver
                 {
                     foreach (string str in pair.Value)
                     {
-                        pyList.Append(new PyFloat(double.Parse(str)));
+                        pyList.Append(new PyFloat(double.Parse(str, CultureInfo.InvariantCulture)));
                     }
                 }
                 else
@@ -353,17 +422,6 @@ namespace Tunny.Solver
             }
             return sampler;
         }
-
-        public double[] GetXOptimum()
-        {
-            return XOpt;
-        }
-
-        public double[] GetFxOptimum()
-        {
-            return FxOpt;
-        }
-
     }
 
     public enum GcAfterTrial

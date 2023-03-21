@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "C:/Program Files/Rhino 7/System/Rhino.exe",
+      "program": "C:/Program Files/Rhino 8 WIP/System/Rhino.exe",
       "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",

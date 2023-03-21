@@ -3,7 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-using Tunny.Solver;
+using Tunny.Settings;
+using Tunny.Storage;
 
 namespace Tunny.UI
 {
@@ -11,12 +12,12 @@ namespace Tunny.UI
     {
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
-            Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.StoragePath));
+            Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
         {
-            File.Delete(_settings.StoragePath);
+            File.Delete(_settings.Storage.Path);
         }
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
@@ -32,23 +33,24 @@ namespace Tunny.UI
         {
             var sfd = new SaveFileDialog
             {
-                FileName = Path.GetFileName(_settings.StoragePath),
-                Filter = "SQLite database(*.db)|*.db",
+                FileName = Path.GetFileName(_settings.Storage.Path),
+                Filter = "Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = "Set Tunny result file path",
-
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                _settings.StoragePath = sfd.FileName;
+                _settings.Storage.Path = sfd.FileName;
+                _settings.Storage.Type = Path.GetExtension(sfd.FileName) == ".log"
+                    ? StorageType.Journal : StorageType.Sqlite;
                 existingStudyComboBox.SelectedIndex = -1;
                 existingStudyComboBox.Items.Clear();
 
-                var study = new Study(_component.GhInOut.ComponentFolder, _settings);
-                if (!File.Exists(_settings.StoragePath))
+                string storagePath = _settings.Storage.Path;
+                if (!File.Exists(storagePath))
                 {
-                    study.CreateNewStorage();
+                    new StorageHandler().CreateNewStorage(true, storagePath);
                 }
-                UpdateStudyComboBox(study);
+                UpdateStudyComboBox(storagePath);
             }
         }
     }
