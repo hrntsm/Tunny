@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -20xx-xx-xx
+## [v0.7.0] -2023-03-21
 
 ### Added
 
