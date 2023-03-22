@@ -39,7 +39,7 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic storage = _settings.Storage.CreateNewOptunaStorage();
+                dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                 dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
@@ -278,7 +278,7 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic storage = _settings.Storage.CreateNewOptunaStorage();
+                dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                 dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {

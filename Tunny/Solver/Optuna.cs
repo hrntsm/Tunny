@@ -106,7 +106,7 @@ namespace Tunny.Solver
 
                 try
                 {
-                    dynamic storage = _settings.Storage.CreateNewOptunaStorage();
+                    dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                     study = optuna.load_study(storage: storage, study_name: studyName);
                 }
                 catch (Exception e)

@@ -43,7 +43,7 @@ namespace Tunny.Settings
             }
         }
 
-        public dynamic CreateNewOptunaStorage(bool useInnerPythonEngine = false)
+        public dynamic CreateNewOptunaStorage(bool useInnerPythonEngine)
         {
             dynamic storage;
             switch (Type)

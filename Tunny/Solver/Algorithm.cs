@@ -56,7 +56,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
-                dynamic storage = Settings.Storage.CreateNewOptunaStorage();
+                dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
 
                 if (CheckExistStudyParameter(nObjective, optuna, storage))
                 {
