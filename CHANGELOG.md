@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.7.1] -2023-03-22
+
+### Fixed
+
+- bug where visualize and output did not work when using journal storage.
+
 ## [v0.7.0] -2023-03-21
 
 ### Added
@@ -23,10 +29,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Boolean to start only the first time, since the Python installer may start every time.
   - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
 - The most of the dll files are combined into a single gha file to improve usability.
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
@@ -69,8 +71,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Deprecated
 
 - Disable unused setting tab ui items
-
-### Removed
 
 ### Fixed
 

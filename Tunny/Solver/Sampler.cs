@@ -31,7 +31,7 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: "sqlite:///" + settings.Storage.Path).get_trials()
+                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: settings.Storage.GetOptunaStoragePath()).get_trials()
                 )
                 : optuna.samplers.CmaEsSampler(
                     sigma0: cmaEs.Sigma0,

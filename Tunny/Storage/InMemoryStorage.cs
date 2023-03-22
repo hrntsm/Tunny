@@ -8,7 +8,7 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             if (useInnerPythonEngine)
             {

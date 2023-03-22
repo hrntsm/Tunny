@@ -20,7 +20,7 @@ namespace Tunny.Solver
             _hasConstraint = hasConstraint;
         }
 
-        private static dynamic LoadStudy(dynamic optuna, string storage, string studyName)
+        private static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
         {
             try
             {
@@ -35,11 +35,11 @@ namespace Tunny.Solver
 
         public void Plot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
+                dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                 dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
@@ -274,11 +274,11 @@ namespace Tunny.Solver
 
         public void ClusteringPlot(PlotSettings pSettings)
         {
-            string storage = "sqlite:///" + _settings.Storage.Path;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
+                dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                 dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
