@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.7.2] -2023-03-22
+
+### Added
+
+- Support Rhino PackageManager.
+- Show Tunny icon in grasshopper ribbon.
+
 ## [v0.7.1] -2023-03-22
 
 ### Fixed
