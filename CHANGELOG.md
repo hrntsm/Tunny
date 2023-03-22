@@ -6,21 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -xxxx-xx-xx
-
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
+## [v0.7.1] -2023-03-22
 
 ### Fixed
 
 - bug where visualize and output did not work when using journal storage.
-
-### Security
 
 ## [v0.7.0] -2023-03-21
 
