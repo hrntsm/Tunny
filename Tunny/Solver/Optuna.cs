@@ -97,7 +97,6 @@ namespace Tunny.Solver
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
         {
-            string storage = "sqlite:///" + _settings.Storage.Path;
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -107,6 +106,7 @@ namespace Tunny.Solver
 
                 try
                 {
+                    dynamic storage = _settings.Storage.CreateNewOptunaStorage();
                     study = optuna.load_study(storage: storage, study_name: studyName);
                 }
                 catch (Exception e)

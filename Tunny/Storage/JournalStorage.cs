@@ -157,8 +157,9 @@ namespace Tunny.Storage
             }
         }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
+            string storagePath = storageSetting.GetOptunaStoragePath();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();
@@ -184,13 +185,13 @@ namespace Tunny.Storage
             Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(filePath, lock_obj: lockObj));
         }
 
-        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
+        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
             PythonEngine.Initialize();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic storage = CreateNewStorage(false, storagePath);
+                dynamic storage = CreateNewStorage(false, storageSetting);
                 optuna.copy_study(from_study_name: fromStudyName, to_study_name: toStudyName, from_storage: storage, to_storage: storage);
             }
             PythonEngine.Shutdown();

@@ -96,7 +96,7 @@ namespace Tunny.UI
             }
             else if (checkResult && copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
             {
-                new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage.Path);
+                new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage);
                 _settings.StudyName = studyNameTextBox.Text;
             }
             else if (checkResult && continueStudyCheckBox.Checked)
