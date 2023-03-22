@@ -56,7 +56,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
-                dynamic storage = CreateNewStorage();
+                dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
 
                 if (CheckExistStudyParameter(nObjective, optuna, storage))
                 {
@@ -67,27 +67,6 @@ namespace Tunny.Solver
                 }
             }
             PythonEngine.Shutdown();
-        }
-
-        private dynamic CreateNewStorage()
-        {
-            dynamic storage;
-            switch (Settings.Storage.Type)
-            {
-                case StorageType.InMemory:
-                    storage = new InMemoryStorage().CreateNewStorage(false, string.Empty);
-                    break;
-                case StorageType.Sqlite:
-                    storage = new SqliteStorage().CreateNewStorage(false, Settings.Storage.Path);
-                    break;
-                case StorageType.Journal:
-                    storage = new JournalStorage().CreateNewStorage(false, Settings.Storage.Path);
-                    break;
-                default:
-                    throw new ArgumentException("Storage type is not defined.");
-            }
-
-            return storage;
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
@@ -305,7 +284,7 @@ namespace Tunny.Solver
         {
             dynamic optuna = Py.Import("optuna");
             string studyName = Settings.StudyName;
-            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage.Path));
+            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)

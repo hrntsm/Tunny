@@ -6,11 +6,11 @@ namespace Tunny.Storage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             ICreateStorage storage;
 
-            switch (Path.GetExtension(storagePath))
+            switch (Path.GetExtension(storageSetting.Path))
             {
                 case null:
                     storage = new InMemoryStorage();
@@ -25,15 +25,15 @@ namespace Tunny.Storage
                 default:
                     throw new ArgumentException("Storage type not supported");
             }
-            Storage = storage.CreateNewStorage(useInnerPythonEngine, storagePath);
+            Storage = storage.CreateNewStorage(useInnerPythonEngine, storageSetting);
             return Storage;
         }
 
-        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
+        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
             IStorage storage;
 
-            switch (Path.GetExtension(storagePath))
+            switch (Path.GetExtension(storageSetting.Path))
             {
                 case ".sqlite3":
                 case ".db":
@@ -45,7 +45,7 @@ namespace Tunny.Storage
                 default:
                     throw new ArgumentException("Storage type not supported");
             }
-            storage.DuplicateStudyInStorage(fromStudyName, toStudyName, storagePath);
+            storage.DuplicateStudyInStorage(fromStudyName, toStudyName, storageSetting);
         }
 
         public StudySummary[] GetStudySummaries(string storagePath)
