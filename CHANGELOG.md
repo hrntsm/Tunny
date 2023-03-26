@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -20xx-xx-xx
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+- Grid sampling.
+
+### Fixed
+
+### Security
+
 ## [v0.7.2] -2023-03-22
 
 ### Added
