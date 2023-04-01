@@ -49,8 +49,8 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.XOpt;
+                ShowEndMessages(optimize.EndState);
 
-                ShowEndMessages(optimize);
                 return true;
             }
             catch (Exception e)
@@ -60,9 +60,9 @@ namespace Tunny.Solver
             }
         }
 
-        private static void ShowEndMessages(Algorithm optimize)
+        private static void ShowEndMessages(EndState endState)
         {
-            switch (optimize.EndState)
+            switch (endState)
             {
                 case EndState.Timeout:
                     TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.", "Tunny");
