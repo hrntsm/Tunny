@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -9,18 +10,16 @@ namespace Tunny.Solver
     {
         private readonly PyModule _importedLibrary;
         private readonly dynamic _artifactBackend;
+        private readonly string _basePath;
 
-        public HumanInTheLoop()
+        public HumanInTheLoop(string path)
         {
             PyModule importedLibrary = Py.CreateScope();
             importedLibrary.Exec(@"
-from __future__ import annotations
-
 import os
 import textwrap
 import threading
 import time
-from typing import NoReturn
 from wsgiref.simple_server import make_server
 
 import optuna
@@ -34,9 +33,10 @@ from optuna_dashboard import wsgi
 from optuna_dashboard.artifact import upload_artifact
 from optuna_dashboard.artifact.file_system import FileSystemBackend"
             );
-
+            _basePath = path;
+            string artifactPath = Path.Combine(_basePath, "artifacts");
             dynamic fileSystemBackend = importedLibrary.Get("FileSystemBackend");
-            _artifactBackend = fileSystemBackend(base_path: "./artifacts");
+            _artifactBackend = fileSystemBackend(base_path: artifactPath);
             _importedLibrary = importedLibrary;
         }
 
@@ -56,7 +56,7 @@ from optuna_dashboard.artifact.file_system import FileSystemBackend"
         {
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
             var pyNameList = new PyList();
-            pyNameList.Append(new PyString("Check Rhino viewport: How do you like the look of this model?"));
+            pyNameList.Append(new PyString("Check above image: How do you like the look of this model?"));
             foreach (string objectiveName in objectiveNames)
             {
                 pyNameList.Append(new PyString(objectiveName));
@@ -99,18 +99,14 @@ from optuna_dashboard.artifact.file_system import FileSystemBackend"
             return len(study);
         }
 
-        public void SaveNote(dynamic study, dynamic trial)
+        public void SaveNote(dynamic study, dynamic trial, Bitmap bitmap)
         {
-            string directoryName = "./artifacts";
-            if (!Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
-
-            string imagePath = @"C:\Users\hiroa\Desktop\TunnyTest\OptunaDotNet\image.jpg";
+            CheckDirectory();
+            string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";
+            bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
 
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
-            dynamic artifactId = uploadArtifact(_artifactBackend, trial, imagePath);
+            dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
 
             dynamic textWrap = _importedLibrary.Get("textwrap");
             dynamic note = textWrap.dedent($@"
@@ -121,6 +117,20 @@ from optuna_dashboard.artifact.file_system import FileSystemBackend"
             );
             dynamic saveNote = _importedLibrary.Get("save_note");
             saveNote(trial, note);
+        }
+
+        private void CheckDirectory()
+        {
+            string artifactPath = Path.Combine(_basePath, "artifacts");
+            string tmpPath = Path.Combine(_basePath, "tmp");
+            if (!Directory.Exists(artifactPath))
+            {
+                Directory.CreateDirectory(artifactPath);
+            }
+            if (!Directory.Exists(tmpPath))
+            {
+                Directory.CreateDirectory(tmpPath);
+            }
         }
     }
 }

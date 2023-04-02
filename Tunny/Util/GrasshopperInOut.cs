@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -419,6 +420,23 @@ namespace Tunny.Util
             }
 
             return attrs;
+        }
+
+        internal Bitmap GetActiveViewBitmap()
+        {
+            foreach (string key in _attributes.Value.Keys)
+            {
+                if (key == "bitmap")
+                {
+                    var objList = _attributes.Value[key] as List<object>;
+                    object obj = objList[0];
+                    var ghObjWrapper = (GH_ObjectWrapper)obj;
+                    var bitmap = ghObjWrapper.Value as Bitmap;
+                    return bitmap;
+                }
+            }
+
+            return null;
         }
     }
 }

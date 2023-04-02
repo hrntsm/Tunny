@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -73,7 +74,7 @@ namespace Tunny.Solver
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
                     if (Settings.Optimize.SelectSampler == 6)
                     {
-                        var humanInTheLoop = new HumanInTheLoop();
+                        var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
                         humanInTheLoop.StartDashboardServerOnBackground(storage);
                         humanInTheLoop.SetObjective(study, ObjNickName);
                         humanInTheLoop.SetWidgets(study, ObjNickName);
@@ -255,7 +256,7 @@ namespace Tunny.Solver
 
                 ProgressState pState = SetProgressState(optSet, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                // optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial);
+                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ActiveViewBitmap);
 
                 if (result.ObjectiveValues.Contains(double.NaN))
                 {

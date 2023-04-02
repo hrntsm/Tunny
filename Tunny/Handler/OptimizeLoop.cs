@@ -72,13 +72,13 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
-            var result = new EvaluatedGHResult
+            return new EvaluatedGHResult
             {
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
-                Attribute = s_component.GhInOut.GetAttributes()
+                Attribute = s_component.GhInOut.GetAttributes(),
+                ActiveViewBitmap = s_component.GhInOut.GetActiveViewBitmap(),
             };
-            return result;
         }
     }
 }
