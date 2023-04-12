@@ -20,6 +20,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Fixed
 
+- Error occurs when remaining time becomes negative
+- GC behavior settings configured in the UI during optimization are not reflected in optimization
+
 ### Security
 
 ## [v0.7.2] -2023-03-22
