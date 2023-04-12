@@ -217,7 +217,7 @@ namespace Tunny.UI
                 : trialNumLabel + (pState.TrialNumber + 1);
             SetBestValues(e, pState);
 
-            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds != 0
+            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds > 0
                 ? "Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
                 : "Estimated Time Remaining: 00:00:00";
             optimizeProgressBar.Value = e.ProgressPercentage;
