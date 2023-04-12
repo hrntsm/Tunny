@@ -69,12 +69,14 @@ namespace Tunny.Component
 
         private static void SetObjectives(GH_Structure<GH_Number> objectives, Fish value, GH_Path path)
         {
-            if (value.Objectives != null)
+            if (value.Objectives == null)
             {
-                foreach (KeyValuePair<string, double> objective in value.Objectives)
-                {
-                    objectives.Append(new GH_Number(objective.Value), path);
-                }
+                return;
+            }
+
+            foreach (KeyValuePair<string, double> objective in value.Objectives)
+            {
+                objectives.Append(new GH_Number(objective.Value), path);
             }
         }
 

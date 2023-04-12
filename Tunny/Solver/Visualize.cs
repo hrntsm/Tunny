@@ -246,7 +246,7 @@ namespace Tunny.Solver
             return truncate(fig, study);
         }
 
-        private void FigureActions(dynamic fig, PlotSettings pSettings)
+        private static void FigureActions(dynamic fig, PlotSettings pSettings)
         {
             if (fig != null && pSettings.PlotActionType == PlotActionType.Show)
             {
@@ -263,8 +263,8 @@ namespace Tunny.Solver
             var sfd = new SaveFileDialog
             {
                 FileName = name + ".html",
-                Filter = "HTML file(*.html)|*.html",
-                Title = "Save"
+                Filter = @"HTML file(*.html)|*.html",
+                Title = @"Save"
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {

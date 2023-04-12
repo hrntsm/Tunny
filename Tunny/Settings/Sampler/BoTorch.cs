@@ -6,12 +6,5 @@ namespace Tunny.Settings.Sampler
     public class BoTorch
     {
         public int NStartupTrials { get; set; } = 10;
-        public TorchDevice Device { get; set; } = TorchDevice.cpu;
-    }
-
-    public enum TorchDevice
-    {
-        cpu,
-        cuda
     }
 }

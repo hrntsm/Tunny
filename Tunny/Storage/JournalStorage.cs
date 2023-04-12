@@ -111,11 +111,16 @@ namespace Tunny.Storage
             return studySummaries;
         }
 
-        private static void SetStudySummaries(List<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, StudySummary[] studySummaries)
+        private static void SetStudySummaries(IReadOnlyList<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, IList<StudySummary> studySummaries)
         {
             int i = 0;
             foreach (IGrouping<int?, JournalStorage> group in userAttr)
             {
+                if (group.Key == null)
+                {
+                    continue;
+                }
+
                 var studySummary = new StudySummary
                 {
                     StudyId = group.Key.Value,
@@ -129,7 +134,7 @@ namespace Tunny.Storage
             }
         }
 
-        private static void SetStudySummaryValue(IGrouping<int?, JournalStorage> group, StudySummary studySummary)
+        private static void SetStudySummaryValue(IEnumerable<JournalStorage> group, StudySummary studySummary)
         {
             foreach (JournalStorage journal in group)
             {
@@ -180,9 +185,8 @@ namespace Tunny.Storage
         private void CreateStorageProcess(string storagePath)
         {
             dynamic optuna = Py.Import("optuna");
-            string filePath = storagePath;
-            dynamic lockObj = optuna.storages.JournalFileOpenLock(filePath);
-            Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(filePath, lock_obj: lockObj));
+            dynamic lockObj = optuna.storages.JournalFileOpenLock(storagePath);
+            Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(storagePath, lock_obj: lockObj));
         }
 
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)

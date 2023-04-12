@@ -18,15 +18,15 @@ namespace Tunny.Solver
 {
     public class Algorithm
     {
-        private List<Variable> Variables { get; set; }
-        private bool HasConstraints { get; set; }
-        private string[] ObjNickName { get; set; }
-        private TunnySettings Settings { get; set; }
-        private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; set; }
         public double[] XOpt { get; private set; }
-        private double[] FxOpt { get; set; }
-        public EndState EndState { get; set; }
-        public Dictionary<string, FishEgg> FishEgg { get; set; }
+        public EndState EndState { get; private set; }
+
+        private List<Variable> Variables { get; }
+        private bool HasConstraints { get; }
+        private string[] ObjNickName { get; }
+        private TunnySettings Settings { get; }
+        private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; }
+        private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
             List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
@@ -55,7 +55,7 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(samplerType, ref nTrials, optuna, HasConstraints);
+                dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
 
                 if (CheckExistStudyParameter(nObjective, optuna, storage))
@@ -63,7 +63,7 @@ namespace Tunny.Solver
                     dynamic study = CreateStudy(directions, sampler, storage);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
                     RunOptimize(nTrials, timeout, study, storage, FishEgg, out double[] xTest, out EvaluatedGHResult result);
-                    SetResultValues(nObjective, study, xTest, result);
+                    SetResultValues(nObjective, study, xTest);
                 }
             }
             PythonEngine.Shutdown();
@@ -116,7 +116,7 @@ namespace Tunny.Solver
             return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
         }
 
-        private bool CheckDirections(int nObjective, Dictionary<string, int> directions)
+        private bool CheckDirections(int nObjective, IReadOnlyDictionary<string, int> directions)
         {
             if (!Settings.Optimize.ContinueStudy)
             {
@@ -134,7 +134,7 @@ namespace Tunny.Solver
             }
         }
 
-        private void SetResultValues(int nObjective, dynamic study, double[] xTest, EvaluatedGHResult result)
+        private void SetResultValues(int nObjective, dynamic study, double[] xTest)
         {
             if (nObjective == 1)
             {
@@ -153,12 +153,10 @@ namespace Tunny.Solver
                     }
                 }
                 XOpt = opt;
-                FxOpt = new[] { (double)study.best_value };
             }
             else
             {
                 XOpt = xTest;
-                FxOpt = result.ObjectiveValues?.ToArray();
             }
         }
 
@@ -249,7 +247,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(int nTrials, double timeout, double[] xTest, int trialNum, DateTime startTime, dynamic study)
+        private ProgressState SetProgressState(int nTrials, double timeout, IEnumerable<double> xTest, int trialNum, DateTime startTime, dynamic study)
         {
             ComputeBestValues(study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
             return new ProgressState
@@ -289,17 +287,19 @@ namespace Tunny.Solver
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
         {
-            if (enqueueItems != null && enqueueItems.Count != 0)
+            if (enqueueItems == null || enqueueItems.Count == 0)
             {
-                for (int i = 0; i < enqueueItems.First().Value.Values.Count; i++)
+                return study;
+            }
+
+            for (int i = 0; i < enqueueItems.First().Value.Values.Count; i++)
+            {
+                var enqueueDict = new PyDict();
+                foreach (KeyValuePair<string, FishEgg> enqueueItem in enqueueItems)
                 {
-                    var enqueueDict = new PyDict();
-                    foreach (KeyValuePair<string, FishEgg> enqueueItem in enqueueItems)
-                    {
-                        enqueueDict.SetItem(new PyString(enqueueItem.Key), new PyFloat(enqueueItem.Value.Values[i]));
-                    }
-                    study.enqueue_trial(enqueueDict, skip_if_exists: true);
+                    enqueueDict.SetItem(new PyString(enqueueItem.Key), new PyFloat(enqueueItem.Value.Values[i]));
                 }
+                study.enqueue_trial(enqueueDict, skip_if_exists: true);
             }
 
             return study;
@@ -308,14 +308,14 @@ namespace Tunny.Solver
         private void RunGC(EvaluatedGHResult result)
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
-            if ((gcAfterTrial == GcAfterTrial.Always) ||
-                (result.GeometryJson.Count > 0) &&
-                (gcAfterTrial == GcAfterTrial.HasGeometry)
-            )
+            if ((gcAfterTrial != GcAfterTrial.Always) &&
+                ((result.GeometryJson.Count <= 0) || (gcAfterTrial != GcAfterTrial.HasGeometry)))
             {
-                dynamic gc = Py.Import("gc");
-                gc.collect();
+                return;
             }
+
+            dynamic gc = Py.Import("gc");
+            gc.collect();
         }
 
         private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
@@ -366,7 +366,7 @@ namespace Tunny.Solver
             }
         }
 
-        private dynamic SetSamplerSettings(int samplerType, ref int nTrials, dynamic optuna, bool hasConstraints)
+        private dynamic SetSamplerSettings(int samplerType, dynamic optuna, bool hasConstraints)
         {
             dynamic sampler;
             switch (samplerType)
@@ -388,9 +388,6 @@ namespace Tunny.Solver
                     break;
                 case 5:
                     sampler = Sampler.Random(optuna, Settings);
-                    break;
-                case 6:
-                    sampler = Sampler.Grid(optuna, Variables, ref nTrials);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");

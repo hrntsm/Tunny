@@ -4,7 +4,9 @@ using System.Drawing;
 
 using Grasshopper.Kernel;
 
-namespace Tunny.Type
+using Tunny.Type;
+
+namespace Tunny.Component
 {
     public class Param_FishEgg : GH_PersistentParam<GH_FishEgg>
     {

@@ -25,7 +25,7 @@ namespace Tunny.Handler
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as FishingComponent;
-            s_component.GhInOutInstantiate();
+            s_component?.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
             if (result == null || double.IsNaN(result[0]))
@@ -38,10 +38,13 @@ namespace Tunny.Handler
                 Values = decimalResults
             };
 
-            s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
-            s_worker.ReportProgress(100, pState);
-            while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
-            { /* just wait until the cows come home */}
+            if (s_component != null)
+            {
+                s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+                s_worker?.ReportProgress(100, pState);
+                while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+                { /* just wait until the cows come home */ }
+            }
 
             s_worker?.CancelAsync();
         }

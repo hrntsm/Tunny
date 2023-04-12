@@ -5,8 +5,9 @@ using System.Drawing;
 using Grasshopper.Kernel;
 
 using Tunny.Resources;
+using Tunny.Type;
 
-namespace Tunny.Type
+namespace Tunny.Component
 {
     public class Param_FishAttribute : GH_PersistentParam<GH_FishAttribute>
     {

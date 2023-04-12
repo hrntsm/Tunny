@@ -10,7 +10,7 @@ namespace Tunny.Component
 {
     public partial class ConstructFishEgg : GH_Component
     {
-        public Dictionary<string, FishEgg> FishEggs { get; private set; } = new Dictionary<string, FishEgg>();
+        private readonly Dictionary<string, FishEgg> _fishEggs = new Dictionary<string, FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public ConstructFishEgg()
@@ -41,7 +41,7 @@ namespace Tunny.Component
 
             if (clear)
             {
-                FishEggs.Clear();
+                _fishEggs.Clear();
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace Tunny.Component
                 LayFishEgg();
             }
 
-            DA.SetData(0, FishEggs);
+            DA.SetData(0, _fishEggs);
         }
 
         private void LayFishEgg()
@@ -59,7 +59,7 @@ namespace Tunny.Component
             List<Variable> variables = ghIO.Variables;
 
             bool isContainedVariableSets = false;
-            if (FishEggs.Count > 0)
+            if (_fishEggs.Count > 0)
             {
                 isContainedVariableSets = CheckVariableSetsIsContained(variables);
             }
@@ -70,32 +70,31 @@ namespace Tunny.Component
             }
         }
 
-        private bool CheckVariableSetsIsContained(List<Variable> variables)
+        private bool CheckVariableSetsIsContained(IEnumerable<Variable> variables)
         {
-            bool isContainVariableSets;
             int sameValueCount = 0;
             foreach (Variable variable in variables)
             {
-                if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
+                if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
                 {
                     sameValueCount++;
                 }
             }
-            isContainVariableSets = sameValueCount == FishEggs.Count;
+            bool isContainVariableSets = sameValueCount == _fishEggs.Count;
             return isContainVariableSets;
         }
 
-        private void AddVariablesToFishEgg(List<Variable> variables)
+        private void AddVariablesToFishEgg(IEnumerable<Variable> variables)
         {
             foreach (Variable variable in variables)
             {
-                if (FishEggs.TryGetValue(variable.NickName, out FishEgg egg))
+                if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg))
                 {
                     egg.Values.Add(variable.Value);
                 }
                 else
                 {
-                    FishEggs.Add(variable.NickName, new FishEgg(variable));
+                    _fishEggs.Add(variable.NickName, new FishEgg(variable));
                 }
             }
         }
