@@ -16,5 +16,6 @@ namespace Tunny.Settings.Sampler
         public bool UseSeparableCma { get; set; }
         public bool UseWarmStart { get; set; }
         public string WarmStartStudyName { get; set; } = string.Empty;
+        public bool WithMargin { get; set; } = true;
     }
 }

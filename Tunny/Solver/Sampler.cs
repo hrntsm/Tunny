@@ -29,7 +29,8 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: settings.Storage.GetOptunaStoragePath()).get_trials()
+                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: settings.Storage.GetOptunaStoragePath()).get_trials(),
+                    with_margin: cmaEs.WithMargin
                 )
                 : optuna.samplers.CmaEsSampler(
                     sigma0: cmaEs.Sigma0,
@@ -40,7 +41,8 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    use_separable_cma: cmaEs.UseSeparableCma
+                    use_separable_cma: cmaEs.UseSeparableCma,
+                    with_margin: cmaEs.WithMargin
                 );
         }
 

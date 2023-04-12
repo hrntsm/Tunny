@@ -50,6 +50,16 @@ namespace Tunny.UI
             cmaEsUseSaparableCmaCheckBox.Enabled = !cmaEsWarmStartCmaEsCheckBox.Checked;
         }
 
+        private void CmaEsWithMarginCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            cmaEsUseSaparableCmaCheckBox.Enabled = !cmaEsWithMarginCheckBox.Checked;
+        }
+
+        private void CmaEsUseSaparableCmaCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            cmaEsWithMarginCheckBox.Enabled = !cmaEsUseSaparableCmaCheckBox.Checked;
+        }
+
         private void BoTorchDefaultButton_Click(object sender, EventArgs e)
         {
             SetBoTorchSettings(new BoTorch());
@@ -221,7 +231,8 @@ namespace Tunny.UI
                 PopulationSize = cmaEsRestartCheckBox.Checked
                     ? (int?)cmaEsPopulationSizeUpDown.Value : null,
                 UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked,
-                WarmStartStudyName = cmaEsWarmStartComboBox.Text
+                WarmStartStudyName = cmaEsWarmStartComboBox.Text,
+                WithMargin = cmaEsWithMarginCheckBox.Checked,
             };
         }
 
