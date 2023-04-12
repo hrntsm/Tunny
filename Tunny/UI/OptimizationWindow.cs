@@ -8,6 +8,7 @@ using Grasshopper.GUI;
 using Tunny.Component;
 using Tunny.Handler;
 using Tunny.Settings;
+using Tunny.Solver;
 
 namespace Tunny.UI
 {
@@ -148,6 +149,8 @@ namespace Tunny.UI
             visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
             visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
             InitializeSamplerSettings();
+
+            runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
         }
         private void GetUIValues()
         {
@@ -164,6 +167,7 @@ namespace Tunny.UI
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings();
+            _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
         }
     }
 }

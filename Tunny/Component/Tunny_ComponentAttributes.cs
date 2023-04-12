@@ -10,18 +10,14 @@ namespace Tunny.Component
 {
     internal class Tunny_ComponentAttributes : GH_ComponentAttributes
     {
-        public Tunny_ComponentAttributes(IGH_Component component) : base(component)
+        protected Tunny_ComponentAttributes(IGH_Component component) : base(component)
         {
         }
 
         internal void RenderBox(Graphics graphics, Brush fill, Pen edge, Guid guid)
         {
             GH_Document doc = Owner.OnPingDocument();
-            if (doc == null)
-            {
-                return;
-            }
-            IGH_DocumentObject obj = doc.FindObject(guid, false);
+            IGH_DocumentObject obj = doc?.FindObject(guid, false);
             if (obj == null)
             {
                 return;
@@ -65,7 +61,7 @@ namespace Tunny.Component
 
         internal sealed class Wire
         {
-            public int Width;
+            public readonly int Width;
             public Color ColorStart;
             public Color ColorEnd;
 

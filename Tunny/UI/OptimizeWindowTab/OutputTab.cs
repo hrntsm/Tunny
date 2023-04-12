@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
 
 using Tunny.Handler;
 using Tunny.Util;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         private void OutputParatoSolutionButton_Click(object sender, EventArgs e)
         {

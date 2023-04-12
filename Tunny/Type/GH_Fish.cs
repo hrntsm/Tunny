@@ -91,11 +91,13 @@ namespace Tunny.Type
             }
             else
             {
-                var values = attr.Value as List<string>;
-                foreach (string val in values)
+                if (attr.Value is List<string> values)
                 {
-                    valueStrings.Append(val);
-                    valueStrings.Append(", ");
+                    foreach (string val in values)
+                    {
+                        valueStrings.Append(val);
+                        valueStrings.Append(", ");
+                    }
                 }
             }
             sb.AppendLine("  " + attr.Key + ": " + valueStrings);

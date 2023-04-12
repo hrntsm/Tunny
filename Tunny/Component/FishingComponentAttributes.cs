@@ -81,8 +81,7 @@ namespace Tunny.Component
 
             private void RenderInputComponentBoxes(Graphics graphics)
             {
-                Brush[] fill = new[]
-                {
+                Brush[] fill = {
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("9900008B", 16))),
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("99008000", 16))),
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("998B008B", 16))),

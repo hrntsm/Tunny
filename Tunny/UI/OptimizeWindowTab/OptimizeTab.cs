@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
@@ -14,7 +13,7 @@ using Tunny.Storage;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         private StudySummary[] _summaries;
 
@@ -62,7 +61,7 @@ namespace Tunny.UI
         private void OptimizeRunButton_Click(object sender, EventArgs e)
         {
             var ghCanvas = Owner as GH_DocumentEditor;
-            ghCanvas.DisableUI();
+            ghCanvas?.DisableUI();
 
             optimizeRunButton.Enabled = false;
             GetUIValues();
@@ -84,24 +83,20 @@ namespace Tunny.UI
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
         {
-            bool checkResult = true;
-            if (!CheckObjectivesCount(ghCanvas))
-            {
-                checkResult = false;
-            }
+            bool checkResult = CheckObjectivesCount(ghCanvas);
 
-            if (checkResult && studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text))
+            switch (checkResult)
             {
-                checkResult = NameAlreadyExistMessage(ghCanvas);
-            }
-            else if (checkResult && copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked)
-            {
-                new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage);
-                _settings.StudyName = studyNameTextBox.Text;
-            }
-            else if (checkResult && continueStudyCheckBox.Checked)
-            {
-                checkResult = CheckSameStudyName(ghCanvas);
+                case true when studyNameTextBox.Enabled && existingStudyComboBox.Items.Contains(studyNameTextBox.Text):
+                    checkResult = NameAlreadyExistMessage(ghCanvas);
+                    break;
+                case true when copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked:
+                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage);
+                    _settings.StudyName = studyNameTextBox.Text;
+                    break;
+                case true when continueStudyCheckBox.Checked:
+                    checkResult = CheckSameStudyName(ghCanvas);
+                    break;
             }
             return checkResult;
         }
@@ -126,7 +121,7 @@ namespace Tunny.UI
                 optimizeRunButton.Enabled = true;
                 return false;
             }
-            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == "EvolutionStrategy (CMA-ES)"))
+            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
             {
                 return CmaEsSupportOneObjectiveMessage(ghCanvas);
             }
@@ -216,15 +211,15 @@ namespace Tunny.UI
         {
             var pState = (ProgressState)e.UserState;
             UpdateGrasshopper(pState.Values);
-            string trialNumLabel = "Trial: ";
+            const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"
                 : trialNumLabel + (pState.TrialNumber + 1);
             SetBestValues(e, pState);
 
             EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds != 0
-                ? $"Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
-                : $"Estimated Time Remaining: 00:00:00";
+                ? "Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
+                : "Estimated Time Remaining: 00:00:00";
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
         }
@@ -233,13 +228,13 @@ namespace Tunny.UI
         {
             if (pState.BestValues == null)
             {
-                optimizeBestValueLabel.Text = "BestValue: #";
+                optimizeBestValueLabel.Text = @"BestValue: #";
             }
             else if (e.ProgressPercentage == 0 || e.ProgressPercentage == 100)
             {
                 optimizeBestValueLabel.Text = pState.ObjectiveNum == 1
-                    ? "BestValue: #"
-                    : "Hypervolume Ratio: #";
+                    ? @"BestValue: #"
+                    : @"Hypervolume Ratio: #";
             }
             else if (pState.BestValues.Length > 0)
             {

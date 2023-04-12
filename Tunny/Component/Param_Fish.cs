@@ -20,7 +20,7 @@ namespace Tunny.Component
         }
 
         protected override GH_Fish InstantiateT() => new GH_Fish();
-        protected override GH_Fish PreferredCast(object data) => data is Fish fish ? new GH_Fish(fish) : (GH_Fish)null;
+        protected override GH_Fish PreferredCast(object data) => data is Fish fish ? new GH_Fish(fish) : null;
         protected override GH_GetterResult Prompt_Singular(ref GH_Fish value) => GH_GetterResult.success;
         protected override GH_GetterResult Prompt_Plural(ref List<GH_Fish> values) => GH_GetterResult.success;
 
