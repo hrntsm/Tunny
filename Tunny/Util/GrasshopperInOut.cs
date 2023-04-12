@@ -359,6 +359,8 @@ namespace Tunny.Util
                         case null:
                             values.Add(double.NaN);
                             break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -414,22 +416,26 @@ namespace Tunny.Util
                 }
                 else
                 {
-                    if (_attributes.Value[key] is List<object> objList)
-                    {
-                        foreach (object param in objList)
-                        {
-                            if (param is IGH_Goo goo)
-                            {
-                                value.Add(Converter.GooToString(goo, true));
-                            }
-                        }
-                    }
+                    AddGooValues(key, value);
                 }
-
                 attrs.Add(key, value);
             }
 
             return attrs;
+        }
+
+        private void AddGooValues(string key, List<string> value)
+        {
+            if (_attributes.Value[key] is List<object> objList)
+            {
+                foreach (object param in objList)
+                {
+                    if (param is IGH_Goo goo)
+                    {
+                        value.Add(Converter.GooToString(goo, true));
+                    }
+                }
+            }
         }
     }
 }

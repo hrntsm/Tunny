@@ -97,6 +97,8 @@ namespace Tunny.UI
                 case true when continueStudyCheckBox.Checked:
                     checkResult = CheckSameStudyName(ghCanvas);
                     break;
+                default:
+                    break;
             }
             return checkResult;
         }
