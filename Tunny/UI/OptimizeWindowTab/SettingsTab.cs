@@ -1,11 +1,11 @@
 using System;
-using System.Windows.Forms;
 
 using Tunny.Settings.Sampler;
+using Tunny.Solver;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         private void TpeDefaultButton_Click(object sender, EventArgs e)
         {
@@ -104,7 +104,8 @@ namespace Tunny.UI
         {
             nsgaMutationProbCheckBox.Checked = nsga.MutationProb != null;
             nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
-            nsgaMutationProbUpDown.Value = nsga.MutationProb != null ? (decimal)nsga.MutationProb : 0;
+            nsgaMutationProbUpDown.Value = nsga.MutationProb != null
+                ? (decimal)nsga.MutationProb : 0;
             nsgaCrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
             nsgaSwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
             nsgaPopulationSizeUpDown.Value = nsga.PopulationSize;
@@ -139,7 +140,8 @@ namespace Tunny.UI
         {
             cmaEsStartupNumUpDown.Value = cmaEs.NStartupTrials;
             cmaEsSigmaCheckBox.Checked = cmaEs.Sigma0 != null;
-            cmaEsSigmaNumUpDown.Value = cmaEs.Sigma0 != null ? (decimal)cmaEs.Sigma0 : 0;
+            cmaEsSigmaNumUpDown.Value = cmaEs.Sigma0 != null
+                ? (decimal)cmaEs.Sigma0 : 0;
             cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
 
             cmaEsWarnIndependentSamplingCheckBox.Checked = cmaEs.WarnIndependentSampling;
@@ -150,13 +152,13 @@ namespace Tunny.UI
             cmaEsIncPopSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
             cmaEsIncPopSizeUpDown.Value = cmaEs.IncPopsize;
             cmaEsPopulationSizeUpDown.Enabled = cmaEsRestartCheckBox.Checked;
-            cmaEsPopulationSizeUpDown.Value = cmaEs.PopulationSize != null ? (decimal)cmaEs.PopulationSize : (decimal)1;
+            cmaEsPopulationSizeUpDown.Value = cmaEs.PopulationSize != null
+                ? (decimal)cmaEs.PopulationSize : 1;
         }
 
         private void SetQMCSettings(QuasiMonteCarlo qmc)
         {
             qmcTypeComboBox.SelectedIndex = qmc.QmcType == "sobol" ? 0 : 1;
-
             qmcScrambleCheckBox.Checked = qmc.Scramble;
             qmcWarnIndependentSamplingCheckBox.Checked = qmc.WarnIndependentSampling;
             qmcWarnAsyncSeedingCheckBox.Checked = qmc.WarnAsynchronousSeeding;
@@ -223,9 +225,11 @@ namespace Tunny.UI
                 WarnIndependentSampling = cmaEsWarnIndependentSamplingCheckBox.Checked,
                 ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked,
                 UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked,
-                RestartStrategy = cmaEsRestartCheckBox.Checked ? "ipop" : string.Empty,
+                RestartStrategy = cmaEsRestartCheckBox.Checked
+                    ? "ipop" : string.Empty,
                 IncPopsize = (int)cmaEsIncPopSizeUpDown.Value,
-                PopulationSize = cmaEsRestartCheckBox.Checked ? (int?)cmaEsPopulationSizeUpDown.Value : null,
+                PopulationSize = cmaEsRestartCheckBox.Checked
+                    ? (int?)cmaEsPopulationSizeUpDown.Value : null,
                 UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked,
                 WarmStartStudyName = cmaEsWarmStartComboBox.Text,
                 WithMargin = cmaEsWithMarginCheckBox.Checked,
@@ -241,6 +245,11 @@ namespace Tunny.UI
                 WarnIndependentSampling = qmcWarnIndependentSamplingCheckBox.Checked,
                 WarnAsynchronousSeeding = qmcWarnAsyncSeedingCheckBox.Checked
             };
+        }
+
+        private void RunGarbageCollectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
         }
     }
 }

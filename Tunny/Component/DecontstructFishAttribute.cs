@@ -56,7 +56,7 @@ namespace Tunny.Component
             SetDataTreeToDataAccess(DA, nicknames, outputValues);
         }
 
-        private void SetOutputValues(List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
+        private void SetOutputValues(ICollection<string> nicknames, IDictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
         {
             //FIXME: This process should be done once, but foreach executes it every time.
             _keys = value.Keys.ToList();
@@ -67,7 +67,7 @@ namespace Tunny.Component
                     outputValues.Add(pair.Key, new GH_Structure<IGH_Goo>());
                 }
 
-                List<IGH_Goo> goo = GetGooFromAttributeObject(pair.Value);
+                IEnumerable<IGH_Goo> goo = GetGooFromAttributeObject(pair.Value);
                 foreach (IGH_Goo g in goo)
                 {
                     outputValues[pair.Key].Append(g, path);
@@ -75,7 +75,7 @@ namespace Tunny.Component
             }
         }
 
-        private void SetDataTreeToDataAccess(IGH_DataAccess DA, List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues)
+        private void SetDataTreeToDataAccess(IGH_DataAccess DA, IReadOnlyCollection<string> nicknames, IReadOnlyDictionary<string, GH_Structure<IGH_Goo>> outputValues)
         {
             if (Params.Output.Count == 0)
             {
@@ -91,14 +91,14 @@ namespace Tunny.Component
             }
         }
 
-        private static List<IGH_Goo> GetGooFromAttributeObject(object value)
+        private static IEnumerable<IGH_Goo> GetGooFromAttributeObject(object value)
         {
             switch (value)
             {
                 case List<string> str:
                     return str.Select(s => new GH_String(s)).Cast<IGH_Goo>().ToList();
                 case List<GeometryBase> geom:
-                    return geom.Select(g => Converter.GeometryBaseToGoo(g)).Cast<IGH_Goo>().ToList();
+                    return geom.Select(Converter.GeometryBaseToGoo).Cast<IGH_Goo>().ToList();
                 default:
                     return new List<IGH_Goo>();
             }
@@ -131,11 +131,13 @@ namespace Tunny.Component
 
         public void VariableParameterMaintenance()
         {
-            if (_outputCount != Params.Output.Count)
+            if (_outputCount == Params.Output.Count)
             {
-                _outputCount = Params.Output.Count;
-                ExpireSolution(true);
+                return;
             }
+
+            _outputCount = Params.Output.Count;
+            ExpireSolution(true);
         }
 
         protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu) => Menu_AppendItem(menu, "Match outputs", new EventHandler(Menu_AutoCreateTree_Clicked));

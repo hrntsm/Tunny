@@ -192,7 +192,7 @@ namespace Tunny.Component
         {
             base.AppendAdditionalMenuItems(menu);
             ToolStripMenuItem item = Menu_AppendItem(menu, "Bake with Text", BakeGeometryFromMenu);
-            item.ToolTipText = "Bake not only geometry, but also result texts.";
+            item.ToolTipText = @"Bake not only geometry, but also result texts.";
         }
 
         private void BakeGeometryFromMenu(object sender, EventArgs e)

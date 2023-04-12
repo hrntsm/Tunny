@@ -4,7 +4,7 @@ using Grasshopper.GUI;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         // OptimizationTab ==========================
         private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)

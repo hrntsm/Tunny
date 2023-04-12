@@ -10,6 +10,38 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+- Grid sampling.
+
+### Fixed
+
+- Error occurs when remaining time becomes negative
+- GC behavior settings configured in the UI during optimization are not reflected in optimization
+
+### Security
+
+## [v0.7.2] -2023-03-22
+
+### Added
+
+- Support Rhino PackageManager.
+- Show Tunny icon in grasshopper ribbon.
+
+## [v0.7.1] -2023-03-22
+
+### Fixed
+
+- bug where visualize and output did not work when using journal storage.
+
+## [v0.7.0] -2023-03-21
+
+### Added
+
 - Display of estimated remaining time during optimization run.
 - In-memory optimization mode.
   - Mode that works faster instead of saving optimization results during optimization.
@@ -23,10 +55,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Boolean to start only the first time, since the Python installer may start every time.
   - If you want to install it again, you can do so by checking the checkbox from Misc in the Settings tab.
 - The most of the dll files are combined into a single gha file to improve usability.
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
@@ -69,8 +97,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Deprecated
 
 - Disable unused setting tab ui items
-
-### Removed
 
 ### Fixed
 

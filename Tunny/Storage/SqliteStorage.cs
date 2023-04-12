@@ -16,7 +16,7 @@ namespace Tunny.Storage
 
         private static bool CheckTableExist(SQLiteConnection connection)
         {
-            int hasStudiesTable = 0;
+            int hasStudiesTable;
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='studies';";
@@ -107,32 +107,9 @@ namespace Tunny.Storage
             }
         }
 
-        public static StudySummary[] GetStudySummariesPY(string storagePath)
+        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
-            var studySummaries = new List<StudySummary>();
-            string storage = "sqlite:///" + storagePath;
-            PythonEngine.Initialize();
-            using (Py.GIL())
-            {
-                dynamic optuna = Py.Import("optuna");
-                PyList summaries = optuna.study.get_all_study_summaries(storage);
-                foreach (dynamic summary in summaries)
-                {
-                    var studySummary = new StudySummary
-                    {
-                        StudyName = (string)summary.study_name,
-                        NTrials = (int)summary.n_trials,
-                    };
-                    studySummaries.Add(studySummary);
-                }
-            }
-            PythonEngine.Shutdown();
-            return studySummaries.ToArray();
-        }
-
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, string storagePath)
-        {
-            string sqlitePath = "sqlite:///" + storagePath;
+            string sqlitePath = storageSetting.GetOptunaStoragePath();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();
@@ -156,9 +133,9 @@ namespace Tunny.Storage
             Storage = optuna.storages.RDBStorage(sqlitePath);
         }
 
-        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, string storagePath)
+        public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
-            string storage = "sqlite:///" + storagePath;
+            string storage = storageSetting.GetOptunaStoragePath();
             PythonEngine.Initialize();
             using (Py.GIL())
             {

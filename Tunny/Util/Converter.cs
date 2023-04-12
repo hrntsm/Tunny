@@ -34,7 +34,7 @@ namespace Tunny.Util
             return GooToString(goo, isGeometryBaseToJson, option);
         }
 
-        public static string GooToString(IGH_Goo goo, bool isGeometryBaseToJson, SerializationOptions option)
+        private static string GooToString(IGH_Goo goo, bool isGeometryBaseToJson, SerializationOptions option)
         {
             if (isGeometryBaseToJson)
             {

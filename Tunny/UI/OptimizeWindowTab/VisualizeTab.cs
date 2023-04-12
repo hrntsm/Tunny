@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 using Tunny.Handler;
 using Tunny.Solver;
@@ -11,7 +10,7 @@ using Tunny.Util;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
@@ -24,9 +23,7 @@ namespace Tunny.UI
             CheckExistDashboardProcess();
             var dashboard = new Process();
             dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = Path.GetExtension(_settings.Storage.Path) == ".log"
-                ? $"\"{_settings.Storage.Path}\""
-                : @"sqlite:///" + $"\"{_settings.Storage.Path}\"";
+            dashboard.StartInfo.Arguments = _settings.Storage.GetOptunaStoragePathByExtension();
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             dashboard.Start();
@@ -114,7 +111,7 @@ namespace Tunny.UI
 
             if (!CheckTargetValues(pSettings)) { return; }
 
-            if (visualizeTypeComboBox.Text == "clustering")
+            if (visualizeTypeComboBox.Text == @"clustering")
             {
                 optunaVis.ClusteringPlot(pSettings);
             }
