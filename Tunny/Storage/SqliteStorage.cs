@@ -109,7 +109,7 @@ namespace Tunny.Storage
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
-            string sqlitePath = storageSetting.GetOptunaStoragePath();
+            string sqlitePath = storageSetting.GetOptunaStoragePathByExtension();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();

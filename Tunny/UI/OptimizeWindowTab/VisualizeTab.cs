@@ -24,7 +24,7 @@ namespace Tunny.UI
             CheckExistDashboardProcess();
             var dashboard = new Process();
             dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = _settings.Storage.GetOptunaStoragePathByExtension();
+            dashboard.StartInfo.Arguments = _settings.Storage.GetOptunaStorageCommandLinePathByExtension();
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             dashboard.Start();
