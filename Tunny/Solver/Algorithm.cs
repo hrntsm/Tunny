@@ -52,11 +52,6 @@ namespace Tunny.Solver
             int nObjective = Settings.Optimize.SelectSampler == 6 ? ObjNickName.Length + 1 : ObjNickName.Length;
             string[] directions = SetDirectionValues(nObjective);
 
-            if (Settings.Optimize.SelectSampler == 6)
-            {
-                Settings.Storage.Type = StorageType.InMemory;
-            }
-
             PythonEngine.Initialize();
             IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
             using (Py.GIL())
@@ -76,11 +71,15 @@ namespace Tunny.Solver
                     if (Settings.Optimize.SelectSampler == 6)
                     {
                         var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
-                        humanInTheLoop.StartDashboardServerOnBackground(storage);
+
+                        // FIXME: This step will fix optuna v3.2
+                        study = HumanInTheLoop.FixStudyCachedStorage(study);
+
+                        humanInTheLoop.WakeOptunaDashboard(Settings.Storage);
                         humanInTheLoop.SetObjective(study, ObjNickName);
                         humanInTheLoop.SetWidgets(study, ObjNickName);
                         runOptimizeSettings.HumanInTheLoop = humanInTheLoop;
-                        RunHumanInTheLoopOptimize(runOptimizeSettings, out xTest, out result);
+                        RunHumanInTheLoopOptimize(runOptimizeSettings, 3, out xTest, out result);
                     }
                     else
                     {
@@ -207,14 +206,13 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optSet.Storage);
         }
 
-        private void RunHumanInTheLoopOptimize(RunOptimizeSettings optSet, out double[] xTest, out EvaluatedGHResult result)
+        private void RunHumanInTheLoopOptimize(RunOptimizeSettings optSet, int nBatch, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
             EnqueueTrial(optSet.Study, optSet.EnqueueItems);
-            int nBatch = 3;
 
             while (true)
             {

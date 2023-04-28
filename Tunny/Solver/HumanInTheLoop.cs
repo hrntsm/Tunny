@@ -1,8 +1,13 @@
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 using Python.Runtime;
+
+using Tunny.Handler;
+using Tunny.UI;
 
 namespace Tunny.Solver
 {
@@ -10,46 +15,91 @@ namespace Tunny.Solver
     {
         private readonly PyModule _importedLibrary;
         private readonly dynamic _artifactBackend;
+        private readonly dynamic _artifactPath;
         private readonly string _basePath;
 
         public HumanInTheLoop(string path)
         {
             PyModule importedLibrary = Py.CreateScope();
-            importedLibrary.Exec(@"
-import os
-import textwrap
-import threading
-import time
-from wsgiref.simple_server import make_server
+            importedLibrary.Import("os");
+            importedLibrary.Import("textwrap");
+            importedLibrary.Import("threading");
+            importedLibrary.Import("time");
+            importedLibrary.Import("optuna");
+            importedLibrary.Import("optuna_dashboard");
+            importedLibrary.Exec("from optuna_dashboard import save_note");
+            importedLibrary.Exec("from optuna_dashboard import ObjectiveChoiceWidget");
+            importedLibrary.Exec("from optuna_dashboard import ObjectiveSliderWidget");
+            importedLibrary.Exec("from optuna_dashboard import ObjectiveUserAttrRef");
+            importedLibrary.Exec("from optuna_dashboard import register_objective_form_widgets");
+            importedLibrary.Exec("from optuna_dashboard import set_objective_names");
+            importedLibrary.Exec("from optuna_dashboard.artifact import upload_artifact");
+            importedLibrary.Exec("from optuna_dashboard.artifact.file_system import FileSystemBackend");
 
-import optuna
-from PIL import Image
-from optuna.trial import TrialState
-
-from optuna_dashboard import ObjectiveChoiceWidget, save_note, ObjectiveSliderWidget, ObjectiveUserAttrRef
-from optuna_dashboard import register_objective_form_widgets
-from optuna_dashboard import set_objective_names
-from optuna_dashboard import wsgi
-from optuna_dashboard.artifact import upload_artifact
-from optuna_dashboard.artifact.file_system import FileSystemBackend"
-            );
             _basePath = path;
-            string artifactPath = Path.Combine(_basePath, "artifacts");
+            _artifactPath = Path.Combine(_basePath, "artifacts");
             dynamic fileSystemBackend = importedLibrary.Get("FileSystemBackend");
-            _artifactBackend = fileSystemBackend(base_path: artifactPath);
+            _artifactBackend = fileSystemBackend(base_path: _artifactPath);
             _importedLibrary = importedLibrary;
         }
 
-        public void StartDashboardServerOnBackground(dynamic storage)
+        public static dynamic FixStudyCachedStorage(dynamic study)
         {
-            dynamic wsgi = _importedLibrary.Get("wsgi");
-            dynamic app = wsgi(storage, artifact_backend: _artifactBackend);
-            dynamic makeServer = _importedLibrary.Get("make_server");
-            dynamic httpd = makeServer("127.0.0.1", 8080, app);
+            PyModule def = Py.CreateScope();
+            def.Exec(@"
+import optuna
+def fix_cached_storage(study):
+    if isinstance(study._storage, optuna.storages._CachedStorage):
+        study._storage = study._storage._backend"
+        );
+            dynamic fixCachedStorage = def.Get("fix_cached_storage");
+            fixCachedStorage(study);
+            return study;
+        }
 
-            dynamic threading = _importedLibrary.Get("threading");
-            dynamic thread = threading.Thread(target: httpd.serve_forever);
-            thread.start();
+        public void WakeOptunaDashboard(Settings.Storage storage)
+        {
+            if (File.Exists(storage.Path) == false)
+            {
+                ResultFileNotExistErrorMessage();
+                return;
+            }
+
+            CheckExistDashboardProcess();
+            string artifactArgument = $"--artifact-dir \"{_artifactPath}\"";
+            var dashboard = new Process();
+            dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
+            dashboard.StartInfo.Arguments = storage.GetOptunaStorageCommandLinePathByExtension() + " " + artifactArgument;
+            dashboard.StartInfo.UseShellExecute = false;
+            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            dashboard.Start();
+
+            var browser = new Process();
+            browser.StartInfo.FileName = @"http://127.0.0.1:8080/beta";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
+        }
+
+        private static void CheckExistDashboardProcess()
+        {
+            Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
+            if (dashboardProcess.Length > 0)
+            {
+                foreach (Process p in dashboardProcess)
+                {
+                    p.Kill();
+                }
+            }
+        }
+
+        private static void ResultFileNotExistErrorMessage()
+        {
+            TunnyMessageBox.Show(
+                "Please set exist result file path.",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
         }
 
         public void SetObjective(dynamic study, string[] objectiveNames)
