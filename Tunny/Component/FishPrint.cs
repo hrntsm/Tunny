@@ -19,12 +19,11 @@ namespace MyNamespace
         }
 
         public override BoundingBox ClippingBox => new BoundingBox(new Point3d(-1e+10, -1e+10, -1e+10), new Point3d(1e+10, 1e+10, 1e+1));
-
         public override bool IsPreviewCapable => true;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometry", "G", "Geometry", GH_ParamAccess.item);
+            pManager.AddGeometryParameter("Geometry", "G", "Geometry", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

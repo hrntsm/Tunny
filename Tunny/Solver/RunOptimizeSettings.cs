@@ -4,7 +4,7 @@ using Tunny.Type;
 
 namespace Tunny.Solver
 {
-    internal class RunOptimizeSettings
+    sealed internal class RunOptimizeSettings
     {
         public int NTrials { get; set; }
         public double Timeout { get; set; }
