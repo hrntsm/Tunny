@@ -58,6 +58,7 @@ namespace Tunny.Solver
             }
 
             PythonEngine.Initialize();
+            IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
@@ -88,6 +89,7 @@ namespace Tunny.Solver
                     SetResultValues(nObjective, study, xTest, result);
                 }
             }
+            PythonEngine.EndAllowThreads(allowThreadsPtr);
             PythonEngine.Shutdown();
         }
 
@@ -202,10 +204,7 @@ namespace Tunny.Solver
                 trialNum++;
             }
 
-            if (Settings.Storage.Type == StorageType.InMemory)
-            {
-                CopyInMemoryStudy(optSet.Storage);
-            }
+            SaveInMemoryStudy(optSet.Storage);
         }
 
         private void RunHumanInTheLoopOptimize(RunOptimizeSettings optSet, out double[] xTest, out EvaluatedGHResult result)
@@ -231,10 +230,7 @@ namespace Tunny.Solver
                 trialNum++;
             }
 
-            if (Settings.Storage.Type == StorageType.InMemory)
-            {
-                CopyInMemoryStudy(optSet.Storage);
-            }
+            SaveInMemoryStudy(optSet.Storage);
         }
 
         private EvaluatedGHResult RunSingleOptimizeStep(RunOptimizeSettings optSet, double[] xTest, int trialNum, DateTime startTime)
@@ -343,11 +339,14 @@ namespace Tunny.Solver
             }
         }
 
-        private void CopyInMemoryStudy(dynamic storage)
+        private void SaveInMemoryStudy(dynamic storage)
         {
-            dynamic optuna = Py.Import("optuna");
-            string studyName = Settings.StudyName;
-            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+            if (Settings.Storage.Type == StorageType.InMemory)
+            {
+                dynamic optuna = Py.Import("optuna");
+                string studyName = Settings.StudyName;
+                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+            }
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
