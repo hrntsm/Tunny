@@ -19,18 +19,18 @@ namespace Tunny.Handler
 
             Installer.InstallPath = Path;
             Installer.SetupPython();
-            worker.ReportProgress(100 / installItems, "Now installing Python runtime...");
+            worker?.ReportProgress(100 / installItems, "Now installing Python runtime...");
             Installer.TryInstallPip();
-            worker.ReportProgress(200 / installItems, "Now installing pip...");
+            worker?.ReportProgress(200 / installItems, "Now installing pip...");
 
             InstallPackages(worker, packageList, installItems);
 
-            worker.ReportProgress(100, "Finish!!");
+            worker?.ReportProgress(100, "Finish!!");
         }
 
-        private static void InstallPackages(BackgroundWorker worker, string[] packageList, int installItems)
+        private static void InstallPackages(BackgroundWorker worker, IReadOnlyList<string> packageList, int installItems)
         {
-            for (int i = 0; i < packageList.Length; i++)
+            for (int i = 0; i < packageList.Count; i++)
             {
                 string packageName = packageList[i].Split('=')[0] == "plotly"
                     ? packageList[i] + "... This package will take time to install. Please wait"
@@ -72,11 +72,11 @@ namespace Tunny.Handler
 
         private static string[] GetTunnyPackageList()
         {
-            string line = string.Empty;
             var pipPackages = new List<string>();
 
             using (var sr = new StreamReader(Path + "/Lib/requirements.txt"))
             {
+                string line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     pipPackages.Add(line);

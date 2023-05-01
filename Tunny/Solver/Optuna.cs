@@ -79,8 +79,11 @@ namespace Tunny.Solver
                 case EndState.UseExitStudyWithoutLoading:
                     TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
-                default:
+                case EndState.Error:
                     TunnyMessageBox.Show("Solver error.", "Tunny");
+                    break;
+                default:
+                    TunnyMessageBox.Show("Solver unexpected error.", "Tunny");
                     break;
             }
         }
@@ -138,9 +141,9 @@ namespace Tunny.Solver
             }
         }
 
-        private void UseModelNumber(int[] resultNum, List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private static void UseModelNumber(IReadOnlyList<int> resultNum, ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
-            for (int i = 0; i < resultNum.Length; i++)
+            for (int i = 0; i < resultNum.Count; i++)
             {
                 int res = resultNum[i];
                 if (OutputLoop.IsForcedStopOutput)
@@ -157,11 +160,11 @@ namespace Tunny.Solver
                 {
                     TunnyMessageBox.Show("Error\n\n" + e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                worker.ReportProgress(i * 100 / resultNum.Length);
+                worker.ReportProgress(i * 100 / resultNum.Count);
             }
         }
 
-        private void AllTrials(List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private static void AllTrials(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
             var trials = (dynamic[])study.trials;
             for (int i = 0; i < trials.Length; i++)
@@ -176,7 +179,7 @@ namespace Tunny.Solver
             }
         }
 
-        private void ParatoSolutions(List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private void ParatoSolutions(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
             var bestTrials = (dynamic[])study.best_trials;
             for (int i = 0; i < bestTrials.Length; i++)
@@ -242,20 +245,20 @@ namespace Tunny.Solver
         {
             var attributes = new Dictionary<string, List<string>>();
             string[] keys = (string[])trial.user_attrs.keys();
-            for (int i = 0; i < keys.Length; i++)
+            foreach (string key in keys)
             {
-                var values = new List<string>();
-                if (keys[i] == "Constraint")
+                List<string> values;
+                if (key == "Constraint")
                 {
-                    double[] constraint = (double[])trial.user_attrs[keys[i]];
+                    double[] constraint = (double[])trial.user_attrs[key];
                     values = constraint.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToList();
                 }
                 else
                 {
-                    string[] valueArray = (string[])trial.user_attrs[keys[i]];
+                    string[] valueArray = (string[])trial.user_attrs[key];
                     values = valueArray.ToList();
                 }
-                attributes.Add(keys[i], values);
+                attributes.Add(key, values);
             }
             return attributes;
         }

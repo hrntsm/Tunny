@@ -16,7 +16,7 @@ namespace Tunny.Storage
 
         private static bool CheckTableExist(SQLiteConnection connection)
         {
-            int hasStudiesTable = 0;
+            int hasStudiesTable;
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='studies';";

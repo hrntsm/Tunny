@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 
 using Python.Runtime;
 
 using Tunny.Settings;
 using Tunny.Settings.Sampler;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -31,7 +29,8 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: settings.Storage.GetOptunaStoragePath()).get_trials()
+                    source_trials: optuna.load_study(study_name: cmaEs.WarmStartStudyName, storage: settings.Storage.GetOptunaStoragePath()).get_trials(),
+                    with_margin: cmaEs.WithMargin
                 )
                 : optuna.samplers.CmaEsSampler(
                     sigma0: cmaEs.Sigma0,
@@ -42,28 +41,9 @@ namespace Tunny.Solver
                     restart_strategy: cmaEs.RestartStrategy == string.Empty ? null : cmaEs.RestartStrategy,
                     inc_popsize: cmaEs.IncPopsize,
                     popsize: cmaEs.PopulationSize,
-                    use_separable_cma: cmaEs.UseSeparableCma
+                    use_separable_cma: cmaEs.UseSeparableCma,
+                    with_margin: cmaEs.WithMargin
                 );
-        }
-
-        internal static dynamic Grid(dynamic optuna, List<Variable> variables, ref int nTrials)
-        {
-            var searchSpace = new PyDict();
-            for (int i = 0; i < variables.Count; i++)
-            {
-                var numSpace = new PyList();
-                for (int j = 0; j < nTrials; j++)
-                {
-                    numSpace.Append(new PyFloat(
-                        variables[i].LowerBond +
-                        ((variables[i].UpperBond - variables[i].LowerBond) * (j / (nTrials - 1)))
-                        )
-                    );
-                }
-                searchSpace.SetItem(new PyString(variables[i].NickName), numSpace);
-            }
-            nTrials = (int)Math.Pow(nTrials, variables.Count);
-            return optuna.samplers.GridSampler(searchSpace);
         }
 
         internal static dynamic NSGAII(dynamic optuna, TunnySettings settings, bool hasConstraints)
@@ -138,12 +118,11 @@ namespace Tunny.Solver
                 qmc_type: qmc.QmcType,
                 scramble: qmc.Scramble,
                 seed: qmc.Seed,
-                // warn_asynchronous_seeding: qmc.WarnAsynchronousSeeding,
                 warn_independent_sampling: qmc.WarnIndependentSampling
             );
         }
 
-        internal static dynamic ConstraintFunc()
+        private static dynamic ConstraintFunc()
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(

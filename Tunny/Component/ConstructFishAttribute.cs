@@ -6,15 +6,17 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 
 using Tunny.Resources;
-using Tunny.Type;
 
 namespace Tunny.Component
 {
     public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
-        private readonly string _geomDescription = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
-        private readonly string _constraintDescription = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
-        private readonly string _attrDescription = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
+        private const string GeomDescription
+            = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
+        private const string ConstraintDescription
+            = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
+        private const string AttrDescription
+            = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public ConstructFishAttribute()
@@ -26,10 +28,10 @@ namespace Tunny.Component
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometry", "Geometry", _geomDescription, GH_ParamAccess.list);
-            pManager.AddNumberParameter("Constraint", "Constraint", _constraintDescription, GH_ParamAccess.item);
-            pManager.AddGenericParameter("Attr1", "Attr1", _attrDescription, GH_ParamAccess.list);
-            pManager.AddGenericParameter("Attr2", "Attr2", _attrDescription, GH_ParamAccess.list);
+            pManager.AddGeometryParameter("Geometry", "Geometry", GeomDescription, GH_ParamAccess.list);
+            pManager.AddNumberParameter("Constraint", "Constraint", ConstraintDescription, GH_ParamAccess.item);
+            pManager.AddGenericParameter("Attr1", "Attr1", AttrDescription, GH_ParamAccess.list);
+            pManager.AddGenericParameter("Attr2", "Attr2", AttrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
@@ -56,7 +58,7 @@ namespace Tunny.Component
             DA.SetData(0, dict);
         }
 
-        private void GetInputData(IGH_DataAccess DA, int paramCount, Dictionary<string, object> dict)
+        private void GetInputData(IGH_DataAccess DA, int paramCount, IDictionary<string, object> dict)
         {
             for (int i = 0; i < paramCount; i++)
             {
@@ -112,32 +114,32 @@ namespace Tunny.Component
                 : null;
         }
 
-        private IGH_Param SetGenericParameterInput(int index)
+        private static IGH_Param SetGenericParameterInput(int index)
         {
             var p = new Param_GenericObject();
             p.Name = p.NickName = $"Attr{index}";
-            p.Description = _attrDescription;
+            p.Description = AttrDescription;
             p.Access = GH_ParamAccess.list;
             p.Optional = true;
             return p;
         }
 
-        private IGH_Param SetNumberParameterInput()
+        private static IGH_Param SetNumberParameterInput()
         {
             var p = new Param_Number();
-            p.Name = p.NickName = $"Constraint";
-            p.Description = _constraintDescription;
+            p.Name = p.NickName = "Constraint";
+            p.Description = ConstraintDescription;
             p.Access = GH_ParamAccess.list;
             p.MutableNickName = false;
             p.Optional = true;
             return p;
         }
 
-        private IGH_Param SetGeometryParameterInput()
+        private static IGH_Param SetGeometryParameterInput()
         {
             var p = new Param_Geometry();
             p.Name = p.NickName = "Geometry";
-            p.Description = _geomDescription;
+            p.Description = GeomDescription;
             p.Access = GH_ParamAccess.item;
             p.MutableNickName = false;
             p.Optional = true;
