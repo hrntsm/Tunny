@@ -75,7 +75,7 @@ def fix_cached_storage(study):
             dashboard.Start();
 
             var browser = new Process();
-            browser.StartInfo.FileName = @"http://127.0.0.1:8080/beta";
+            browser.StartInfo.FileName = @"http://127.0.0.1:8080/dashboard/beta";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
         }
