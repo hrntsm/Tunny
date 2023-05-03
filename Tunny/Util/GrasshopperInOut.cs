@@ -425,21 +425,24 @@ namespace Tunny.Util
             return attrs;
         }
 
-        internal Bitmap GetActiveViewBitmap()
+        internal List<Bitmap> GetBitmapImages()
         {
+            var bitmaps = new List<Bitmap>();
             foreach (string key in _attributes.Value.Keys)
             {
                 if (key == "bitmap")
                 {
                     var objList = _attributes.Value[key] as List<object>;
-                    object obj = objList[0];
-                    var ghObjWrapper = (GH_ObjectWrapper)obj;
-                    var bitmap = ghObjWrapper.Value as Bitmap;
-                    return bitmap;
+                    foreach (object obj in objList)
+                    {
+                        var ghObjWrapper = (GH_ObjectWrapper)obj;
+                        var bitmap = ghObjWrapper.Value as Bitmap;
+                        bitmaps.Add(bitmap);
+                    }
                 }
             }
 
-            return null;
+            return bitmaps;
         }
 
         private void AddGooValues(string key, List<string> value)

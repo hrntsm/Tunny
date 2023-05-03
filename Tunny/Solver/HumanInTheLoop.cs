@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -21,6 +22,12 @@ namespace Tunny.Solver
         public HumanInTheLoop(string path)
         {
             PyModule importedLibrary = Py.CreateScope();
+            importedLibrary.Exec(@"
+import sys
+path = 'C:/Users/hiroa/Desktop/temp_stdio.txt'
+sys.stdout = open(path, 'w', encoding='utf-8')
+sys.stderr = open(path, 'w', encoding='utf-8')"
+            );
             importedLibrary.Import("os");
             importedLibrary.Import("textwrap");
             importedLibrary.Import("threading");
@@ -149,27 +156,31 @@ def fix_cached_storage(study):
             return len(study);
         }
 
-        public void SaveNote(dynamic study, dynamic trial, Bitmap bitmap)
+        public void SaveNote(dynamic study, dynamic trial, List<Bitmap> bitmaps)
         {
-            CheckDirectory();
-            string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";
-            bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
-            dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
+            var noteText = new StringBuilder();
+            noteText.AppendLine("# Image");
+            noteText.AppendLine("");
+
+            CheckDirectoryIsExist();
+            for (int i = 0; i < bitmaps.Count; i++)
+            {
+                Bitmap bitmap = bitmaps[i];
+                string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";
+                bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+                dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
+                noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})");
+            }
+
 
             dynamic textWrap = _importedLibrary.Get("textwrap");
-            dynamic note = textWrap.dedent($@"
-# Rhino Viewport Image
-
-![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})
-"
-            );
+            dynamic note = textWrap.dedent(noteText.ToString());
             dynamic saveNote = _importedLibrary.Get("save_note");
             saveNote(trial, note);
         }
 
-        private void CheckDirectory()
+        private void CheckDirectoryIsExist()
         {
             string artifactPath = Path.Combine(_basePath, "artifacts");
             string tmpPath = Path.Combine(_basePath, "tmp");

@@ -8,6 +8,6 @@ namespace Tunny.Util
         public List<double> ObjectiveValues { get; set; }
         public List<string> GeometryJson { get; set; }
         public Dictionary<string, List<string>> Attribute { get; set; }
-        public Bitmap ActiveViewBitmap { get; set; }
+        public List<Bitmap> Images { get; set; }
     }
 }

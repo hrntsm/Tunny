@@ -80,7 +80,7 @@ namespace Tunny.Handler
                 ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
                 Attribute = s_component.GhInOut.GetAttributes(),
-                ActiveViewBitmap = s_component.GhInOut.GetActiveViewBitmap(),
+                Images = s_component.GhInOut.GetBitmapImages(),
             };
         }
     }

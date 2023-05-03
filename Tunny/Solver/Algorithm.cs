@@ -248,7 +248,7 @@ namespace Tunny.Solver
 
                 ProgressState pState = SetProgressState(optSet, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ActiveViewBitmap);
+                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.Images);
 
                 if (result.ObjectiveValues.Contains(double.NaN))
                 {
