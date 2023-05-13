@@ -5,32 +5,28 @@ using Grasshopper.Kernel;
 
 using Rhino;
 using Rhino.Display;
-using Rhino.Geometry;
 
 using Tunny.Component.Params;
 
 namespace Tunny.Component.Util
 {
-    public class FishPrint : GH_Component
+    public class FishPrintByPath : GH_Component
     {
-        public FishPrint()
-          : base("ConstructFishPrintByCapture", "FPCap",
-              "Description",
+        public FishPrintByPath()
+          : base("Fish Print by Path", "FPPath",
+              "Create Fish Print by file path.",
               "Tunny", "Util")
         {
         }
 
-        public override BoundingBox ClippingBox => new BoundingBox(new Point3d(-1e+10, -1e+10, -1e+10), new Point3d(1e+10, 1e+10, 1e+1));
-        public override bool IsPreviewCapable => true;
-
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometry", "G", "Geometry", GH_ParamAccess.list);
+            pManager.AddTextParameter("Path", "Path", "Create Fish Print by file path", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Param_FishPrint(), "FishPrint", "cap", "FishPrint", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_FishPrint(), "FishPrint", "FPrint", "FishPrint", GH_ParamAccess.item);
         }
 
         private readonly RhinoDoc _doc = RhinoDoc.ActiveDoc;
@@ -44,6 +40,6 @@ namespace Tunny.Component.Util
 
         protected override Bitmap Icon => null;
 
-        public override Guid ComponentGuid => new Guid("5CFA19E3-2FBE-45D3-8E40-EF459C7FF491");
+        public override Guid ComponentGuid => new Guid("8ea46ce9-d546-4fdc-a950-976134af8227");
     }
 }

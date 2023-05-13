@@ -203,13 +203,22 @@ namespace Tunny.Util
                 return false;
             }
 
-            var noNumberObjectives = _component.Params.Input[1]
-                .Sources.Where(ghParam => ghParam.ToString() != "Grasshopper.Kernel.Parameters.Param_Number")
-                .ToList();
-
-            if (noNumberObjectives.Count > 0)
+            var unsupportedObjectives = new List<IGH_Param>();
+            foreach (IGH_Param param in _component.Params.Input[1].Sources)
             {
-                ShowIncorrectObjectiveInputMessage(noNumberObjectives);
+                switch(param)
+                {
+                    case GH_Number _:
+                    case Param_FishPrint _:
+                        break;
+                    default:
+                        unsupportedObjectives.Add(param);
+                        break;
+                }
+            }
+            if (unsupportedObjectives.Count > 0)
+            {
+                ShowIncorrectObjectiveInputMessage(unsupportedObjectives);
                 return false;
             }
 
