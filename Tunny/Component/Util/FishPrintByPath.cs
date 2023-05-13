@@ -7,6 +7,7 @@ using Rhino;
 using Rhino.Display;
 
 using Tunny.Component.Params;
+using Tunny.Resources;
 
 namespace Tunny.Component.Util
 {
@@ -38,7 +39,7 @@ namespace Tunny.Component.Util
             DA.SetData(0, bitmap);
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resource.FishPrintByPath;
 
         public override Guid ComponentGuid => new Guid("8ea46ce9-d546-4fdc-a950-976134af8227");
     }
