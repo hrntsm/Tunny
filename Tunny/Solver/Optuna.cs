@@ -6,9 +6,11 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
 
 using Python.Runtime;
 
+using Tunny.Component.Params;
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.Type;
@@ -37,8 +39,7 @@ namespace Tunny.Solver
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, EvaluatedGHResult> evaluate)
         {
-            string[] objNickName = objectives.Select(x => x.NickName).ToArray();
-
+            string[] objNickName = GetObjectiveNickName(objectives);
             EvaluatedGHResult Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
@@ -58,6 +59,27 @@ namespace Tunny.Solver
                 ShowErrorMessages(e);
                 return false;
             }
+        }
+
+        private static string[] GetObjectiveNickName(IEnumerable<IGH_Param> objectives)
+        {
+            string[] objNickName = new string[objectives.Count()];
+            foreach ((IGH_Param ghParam, int i) in objectives.Select((ghParam, i) => (ghParam, i)))
+            {
+                switch (ghParam)
+                {
+                    case Param_Number param:
+                        objNickName[i] = param.NickName;
+                        break;
+                    case Param_FishPrint param:
+                        objNickName[i] = "Human-in-the-Loop " + param.NickName;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return objNickName;
         }
 
         private static void ShowEndMessages(EndState endState)

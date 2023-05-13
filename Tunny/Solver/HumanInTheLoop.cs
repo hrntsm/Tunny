@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -22,12 +21,7 @@ namespace Tunny.Solver
         public HumanInTheLoop(string path)
         {
             PyModule importedLibrary = Py.CreateScope();
-            importedLibrary.Exec(@"
-import sys
-path = 'C:/Users/hiroa/Desktop/temp_stdio.txt'
-sys.stdout = open(path, 'w', encoding='utf-8')
-sys.stderr = open(path, 'w', encoding='utf-8')"
-            );
+            SetStdOutErrDirection(path, importedLibrary);
             importedLibrary.Import("os");
             importedLibrary.Import("textwrap");
             importedLibrary.Import("threading");
@@ -35,8 +29,7 @@ sys.stderr = open(path, 'w', encoding='utf-8')"
             importedLibrary.Import("optuna");
             importedLibrary.Import("optuna_dashboard");
             importedLibrary.Exec("from optuna_dashboard import save_note");
-            importedLibrary.Exec("from optuna_dashboard import ObjectiveChoiceWidget");
-            importedLibrary.Exec("from optuna_dashboard import ObjectiveSliderWidget");
+            importedLibrary.Exec("from optuna_dashboard import SliderWidget");
             importedLibrary.Exec("from optuna_dashboard import ObjectiveUserAttrRef");
             importedLibrary.Exec("from optuna_dashboard import register_objective_form_widgets");
             importedLibrary.Exec("from optuna_dashboard import set_objective_names");
@@ -48,6 +41,15 @@ sys.stderr = open(path, 'w', encoding='utf-8')"
             dynamic fileSystemBackend = importedLibrary.Get("FileSystemBackend");
             _artifactBackend = fileSystemBackend(base_path: _artifactPath);
             _importedLibrary = importedLibrary;
+        }
+
+        private static void SetStdOutErrDirection(string path, PyModule importedLibrary)
+        {
+            string ioPath = Path.Combine(path, "tmp.out");
+            importedLibrary.Import("sys");
+            importedLibrary.Exec("path = r'" + ioPath + "'");
+            importedLibrary.Exec("sys.stdout = open(path, 'w', encoding='utf-8')");
+            importedLibrary.Exec("sys.stderr = open(path, 'w', encoding='utf-8')");
         }
 
         public static dynamic FixStudyCachedStorage(dynamic study)
@@ -113,10 +115,9 @@ def fix_cached_storage(study):
         {
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
             var pyNameList = new PyList();
-            pyNameList.Append(new PyString("Check above image: How do you like the look of this model?"));
             foreach (string objectiveName in objectiveNames)
             {
-                pyNameList.Append(new PyString(objectiveName));
+                pyNameList.Append(new PyString(objectiveName.Replace("Human-in-the-Loop", "HITL")));
             }
             setObjectiveNames(study, pyNameList);
         }
@@ -124,18 +125,23 @@ def fix_cached_storage(study):
         public void SetWidgets(dynamic study, string[] objectiveNames)
         {
             dynamic registerObjectiveFromWidgets = _importedLibrary.Get("register_objective_form_widgets");
-            dynamic objectiveSliderWidget = _importedLibrary.Get("ObjectiveSliderWidget");
+            dynamic sliderWidget = _importedLibrary.Get("SliderWidget");
             dynamic objectiveUserAttrRef = _importedLibrary.Get("ObjectiveUserAttrRef");
 
-            var widgets = new dynamic[objectiveNames.Length + 1];
-            widgets[0] = objectiveSliderWidget(min: 1, max: 10, step: 1, description: "Smaller is better");
-            for (int i = 1; i < objectiveNames.Length + 1; i++)
+            var widgets = new dynamic[objectiveNames.Length];
+            for (int i = 0; i < objectiveNames.Length; i++)
             {
-                string objectiveName = objectiveNames[i - 1];
-                var key = new PyString("result_" + objectiveName);
-                widgets[i] = objectiveUserAttrRef(key: key);
+                if (objectiveNames[i].Contains("Human-in-the-Loop"))
+                {
+                    widgets[i] = sliderWidget(min: 1, max: 10, step: 1, description: "Smaller is better");
+                }
+                else
+                {
+                    string objectiveName = objectiveNames[i];
+                    var key = new PyString("result_" + objectiveName);
+                    widgets[i] = objectiveUserAttrRef(key: key);
+                }
             }
-
             registerObjectiveFromWidgets(study, widgets: widgets);
         }
 

@@ -49,8 +49,7 @@ namespace Tunny.Solver
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
-            int nObjective = Settings.Optimize.SelectSampler == 6 ? ObjNickName.Length + 1 : ObjNickName.Length;
-            string[] directions = SetDirectionValues(nObjective);
+            string[] directions = SetDirectionValues(ObjNickName.Length);
 
             PythonEngine.Initialize();
             IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
@@ -63,7 +62,7 @@ namespace Tunny.Solver
                 double[] xTest = null;
                 EvaluatedGHResult result = null;
 
-                if (CheckExistStudyParameter(nObjective, optuna, storage))
+                if (CheckExistStudyParameter(ObjNickName.Length, optuna, storage))
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
                     var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
@@ -85,7 +84,7 @@ namespace Tunny.Solver
                     {
                         RunOptimize(runOptimizeSettings, out xTest, out result);
                     }
-                    SetResultValues(nObjective, study, xTest);
+                    SetResultValues(ObjNickName.Length, study, xTest);
                 }
             }
             PythonEngine.EndAllowThreads(allowThreadsPtr);
@@ -404,11 +403,19 @@ namespace Tunny.Solver
 
             if (result.ObjectiveValues.Length != 0 && optSet.HumanInTheLoop != null)
             {
-                for (int i = 0; i < result.ObjectiveValues.Length; i++)
+                int imageCount = 0;
+                for (int i = 0; i < result.ObjectiveValues.Length + result.ObjectiveImages.Length; i++)
                 {
-                    var key = new PyString("result_" + optSet.ObjectiveNames[i]);
-                    var value = new PyFloat(result.ObjectiveValues[i]);
-                    trial.set_user_attr(key, value);
+                    if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
+                    {
+                        var key = new PyString("result_" + optSet.ObjectiveNames[i]);
+                        var value = new PyFloat(result.ObjectiveValues[i - imageCount]);
+                        trial.set_user_attr(key, value);
+                    }
+                    else
+                    {
+                        imageCount++;
+                    }
                 }
             }
         }
