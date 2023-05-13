@@ -5,7 +5,7 @@ using System.Linq;
 
 using Grasshopper.Kernel;
 
-using Tunny.Component;
+using Tunny.Component.Optimizer;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;

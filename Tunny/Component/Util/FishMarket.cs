@@ -17,7 +17,7 @@ using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public class FishMarket : GH_Component
     {
@@ -31,7 +31,7 @@ namespace Tunny.Component
         public FishMarket()
           : base("Fish Market", "FMarket",
             "A place to lay out the solutions we caught.",
-            "Tunny", "Tunny")
+            "Tunny", "Util")
         {
         }
 
@@ -112,12 +112,12 @@ namespace Tunny.Component
             Vector3d yVec = _settings.Plane.YAxis * (_settings.YInterval * countY);
             for (int countX = 0; countX < _settings.XNum; countX++)
             {
-                int index = countX + (_settings.XNum * countY);
+                int index = countX + _settings.XNum * countY;
                 if (index == _fishes.Count)
                 {
                     return false;
                 }
-                Vector3d moveVec = (_settings.Plane.XAxis * (_settings.XInterval * countX)) + yVec;
+                Vector3d moveVec = _settings.Plane.XAxis * (_settings.XInterval * countX) + yVec;
                 if (fishGeometries[index] != null)
                 {
                     MoveGeometries(index, moveVec, fishGeometries, arrayedGeometries);
@@ -141,7 +141,7 @@ namespace Tunny.Component
             }
             modelMinPt = GetUnionBoundingBoxMinPt(movedGeometries);
             _tagPlanes.Add(new Plane(
-                modelMinPt - (_settings.Plane.YAxis * 2.5 * _size),
+                modelMinPt - _settings.Plane.YAxis * 2.5 * _size,
                 _settings.Plane.XAxis,
                 _settings.Plane.YAxis
                 )

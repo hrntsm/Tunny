@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+
+using GalapagosComponents;
 
 using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
+using Grasshopper.Kernel.Special;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 using Tunny.UI;
 using Tunny.Util;
 
-namespace Tunny.Component
+namespace Tunny.Component.Optimizer
 {
     public partial class FishingComponent : GH_Component, IDisposable
     {
@@ -24,14 +31,14 @@ namespace Tunny.Component
         public FishingComponent()
           : base("Tunny", "Tunny",
             "Tunny is an optimization component wrapped in optuna.",
-            "Tunny", "Tunny")
+            "Tunny", "Optimizer")
         {
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
-            pManager.AddNumberParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
             pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
@@ -45,7 +52,43 @@ namespace Tunny.Component
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            CheckVariablesInput(Params.Input[0].Sources.Select(ghParam => ghParam.InstanceGuid));
+            CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
+
             DA.SetDataList(0, Fishes);
+        }
+
+        private void CheckVariablesInput(IEnumerable<Guid> inputGuids)
+        {
+            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
+            {
+                switch (docObject)
+                {
+                    case GH_NumberSlider slider:
+                    case GalapagosGeneListObject genePool:
+                    case Param_FishEgg fishEgg:
+                        break;
+                    default:
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid variable.");
+                        break;
+                }
+            }
+        }
+
+        private void CheckObjectivesInput(IEnumerable<Guid> inputGuids)
+        {
+            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
+            {
+                switch (docObject)
+                {
+                    case Param_Number number:
+                    case Param_FishPrint fPrint:
+                        break;
+                    default:
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid objective.");
+                        break;
+                }
+            }
         }
 
         public void GhInOutInstantiate()

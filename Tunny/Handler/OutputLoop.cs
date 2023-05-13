@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Rhino.Geometry;
 using Rhino.Runtime;
 
-using Tunny.Component;
+using Tunny.Component.Optimizer;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;

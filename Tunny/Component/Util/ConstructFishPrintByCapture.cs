@@ -7,14 +7,16 @@ using Rhino;
 using Rhino.Display;
 using Rhino.Geometry;
 
-namespace MyNamespace
+using Tunny.Component.Params;
+
+namespace Tunny.Component.Util
 {
     public class FishPrint : GH_Component
     {
         public FishPrint()
-          : base("FishPrint", "capture",
+          : base("ConstructFishPrintByCapture", "FPCap",
               "Description",
-              "Tunny", "Subcategory")
+              "Tunny", "Util")
         {
         }
 
@@ -28,7 +30,7 @@ namespace MyNamespace
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("FishPrint", "cap", "FishPrint", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_FishPrint(), "FishPrint", "cap", "FishPrint", GH_ParamAccess.item);
         }
 
         private readonly RhinoDoc _doc = RhinoDoc.ActiveDoc;
