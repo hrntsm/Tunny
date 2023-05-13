@@ -85,6 +85,13 @@ namespace Tunny.Solver
             {
                 _settings.Optimize.IsHumanInTheLoop = false;
             }
+            // FIXME: Fix JournalStorage when the usage of JournalStorage is understood.
+            else if(_settings.Storage.Type != StorageType.Sqlite)
+            {
+                string message = "Human-in-the-Loop is not available with the current storage type.\nPlease change the storage type to Sqlite.";
+                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException(message);
+            }
 
             return objNickName;
         }
