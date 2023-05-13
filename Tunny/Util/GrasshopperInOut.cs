@@ -206,7 +206,7 @@ namespace Tunny.Util
             var unsupportedObjectives = new List<IGH_Param>();
             foreach (IGH_Param param in _component.Params.Input[1].Sources)
             {
-                switch(param)
+                switch (param)
                 {
                     case GH_Number _:
                     case Param_FishPrint _:
@@ -346,31 +346,35 @@ namespace Tunny.Util
             SetAttributes();
         }
 
-        public List<double> GetObjectiveValues()
+        public TunnyObjective GetObjectiveValues()
         {
-            var values = new List<double>();
+            var numbers = new List<double>();
+            var images = new List<Bitmap>();
 
             foreach (IGH_StructureEnumerator ghEnumerator in Objectives.Select(objective => objective.VolatileData.AllData(false)))
             {
                 if (ghEnumerator.Count() > 1)
                 {
                     TunnyMessageBox.Show(
-                        "Tunny doesn't handle list output.\nSeparate each objective if you want multiple objectives",
+                        "Tunny doesn't handle list input.\nSeparate each objective if you want multiple objectives",
                         "Tunny",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
-                    return new List<double>();
+                    return new TunnyObjective();
                 }
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
                     switch (goo)
                     {
                         case GH_Number num:
-                            values.Add(num.Value);
+                            numbers.Add(num.Value);
                             break;
                         case null:
-                            values.Add(double.NaN);
+                            numbers.Add(double.NaN);
+                            break;
+                        case GH_FishPrint print:
+                            images.Add(print.Value);
                             break;
                         default:
                             break;
@@ -378,10 +382,10 @@ namespace Tunny.Util
                 }
             }
 
-            return values;
+            return new TunnyObjective(numbers.ToArray(), images.ToArray());
         }
 
-        public List<string> GetGeometryJson()
+        public string[] GetGeometryJson()
         {
             var json = new List<string>();
 
@@ -389,7 +393,7 @@ namespace Tunny.Util
                 || !_attributes.Value.ContainsKey("Geometry")
                 || !(_attributes.Value["Geometry"] is List<object> geometries))
             {
-                return json;
+                return json.ToArray();
             }
 
             foreach (object param in geometries)
@@ -400,7 +404,7 @@ namespace Tunny.Util
                 }
             }
 
-            return json;
+            return json.ToArray();
         }
 
         public Dictionary<string, List<string>> GetAttributes()
@@ -435,26 +439,6 @@ namespace Tunny.Util
             }
 
             return attrs;
-        }
-
-        internal List<Bitmap> GetBitmapImages()
-        {
-            var bitmaps = new List<Bitmap>();
-            foreach (string key in _attributes.Value.Keys)
-            {
-                if (key == "bitmap")
-                {
-                    var objList = _attributes.Value[key] as List<object>;
-                    foreach (object obj in objList)
-                    {
-                        var ghObjWrapper = (GH_ObjectWrapper)obj;
-                        var bitmap = ghObjWrapper.Value as Bitmap;
-                        bitmaps.Add(bitmap);
-                    }
-                }
-            }
-
-            return bitmaps;
         }
 
         private void AddGooValues(string key, List<string> value)

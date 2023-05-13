@@ -156,7 +156,7 @@ def fix_cached_storage(study):
             return len(study);
         }
 
-        public void SaveNote(dynamic study, dynamic trial, List<Bitmap> bitmaps)
+        public void SaveNote(dynamic study, dynamic trial, Bitmap[] bitmaps)
         {
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             var noteText = new StringBuilder();
@@ -164,7 +164,7 @@ def fix_cached_storage(study):
             noteText.AppendLine("");
 
             CheckDirectoryIsExist();
-            for (int i = 0; i < bitmaps.Count; i++)
+            for (int i = 0; i < bitmaps.Length; i++)
             {
                 Bitmap bitmap = bitmaps[i];
                 string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";

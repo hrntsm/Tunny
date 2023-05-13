@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -10,6 +9,7 @@ using Grasshopper.GUI;
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.Storage;
+using Tunny.Type;
 
 namespace Tunny.UI
 {
@@ -116,14 +116,14 @@ namespace Tunny.UI
 
         private bool CheckObjectivesCount(GH_DocumentEditor ghCanvas)
         {
-            List<double> objectiveValues = _component.GhInOut.GetObjectiveValues();
-            if (objectiveValues.Count == 0)
+            TunnyObjective value = _component.GhInOut.GetObjectiveValues();
+            if (value.Length == 0)
             {
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
                 return false;
             }
-            else if (objectiveValues.Count > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
+            else if (value.Length > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
             {
                 return CmaEsSupportOneObjectiveMessage(ghCanvas);
             }

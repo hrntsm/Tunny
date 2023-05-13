@@ -248,7 +248,7 @@ namespace Tunny.Solver
 
                 ProgressState pState = SetProgressState(optSet, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.Images);
+                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ObjectiveImages);
 
                 if (result.ObjectiveValues.Contains(double.NaN))
                 {
@@ -369,7 +369,7 @@ namespace Tunny.Solver
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
             if ((gcAfterTrial != GcAfterTrial.Always) &&
-                ((result.GeometryJson.Count <= 0) || (gcAfterTrial != GcAfterTrial.HasGeometry)))
+                ((result.GeometryJson.Length <= 0) || (gcAfterTrial != GcAfterTrial.HasGeometry)))
             {
                 return;
             }
@@ -387,7 +387,7 @@ namespace Tunny.Solver
 
         private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial, RunOptimizeSettings optSet)
         {
-            if (result.GeometryJson.Count != 0)
+            if (result.GeometryJson.Length != 0)
             {
                 var pyJson = new PyList();
                 foreach (string json in result.GeometryJson)
@@ -402,9 +402,9 @@ namespace Tunny.Solver
                 SetNonGeometricAttr(result, trial);
             }
 
-            if (result.ObjectiveValues.Count != 0 && optSet.HumanInTheLoop != null)
+            if (result.ObjectiveValues.Length != 0 && optSet.HumanInTheLoop != null)
             {
-                for (int i = 0; i < result.ObjectiveValues.Count; i++)
+                for (int i = 0; i < result.ObjectiveValues.Length; i++)
                 {
                     var key = new PyString("result_" + optSet.ObjectiveNames[i]);
                     var value = new PyFloat(result.ObjectiveValues[i]);
