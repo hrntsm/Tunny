@@ -6,6 +6,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 

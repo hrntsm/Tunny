@@ -14,7 +14,7 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
+using Tunny.Component.Params;
 using Tunny.Type;
 using Tunny.UI;
 

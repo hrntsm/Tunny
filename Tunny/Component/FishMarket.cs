@@ -12,6 +12,7 @@ using Rhino;
 using Rhino.Display;
 using Rhino.Geometry;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
