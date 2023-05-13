@@ -11,6 +11,7 @@ using GalapagosComponents;
 using Grasshopper.GUI.Base;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
@@ -208,7 +209,7 @@ namespace Tunny.Util
             {
                 switch (param)
                 {
-                    case GH_Number _:
+                    case Param_Number _:
                     case Param_FishPrint _:
                         break;
                     default:
@@ -239,12 +240,12 @@ namespace Tunny.Util
             return true;
         }
 
-        private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> noNumberObjectives)
+        private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
         {
-            TunnyMessageBox.Show("Objective supports only the Number input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            foreach (IGH_Param noNumberSource in noNumberObjectives)
+            TunnyMessageBox.Show("Objective supports only the Number or FishPrint input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            foreach (IGH_Param unsupportedSource in unsupportedSources)
             {
-                _component.Params.Input[1].RemoveSource(noNumberSource);
+                _component.Params.Input[1].RemoveSource(unsupportedSource);
             }
             _component.ExpireSolution(true);
         }
