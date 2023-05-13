@@ -86,8 +86,11 @@ namespace Tunny.Util
                         _genePool.Add(genePool);
                         break;
                     case Param_FishEgg fishEgg:
-                        var ghFishEgg = (GH_FishEgg)fishEgg.VolatileData.AllData(true).First();
-                        EnqueueItems = ghFishEgg.Value;
+                        if (fishEgg.SourceCount != 0)
+                        {
+                            var ghFishEgg = (GH_FishEgg)fishEgg.VolatileData.AllData(true).First();
+                            EnqueueItems = ghFishEgg.Value;
+                        }
                         break;
                     default:
                         errorInputGuids.Add(docObject.InstanceGuid);
