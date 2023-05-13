@@ -67,7 +67,7 @@ namespace Tunny.Solver
                     dynamic study = CreateStudy(directions, sampler, storage);
                     var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
-                    if (Settings.Optimize.SelectSampler == 6)
+                    if (Settings.Optimize.IsHumanInTheLoop)
                     {
                         var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
 

@@ -61,9 +61,10 @@ namespace Tunny.Solver
             }
         }
 
-        private static string[] GetObjectiveNickName(IEnumerable<IGH_Param> objectives)
+        private string[] GetObjectiveNickName(IEnumerable<IGH_Param> objectives)
         {
             string[] objNickName = new string[objectives.Count()];
+            int hitlCount = 0;
             foreach ((IGH_Param ghParam, int i) in objectives.Select((ghParam, i) => (ghParam, i)))
             {
                 switch (ghParam)
@@ -73,10 +74,16 @@ namespace Tunny.Solver
                         break;
                     case Param_FishPrint param:
                         objNickName[i] = "Human-in-the-Loop " + param.NickName;
+                        _settings.Optimize.IsHumanInTheLoop = true;
+                        hitlCount++;
                         break;
                     default:
                         break;
                 }
+            }
+            if (hitlCount == 0)
+            {
+                _settings.Optimize.IsHumanInTheLoop = false;
             }
 
             return objNickName;
