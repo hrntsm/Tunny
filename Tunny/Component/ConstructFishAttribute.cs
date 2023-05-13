@@ -5,6 +5,7 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 
 namespace Tunny.Component

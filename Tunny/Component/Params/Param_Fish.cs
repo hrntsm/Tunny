@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 using Tunny.Resources;
 using Tunny.Type;
 
-namespace Tunny.Component
+namespace Tunny.Component.Params
 {
     public class Param_Fish : GH_PersistentParam<GH_Fish>
     {
@@ -15,7 +15,7 @@ namespace Tunny.Component
         public Param_Fish()
           : base("Fish", "Fish",
             "Fish caught by the optimization nets",
-            "Tunny", "Tunny")
+            "Tunny", "Params")
         {
         }
 

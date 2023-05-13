@@ -10,6 +10,7 @@ using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
