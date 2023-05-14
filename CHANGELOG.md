@@ -12,6 +12,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Support Human-in-the-loop optimization
   - Input FishPrint into the objective to start it.
+  - Add 2 sample gh file.
 - Support CMA-ES with Margin
   - It allows for more efficient optimization in mixed integer problems.
 

@@ -133,7 +133,7 @@ def fix_cached_storage(study):
             {
                 if (objectiveNames[i].Contains("Human-in-the-Loop"))
                 {
-                    widgets[i] = sliderWidget(min: 1, max: 10, step: 1, description: "Smaller is better");
+                    widgets[i] = sliderWidget(min: 1, max: 5, step: 1, description: "Smaller is better");
                 }
                 else
                 {
