@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
+using Tunny.Component.Params;
 using Tunny.Type;
 using Tunny.Util;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public partial class ConstructFishEgg : GH_Component
     {
@@ -16,7 +17,7 @@ namespace Tunny.Component
         public ConstructFishEgg()
           : base("Construct Fish Egg", "ConstrFEgg",
             "You can specify the initial individual that Tunny will run. Try your golden egg!",
-            "Tunny", "Tunny")
+            "Tunny", "Util")
         {
         }
 

@@ -6,7 +6,7 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-namespace Tunny.Component
+namespace Tunny.Component.Optimizer
 {
     public partial class FishingComponent
     {

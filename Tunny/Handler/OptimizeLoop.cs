@@ -5,7 +5,7 @@ using System.Linq;
 
 using Grasshopper.Kernel;
 
-using Tunny.Component;
+using Tunny.Component.Optimizer;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
@@ -75,13 +75,14 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
-            var result = new EvaluatedGHResult
+            TunnyObjective objective = s_component.GhInOut.GetObjectiveValues();
+            return new EvaluatedGHResult
             {
-                ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
+                ObjectiveValues = objective.Numbers,
+                ObjectiveImages = objective.Images,
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
-                Attribute = s_component.GhInOut.GetAttributes()
+                Attribute = s_component.GhInOut.GetAttributes(),
             };
-            return result;
         }
     }
 }

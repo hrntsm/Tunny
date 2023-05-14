@@ -6,10 +6,11 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public class DeconstructFish : GH_Component
     {
@@ -18,7 +19,7 @@ namespace Tunny.Component
         public DeconstructFish()
           : base("Deconstruct Fish", "DeconF",
               "Deconstruct Fish.",
-              "Tunny", "Tunny")
+              "Tunny", "Util")
         {
         }
 

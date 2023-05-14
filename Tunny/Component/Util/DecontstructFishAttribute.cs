@@ -10,11 +10,12 @@ using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public class DeconstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
@@ -25,7 +26,7 @@ namespace Tunny.Component
         public DeconstructFishAttribute()
           : base("Deconstruct Fish Attribute", "DeconFA",
               "Deconstruct Fish Attribute.",
-              "Tunny", "Tunny")
+              "Tunny", "Util")
         {
         }
 
@@ -106,7 +107,7 @@ namespace Tunny.Component
 
         public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Input && (Params.Output.Count == 0 || index == Params.Output.Count);
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index) => (side != GH_ParameterSide.Input) && (index == Params.Output.Count - 1);
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Input && index == Params.Output.Count - 1;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {

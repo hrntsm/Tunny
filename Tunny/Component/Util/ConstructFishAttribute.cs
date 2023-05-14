@@ -5,9 +5,10 @@ using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
@@ -22,7 +23,7 @@ namespace Tunny.Component
         public ConstructFishAttribute()
           : base("Construct Fish Attribute", "ConstrFA",
             "Construct Fish Attribute.",
-            "Tunny", "Tunny")
+            "Tunny", "Util")
         {
         }
 

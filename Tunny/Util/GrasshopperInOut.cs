@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,11 @@ using GalapagosComponents;
 using Grasshopper.GUI.Base;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
-using Tunny.Component;
+using Tunny.Component.Params;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -85,8 +87,10 @@ namespace Tunny.Util
                         _genePool.Add(genePool);
                         break;
                     case Param_FishEgg fishEgg:
-                        var ghFishEgg = (GH_FishEgg)fishEgg.VolatileData.AllData(true).First();
-                        EnqueueItems = ghFishEgg.Value;
+                        if (fishEgg.SourceCount != 0)
+                        {
+                            EnqueueItems = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
+                        }
                         break;
                     default:
                         errorInputGuids.Add(docObject.InstanceGuid);
@@ -192,26 +196,34 @@ namespace Tunny.Util
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
-                TunnyMessageBox.Show("No objective found.\nPlease connect a number to the objective of the component.",
-                    "Tunny",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return false;
+                return ShowNoObjectiveFoundMessage();
             }
-
-            var noNumberObjectives = _component.Params.Input[1]
-                .Sources.Where(ghParam => ghParam.ToString() != "Grasshopper.Kernel.Parameters.Param_Number")
-                .ToList();
-
-            if (noNumberObjectives.Count > 0)
+            var unsupportedObjectives = new List<IGH_Param>();
+            foreach (IGH_Param param in _component.Params.Input[1].Sources)
             {
-                ShowIncorrectObjectiveInputMessage(noNumberObjectives);
-                return false;
+                switch (param)
+                {
+                    case Param_Number _:
+                    case Param_FishPrint _:
+                        break;
+                    default:
+                        unsupportedObjectives.Add(param);
+                        break;
+                }
             }
-
+            if (unsupportedObjectives.Count > 0)
+            {
+                return ShowIncorrectObjectiveInputMessage(unsupportedObjectives);
+            }
             if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return false; }
             Objectives = _component.Params.Input[1].Sources.ToList();
             return true;
+        }
+
+        private static bool ShowNoObjectiveFoundMessage()
+        {
+            TunnyMessageBox.Show("No objective found.\nPlease connect number or FishPrint to the objective.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
 
         private static bool CheckObjectiveNicknameDuplication(IEnumerable<IGH_Param> objectives)
@@ -226,14 +238,16 @@ namespace Tunny.Util
             return true;
         }
 
-        private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> noNumberObjectives)
+        private bool ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
         {
-            TunnyMessageBox.Show("Objective supports only the Number input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            foreach (IGH_Param noNumberSource in noNumberObjectives)
+            TunnyMessageBox.Show("Objective supports only the Number or FishPrint input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            foreach (IGH_Param unsupportedSource in unsupportedSources)
             {
-                _component.Params.Input[1].RemoveSource(noNumberSource);
+                _component.Params.Input[1].RemoveSource(unsupportedSource);
             }
             _component.ExpireSolution(true);
+
+            return false;
         }
 
         private bool SetAttributes()
@@ -333,31 +347,35 @@ namespace Tunny.Util
             SetAttributes();
         }
 
-        public List<double> GetObjectiveValues()
+        public TunnyObjective GetObjectiveValues()
         {
-            var values = new List<double>();
+            var numbers = new List<double>();
+            var images = new List<Bitmap>();
 
             foreach (IGH_StructureEnumerator ghEnumerator in Objectives.Select(objective => objective.VolatileData.AllData(false)))
             {
                 if (ghEnumerator.Count() > 1)
                 {
                     TunnyMessageBox.Show(
-                        "Tunny doesn't handle list output.\nSeparate each objective if you want multiple objectives",
+                        "Tunny doesn't handle list input.\nSeparate each objective if you want multiple objectives",
                         "Tunny",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
                     );
-                    return new List<double>();
+                    return new TunnyObjective();
                 }
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
                     switch (goo)
                     {
                         case GH_Number num:
-                            values.Add(num.Value);
+                            numbers.Add(num.Value);
                             break;
                         case null:
-                            values.Add(double.NaN);
+                            numbers.Add(double.NaN);
+                            break;
+                        case GH_FishPrint print:
+                            images.Add(print.Value);
                             break;
                         default:
                             break;
@@ -365,10 +383,10 @@ namespace Tunny.Util
                 }
             }
 
-            return values;
+            return new TunnyObjective(numbers.ToArray(), images.ToArray());
         }
 
-        public List<string> GetGeometryJson()
+        public string[] GetGeometryJson()
         {
             var json = new List<string>();
 
@@ -376,7 +394,7 @@ namespace Tunny.Util
                 || !_attributes.Value.ContainsKey("Geometry")
                 || !(_attributes.Value["Geometry"] is List<object> geometries))
             {
-                return json;
+                return json.ToArray();
             }
 
             foreach (object param in geometries)
@@ -387,7 +405,7 @@ namespace Tunny.Util
                 }
             }
 
-            return json;
+            return json.ToArray();
         }
 
         public Dictionary<string, List<string>> GetAttributes()

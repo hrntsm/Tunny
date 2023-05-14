@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -48,24 +49,45 @@ namespace Tunny.Solver
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
-            int nObjective = ObjNickName.Length;
-            string[] directions = SetDirectionValues(nObjective);
+            string[] directions = SetDirectionValues(ObjNickName.Length);
 
             PythonEngine.Initialize();
+            IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
 
-                if (CheckExistStudyParameter(nObjective, optuna, storage))
+                double[] xTest = null;
+                EvaluatedGHResult result = null;
+
+                if (CheckExistStudyParameter(ObjNickName.Length, optuna, storage))
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
+                    var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
-                    RunOptimize(nTrials, timeout, study, storage, FishEgg, out double[] xTest, out EvaluatedGHResult result);
-                    SetResultValues(nObjective, study, xTest);
+                    if (Settings.Optimize.IsHumanInTheLoop)
+                    {
+                        var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
+
+                        // FIXME: This step will fix optuna v3.2
+                        study = HumanInTheLoop.FixStudyCachedStorage(study);
+
+                        humanInTheLoop.WakeOptunaDashboard(Settings.Storage);
+                        humanInTheLoop.SetObjective(study, ObjNickName);
+                        humanInTheLoop.SetWidgets(study, ObjNickName);
+                        runOptimizeSettings.HumanInTheLoop = humanInTheLoop;
+                        RunHumanInTheLoopOptimize(runOptimizeSettings, 3, out xTest, out result);
+                    }
+                    else
+                    {
+                        RunOptimize(runOptimizeSettings, out xTest, out result);
+                    }
+                    SetResultValues(ObjNickName.Length, study, xTest);
                 }
             }
+            PythonEngine.EndAllowThreads(allowThreadsPtr);
             PythonEngine.Shutdown();
         }
 
@@ -160,68 +182,102 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(int nTrials, double timeout, dynamic study, dynamic storage, Dictionary<string, FishEgg> enqueueItems, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(RunOptimizeSettings optSet, out double[] xTest, out EvaluatedGHResult result)
         {
             xTest = new double[Variables.Count];
             result = new EvaluatedGHResult();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
-            EnqueueTrial(study, enqueueItems);
+            EnqueueTrial(optSet.Study, optSet.EnqueueItems);
 
             while (true)
             {
-                if (CheckOptimizeComplete(nTrials, timeout, trialNum, startTime))
+                if (CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
                 {
                     break;
                 }
-                int progress = trialNum * 100 / nTrials;
-                dynamic trial = study.ask();
-
-                //TODO: Is this the correct way to handle the case of null?
-                int nullCount = 0;
-                while (nullCount < 10)
-                {
-                    for (int j = 0; j < Variables.Count; j++)
-                    {
-                        xTest[j] = Variables[j].IsInteger
-                        ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
-                        : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
-                    }
-
-                    ProgressState pState = SetProgressState(nTrials, timeout, xTest, trialNum, startTime, study);
-                    result = EvalFunc(pState, progress);
-
-                    if (result.ObjectiveValues.Contains(double.NaN))
-                    {
-                        trial = study.ask();
-                        nullCount++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                SetTrialUserAttr(result, trial);
-                try
-                {
-                    study.tell(trial, result.ObjectiveValues.ToArray());
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException(e.Message);
-                }
-                finally
-                {
-                    RunGC(result);
-                }
+                result = RunSingleOptimizeStep(optSet, xTest, trialNum, startTime);
                 trialNum++;
             }
 
-            if (Settings.Storage.Type == StorageType.InMemory)
+            SaveInMemoryStudy(optSet.Storage);
+        }
+
+        private void RunHumanInTheLoopOptimize(RunOptimizeSettings optSet, int nBatch, out double[] xTest, out EvaluatedGHResult result)
+        {
+            xTest = new double[Variables.Count];
+            result = new EvaluatedGHResult();
+            int trialNum = 0;
+            DateTime startTime = DateTime.Now;
+            EnqueueTrial(optSet.Study, optSet.EnqueueItems);
+
+            while (true)
             {
-                CopyInMemoryStudy(storage);
+                if (CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
+                {
+                    break;
+                }
+                if (HumanInTheLoop.GetRunningTrialNumber(optSet.Study) >= nBatch)
+                {
+                    continue;
+                }
+                result = RunSingleOptimizeStep(optSet, xTest, trialNum, startTime);
+                trialNum++;
             }
+
+            SaveInMemoryStudy(optSet.Storage);
+        }
+
+        private EvaluatedGHResult RunSingleOptimizeStep(RunOptimizeSettings optSet, double[] xTest, int trialNum, DateTime startTime)
+        {
+            int progress = trialNum * 100 / optSet.NTrials;
+            dynamic trial = optSet.Study.ask();
+            var result = new EvaluatedGHResult();
+
+            //TODO: Is this the correct way to handle the case of null?
+            int nullCount = 0;
+            while (nullCount < 10)
+            {
+                for (int j = 0; j < Variables.Count; j++)
+                {
+                    xTest[j] = Variables[j].IsInteger
+                    ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
+                    : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
+                }
+
+                ProgressState pState = SetProgressState(optSet, xTest, trialNum, startTime);
+                result = EvalFunc(pState, progress);
+                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ObjectiveImages);
+
+                if (result.ObjectiveValues.Contains(double.NaN))
+                {
+                    trial = optSet.Study.ask();
+                    nullCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            SetTrialUserAttr(result, trial, optSet);
+            try
+            {
+                if (optSet.HumanInTheLoop == null)
+                {
+                    optSet.Study.tell(trial, result.ObjectiveValues.ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException(e.Message);
+            }
+            finally
+            {
+                RunGC(result);
+            }
+
+            return result;
         }
 
         private bool CheckOptimizeComplete(int nTrials, double timeout, int trialNum, DateTime startTime)
@@ -247,9 +303,9 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(int nTrials, double timeout, IEnumerable<double> xTest, int trialNum, DateTime startTime, dynamic study)
+        private ProgressState SetProgressState(RunOptimizeSettings optSet, double[] xTest, int trialNum, DateTime startTime)
         {
-            ComputeBestValues(study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
+            ComputeBestValues(optSet.Study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
             return new ProgressState
             {
                 TrialNumber = trialNum,
@@ -257,9 +313,9 @@ namespace Tunny.Solver
                 BestValues = bestValues,
                 Values = xTest.Select(v => (decimal)v).ToList(),
                 HypervolumeRatio = hypervolumeRatio,
-                EstimatedTimeRemaining = timeout <= 0
-                    ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (nTrials - trialNum) / (trialNum + 1))
-                    : TimeSpan.FromSeconds(timeout - (DateTime.Now - startTime).TotalSeconds)
+                EstimatedTimeRemaining = optSet.Timeout <= 0
+                    ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (optSet.NTrials - trialNum) / (trialNum + 1))
+                    : TimeSpan.FromSeconds(optSet.Timeout - (DateTime.Now - startTime).TotalSeconds)
             };
         }
 
@@ -278,11 +334,14 @@ namespace Tunny.Solver
             }
         }
 
-        private void CopyInMemoryStudy(dynamic storage)
+        private void SaveInMemoryStudy(dynamic storage)
         {
-            dynamic optuna = Py.Import("optuna");
-            string studyName = Settings.StudyName;
-            optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+            if (Settings.Storage.Type == StorageType.InMemory)
+            {
+                dynamic optuna = Py.Import("optuna");
+                string studyName = Settings.StudyName;
+                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+            }
         }
 
         private static dynamic EnqueueTrial(dynamic study, Dictionary<string, FishEgg> enqueueItems)
@@ -309,7 +368,7 @@ namespace Tunny.Solver
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
             if ((gcAfterTrial != GcAfterTrial.Always) &&
-                ((result.GeometryJson.Count <= 0) || (gcAfterTrial != GcAfterTrial.HasGeometry)))
+                ((result.GeometryJson.Length <= 0) || (gcAfterTrial != GcAfterTrial.HasGeometry)))
             {
                 return;
             }
@@ -325,9 +384,9 @@ namespace Tunny.Solver
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
-        private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial)
+        private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial, RunOptimizeSettings optSet)
         {
-            if (result.GeometryJson.Count != 0)
+            if (result.GeometryJson.Length != 0)
             {
                 var pyJson = new PyList();
                 foreach (string json in result.GeometryJson)
@@ -340,6 +399,24 @@ namespace Tunny.Solver
             if (result.Attribute != null)
             {
                 SetNonGeometricAttr(result, trial);
+            }
+
+            if (result.ObjectiveValues.Length != 0 && optSet.HumanInTheLoop != null)
+            {
+                int imageCount = 0;
+                for (int i = 0; i < result.ObjectiveValues.Length + result.ObjectiveImages.Length; i++)
+                {
+                    if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
+                    {
+                        var key = new PyString("result_" + optSet.ObjectiveNames[i]);
+                        var value = new PyFloat(result.ObjectiveValues[i - imageCount]);
+                        trial.set_user_attr(key, value);
+                    }
+                    else
+                    {
+                        imageCount++;
+                    }
+                }
             }
         }
 
@@ -372,6 +449,7 @@ namespace Tunny.Solver
             switch (samplerType)
             {
                 case 0:
+                case 6:
                     sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
                 case 1:

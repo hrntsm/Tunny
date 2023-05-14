@@ -6,9 +6,11 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
 
 using Python.Runtime;
 
+using Tunny.Component.Params;
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.Type;
@@ -37,8 +39,7 @@ namespace Tunny.Solver
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, EvaluatedGHResult> evaluate)
         {
-            string[] objNickName = objectives.Select(x => x.NickName).ToArray();
-
+            string[] objNickName = GetObjectiveNickName(objectives);
             EvaluatedGHResult Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
@@ -49,8 +50,8 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.XOpt;
+                ShowEndMessages(optimize.EndState);
 
-                ShowEndMessages(optimize);
                 return true;
             }
             catch (Exception e)
@@ -60,9 +61,44 @@ namespace Tunny.Solver
             }
         }
 
-        private static void ShowEndMessages(Algorithm optimize)
+        private string[] GetObjectiveNickName(IEnumerable<IGH_Param> objectives)
         {
-            switch (optimize.EndState)
+            string[] objNickName = new string[objectives.Count()];
+            int hitlCount = 0;
+            foreach ((IGH_Param ghParam, int i) in objectives.Select((ghParam, i) => (ghParam, i)))
+            {
+                switch (ghParam)
+                {
+                    case Param_Number param:
+                        objNickName[i] = param.NickName;
+                        break;
+                    case Param_FishPrint param:
+                        objNickName[i] = "Human-in-the-Loop " + param.NickName;
+                        _settings.Optimize.IsHumanInTheLoop = true;
+                        hitlCount++;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (hitlCount == 0)
+            {
+                _settings.Optimize.IsHumanInTheLoop = false;
+            }
+            // FIXME: Fix JournalStorage when the usage of JournalStorage is understood.
+            else if (_settings.Storage.Type != StorageType.Sqlite)
+            {
+                string message = "Human-in-the-Loop is not available with the current storage type.\nPlease change the storage type to Sqlite.";
+                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException(message);
+            }
+
+            return objNickName;
+        }
+
+        private static void ShowEndMessages(EndState endState)
+        {
+            switch (endState)
             {
                 case EndState.Timeout:
                     TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.", "Tunny");

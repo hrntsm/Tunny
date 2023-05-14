@@ -12,3 +12,7 @@
   - https://icooon-mono.com/13073-fire-icon/?lang=en
 - Fish Egg
   - https://icooon-mono.com/15187-%e9%bb%84%e9%87%91%e3%81%ae%e5%8d%b5%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b3/
+- Param_FishPrint
+  - https://icooon-mono.com/11196-%e3%82%ab%e3%83%a1%e3%83%a9%e3%81%ae%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b3%e7%b4%a0%e6%9d%90-6/
+- FishPrintByPath
+  - https://icooon-mono.com/11375-%e3%82%b7%e3%83%b3%e3%83%97%e3%83%ab%e3%81%aa%e3%83%95%e3%82%a9%e3%83%ab%e3%83%80%e3%82%a2%e3%82%a4%e3%82%b3%e3%83%b3/

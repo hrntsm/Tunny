@@ -164,7 +164,7 @@ namespace Tunny.Storage
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
-            string storagePath = storageSetting.GetOptunaStoragePath();
+            string storagePath = storageSetting.GetOptunaStoragePathByExtension();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();

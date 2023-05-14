@@ -35,6 +35,22 @@ namespace Tunny.Settings
                     return string.Empty;
                 case ".sqlite3":
                 case ".db":
+                    return "sqlite:///" + Path;
+                case ".log":
+                    return Path;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public string GetOptunaStorageCommandLinePathByExtension()
+        {
+            switch (System.IO.Path.GetExtension(Path))
+            {
+                case null:
+                    return string.Empty;
+                case ".sqlite3":
+                case ".db":
                     return @"sqlite:///" + $"\"{Path}\"";
                 case ".log":
                     return $"\"{Path}\"";
