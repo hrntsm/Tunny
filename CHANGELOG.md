@@ -10,6 +10,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
+- Support Human-in-the-loop optimization
+  - Input FishPrint into the objective to start it.
 - Support CMA-ES with Margin
   - It allows for more efficient optimization in mixed integer problems.
 
@@ -17,7 +19,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - When optimizing with CMA-ES, the with Margin option is enabled by default.
 - Bump up optuna v3.1.1
-- Bump up optuna-dashboard v0.9.0
+- Bump up optuna-dashboard v0.9.2
 
 ### Deprecated
 
