@@ -71,13 +71,7 @@ namespace Tunny.Component.Util
             if (!DA.GetData(4, ref yInterval)) { return; }
             if (!DA.GetData(5, ref _size)) { return; }
 
-            _settings = new Settings()
-            {
-                Plane = plane,
-                XNum = xNum,
-                XInterval = xInterval,
-                YInterval = yInterval
-            };
+            _settings = new Settings(plane, xNum, xInterval, yInterval);
             if (xNum <= 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "xNum must lager than 0");
@@ -213,6 +207,14 @@ namespace Tunny.Component.Util
             public int XNum { get; set; }
             public double XInterval { get; set; }
             public double YInterval { get; set; }
+
+            public Settings(Plane plane, int xNum, double xInterval, double yInterval)
+            {
+                Plane = plane;
+                XNum = xNum;
+                XInterval = xInterval;
+                YInterval = yInterval;
+            }
         }
     }
 }

@@ -179,7 +179,6 @@ def fix_cached_storage(study):
                 noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})");
             }
 
-
             dynamic textWrap = _importedLibrary.Get("textwrap");
             dynamic note = textWrap.dedent(noteText.ToString());
             dynamic saveNote = _importedLibrary.Get("save_note");

@@ -89,8 +89,7 @@ namespace Tunny.Util
                     case Param_FishEgg fishEgg:
                         if (fishEgg.SourceCount != 0)
                         {
-                            var ghFishEgg = (GH_FishEgg)fishEgg.VolatileData.AllData(true).First();
-                            EnqueueItems = ghFishEgg.Value;
+                            EnqueueItems = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
                         }
                         break;
                     default:
@@ -197,13 +196,8 @@ namespace Tunny.Util
         {
             if (_component.Params.Input[1].SourceCount == 0)
             {
-                TunnyMessageBox.Show("No objective found.\nPlease connect a number to the objective of the component.",
-                    "Tunny",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return false;
+                return ShowNoObjectiveFoundMessage();
             }
-
             var unsupportedObjectives = new List<IGH_Param>();
             foreach (IGH_Param param in _component.Params.Input[1].Sources)
             {
@@ -219,13 +213,17 @@ namespace Tunny.Util
             }
             if (unsupportedObjectives.Count > 0)
             {
-                ShowIncorrectObjectiveInputMessage(unsupportedObjectives);
-                return false;
+                return ShowIncorrectObjectiveInputMessage(unsupportedObjectives);
             }
-
             if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return false; }
             Objectives = _component.Params.Input[1].Sources.ToList();
             return true;
+        }
+
+        private static bool ShowNoObjectiveFoundMessage()
+        {
+            TunnyMessageBox.Show("No objective found.\nPlease connect number or FishPrint to the objective.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
         }
 
         private static bool CheckObjectiveNicknameDuplication(IEnumerable<IGH_Param> objectives)
@@ -240,7 +238,7 @@ namespace Tunny.Util
             return true;
         }
 
-        private void ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
+        private bool ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
         {
             TunnyMessageBox.Show("Objective supports only the Number or FishPrint input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             foreach (IGH_Param unsupportedSource in unsupportedSources)
@@ -248,6 +246,8 @@ namespace Tunny.Util
                 _component.Params.Input[1].RemoveSource(unsupportedSource);
             }
             _component.ExpireSolution(true);
+
+            return false;
         }
 
         private bool SetAttributes()
