@@ -208,6 +208,10 @@ namespace Tunny.Component.Util
             public double XInterval { get; set; }
             public double YInterval { get; set; }
 
+            public Settings()
+            {
+            }
+
             public Settings(Plane plane, int xNum, double xInterval, double yInterval)
             {
                 Plane = plane;
