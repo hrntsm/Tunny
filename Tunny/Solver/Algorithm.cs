@@ -66,7 +66,7 @@ namespace Tunny.Solver
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
                     var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
-                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
+                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), ObjNickName);
                     if (Settings.Optimize.IsHumanInTheLoop)
                     {
                         var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
@@ -99,6 +99,16 @@ namespace Tunny.Solver
                 name.Append(objName + ",");
             }
             name.Remove(name.Length - 1, 1);
+            return name;
+        }
+
+        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
+        {
+            var name = new PyList();
+            foreach (string objName in nicknames)
+            {
+                name.Append(new PyString(objName));
+            }
             return name;
         }
 
@@ -377,10 +387,11 @@ namespace Tunny.Solver
             gc.collect();
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
+        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, string[] objectiveName)
         {
             study.set_user_attr("variable_names", variableName.ToString());
-            study.set_user_attr("objective_names", objectiveName.ToString());
+            study.set_user_attr("objective_names", NicknameToAttr(objectiveName).ToString());
+            study.set_metric_names(NicknameToPyList(objectiveName)); // new in Optuna 3.2
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
