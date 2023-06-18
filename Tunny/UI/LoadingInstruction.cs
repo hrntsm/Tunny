@@ -35,7 +35,6 @@ namespace Tunny.UI
             {
                 SetupTunnyMenu(docEditor);
             }
-
         }
         private void SetupTunnyMenu(GH_DocumentEditor docEditor)
         {
@@ -74,9 +73,9 @@ namespace Tunny.UI
                 {
                     Name = "OptunaDashboardToolStripMenuItem",
                     Size = new Size(265, 30),
-                    Text = "Open Optuna Dashboard",
+                    Text = "Run optuna-dashboard",
                 };
-                _optunaDashboardToolStripMenuItem.Click += new EventHandler(OptunaDashboardToolStripMenuItem_Click);
+                _optunaDashboardToolStripMenuItem.Click += OptunaDashboardToolStripMenuItem_Click;
 
                 list.Add(_optunaDashboardToolStripMenuItem);
                 return list;
@@ -99,26 +98,30 @@ namespace Tunny.UI
             }
             else
             {
-                string settingsPath = componentFolder + @"\Settings.json";
-                string storagePath = string.Empty;
-                if (File.Exists(settingsPath))
-                {
-                    var settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
-                    storagePath = settings.Storage.Path;
-                }
-                var ofd = new OpenFileDialog
-                {
-                    FileName = Path.GetFileName(storagePath),
-                    Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
-                    Title = @"Set Tunny result file path",
-                };
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    storagePath = GetStorageArgument(ofd.FileName);
-                    DashboardHandler.RunDashboardProcess(dashboardPath, storagePath);
-                }
+                RunOptunaDashboard(componentFolder, dashboardPath);
             }
-            return;
+        }
+
+        private static void RunOptunaDashboard(string componentFolder, string dashboardPath)
+        {
+            string settingsPath = componentFolder + @"\Settings.json";
+            string storagePath = string.Empty;
+            if (File.Exists(settingsPath))
+            {
+                var settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+                storagePath = settings.Storage.Path;
+            }
+            var ofd = new OpenFileDialog
+            {
+                FileName = Path.GetFileName(storagePath),
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Title = @"Set Tunny result file path",
+            };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                storagePath = GetStorageArgument(ofd.FileName);
+                DashboardHandler.RunDashboardProcess(dashboardPath, storagePath);
+            }
         }
 
         private static string GetStorageArgument(string path)

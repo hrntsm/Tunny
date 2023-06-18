@@ -22,7 +22,6 @@ namespace Tunny.UI
             DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", _settings.Storage.GetOptunaStorageCommandLinePathByExtension());
         }
 
-
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
         {
             UpdateVisualizeListBox();
