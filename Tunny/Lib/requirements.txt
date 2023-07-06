@@ -21,7 +21,7 @@ pyro-api==0.1.2
 pyro-ppl==1.8.4
 PyYAML==6.0
 scikit-learn==1.2.0
-scipy==1.8.1
+scipy==1.10.0
 six==1.16.0
 SQLAlchemy==1.4.46
 tenacity==8.1.0
