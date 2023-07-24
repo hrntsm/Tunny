@@ -11,13 +11,15 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Support Human-in-the-loop optimization
-  - Input FishPrint into the objective to start it.
-  - Add 2 sample gh file.
+  - Input FishPrint into the objective to start it
+  - Add 2 sample gh file
 - Support CMA-ES with Margin
   - It allows for more efficient optimization in mixed integer problems.
 - Support NSGA-III
   - For more than 3 objective optimization.
 - Python sample code
+- Open optuna dashboard menu item
+
 
 ### Changed
 

@@ -18,14 +18,4 @@ namespace Tunny
         public override string AuthorContact => "contact@hrntsm.com";
         public override GH_LibraryLicense License => GH_LibraryLicense.opensource;
     }
-
-    public class TunnyCategoryIcon : GH_AssemblyPriority
-    {
-        public override GH_LoadingInstruction PriorityLoad()
-        {
-            Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
-            Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
-            return GH_LoadingInstruction.Proceed;
-        }
-    }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -20,30 +19,7 @@ namespace Tunny.UI
                 return;
             }
 
-            CheckExistDashboardProcess();
-            var dashboard = new Process();
-            dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
-            dashboard.StartInfo.Arguments = _settings.Storage.GetOptunaStorageCommandLinePathByExtension();
-            dashboard.StartInfo.UseShellExecute = false;
-            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            dashboard.Start();
-
-            var browser = new Process();
-            browser.StartInfo.FileName = @"http://127.0.0.1:8080/";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
-        }
-
-        private static void CheckExistDashboardProcess()
-        {
-            Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
-            if (dashboardProcess.Length > 0)
-            {
-                foreach (Process p in dashboardProcess)
-                {
-                    p.Kill();
-                }
-            }
+            DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", _settings.Storage.GetOptunaStorageCommandLinePathByExtension());
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
