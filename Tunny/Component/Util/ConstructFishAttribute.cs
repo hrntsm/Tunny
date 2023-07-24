@@ -30,7 +30,7 @@ namespace Tunny.Component.Util
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "Geometry", GeomDescription, GH_ParamAccess.list);
-            pManager.AddNumberParameter("Constraint", "Constraint", ConstraintDescription, GH_ParamAccess.item);
+            pManager.AddNumberParameter("Constraint", "Constraint", ConstraintDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr1", "Attr1", AttrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", AttrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
@@ -66,8 +66,8 @@ namespace Tunny.Component.Util
                 string key = Params.Input[i].NickName;
                 if (i == 1)
                 {
-                    double constraint = 0;
-                    if (DA.GetData(i, ref constraint))
+                    var constraint = new List<double>();
+                    if (DA.GetDataList(i, constraint))
                     {
                         dict.Add(key, constraint);
                     }

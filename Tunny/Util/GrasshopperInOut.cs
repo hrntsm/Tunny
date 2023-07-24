@@ -427,9 +427,9 @@ namespace Tunny.Util
                 if (key == "Constraint")
                 {
                     object obj = _attributes.Value[key];
-                    if (obj is double val)
+                    if (obj is List<double> val)
                     {
-                        value.Add(val.ToString(CultureInfo.InvariantCulture));
+                        value.AddRange(val.Select(v => v.ToString(CultureInfo.InvariantCulture)));
                     }
                 }
                 else
