@@ -102,63 +102,102 @@ namespace Tunny.Storage
 
             JournalStorage[] storage = Deserialize(journalStorageString);
             var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
-            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2)
-                .GroupBy(x => x.StudyId);
+            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == 3).GroupBy(x => x.StudyId);
+            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2).GroupBy(x => x.StudyId);
             var studySummaries = new StudySummary[studyName.Count];
 
-            SetStudySummaries(studyName, userAttr, studySummaries);
+            SetStudySummaries(studyName, systemAttr, userAttr, studySummaries);
 
             return studySummaries;
         }
 
-        private static void SetStudySummaries(IReadOnlyList<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, IList<StudySummary> studySummaries)
+        private static void SetStudySummaries(IReadOnlyList<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> systemAttr, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, IList<StudySummary> studySummaries)
         {
             int i = 0;
-            foreach (IGrouping<int?, JournalStorage> group in userAttr)
+            foreach (var group in userAttr.Zip(systemAttr, (user, system) => new { user, system }))
             {
-                if (group.Key == null)
+                if (group.user.Key == null)
                 {
                     continue;
                 }
 
                 var studySummary = new StudySummary
                 {
-                    StudyId = group.Key.Value,
+                    StudyId = group.user.Key.Value,
                     StudyName = studyName[i],
                     UserAttributes = new Dictionary<string, string[]>(),
                     SystemAttributes = new Dictionary<string, string[]>(),
                     Trials = new List<Trial>()
                 };
-                SetStudySummaryValue(group, studySummary);
+                SetStudySummaryValue(group.user, group.system, studySummary);
                 studySummaries[i++] = studySummary;
             }
         }
 
-        private static void SetStudySummaryValue(IEnumerable<JournalStorage> group, StudySummary studySummary)
+        private static void SetStudySummaryValue(IEnumerable<JournalStorage> user, IEnumerable<JournalStorage> system, StudySummary studySummary)
         {
-            foreach (JournalStorage journal in group)
+            foreach (var journal in user.Zip(system, (u, s) => new { u, s }))
             {
-                foreach (KeyValuePair<string, object> item in journal.UserAttr)
+                foreach (KeyValuePair<string, object> item in journal.u.UserAttr)
                 {
-                    string[] values = Array.Empty<string>();
-                    if (item.Value is string str)
-                    {
-                        values = str.Split(',');
-                    }
-                    else if (item.Value is string[] strArray)
-                    {
-                        values = strArray;
-                    }
-
-                    if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
-                    {
-                        _ = value.Union(values);
-                    }
-                    else
-                    {
-                        studySummary.UserAttributes.Add(item.Key, values);
-                    }
+                    SetUserAttr(studySummary, item);
                 }
+                foreach (KeyValuePair<string, object> item in journal.s.SystemAttr)
+                {
+                    SetSystemAttr(studySummary, item);
+                }
+            }
+        }
+
+        private static void SetSystemAttr(StudySummary studySummary, KeyValuePair<string, object> item)
+        {
+            string[] values = Array.Empty<string>();
+            if (item.Value is string str)
+            {
+                values = str.Split(',');
+            }
+            else if (item.Value is string[] strArray)
+            {
+                values = strArray;
+            }
+            else if (item.Value is Newtonsoft.Json.Linq.JArray strJArray)
+            {
+                values = new string[strJArray.Count];
+                for (int i = 0; i < strJArray.Count; i++)
+                {
+                    values[i] = strJArray[i].ToString();
+                }
+            }
+
+            if (studySummary.SystemAttributes.TryGetValue(item.Key, out string[] value))
+            {
+                _ = value.Union(values);
+            }
+            else
+            {
+                studySummary.SystemAttributes.Add(item.Key, values);
+            }
+        }
+
+        private static void SetUserAttr(StudySummary studySummary, KeyValuePair<string, object> item)
+        {
+            string[] values = Array.Empty<string>();
+            if (item.Value is string str)
+            {
+                values = str.Split(',');
+            }
+            else if (item.Value is string[] strArray)
+            {
+                values = strArray;
+            }
+
+            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+            {
+                _ = value.Union(values);
+            }
+            else
+            {
+                studySummary.UserAttributes.Add(item.Key, values);
             }
         }
 
