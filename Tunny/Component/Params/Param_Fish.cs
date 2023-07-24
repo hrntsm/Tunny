@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 using Tunny.Resources;
 using Tunny.Type;
 
-namespace Tunny.Component
+namespace Tunny.Component.Params
 {
     public class Param_Fish : GH_PersistentParam<GH_Fish>
     {
@@ -15,12 +15,12 @@ namespace Tunny.Component
         public Param_Fish()
           : base("Fish", "Fish",
             "Fish caught by the optimization nets",
-            "Tunny", "Tunny")
+            "Tunny", "Params")
         {
         }
 
         protected override GH_Fish InstantiateT() => new GH_Fish();
-        protected override GH_Fish PreferredCast(object data) => data is Fish fish ? new GH_Fish(fish) : (GH_Fish)null;
+        protected override GH_Fish PreferredCast(object data) => data is Fish fish ? new GH_Fish(fish) : null;
         protected override GH_GetterResult Prompt_Singular(ref GH_Fish value) => GH_GetterResult.success;
         protected override GH_GetterResult Prompt_Plural(ref List<GH_Fish> values) => GH_GetterResult.success;
 

@@ -16,7 +16,7 @@ namespace Tunny.Storage
 
         private static bool CheckTableExist(SQLiteConnection connection)
         {
-            int hasStudiesTable = 0;
+            int hasStudiesTable;
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='studies';";
@@ -60,7 +60,7 @@ namespace Tunny.Storage
             });
         }
 
-        private static void GetStudyUserAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)
+        private static void GetStudyAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)
         {
             using (var command = new SQLiteCommand(connection))
             {
@@ -72,11 +72,30 @@ namespace Tunny.Storage
                         long studyId = (long)reader["study_id"];
                         string key = (string)reader["key"];
 
-                        if (key == "objective_names" || key == "variable_names")
+                        if (key == "variable_names")
                         {
                             string valueJson = (string)reader["value_json"];
                             string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');
                             studySummaries.Find(x => x.StudyId == studyId).UserAttributes.Add(key, values);
+                        }
+                    }
+                }
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "SELECT * FROM study_system_attributes";
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        long studyId = (long)reader["study_id"];
+                        string key = (string)reader["key"];
+
+                        if (key == "study:metric_names")
+                        {
+                            string valueJson = (string)reader["value_json"];
+                            string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');
+                            studySummaries.Find(x => x.StudyId == studyId).SystemAttributes.Add(key, values);
                         }
                     }
                 }
@@ -109,7 +128,7 @@ namespace Tunny.Storage
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
-            string sqlitePath = storageSetting.GetOptunaStoragePath();
+            string sqlitePath = storageSetting.GetOptunaStoragePathByExtension();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();
@@ -168,7 +187,7 @@ namespace Tunny.Storage
                     return studySummaries.ToArray();
                 }
                 GetStudy(studySummaries, connection);
-                GetStudyUserAttributes(studySummaries, connection);
+                GetStudyAttributes(studySummaries, connection);
             }
 
             return studySummaries.ToArray();

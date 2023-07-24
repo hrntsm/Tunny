@@ -1,14 +1,13 @@
 ---
 name: Tunny
-version: 0.7.2
+version: 0.8.0
 authors:
 - hrntsm
 description: 🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework. Tunny includes some features such as multi-objective optimization with constraint, Quasi-MonteCarlo sampling and dashboards for results analysis etc.
 url: https://tunny-docs.deno.dev/
 keywords:
-  - guid:01E58960-AFAA-48FF-BC90-174FDC4A9D64
   - optimization
   - Bayesian
-  - Genetic Algorithm
+  - GeneticAlgorithm
   - GA
 icon: icon.png

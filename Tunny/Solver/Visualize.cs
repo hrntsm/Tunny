@@ -246,7 +246,7 @@ namespace Tunny.Solver
             return truncate(fig, study);
         }
 
-        private void FigureActions(dynamic fig, PlotSettings pSettings)
+        private static void FigureActions(dynamic fig, PlotSettings pSettings)
         {
             if (fig != null && pSettings.PlotActionType == PlotActionType.Show)
             {
@@ -263,8 +263,8 @@ namespace Tunny.Solver
             var sfd = new SaveFileDialog
             {
                 FileName = name + ".html",
-                Filter = "HTML file(*.html)|*.html",
-                Title = "Save"
+                Filter = @"HTML file(*.html)|*.html",
+                Title = @"Save"
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -285,7 +285,7 @@ namespace Tunny.Solver
                     return;
                 }
 
-                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
+                string[] nickNames = ((string)study.system_attrs["study:metric_names"]).Split(',');
                 if (nickNames.Length == 1)
                 {
                     TunnyMessageBox.Show("Clustering Error\n\nClustering is for multi-objective optimization only.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -64,6 +64,9 @@ namespace Tunny.Type
                     case List<string> str:
                         valueStrings = string.Join(", ", str);
                         break;
+                    case List<double> num:
+                        valueStrings = string.Join(", ", num);
+                        break;
                     case List<GeometryBase> geo:
                         IEnumerable<string> geometryStrings = geo.Select(g => Converter.GeometryBaseToGoo(g).ToString());
                         valueStrings = string.Join(", ", geometryStrings);

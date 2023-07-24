@@ -5,7 +5,7 @@ using System.Linq;
 
 using Grasshopper.Kernel;
 
-using Tunny.Component;
+using Tunny.Component.Optimizer;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
@@ -25,7 +25,7 @@ namespace Tunny.Handler
         {
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as FishingComponent;
-            s_component.GhInOutInstantiate();
+            s_component?.GhInOutInstantiate();
 
             double[] result = RunOptimizationLoop(s_worker);
             if (result == null || double.IsNaN(result[0]))
@@ -38,10 +38,13 @@ namespace Tunny.Handler
                 Values = decimalResults
             };
 
-            s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
-            s_worker.ReportProgress(100, pState);
-            while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
-            { /* just wait until the cows come home */}
+            if (s_component != null)
+            {
+                s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+                s_worker?.ReportProgress(100, pState);
+                while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+                { /* just wait until the cows come home */ }
+            }
 
             s_worker?.CancelAsync();
         }
@@ -72,13 +75,14 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
-            var result = new EvaluatedGHResult
+            TunnyObjective objective = s_component.GhInOut.GetObjectiveValues();
+            return new EvaluatedGHResult
             {
-                ObjectiveValues = s_component.GhInOut.GetObjectiveValues(),
+                ObjectiveValues = objective.Numbers,
+                ObjectiveImages = objective.Images,
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
-                Attribute = s_component.GhInOut.GetAttributes()
+                Attribute = s_component.GhInOut.GetAttributes(),
             };
-            return result;
         }
     }
 }

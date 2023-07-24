@@ -26,8 +26,8 @@ summary
 | multipledispatch  | 0.6.0   | BSD                                               |
 | numpy             | 1.24.1  | BSD License                                       |
 | opt-einsum        | 3.3.0   | MIT                                               |
-| optuna            | 3.1.0   | MIT License                                       |
-| optuna-dashboard  | 0.9.0b6 | MIT License                                       |
+| optuna            | 3.2.0   | MIT License                                       |
+| optuna-dashboard  | 0.10.2  | MIT License                                       |
 | packaging         | 23.0    | Apache Software License; BSD License              |
 | pip               | 23.0    | MIT License                                       |
 | pip-licenses      | 4.0.3   | MIT License                                       |
@@ -36,7 +36,7 @@ summary
 | pyro-api          | 0.1.2   | Apache Software License                           |
 | pyro-ppl          | 1.8.4   | Apache Software License                           |
 | scikit-learn      | 1.2.0   | BSD License                                       |
-| scipy             | 1.8.1   | BSD License                                       |
+| scipy             | 1.10.0  | BSD License                                       |
 | setuptools        | 65.5.0  | MIT License                                       |
 | six               | 1.16.0  | MIT License                                       |
 | tenacity          | 8.1.0   | Apache Software License                           |
@@ -1470,7 +1470,7 @@ SOFTWARE.
 
 
 optuna
-3.1.0
+3.2.0
 MIT License
 Takuya Akiba
 https://optuna.org/
@@ -1554,7 +1554,7 @@ fdlibm
 
 
 optuna-dashboard
-0.9.0b6
+0.10.2
 MIT License
 UNKNOWN
 UNKNOWN

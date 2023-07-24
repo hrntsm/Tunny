@@ -8,7 +8,7 @@ using Tunny.Storage;
 
 namespace Tunny.UI
 {
-    public partial class OptimizationWindow : Form
+    public partial class OptimizationWindow
     {
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
@@ -34,8 +34,8 @@ namespace Tunny.UI
             var sfd = new SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
-                Filter = "Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
-                Title = "Set Tunny result file path",
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Title = @"Set Tunny result file path",
             };
             if (sfd.ShowDialog() == DialogResult.OK)
             {

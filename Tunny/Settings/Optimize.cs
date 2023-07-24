@@ -11,6 +11,7 @@ namespace Tunny.Settings
         public bool CopyStudy { get; set; }
         public int SelectSampler { get; set; }
         public double Timeout { get; set; }
+        public bool IsHumanInTheLoop { get; set; }
         public GcAfterTrial GcAfterTrial { get; set; } = GcAfterTrial.HasGeometry;
         public bool ShowRealtimeResult { get; set; }
     }

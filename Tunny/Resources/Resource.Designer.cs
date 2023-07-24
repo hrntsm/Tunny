@@ -113,6 +113,26 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap FishPrintByCapture {
+            get {
+                object obj = ResourceManager.GetObject("FishPrintByCapture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap FishPrintByPath {
+            get {
+                object obj = ResourceManager.GetObject("FishPrintByPath", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap ParamFishAttribute {
             get {
                 object obj = ResourceManager.GetObject("ParamFishAttribute", resourceCulture);
@@ -136,6 +156,16 @@ namespace Tunny.Resources {
         internal static System.Drawing.Bitmap ParamFishIcon {
             get {
                 object obj = ResourceManager.GetObject("ParamFishIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap ParamFishPrintIcon {
+            get {
+                object obj = ResourceManager.GetObject("ParamFishPrintIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

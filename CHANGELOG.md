@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.8.0] -2023-07-24
+
+### Added
+
+- Support Human-in-the-loop optimization
+  - Input FishPrint into the objective to start it
+  - Add 2 sample gh file
+- Support CMA-ES with Margin
+  - It allows for more efficient optimization in mixed integer problems.
+- Support NSGA-III
+  - For more than 3 objective optimization.
+- Python sample code
+- Open optuna dashboard menu item
+
+
+### Changed
+
+- When optimizing with CMA-ES, the with Margin option is enabled by default.
+- Support multi constraints.
+- Bump up optuna v3.2.0
+- Bump up optuna-dashboard v0.10.2
+
+### Removed
+
+- Grid sampling.
+
+### Fixed
+
+- Error occurs when remaining time becomes negative
+- GC behavior settings configured in the UI during optimization are not reflected in optimization
+
+### Security
+
+- Bump up scipy v1.10.0
+
 ## [v0.7.2] -2023-03-22
 
 ### Added

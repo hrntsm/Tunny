@@ -6,10 +6,11 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 
-namespace Tunny.Component
+namespace Tunny.Component.Util
 {
     public class DeconstructFish : GH_Component
     {
@@ -18,7 +19,7 @@ namespace Tunny.Component
         public DeconstructFish()
           : base("Deconstruct Fish", "DeconF",
               "Deconstruct Fish.",
-              "Tunny", "Tunny")
+              "Tunny", "Util")
         {
         }
 
@@ -69,12 +70,14 @@ namespace Tunny.Component
 
         private static void SetObjectives(GH_Structure<GH_Number> objectives, Fish value, GH_Path path)
         {
-            if (value.Objectives != null)
+            if (value.Objectives == null)
             {
-                foreach (KeyValuePair<string, double> objective in value.Objectives)
-                {
-                    objectives.Append(new GH_Number(objective.Value), path);
-                }
+                return;
+            }
+
+            foreach (KeyValuePair<string, double> objective in value.Objectives)
+            {
+                objectives.Append(new GH_Number(objective.Value), path);
             }
         }
 

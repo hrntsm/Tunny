@@ -4,8 +4,9 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Rhino.Geometry;
+using Rhino.Runtime;
 
-using Tunny.Component;
+using Tunny.Component.Optimizer;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
@@ -32,22 +33,24 @@ namespace Tunny.Handler
 
             var fishes = new List<Fish>();
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
-            ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
-            if (modelResult.Length == 0)
+            if (s_component != null)
             {
-                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+                ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
+                if (modelResult.Length == 0)
+                {
+                    TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                foreach (ModelResult result in modelResult)
+                {
+                    SetResultToFish(fishes, result, NickNames);
+                }
+                s_component.Fishes = fishes.ToArray();
             }
 
-            foreach (ModelResult result in modelResult)
-            {
-                SetResultToFish(fishes, result, NickNames);
-            }
-
-            s_component.Fishes = fishes.ToArray();
-            s_worker.ReportProgress(100);
-
+            s_worker?.ReportProgress(100);
             s_worker?.Dispose();
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
@@ -65,15 +68,8 @@ namespace Tunny.Handler
 
         private static Dictionary<string, double> SetVariables(ModelResult model, IEnumerable<string> nickNames)
         {
-            var variables = new Dictionary<string, double>();
-            foreach (string name in nickNames)
-            {
-                foreach (KeyValuePair<string, double> variable in model.Variables.Where(obj => obj.Key == name))
-                {
-                    variables.Add(variable.Key, variable.Value);
-                }
-            }
-            return variables;
+            return nickNames.SelectMany(name => model.Variables.Where(obj => obj.Key == name))
+                .ToDictionary(variable => variable.Key, variable => variable.Value);
         }
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
@@ -105,14 +101,9 @@ namespace Tunny.Handler
             {
                 if (attr.Key == "Geometry")
                 {
-                    var geometries = new List<GeometryBase>();
-                    foreach (string json in attr.Value)
-                    {
-                        if (!string.IsNullOrEmpty(json))
-                        {
-                            geometries.Add(Rhino.Runtime.CommonObject.FromJSON(json) as GeometryBase);
-                        }
-                    }
+                    var geometries = attr.Value.Where(json => !string.IsNullOrEmpty(json))
+                        .Select(json => CommonObject.FromJSON(json) as GeometryBase)
+                        .ToList();
                     attribute.Add(attr.Key, geometries);
                 }
                 else
