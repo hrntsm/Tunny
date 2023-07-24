@@ -102,10 +102,8 @@ namespace Tunny.Storage
 
             JournalStorage[] storage = Deserialize(journalStorageString);
             var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
-            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == 3)
-                .GroupBy(x => x.StudyId);
-            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2)
-                .GroupBy(x => x.StudyId);
+            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == 3).GroupBy(x => x.StudyId);
+            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2).GroupBy(x => x.StudyId);
             var studySummaries = new StudySummary[studyName.Count];
 
             SetStudySummaries(studyName, systemAttr, userAttr, studySummaries);
@@ -142,54 +140,64 @@ namespace Tunny.Storage
             {
                 foreach (KeyValuePair<string, object> item in journal.u.UserAttr)
                 {
-                    string[] values = Array.Empty<string>();
-                    if (item.Value is string str)
-                    {
-                        values = str.Split(',');
-                    }
-                    else if (item.Value is string[] strArray)
-                    {
-                        values = strArray;
-                    }
-
-                    if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
-                    {
-                        _ = value.Union(values);
-                    }
-                    else
-                    {
-                        studySummary.UserAttributes.Add(item.Key, values);
-                    }
+                    SetUserAttr(studySummary, item);
                 }
                 foreach (KeyValuePair<string, object> item in journal.s.SystemAttr)
                 {
-                    string[] values = Array.Empty<string>();
-                    if (item.Value is string str)
-                    {
-                        values = str.Split(',');
-                    }
-                    else if (item.Value is string[] strArray)
-                    {
-                        values = strArray;
-                    }
-                    else if(item.Value is Newtonsoft.Json.Linq.JArray strJArray)
-                    {
-                        values = new string[strJArray.Count];
-                        for (int i = 0; i < strJArray.Count; i++)
-                        {
-                            values[i] = strJArray[i].ToString();
-                        }
-                    }
-
-                    if (studySummary.SystemAttributes.TryGetValue(item.Key, out string[] value))
-                    {
-                        _ = value.Union(values);
-                    }
-                    else
-                    {
-                        studySummary.SystemAttributes.Add(item.Key, values);
-                    }
+                    SetSystemAttr(studySummary, item);
                 }
+            }
+        }
+
+        private static void SetSystemAttr(StudySummary studySummary, KeyValuePair<string, object> item)
+        {
+            string[] values = Array.Empty<string>();
+            if (item.Value is string str)
+            {
+                values = str.Split(',');
+            }
+            else if (item.Value is string[] strArray)
+            {
+                values = strArray;
+            }
+            else if (item.Value is Newtonsoft.Json.Linq.JArray strJArray)
+            {
+                values = new string[strJArray.Count];
+                for (int i = 0; i < strJArray.Count; i++)
+                {
+                    values[i] = strJArray[i].ToString();
+                }
+            }
+
+            if (studySummary.SystemAttributes.TryGetValue(item.Key, out string[] value))
+            {
+                _ = value.Union(values);
+            }
+            else
+            {
+                studySummary.SystemAttributes.Add(item.Key, values);
+            }
+        }
+
+        private static void SetUserAttr(StudySummary studySummary, KeyValuePair<string, object> item)
+        {
+            string[] values = Array.Empty<string>();
+            if (item.Value is string str)
+            {
+                values = str.Split(',');
+            }
+            else if (item.Value is string[] strArray)
+            {
+                values = strArray;
+            }
+
+            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+            {
+                _ = value.Union(values);
+            }
+            else
+            {
+                studySummary.UserAttributes.Add(item.Key, values);
             }
         }
 
