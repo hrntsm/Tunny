@@ -1,3 +1,7 @@
+# #############################################################################
+# This is an example of how optuna compares each sampler it can handle.
+# #############################################################################
+
 import optuna
 
 n_trials = 50
@@ -6,23 +10,30 @@ n_trials = 50
 def objective(trial):
     x = trial.suggest_float("x", -5, 5, step=0.1)
     y = trial.suggest_int("y", -5, 5)
-    return x ** 2 + y ** 2
+    return x**2 + y**2
+
 
 studies = []
 
 # compare samplers
 cmaes = optuna.samplers.CmaEsSampler(with_margin=True)
-study_cmaes = optuna.create_study(sampler=cmaes, direction="minimize", study_name="cmaes")
+study_cmaes = optuna.create_study(
+    sampler=cmaes, direction="minimize", study_name="cmaes"
+)
 study_cmaes.optimize(objective, n_trials=n_trials)
 studies.append(study_cmaes)
 
 nsgaii = optuna.samplers.NSGAIISampler(population_size=10)
-study_nsgaii = optuna.create_study(sampler=nsgaii, direction="minimize", study_name="nsgaii")
+study_nsgaii = optuna.create_study(
+    sampler=nsgaii, direction="minimize", study_name="nsgaii"
+)
 study_nsgaii.optimize(objective, n_trials=n_trials)
 studies.append(study_nsgaii)
 
 nsgaiii = optuna.samplers.NSGAIIISampler(population_size=10)
-study_nsgaiii = optuna.create_study(sampler=nsgaiii, direction="minimize", study_name="nsgaiii")
+study_nsgaiii = optuna.create_study(
+    sampler=nsgaiii, direction="minimize", study_name="nsgaiii"
+)
 study_nsgaiii.optimize(objective, n_trials=n_trials)
 studies.append(study_nsgaiii)
 
@@ -37,7 +48,9 @@ study_bo.optimize(objective, n_trials=n_trials)
 studies.append(study_bo)
 
 random = optuna.samplers.RandomSampler()
-study_random = optuna.create_study(sampler=random, direction="minimize", study_name="random")
+study_random = optuna.create_study(
+    sampler=random, direction="minimize", study_name="random"
+)
 study_random.optimize(objective, n_trials=n_trials)
 
 qmc = optuna.samplers.QMCSampler()
@@ -45,7 +58,9 @@ study_qmc = optuna.create_study(sampler=qmc, direction="minimize", study_name="q
 study_qmc.optimize(objective, n_trials=n_trials)
 
 brute = optuna.samplers.BruteForceSampler()
-study_brute = optuna.create_study(sampler=brute, direction="minimize", study_name="brute")
+study_brute = optuna.create_study(
+    sampler=brute, direction="minimize", study_name="brute"
+)
 study_brute.optimize(objective, n_trials=n_trials)
 
 print("Result")

@@ -1,3 +1,8 @@
+# #############################################################################
+# This is an example of how to use the visualization function.
+# #############################################################################
+
+
 import optuna
 
 n_trials = 50
@@ -27,7 +32,7 @@ optuna.visualization.plot_slice(
 
 optuna.visualization.plot_pareto_front(
     study,
-    target_names = [name, "x"],
+    target_names=[name, "x"],
 ).show()
 
 optuna.visualization.plot_param_importances(
@@ -48,10 +53,7 @@ optuna.visualization.plot_optimization_history(
 ).show()
 
 optuna.visualization.plot_parallel_coordinate(
-    study,
-    params=["x", "y"],
-    target=lambda t: t.values[0],
-    target_name=name
+    study, params=["x", "y"], target=lambda t: t.values[0], target_name=name
 ).show()
 
 optuna.visualization.plot_edf(

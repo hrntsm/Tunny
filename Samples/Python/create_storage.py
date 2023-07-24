@@ -1,8 +1,14 @@
+# #############################################################################
+# This is an example of creating STORAGE.
+# #############################################################################
+
 import optuna
+
 
 def objective(trial):
     x = trial.suggest_float("x", -100, 100)
     return x**2
+
 
 # SQLite3 storage
 storage = optuna.storages.RDBStorage(

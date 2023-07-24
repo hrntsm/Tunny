@@ -1,3 +1,7 @@
+# ##############################################################################
+# This is an example of how to cull unintended trial results from STUDY
+# ##############################################################################
+
 import optuna
 
 storage_path = "fish.log"
