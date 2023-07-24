@@ -24,7 +24,7 @@ namespace Tunny.UI
 
         private void Nsga2DefaultButton_Click(object sender, EventArgs e)
         {
-            SetNsga2Settings(new NSGAII());
+            SetNsgaSettings(new NSGAII());
         }
 
         private void Nsga3MutationProbCheckedChanged(object sender, EventArgs e)
@@ -39,7 +39,7 @@ namespace Tunny.UI
 
         private void Nsga3DefaultButton_Click(object sender, EventArgs e)
         {
-            SetNsga3Settings(new NSGAIII());
+            SetNsgaSettings(new NSGAIII());
         }
 
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
@@ -90,8 +90,8 @@ namespace Tunny.UI
             SamplerSettings sampler = _settings.Optimize.Sampler;
             SetTpeSettings(sampler.Tpe);
             SetBoTorchSettings(sampler.BoTorch);
-            SetNsga2Settings(sampler.NsgaII);
-            SetNsga3Settings(sampler.NsgaIII);
+            SetNsgaSettings(sampler.NsgaII);
+            SetNsgaSettings(sampler.NsgaIII);
             SetCmaEsSettings(sampler.CmaEs);
             SetQMCSettings(sampler.QMC);
         }
@@ -116,7 +116,7 @@ namespace Tunny.UI
             boTorchStartupNumUpDown.Value = boTorch.NStartupTrials;
         }
 
-        private void SetNsga2Settings(NSGAII nsga)
+        private void SetNsgaSettings(NSGAII nsga)
         {
             nsga2MutationProbCheckBox.Checked = nsga.MutationProb != null;
             nsga2MutationProbUpDown.Enabled = nsga2MutationProbCheckBox.Checked;
@@ -128,20 +128,6 @@ namespace Tunny.UI
             nsga2CrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
             nsga2CrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
             nsga2CrossoverComboBox.SelectedIndex = SetNsgaCrossoverSetting(nsga.Crossover);
-        }
-
-        private void SetNsga3Settings(NSGAIII nsga)
-        {
-            nsga3MutationProbCheckBox.Checked = nsga.MutationProb != null;
-            nsga3MutationProbUpDown.Enabled = nsga3MutationProbCheckBox.Checked;
-            nsga3MutationProbUpDown.Value = nsga.MutationProb != null
-                ? (decimal)nsga.MutationProb : 0;
-            nsga3CrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
-            nsga3SwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
-            nsga3PopulationSizeUpDown.Value = nsga.PopulationSize;
-            nsga3CrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
-            nsga3CrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
-            nsga3CrossoverComboBox.SelectedIndex = SetNsgaCrossoverSetting(nsga.Crossover);
         }
 
         private static int SetNsgaCrossoverSetting(string crossover)
