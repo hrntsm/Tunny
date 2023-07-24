@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -20xx-xx-xx
+## [v0.8.0] -2023-07-24
 
 ### Added
 
@@ -27,8 +27,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Support multi constraints.
 - Bump up optuna v3.2.0
 - Bump up optuna-dashboard v0.10.2
-
-### Deprecated
 
 ### Removed
 
