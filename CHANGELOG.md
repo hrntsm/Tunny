@@ -15,12 +15,15 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Add 2 sample gh file.
 - Support CMA-ES with Margin
   - It allows for more efficient optimization in mixed integer problems.
+- Support NSGA-III
+  - For more than 3 objective optimization.
+- Python sample code
 
 ### Changed
 
 - When optimizing with CMA-ES, the with Margin option is enabled by default.
-- Bump up optuna v3.1.1
-- Bump up optuna-dashboard v0.9.2
+- Bump up optuna v3.2.0
+- Bump up optuna-dashboard v0.10.2
 
 ### Deprecated
 
@@ -34,6 +37,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - GC behavior settings configured in the UI during optimization are not reflected in optimization
 
 ### Security
+
+- Bump up scipy v1.10.0
 
 ## [v0.7.2] -2023-03-22
 
