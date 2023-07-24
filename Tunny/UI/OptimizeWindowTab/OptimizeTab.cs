@@ -172,7 +172,7 @@ namespace Tunny.UI
 
                 outputTargetStudyComboBox.Items.AddRange(studyNames);
 
-                if (!_summaries[0].UserAttributes.ContainsKey("objective_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
+                if (!_summaries[0].SystemAttributes.ContainsKey("study:metric_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
                 {
                     return;
                 }

@@ -285,7 +285,7 @@ namespace Tunny.Solver
                     return;
                 }
 
-                string[] nickNames = ((string)study.user_attrs["objective_names"]).Split(',');
+                string[] nickNames = ((string)study.system_attrs["study:metric_names"]).Split(',');
                 if (nickNames.Length == 1)
                 {
                     TunnyMessageBox.Show("Clustering Error\n\nClustering is for multi-objective optimization only.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);

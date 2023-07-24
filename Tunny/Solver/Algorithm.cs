@@ -66,7 +66,7 @@ namespace Tunny.Solver
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
                     var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
-                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), NicknameToAttr(ObjNickName));
+                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), ObjNickName);
                     if (Settings.Optimize.IsHumanInTheLoop)
                     {
                         var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
@@ -99,6 +99,16 @@ namespace Tunny.Solver
                 name.Append(objName + ",");
             }
             name.Remove(name.Length - 1, 1);
+            return name;
+        }
+
+        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
+        {
+            var name = new PyList();
+            foreach (string objName in nicknames)
+            {
+                name.Append(new PyString(objName));
+            }
             return name;
         }
 
@@ -377,10 +387,10 @@ namespace Tunny.Solver
             gc.collect();
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, StringBuilder objectiveName)
+        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, string[] objectiveName)
         {
             study.set_user_attr("variable_names", variableName.ToString());
-            study.set_user_attr("objective_names", objectiveName.ToString());
+            study.set_metric_names(NicknameToPyList(objectiveName)); // new in Optuna 3.2
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
@@ -449,7 +459,7 @@ namespace Tunny.Solver
             switch (samplerType)
             {
                 case 0:
-                case 6:
+                case 7:
                     sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
                 case 1:
@@ -459,20 +469,23 @@ namespace Tunny.Solver
                     sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
                     break;
                 case 3:
-                    sampler = Sampler.CmaEs(optuna, Settings);
+                    sampler = Sampler.NSGAIII(optuna, Settings, hasConstraints);
                     break;
                 case 4:
-                    sampler = Sampler.QMC(optuna, Settings);
+                    sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 5:
+                    sampler = Sampler.QMC(optuna, Settings);
+                    break;
+                case 6:
                     sampler = Sampler.Random(optuna, Settings);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
             }
-            if (samplerType > 2 && hasConstraints)
+            if (samplerType > 3 && hasConstraints)
             {
-                TunnyMessageBox.Show("Only TPE, GP and NSGAII support constraints. Optimization is run without considering constraints.", "Tunny");
+                TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return sampler;
         }
