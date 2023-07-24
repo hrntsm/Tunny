@@ -390,7 +390,6 @@ namespace Tunny.Solver
         private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, string[] objectiveName)
         {
             study.set_user_attr("variable_names", variableName.ToString());
-            study.set_user_attr("objective_names", NicknameToAttr(objectiveName).ToString());
             study.set_metric_names(NicknameToPyList(objectiveName)); // new in Optuna 3.2
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }

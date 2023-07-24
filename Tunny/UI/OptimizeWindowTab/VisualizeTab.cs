@@ -57,7 +57,7 @@ namespace Tunny.UI
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.UserAttributes["objective_names"].ToArray());
+                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.SystemAttributes["study:metric_names"].ToArray());
 
                 visualizeObjectiveListBox.Items.Clear();
                 visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
