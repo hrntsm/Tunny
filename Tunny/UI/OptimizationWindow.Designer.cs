@@ -1140,6 +1140,7 @@ namespace Tunny.UI
             // 
             // nsga2CrossoverComboBox
             // 
+            this.nsga2CrossoverComboBox.Enabled = false;
             this.nsga2CrossoverComboBox.FormattingEnabled = true;
             this.nsga2CrossoverComboBox.Items.AddRange(new object[] {
             "Uniform",
@@ -1341,6 +1342,7 @@ namespace Tunny.UI
             // 
             // nsga3CrossoverComboBox
             // 
+            this.nsga3CrossoverComboBox.Enabled = false;
             this.nsga3CrossoverComboBox.FormattingEnabled = true;
             this.nsga3CrossoverComboBox.Items.AddRange(new object[] {
             "Uniform",
