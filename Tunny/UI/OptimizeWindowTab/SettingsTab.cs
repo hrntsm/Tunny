@@ -12,19 +12,34 @@ namespace Tunny.UI
             SetTpeSettings(new Tpe());
         }
 
-        private void NsgaMutationProbCheckedChanged(object sender, EventArgs e)
+        private void Nsga2MutationProbCheckedChanged(object sender, EventArgs e)
         {
-            nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
+            nsga2MutationProbUpDown.Enabled = nsga2MutationProbCheckBox.Checked;
         }
 
-        private void NsgaCrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void Nsga2CrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            nsgaCrossoverComboBox.Enabled = nsgaCrossoverCheckBox.Checked;
+            nsga2CrossoverComboBox.Enabled = nsga2CrossoverCheckBox.Checked;
         }
 
-        private void NsgaDefaultButton_Click(object sender, EventArgs e)
+        private void Nsga2DefaultButton_Click(object sender, EventArgs e)
         {
-            SetNSGAIISettings(new NSGAII());
+            SetNsga2Settings(new NSGAII());
+        }
+
+        private void Nsga3MutationProbCheckedChanged(object sender, EventArgs e)
+        {
+            nsga3MutationProbUpDown.Enabled = nsga3MutationProbCheckBox.Checked;
+        }
+
+        private void Nsga3CrossoverCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            nsga3CrossoverComboBox.Enabled = nsga3CrossoverCheckBox.Checked;
+        }
+
+        private void Nsga3DefaultButton_Click(object sender, EventArgs e)
+        {
+            SetNsga3Settings(new NSGAIII());
         }
 
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
@@ -75,7 +90,8 @@ namespace Tunny.UI
             SamplerSettings sampler = _settings.Optimize.Sampler;
             SetTpeSettings(sampler.Tpe);
             SetBoTorchSettings(sampler.BoTorch);
-            SetNSGAIISettings(sampler.NsgaII);
+            SetNsga2Settings(sampler.NsgaII);
+            SetNsga3Settings(sampler.NsgaIII);
             SetCmaEsSettings(sampler.CmaEs);
             SetQMCSettings(sampler.QMC);
         }
@@ -100,21 +116,35 @@ namespace Tunny.UI
             boTorchStartupNumUpDown.Value = boTorch.NStartupTrials;
         }
 
-        private void SetNSGAIISettings(NSGAII nsga)
+        private void SetNsga2Settings(NSGAII nsga)
         {
-            nsgaMutationProbCheckBox.Checked = nsga.MutationProb != null;
-            nsgaMutationProbUpDown.Enabled = nsgaMutationProbCheckBox.Checked;
-            nsgaMutationProbUpDown.Value = nsga.MutationProb != null
+            nsga2MutationProbCheckBox.Checked = nsga.MutationProb != null;
+            nsga2MutationProbUpDown.Enabled = nsga2MutationProbCheckBox.Checked;
+            nsga2MutationProbUpDown.Value = nsga.MutationProb != null
                 ? (decimal)nsga.MutationProb : 0;
-            nsgaCrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
-            nsgaSwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
-            nsgaPopulationSizeUpDown.Value = nsga.PopulationSize;
-            nsgaCrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
-            nsgaCrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
-            nsgaCrossoverComboBox.SelectedIndex = SetNSGAIICrossoverSetting(nsga.Crossover);
+            nsga2CrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
+            nsga2SwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
+            nsga2PopulationSizeUpDown.Value = nsga.PopulationSize;
+            nsga2CrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
+            nsga2CrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
+            nsga2CrossoverComboBox.SelectedIndex = SetNsgaCrossoverSetting(nsga.Crossover);
         }
 
-        private static int SetNSGAIICrossoverSetting(string crossover)
+        private void SetNsga3Settings(NSGAIII nsga)
+        {
+            nsga3MutationProbCheckBox.Checked = nsga.MutationProb != null;
+            nsga3MutationProbUpDown.Enabled = nsga3MutationProbCheckBox.Checked;
+            nsga3MutationProbUpDown.Value = nsga.MutationProb != null
+                ? (decimal)nsga.MutationProb : 0;
+            nsga3CrossoverProbUpDown.Value = (decimal)nsga.CrossoverProb;
+            nsga3SwappingProbUpDown.Value = (decimal)nsga.SwappingProb;
+            nsga3PopulationSizeUpDown.Value = nsga.PopulationSize;
+            nsga3CrossoverCheckBox.Checked = nsga.Crossover != string.Empty;
+            nsga3CrossoverComboBox.Enabled = nsga.Crossover != string.Empty;
+            nsga3CrossoverComboBox.SelectedIndex = SetNsgaCrossoverSetting(nsga.Crossover);
+        }
+
+        private static int SetNsgaCrossoverSetting(string crossover)
         {
             switch (crossover)
             {
@@ -170,7 +200,8 @@ namespace Tunny.UI
             {
                 Tpe = GetTpeSettings(),
                 BoTorch = GetBoTorchSettings(),
-                NsgaII = GetNSGAIISettings(),
+                NsgaII = GetNsga2Settings(),
+                NsgaIII = GetNsga3Settings(),
                 CmaEs = GetCmaEsSettings(),
                 QMC = GetQMCSettings()
             };
@@ -201,20 +232,33 @@ namespace Tunny.UI
             };
         }
 
-        private NSGAII GetNSGAIISettings()
+        private NSGAII GetNsga2Settings()
         {
             return new NSGAII
             {
-                MutationProb = nsgaMutationProbCheckBox.Checked
-                    ? (double?)nsgaMutationProbUpDown.Value : null,
-                CrossoverProb = (double)nsgaCrossoverProbUpDown.Value,
-                SwappingProb = (double)nsgaSwappingProbUpDown.Value,
-                PopulationSize = (int)nsgaPopulationSizeUpDown.Value,
-                Crossover = nsgaCrossoverCheckBox.Checked
-                    ? nsgaCrossoverComboBox.Text : string.Empty,
+                MutationProb = nsga2MutationProbCheckBox.Checked
+                    ? (double?)nsga2MutationProbUpDown.Value : null,
+                CrossoverProb = (double)nsga2CrossoverProbUpDown.Value,
+                SwappingProb = (double)nsga2SwappingProbUpDown.Value,
+                PopulationSize = (int)nsga2PopulationSizeUpDown.Value,
+                Crossover = nsga2CrossoverCheckBox.Checked
+                    ? nsga2CrossoverComboBox.Text : string.Empty,
             };
         }
 
+        private NSGAIII GetNsga3Settings()
+        {
+            return new NSGAIII
+            {
+                MutationProb = nsga3MutationProbCheckBox.Checked
+                    ? (double?)nsga3MutationProbUpDown.Value : null,
+                CrossoverProb = (double)nsga3CrossoverProbUpDown.Value,
+                SwappingProb = (double)nsga3SwappingProbUpDown.Value,
+                PopulationSize = (int)nsga3PopulationSizeUpDown.Value,
+                Crossover = nsga3CrossoverCheckBox.Checked
+                    ? nsga3CrossoverComboBox.Text : string.Empty,
+            };
+        }
         private CmaEs GetCmaEsSettings()
         {
             return new CmaEs

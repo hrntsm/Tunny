@@ -459,7 +459,7 @@ namespace Tunny.Solver
             switch (samplerType)
             {
                 case 0:
-                case 6:
+                case 7:
                     sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
                 case 1:
@@ -469,20 +469,23 @@ namespace Tunny.Solver
                     sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
                     break;
                 case 3:
-                    sampler = Sampler.CmaEs(optuna, Settings);
+                    sampler = Sampler.NSGAIII(optuna, Settings, hasConstraints);
                     break;
                 case 4:
-                    sampler = Sampler.QMC(optuna, Settings);
+                    sampler = Sampler.CmaEs(optuna, Settings);
                     break;
                 case 5:
+                    sampler = Sampler.QMC(optuna, Settings);
+                    break;
+                case 6:
                     sampler = Sampler.Random(optuna, Settings);
                     break;
                 default:
                     throw new ArgumentException("Unknown sampler type");
             }
-            if (samplerType > 2 && hasConstraints)
+            if (samplerType > 3 && hasConstraints)
             {
-                TunnyMessageBox.Show("Only TPE, GP and NSGAII support constraints. Optimization is run without considering constraints.", "Tunny");
+                TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return sampler;
         }

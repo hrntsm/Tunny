@@ -60,6 +60,20 @@ namespace Tunny.Solver
             );
         }
 
+        internal static dynamic NSGAIII(dynamic optuna, TunnySettings settings, bool hasConstraints)
+        {
+            NSGAIII nsga3 = settings.Optimize.Sampler.NsgaIII;
+            return optuna.samplers.NSGAIIISampler(
+                population_size: nsga3.PopulationSize,
+                mutation_prob: nsga3.MutationProb,
+                crossover_prob: nsga3.CrossoverProb,
+                swapping_prob: nsga3.SwappingProb,
+                seed: nsga3.Seed,
+                crossover: SetCrossover(optuna, nsga3.Crossover),
+                constraints_func: hasConstraints ? ConstraintFunc() : null
+            );
+        }
+
         private static dynamic SetCrossover(dynamic optuna, string crossover)
         {
             switch (crossover)
