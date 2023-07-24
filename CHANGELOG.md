@@ -24,6 +24,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - When optimizing with CMA-ES, the with Margin option is enabled by default.
+- Support multi constraints.
 - Bump up optuna v3.2.0
 - Bump up optuna-dashboard v0.10.2
 
