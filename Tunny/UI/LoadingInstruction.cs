@@ -8,6 +8,7 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Tunny.Handler;
 using Tunny.Resources;
 using Tunny.Settings;
 using Tunny.Util;
@@ -86,7 +87,7 @@ namespace Tunny.UI
         {
             string componentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindObjectByName("Tunny", true, true).Location);
 
-            string pythonDirectory = componentFolder + "/python-3.10.0-embed-amd64";
+            string pythonDirectory = PythonInstaller.GetEmbeddedPythonPath();
             string dashboardPath = pythonDirectory + "/Scripts/optuna-dashboard.exe";
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))

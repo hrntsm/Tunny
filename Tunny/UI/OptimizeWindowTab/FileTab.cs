@@ -53,5 +53,18 @@ namespace Tunny.UI
                 UpdateStudyComboBox(storagePath);
             }
         }
+
+        private void OutputDebugLogButton_Click(object sender, EventArgs e)
+        {
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = "PowerShell.exe";
+                process.StartInfo.Arguments = $"tree {_component.GhInOut.ComponentFolder} /f > {_component.GhInOut.ComponentFolder}\\debug.log";
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+            }
+            TunnyMessageBox.Show("Debug log file is created at\n" + _component.GhInOut.ComponentFolder + "\\debug.log", "Tunny");
+        }
     }
 }

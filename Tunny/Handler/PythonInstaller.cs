@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-
-using Python.Included;
+using System.IO.Compression;
 
 namespace Tunny.Handler
 {
@@ -14,75 +11,57 @@ namespace Tunny.Handler
         public static void Run(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
-            string[] packageList = GetTunnyPackageList();
-            int installItems = packageList.Length + 2;
-
-            Installer.InstallPath = Path;
-            Installer.SetupPython();
-            worker?.ReportProgress(100 / installItems, "Now installing Python runtime...");
-            Installer.TryInstallPip();
-            worker?.ReportProgress(200 / installItems, "Now installing pip...");
-
-            InstallPackages(worker, packageList, installItems);
+            worker?.ReportProgress(0, "Unzip library...");
+            string[] packageList = UnzipLibraries();
+            InstallPackages(worker, packageList);
 
             worker?.ReportProgress(100, "Finish!!");
         }
 
-        private static void InstallPackages(BackgroundWorker worker, IReadOnlyList<string> packageList, int installItems)
+        private static string[] UnzipLibraries()
         {
-            for (int i = 0; i < packageList.Count; i++)
+            if (Directory.Exists(Path + "/python"))
             {
-                string packageName = packageList[i].Split('=')[0] == "plotly"
-                    ? packageList[i] + "... This package will take time to install. Please wait"
-                    : packageList[i];
-                worker.ReportProgress((i + 2) * 100 / installItems, "Now installing " + packageName + "...");
-                Installer.PipInstallModule(packageList[i]);
+                Directory.Delete(Path + "/python", true);
             }
+            ZipFile.ExtractToDirectory(Path + "/Lib/python.zip", Path + "/python");
+
+            if (Directory.Exists(Path + "/Lib/whl"))
+            {
+                Directory.Delete(Path + "/Lib/whl", true);
+            }
+            ZipFile.ExtractToDirectory(Path + "/Lib/whl.zip", Path + "/Lib/whl");
+            return Directory.GetFiles(Path + "/Lib/whl");
         }
 
-        internal static bool CheckPackagesIsInstalled()
+        private static void InstallPackages(BackgroundWorker worker, string[] packageList)
         {
-            Installer.InstallPath = Path;
-            string[] packageList = GetTunnyPackageList().Select(s => s.Split('=')[0]).ToArray();
-            if (!Installer.IsPythonInstalled())
+            int num = packageList.Length;
+            for (int i = 0; i < num; i++)
             {
-                return false;
-            }
-            if (!Installer.IsPipInstalled())
-            {
-                return false;
-            }
-            foreach (string package in packageList)
-            {
-                string[] singleFilePackages = { "bottle", "optuna-dashboard", "six", "PyYAML", "scikit-learn", "threadpoolctl", "typing_extensions" };
-                string[] useUnderLinePackages = { "opt-einsum", "pyro-api", "pyro-ppl" };
-                if (!Installer.IsModuleInstalled(package) && !singleFilePackages.Contains(package) && !useUnderLinePackages.Contains(package))
+                double progress = (double)i / num * 100d;
+                string packageName = System.IO.Path.GetFileName(packageList[i]).Split('-')[0];
+                worker.ReportProgress((int)progress, "Now installing " + packageName + "...");
+                var startInfo = new ProcessStartInfo
                 {
-                    return false;
+                    FileName = Path + "/python/python.exe",
+                    Arguments = "-m pip install --no-deps " + packageList[i],
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                };
+                using (var process = new Process())
+                {
+                    process.StartInfo = startInfo;
+                    process.Start();
+                    process.WaitForExit();
                 }
             }
-            return true;
         }
 
         internal static string GetEmbeddedPythonPath()
         {
-            Installer.InstallPath = Path;
-            return Installer.EmbeddedPythonHome;
-        }
-
-        private static string[] GetTunnyPackageList()
-        {
-            var pipPackages = new List<string>();
-
-            using (var sr = new StreamReader(Path + "/Lib/requirements.txt"))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    pipPackages.Add(line);
-                }
-            }
-            return pipPackages.ToArray();
+            return Path + "/python";
         }
     }
 }
