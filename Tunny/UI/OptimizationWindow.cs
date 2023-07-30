@@ -44,7 +44,7 @@ namespace Tunny.UI
         private void RunPythonInstaller()
         {
             PythonInstaller.Path = _component.GhInOut.ComponentFolder;
-            if (_settings.CheckPythonLibraries && !PythonInstaller.CheckPackagesIsInstalled())
+            if (_settings.CheckPythonLibraries)
             {
                 var installer = new PythonInstallDialog()
                 {

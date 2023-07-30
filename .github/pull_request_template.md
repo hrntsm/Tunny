@@ -1,15 +1,14 @@
-## Added
+<!--
+Thank you for creating a pull request!
+-->
 
-## Changed
+## Reference Issues/PRs
 
-## Deprecated
+<!--
+Example: Fixes #1234. Close #1234. See also #1234. Follow-up #1234.
+Please use keywords (e.g., Fixes) to automatically close referenced issues.
+-->
 
-## Removed
+## What does this implement/fix? Explain your changes.
 
-## Fixed
-
-## Security
-
-## Related issue number
-
-close #
+<!-- Describe the changes in this PR. A picture or video tells a thousand words. -->
