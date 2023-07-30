@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -20xx-xx-xx
+
+### Added
+
+- Debug log output button
+
+### Changed
+
+- Improved stability of python library installation
+  - The library is now included from the beginning in whl format and the file is installed, eliminating the need to download it from the Internet.
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [v0.8.0] -2023-07-24
 
 ### Added
@@ -19,7 +38,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - For more than 3 objective optimization.
 - Python sample code
 - Open optuna dashboard menu item
-
 
 ### Changed
 
