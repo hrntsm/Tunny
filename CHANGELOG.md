@@ -14,7 +14,8 @@ for new features.
 
 ### Changed
 
-for changes in existing functionality.
+- Stopped putting built files together in gha.
+  - Because some people did not work in some environments
 
 ### Deprecated
 
