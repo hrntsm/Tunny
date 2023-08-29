@@ -483,7 +483,7 @@ namespace Tunny.Solver
                 default:
                     throw new ArgumentException("Unknown sampler type");
             }
-            if (samplerType > 3 && hasConstraints)
+            if (samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
