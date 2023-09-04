@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 using Python.Runtime;
 
@@ -202,7 +203,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
                 {
                     break;
                 }
@@ -223,7 +224,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
                 {
                     break;
                 }
@@ -244,9 +245,8 @@ namespace Tunny.Solver
             dynamic trial = optSet.Study.ask();
             var result = new EvaluatedGHResult();
 
-            //TODO: Is this the correct way to handle the case of null?
             int nullCount = 0;
-            while (nullCount < 10)
+            while (true)
             {
                 for (int j = 0; j < Variables.Count; j++)
                 {
@@ -259,7 +259,17 @@ namespace Tunny.Solver
                 result = EvalFunc(pState, progress);
                 optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ObjectiveImages);
 
-                if (result.ObjectiveValues.Contains(double.NaN))
+                if (nullCount >= 10)
+                {
+                    TunnyMessageBox.Show(
+                        "The objective function returned NaN 10 times in a row. Tunny terminates the optimization. Please check the objective function.",
+                        "Tunny",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    return null;
+                }
+                else if (result.ObjectiveValues.Contains(double.NaN))
                 {
                     trial = optSet.Study.ask();
                     nullCount++;

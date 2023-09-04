@@ -16,6 +16,7 @@ for new features.
 
 - Stopped putting built files together in gha.
   - Because some people did not work in some environments
+- If the objective function contains null for 10 consecutive times, optimization is stopped.
 
 ### Deprecated
 
