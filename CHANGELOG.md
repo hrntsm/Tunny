@@ -6,11 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -xxxx-xx-xx
-
-### Added
-
-for new features.
+## [v0.8.2] -2023-09-04
 
 ### Changed
 
@@ -20,21 +16,9 @@ for new features.
 - Update python lib
   - bump up optuna v3.3 & optuna-dashboard v0.12.0 & some library
 
-### Deprecated
-
-for soon-to-be removed features.
-
-### Removed
-
-for now removed features.
-
 ### Fixed
 
 - NSGA-III supports constraints, but was getting a message that constraints are not taken into account
-
-### Security
-
-in case of vulnerabilities.
 
 ## [v0.8.1] -2023-07-30
 
