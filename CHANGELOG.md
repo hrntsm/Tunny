@@ -17,6 +17,8 @@ for new features.
 - Stopped putting built files together in gha.
   - Because some people did not work in some environments
 - If the objective function contains null for 10 consecutive times, optimization is stopped.
+- Update python lib
+  - bump up optuna v3.3 & optuna-dashboard v0.12.0 & some library
 
 ### Deprecated
 
