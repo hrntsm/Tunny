@@ -120,6 +120,7 @@ namespace Tunny.Solver
         {
             BoTorch boTorch = settings.Optimize.Sampler.BoTorch;
             return optuna.integration.BoTorchSampler(
+                seed: boTorch.Seed,
                 n_startup_trials: boTorch.NStartupTrials,
                 constraints_func: hasConstraints ? ConstraintFunc() : null
             );

@@ -6,6 +6,36 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -yyyy-mm-dd
+
+### Added
+
+for new features.
+
+- Added the seed value can be specified in BayesianOptimization(GP).
+
+### Changed
+
+for changes in existing functionality.
+
+### Deprecated
+
+for soon-to-be removed features.
+
+### Removed
+
+for now removed features.
+
+### Fixed
+
+for any bug fixes.
+
+- The seed value of the sampler was not used.
+
+### Security
+
+in case of vulnerabilities.
+
 ## [v0.8.2] -2023-09-04
 
 ### Changed

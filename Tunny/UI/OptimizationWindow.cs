@@ -166,7 +166,7 @@ namespace Tunny.UI
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
-            _settings.Optimize.Sampler = GetSamplerSettings();
+            _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
         }
     }
