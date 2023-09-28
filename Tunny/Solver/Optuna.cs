@@ -37,10 +37,10 @@ namespace Tunny.Solver
             List<Variable> variables,
             IEnumerable<IGH_Param> objectives,
             Dictionary<string, FishEgg> fishEggs,
-            Func<ProgressState, int, EvaluatedGHResult> evaluate)
+            Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
             string[] objNickName = GetObjectiveNickName(objectives);
-            EvaluatedGHResult Eval(ProgressState pState, int progress)
+            TrialGrasshopperItems Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
             }

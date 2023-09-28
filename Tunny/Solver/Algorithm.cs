@@ -9,6 +9,10 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Rhino;
+using Rhino.DocObjects;
+using Rhino.Geometry;
+
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.Storage;
@@ -27,13 +31,13 @@ namespace Tunny.Solver
         private bool HasConstraints { get; }
         private string[] ObjNickName { get; }
         private TunnySettings Settings { get; }
-        private Func<ProgressState, int, EvaluatedGHResult> EvalFunc { get; }
+        private Func<ProgressState, int, TrialGrasshopperItems> EvalFunc { get; }
         private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
             List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
-            Func<ProgressState, int, EvaluatedGHResult> evalFunc)
+            Func<ProgressState, int, TrialGrasshopperItems> evalFunc)
         {
             Variables = variables;
             HasConstraints = hasConstraint;
@@ -59,14 +63,15 @@ namespace Tunny.Solver
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
+                dynamic artifactBackend = Settings.Storage.CreateNewOptunaArtifactBackend(false);
 
                 double[] xTest = null;
-                EvaluatedGHResult result = null;
+                TrialGrasshopperItems result = null;
 
                 if (CheckExistStudyParameter(ObjNickName.Length, optuna, storage))
                 {
                     dynamic study = CreateStudy(directions, sampler, storage);
-                    var runOptimizeSettings = new RunOptimizeSettings(nTrials, timeout, study, storage, FishEgg, ObjNickName);
+                    var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, ObjNickName);
                     SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), ObjNickName);
                     if (Settings.Optimize.IsHumanInTheLoop)
                     {
@@ -78,12 +83,12 @@ namespace Tunny.Solver
                         humanInTheLoop.WakeOptunaDashboard(Settings.Storage);
                         humanInTheLoop.SetObjective(study, ObjNickName);
                         humanInTheLoop.SetWidgets(study, ObjNickName);
-                        runOptimizeSettings.HumanInTheLoop = humanInTheLoop;
-                        RunHumanInTheLoopOptimize(runOptimizeSettings, 3, out xTest, out result);
+                        optInfo.HumanInTheLoop = humanInTheLoop;
+                        RunHumanInTheLoopOptimize(optInfo, 3, out xTest, out result);
                     }
                     else
                     {
-                        RunOptimize(runOptimizeSettings, out xTest, out result);
+                        RunOptimize(optInfo, out xTest, out result);
                     }
                     SetResultValues(ObjNickName.Length, study, xTest);
                 }
@@ -193,57 +198,57 @@ namespace Tunny.Solver
             }
         }
 
-        private void RunOptimize(RunOptimizeSettings optSet, out double[] xTest, out EvaluatedGHResult result)
+        private void RunOptimize(OptimizationHandlingInfo optInfo, out double[] xTest, out TrialGrasshopperItems result)
         {
             xTest = new double[Variables.Count];
-            result = new EvaluatedGHResult();
+            result = new TrialGrasshopperItems();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
-            EnqueueTrial(optSet.Study, optSet.EnqueueItems);
+            EnqueueTrial(optInfo.Study, optInfo.EnqueueItems);
 
             while (true)
             {
-                if (result == null || CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
                 {
                     break;
                 }
-                result = RunSingleOptimizeStep(optSet, xTest, trialNum, startTime);
+                result = RunSingleOptimizeStep(optInfo, xTest, trialNum, startTime);
                 trialNum++;
             }
 
-            SaveInMemoryStudy(optSet.Storage);
+            SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private void RunHumanInTheLoopOptimize(RunOptimizeSettings optSet, int nBatch, out double[] xTest, out EvaluatedGHResult result)
+        private void RunHumanInTheLoopOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
         {
             xTest = new double[Variables.Count];
-            result = new EvaluatedGHResult();
+            result = new TrialGrasshopperItems();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
-            EnqueueTrial(optSet.Study, optSet.EnqueueItems);
+            EnqueueTrial(optInfo.Study, optInfo.EnqueueItems);
 
             while (true)
             {
-                if (result == null || CheckOptimizeComplete(optSet.NTrials, optSet.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
                 {
                     break;
                 }
-                if (HumanInTheLoop.GetRunningTrialNumber(optSet.Study) >= nBatch)
+                if (HumanInTheLoop.GetRunningTrialNumber(optInfo.Study) >= nBatch)
                 {
                     continue;
                 }
-                result = RunSingleOptimizeStep(optSet, xTest, trialNum, startTime);
+                result = RunSingleOptimizeStep(optInfo, xTest, trialNum, startTime);
                 trialNum++;
             }
 
-            SaveInMemoryStudy(optSet.Storage);
+            SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private EvaluatedGHResult RunSingleOptimizeStep(RunOptimizeSettings optSet, double[] xTest, int trialNum, DateTime startTime)
+        private TrialGrasshopperItems RunSingleOptimizeStep(OptimizationHandlingInfo optInfo, double[] xTest, int trialNum, DateTime startTime)
         {
-            int progress = trialNum * 100 / optSet.NTrials;
-            dynamic trial = optSet.Study.ask();
-            var result = new EvaluatedGHResult();
+            int progress = trialNum * 100 / optInfo.NTrials;
+            dynamic trial = optInfo.Study.ask();
+            var result = new TrialGrasshopperItems();
 
             int nullCount = 0;
             while (true)
@@ -255,23 +260,17 @@ namespace Tunny.Solver
                     : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
                 }
 
-                ProgressState pState = SetProgressState(optSet, xTest, trialNum, startTime);
+                ProgressState pState = SetProgressState(optInfo, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                optSet.HumanInTheLoop?.SaveNote(optSet.Study, trial, result.ObjectiveImages);
+                optInfo.HumanInTheLoop?.SaveNote(optInfo.Study, trial, result.ObjectiveImages);
 
                 if (nullCount >= 10)
                 {
-                    TunnyMessageBox.Show(
-                        "The objective function returned NaN 10 times in a row. Tunny terminates the optimization. Please check the objective function.",
-                        "Tunny",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    return null;
+                    return TenTimesNullResultErrorMessage();
                 }
                 else if (result.ObjectiveValues.Contains(double.NaN))
                 {
-                    trial = optSet.Study.ask();
+                    trial = optInfo.Study.ask();
                     nullCount++;
                 }
                 else
@@ -280,12 +279,16 @@ namespace Tunny.Solver
                 }
             }
 
-            SetTrialUserAttr(result, trial, optSet);
+            SetTrialUserAttr(result, trial, optInfo);
             try
             {
-                if (optSet.HumanInTheLoop == null)
+                if (result.Artifacts != null && result.Artifacts.Length > 0)
                 {
-                    optSet.Study.tell(trial, result.ObjectiveValues.ToArray());
+                    UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
+                }
+                if (optInfo.HumanInTheLoop == null)
+                {
+                    optInfo.Study.tell(trial, result.ObjectiveValues.ToArray());
                 }
             }
             catch (Exception e)
@@ -298,6 +301,44 @@ namespace Tunny.Solver
             }
 
             return result;
+        }
+
+        private void UploadArtifacts(GeometryBase[] artifacts, dynamic artifactBackend, dynamic trial)
+        {
+            var rhinoDoc = RhinoDoc.CreateHeadless("");
+            foreach (GeometryBase artifact in artifacts)
+            {
+                rhinoDoc.Objects.Add(artifact);
+            }
+
+            foreach (RhinoObject obj in rhinoDoc.Objects)
+            {
+                obj.CreateMeshes(MeshType.Render, new MeshingParameters(), false);
+            }
+
+            var option = new Rhino.FileIO.FileWriteOptions
+            {
+                IncludeRenderMeshes = true
+            };
+
+            string dir = Path.GetDirectoryName(Settings.Storage.Path) + "/temp";
+            Directory.CreateDirectory(dir);
+            string artifactPath = dir + "/artifact_trial" + trial.number + ".3dm";
+            rhinoDoc.Write3dmFile(artifactPath, option);
+
+            dynamic optuna = Py.Import("optuna");
+            optuna.artifacts.upload_artifact(trial, artifactPath, artifactBackend);
+        }
+
+        private static TrialGrasshopperItems TenTimesNullResultErrorMessage()
+        {
+            TunnyMessageBox.Show(
+                "The objective function returned NaN 10 times in a row. Tunny terminates the optimization. Please check the objective function.",
+                "Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+            return null;
         }
 
         private bool CheckOptimizeComplete(int nTrials, double timeout, int trialNum, DateTime startTime)
@@ -323,7 +364,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(RunOptimizeSettings optSet, double[] xTest, int trialNum, DateTime startTime)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, double[] xTest, int trialNum, DateTime startTime)
         {
             ComputeBestValues(optSet.Study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
             return new ProgressState
@@ -384,7 +425,7 @@ namespace Tunny.Solver
             return study;
         }
 
-        private void RunGC(EvaluatedGHResult result)
+        private void RunGC(TrialGrasshopperItems result)
         {
             GcAfterTrial gcAfterTrial = Settings.Optimize.GcAfterTrial;
             if ((gcAfterTrial != GcAfterTrial.Always) &&
@@ -404,7 +445,7 @@ namespace Tunny.Solver
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
         }
 
-        private static void SetTrialUserAttr(EvaluatedGHResult result, dynamic trial, RunOptimizeSettings optSet)
+        private static void SetTrialUserAttr(TrialGrasshopperItems result, dynamic trial, OptimizationHandlingInfo optSet)
         {
             if (result.GeometryJson.Length != 0)
             {
@@ -440,7 +481,7 @@ namespace Tunny.Solver
             }
         }
 
-        private static void SetNonGeometricAttr(EvaluatedGHResult result, dynamic trial)
+        private static void SetNonGeometricAttr(TrialGrasshopperItems result, dynamic trial)
         {
             foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
             {

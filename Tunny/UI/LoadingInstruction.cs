@@ -121,7 +121,14 @@ namespace Tunny.UI
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 storagePath = GetStorageArgument(ofd.FileName);
-                DashboardHandler.RunDashboardProcess(dashboardPath, storagePath);
+                string arguments = storagePath;
+                string backendPath = Path.GetDirectoryName(ofd.FileName) + "/artifacts";
+                if (Directory.Exists(backendPath))
+                {
+                    arguments += " --artifact-dir " + backendPath;
+                }
+
+                DashboardHandler.RunDashboardProcess(dashboardPath, arguments);
             }
         }
 

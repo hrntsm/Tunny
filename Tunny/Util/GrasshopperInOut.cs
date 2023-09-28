@@ -15,6 +15,8 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
+using Rhino.Geometry;
+
 using Tunny.Component.Params;
 using Tunny.Type;
 using Tunny.UI;
@@ -28,6 +30,7 @@ namespace Tunny.Util
         private readonly GH_Component _component;
         private List<GalapagosGeneListObject> _genePool;
         private GH_FishAttribute _attributes;
+        private List<GeometryBase> _artifacts;
         private List<GH_NumberSlider> Sliders { get; set; }
 
         public List<IGH_Param> Objectives { get; private set; }
@@ -46,7 +49,7 @@ namespace Tunny.Util
 
             IsLoadCorrectly = getVariableOnly
                 ? SetVariables()
-                : SetVariables() && SetObjectives() && SetAttributes();
+                : SetVariables() && SetObjectives() && SetAttributes() && SetArtifacts();
         }
 
         private bool SetVariables()
@@ -454,6 +457,41 @@ namespace Tunny.Util
                     }
                 }
             }
+        }
+
+        private bool SetArtifacts()
+        {
+            _artifacts = new List<GeometryBase>();
+            if (_component.Params.Input[3].SourceCount == 0)
+            {
+                return true;
+            }
+            else if (_component.Params.Input[3].SourceCount >= 2)
+            {
+                return ShowIncorrectArtifactInputMessage();
+            }
+
+            IGH_StructureEnumerator enumerator = _component.Params.Input[3].Sources[0].VolatileData.AllData(true);
+            foreach (IGH_Goo goo in enumerator)
+            {
+                bool result = goo.CastTo(out GeometryBase geometry);
+                if (result)
+                {
+                    _artifacts.Add(geometry);
+                }
+            }
+            return _artifacts.Count != 0;
+        }
+
+        private static bool ShowIncorrectArtifactInputMessage()
+        {
+            TunnyMessageBox.Show("Inputs to Artifact should be flatten.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        public GeometryBase[] GetArtifacts()
+        {
+            return _artifacts.ToArray();
         }
     }
 }
