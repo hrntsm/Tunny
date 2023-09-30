@@ -318,6 +318,7 @@ namespace Tunny.Solver
 
             var option = new Rhino.FileIO.FileWriteOptions
             {
+                FileVersion = 7,
                 IncludeRenderMeshes = true
             };
 
