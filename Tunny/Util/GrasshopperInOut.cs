@@ -348,6 +348,7 @@ namespace Tunny.Util
             Recalculate();
             SetObjectives();
             SetAttributes();
+            SetArtifacts();
         }
 
         public TunnyObjective GetObjectiveValues()

@@ -328,6 +328,7 @@ namespace Tunny.Solver
 
             dynamic optuna = Py.Import("optuna");
             optuna.artifacts.upload_artifact(trial, artifactPath, artifactBackend);
+            rhinoDoc.Dispose();
         }
 
         private static TrialGrasshopperItems TenTimesNullResultErrorMessage()
