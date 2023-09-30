@@ -322,14 +322,14 @@ namespace Tunny.Solver
                 IncludeRenderMeshes = true
             };
 
-            string dir = Path.GetDirectoryName(Settings.Storage.Path) + "/temp";
-            Directory.CreateDirectory(dir);
+            string dir = Path.GetDirectoryName(Settings.Storage.Path);
             string artifactPath = dir + "/artifact_trial" + trial.number + ".3dm";
             rhinoDoc.Write3dmFile(artifactPath, option);
 
             dynamic optuna = Py.Import("optuna");
             optuna.artifacts.upload_artifact(trial, artifactPath, artifactBackend);
             rhinoDoc.Dispose();
+            File.Delete(artifactPath);
         }
 
         private static TrialGrasshopperItems TenTimesNullResultErrorMessage()
