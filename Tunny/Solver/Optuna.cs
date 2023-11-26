@@ -74,7 +74,7 @@ namespace Tunny.Solver
                         break;
                     case Param_FishPrint param:
                         objNickName[i] = "Human-in-the-Loop " + param.NickName;
-                        _settings.Optimize.IsHumanInTheLoop = true;
+                        _settings.Optimize.HumanInTheLoopType = HumanInTheLoopType.Preferential;
                         hitlCount++;
                         break;
                     default:
@@ -83,7 +83,7 @@ namespace Tunny.Solver
             }
             if (hitlCount == 0)
             {
-                _settings.Optimize.IsHumanInTheLoop = false;
+                _settings.Optimize.HumanInTheLoopType = HumanInTheLoopType.None;
             }
             // FIXME: Fix JournalStorage when the usage of JournalStorage is understood.
             else if (_settings.Storage.Type != StorageType.Sqlite)

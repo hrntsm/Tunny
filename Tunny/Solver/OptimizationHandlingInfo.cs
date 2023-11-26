@@ -13,7 +13,8 @@ namespace Tunny.Solver
         public dynamic ArtifactBackend { get; set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; set; }
         public string[] ObjectiveNames { get; set; }
-        public HumanInTheLoop HumanInTheLoop { get; set; }
+        public HumanInTheLoop.Slider HitlSlider { get; set; }
+        public HumanInTheLoop.Preferential HitlPreferential { get; set; }
 
         public OptimizationHandlingInfo(int nTrials, double timeout, dynamic study, dynamic storage,
                                         dynamic artifactBackend, Dictionary<string, FishEgg> enqueueItems,
