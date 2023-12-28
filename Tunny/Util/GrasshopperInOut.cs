@@ -15,7 +15,10 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Types;
 
+using Rhino.Geometry;
+
 using Tunny.Component.Params;
+using Tunny.PreProcess;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -33,6 +36,7 @@ namespace Tunny.Util
         public List<IGH_Param> Objectives { get; private set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; private set; }
+        public Artifact Artifacts { get; private set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsLoadCorrectly { get; }
@@ -46,7 +50,7 @@ namespace Tunny.Util
 
             IsLoadCorrectly = getVariableOnly
                 ? SetVariables()
-                : SetVariables() && SetObjectives() && SetAttributes();
+                : SetVariables() && SetObjectives() && SetAttributes() && SetArtifacts();
         }
 
         private bool SetVariables()
@@ -345,6 +349,7 @@ namespace Tunny.Util
             Recalculate();
             SetObjectives();
             SetAttributes();
+            SetArtifacts();
         }
 
         public TunnyObjective GetObjectiveValues()
@@ -454,6 +459,42 @@ namespace Tunny.Util
                     }
                 }
             }
+        }
+
+        private bool SetArtifacts()
+        {
+            Artifacts = new Artifact();
+            if (_component.Params.Input[3].SourceCount == 0)
+            {
+                return true;
+            }
+
+            foreach (IGH_Param param in _component.Params.Input[3].Sources)
+            {
+                IGH_StructureEnumerator enumerator = param.VolatileData.AllData(true);
+                foreach (IGH_Goo goo in enumerator)
+                {
+                    bool result = goo.CastTo(out GeometryBase geometry);
+                    if (result)
+                    {
+                        Artifacts.Geometries.Add(geometry);
+                        continue;
+                    }
+
+                    if (goo is GH_FishPrint fishPrint)
+                    {
+                        Artifacts.Images.Add(fishPrint.Value);
+                        continue;
+                    }
+
+                    result = goo.CastTo(out string path);
+                    if (result)
+                    {
+                        Artifacts.AddFilePathToArtifact(path);
+                    }
+                }
+            }
+            return Artifacts.Count() != 0;
         }
     }
 }

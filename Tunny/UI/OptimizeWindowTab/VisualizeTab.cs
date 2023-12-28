@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 
 using Tunny.Handler;
+using Tunny.PostProcess;
 using Tunny.Solver;
 using Tunny.Storage;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -18,8 +18,14 @@ namespace Tunny.UI
                 ResultFileNotExistErrorMessage();
                 return;
             }
+            string argument = _settings.Storage.GetOptunaStorageCommandLinePathByExtension();
+            string backendPath = _settings.Storage.GetArtifactBackendPath();
+            if (Directory.Exists(backendPath))
+            {
+                argument += " --artifact-dir " + backendPath;
+            }
 
-            DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", _settings.Storage.GetOptunaStorageCommandLinePathByExtension());
+            DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", argument);
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)

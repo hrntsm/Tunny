@@ -6,11 +6,12 @@ using System.Linq;
 using Grasshopper.Kernel;
 
 using Tunny.Component.Optimizer;
+using Tunny.PostProcess;
+using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Handler
 {
@@ -67,7 +68,7 @@ namespace Tunny.Handler
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
         }
 
-        private static EvaluatedGHResult EvaluateFunction(ProgressState pState, int progress)
+        private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
             s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
 
@@ -76,12 +77,13 @@ namespace Tunny.Handler
             { /*just wait*/ }
 
             TunnyObjective objective = s_component.GhInOut.GetObjectiveValues();
-            return new EvaluatedGHResult
+            return new TrialGrasshopperItems
             {
                 ObjectiveValues = objective.Numbers,
                 ObjectiveImages = objective.Images,
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
                 Attribute = s_component.GhInOut.GetAttributes(),
+                Artifacts = s_component.GhInOut.Artifacts,
             };
         }
     }

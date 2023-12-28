@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Tunny.Util
+namespace Tunny.Handler
 {
     public static class DashboardHandler
     {

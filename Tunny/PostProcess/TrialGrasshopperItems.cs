@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Tunny.Util
+using Tunny.PreProcess;
+
+namespace Tunny.PostProcess
 {
-    public class EvaluatedGHResult
+    public class TrialGrasshopperItems
     {
         public double[] ObjectiveValues { get; set; }
         public string[] GeometryJson { get; set; }
         public Dictionary<string, List<string>> Attribute { get; set; }
         public Bitmap[] ObjectiveImages { get; set; }
+        public Artifact Artifacts { get; set; }
     }
 }

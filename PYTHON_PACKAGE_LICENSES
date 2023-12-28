@@ -11,8 +11,8 @@ summary
 |-------------------|---------|---------------------------------------------------|
 | Mako              | 1.2.4   | MIT License                                       |
 | MarkupSafe        | 2.1.3   | BSD License                                       |
-| PyYAML            | 6.0     | MIT License                                       |
-| SQLAlchemy        | 2.0.20  | MIT License                                       |
+| PyYAML            | 6.0.1   | MIT License                                       |
+| SQLAlchemy        | 2.0.21  | MIT License                                       |
 | alembic           | 1.12.0  | MIT License                                       |
 | botorch           | 0.7.3   | MIT License                                       |
 | bottle            | 0.12.25 | MIT License                                       |
@@ -24,26 +24,25 @@ summary
 | joblib            | 1.3.2   | BSD License                                       |
 | linear-operator   | 0.2.0   | MIT                                               |
 | multipledispatch  | 0.6.0   | BSD                                               |
-| numpy             | 1.25.2  | BSD License                                       |
+| numpy             | 1.26.0  | BSD License                                       |
 | opt-einsum        | 3.3.0   | MIT                                               |
 | optuna            | 3.3.0   | MIT License                                       |
-| optuna-dashboard  | 0.12.0  | MIT License                                       |
+| optuna-dashboard  | 0.13.0b1| MIT License                                       |
 | packaging         | 23.1    | Apache Software License; BSD License              |
 | pip               | 23.0    | MIT License                                       |
 | pip-licenses      | 4.0.3   | MIT License                                       |
 | plotly            | 5.16.1  | MIT                                               |
 | pyro-api          | 0.1.2   | Apache Software License                           |
 | pyro-ppl          | 1.8.4   | Apache Software License                           |
-| scikit-learn      | 1.3.0   | BSD License                                       |
-| scipy             | 1.11.2  | BSD License                                       |
+| scikit-learn      | 1.3.1   | BSD License                                       |
+| scipy             | 1.11.3  | BSD License                                       |
 | setuptools        | 65.5.0  | MIT License                                       |
 | six               | 1.16.0  | MIT License                                       |
 | tenacity          | 8.2.3   | Apache Software License                           |
 | threadpoolctl     | 3.2.0   | BSD License                                       |
 | torch             | 1.13.1  | BSD License                                       |
 | tqdm              | 4.66.1  | MIT License; Mozilla Public License 2.0 (MPL 2.0) |
-| typing_extensions | 4.4.0   | Python Software Foundation License                |
-| wcwidth           | 0.2.6   | MIT License                                       |
+| typing_extensions | 4.8.0   | Python Software Foundation License                |
 
 ----------------------------------------------------------------------------------------------------
 

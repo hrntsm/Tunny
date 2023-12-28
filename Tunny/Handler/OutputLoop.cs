@@ -7,11 +7,11 @@ using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
+using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Handler
 {

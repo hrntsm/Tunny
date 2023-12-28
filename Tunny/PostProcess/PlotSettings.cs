@@ -1,4 +1,4 @@
-namespace Tunny.Util
+namespace Tunny.PostProcess
 {
     public class PlotSettings
     {

@@ -12,6 +12,8 @@ using Python.Runtime;
 
 using Tunny.Component.Params;
 using Tunny.Handler;
+using Tunny.PostProcess;
+using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Type;
 using Tunny.UI;
@@ -37,10 +39,10 @@ namespace Tunny.Solver
             List<Variable> variables,
             IEnumerable<IGH_Param> objectives,
             Dictionary<string, FishEgg> fishEggs,
-            Func<ProgressState, int, EvaluatedGHResult> evaluate)
+            Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
             string[] objNickName = GetObjectiveNickName(objectives);
-            EvaluatedGHResult Eval(ProgressState pState, int progress)
+            TrialGrasshopperItems Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
             }
