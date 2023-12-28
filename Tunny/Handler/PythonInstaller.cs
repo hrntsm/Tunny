@@ -3,11 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
+using Tunny.Util;
+
 namespace Tunny.Handler
 {
     public static class PythonInstaller
     {
-        public static string TunnyEnvPath { get; private set; } = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile) + "/.tunny_env";
         public static string ComponentFolderPath { get; set; }
         public static void Run(object sender, DoWorkEventArgs e)
         {
@@ -21,18 +22,19 @@ namespace Tunny.Handler
 
         private static string[] UnzipLibraries()
         {
-            if (Directory.Exists(TunnyEnvPath + "/python"))
+            string envPath = TunnyVariables.TunnyEnvPath;
+            if (Directory.Exists(envPath + "/python"))
             {
-                Directory.Delete(TunnyEnvPath + "/python", true);
+                Directory.Delete(envPath + "/python", true);
             }
-            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/python.zip", TunnyEnvPath + "/python");
+            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/python.zip", envPath + "/python");
 
-            if (Directory.Exists(TunnyEnvPath + "/Lib/whl"))
+            if (Directory.Exists(envPath + "/Lib/whl"))
             {
-                Directory.Delete(TunnyEnvPath + "/Lib/whl", true);
+                Directory.Delete(envPath + "/Lib/whl", true);
             }
-            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/whl.zip", TunnyEnvPath + "/Lib/whl");
-            return Directory.GetFiles(TunnyEnvPath + "/Lib/whl");
+            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/whl.zip", envPath + "/Lib/whl");
+            return Directory.GetFiles(envPath + "/Lib/whl");
         }
 
         private static void InstallPackages(BackgroundWorker worker, string[] packageList)
@@ -45,7 +47,7 @@ namespace Tunny.Handler
                 worker.ReportProgress((int)progress, "Now installing " + packageName + "...");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = TunnyEnvPath + "/python/python.exe",
+                    FileName = TunnyVariables.TunnyEnvPath + "/python/python.exe",
                     Arguments = "-m pip install --no-deps " + packageList[i],
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
@@ -62,7 +64,7 @@ namespace Tunny.Handler
 
         internal static string GetEmbeddedPythonPath()
         {
-            return TunnyEnvPath + "/python";
+            return TunnyVariables.TunnyEnvPath + "/python";
         }
     }
 }
