@@ -14,11 +14,12 @@ using Rhino.DocObjects;
 using Rhino.Geometry;
 
 using Tunny.Handler;
+using Tunny.PostProcess;
+using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -282,9 +283,9 @@ namespace Tunny.Solver
             SetTrialUserAttr(result, trial, optInfo);
             try
             {
-                if (result.Artifacts != null && result.Artifacts.Length > 0)
+                if (result.ArtifactGeometries != null && result.ArtifactGeometries.Length > 0)
                 {
-                    UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
+                    UploadArtifacts(result.ArtifactGeometries, optInfo.ArtifactBackend, trial);
                 }
                 if (optInfo.HumanInTheLoop == null)
                 {
