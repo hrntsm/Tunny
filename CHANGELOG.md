@@ -16,7 +16,12 @@ for new features.
 
 ### Changed
 
-for changes in existing functionality.
+- Tunny Python runtime environment location to [UserProfile]/.tunny_env
+- Moved settings file location to [UserProfile]/.tunny_env
+- Storage's default path to the desktop.
+  - Previously, it was in the same folder as the Tunny component .gha file.
+- Default StudyName set to empty.
+  - If you don't input a name in Tunny UI, Optuna will automatically assign a StudyName.
 
 ### Deprecated
 
@@ -28,9 +33,8 @@ for now removed features.
 
 ### Fixed
 
-for any bug fixes.
-
 - The seed value of the sampler was not used.
+- Failure to launch Optuna-Dashboard from tab.
 
 ### Security
 
