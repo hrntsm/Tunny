@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using Tunny.Settings;
 using Tunny.Storage;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -59,7 +60,7 @@ namespace Tunny.UI
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "PowerShell.exe";
-                process.StartInfo.Arguments = $"tree {_component.GhInOut.ComponentFolder} /f > {_component.GhInOut.ComponentFolder}\\debug.log";
+                process.StartInfo.Arguments = $"tree {_component.GhInOut.ComponentFolder} /f > {TunnyVariables.TunnyEnvPath}\\debug.log";
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();

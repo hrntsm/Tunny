@@ -9,6 +9,7 @@ using Tunny.Component.Optimizer;
 using Tunny.Handler;
 using Tunny.Settings;
 using Tunny.Solver;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -83,7 +84,7 @@ namespace Tunny.UI
 
         private void LoadSettingJson()
         {
-            string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
+            string settingsPath = TunnyVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
                 _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
@@ -94,7 +95,7 @@ namespace Tunny.UI
                 {
                     Storage = new Settings.Storage
                     {
-                        Path = _component.GhInOut.ComponentFolder + @"\fish.log",
+                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
                         Type = StorageType.Journal
                     }
                 };
