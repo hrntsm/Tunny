@@ -125,7 +125,7 @@ namespace Tunny.UI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
             GetUIValues();
-            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
+            _settings.Serialize(TunnyVariables.OptimizeSettingsPath);
 
             //TODO: use cancelAsync to stop the background worker safely
             optimizeBackgroundWorker?.Dispose();
