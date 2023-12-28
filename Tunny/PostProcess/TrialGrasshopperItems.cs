@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using Rhino.Geometry;
+using Tunny.PreProcess;
 
 namespace Tunny.PostProcess
 {
@@ -11,7 +11,6 @@ namespace Tunny.PostProcess
         public string[] GeometryJson { get; set; }
         public Dictionary<string, List<string>> Attribute { get; set; }
         public Bitmap[] ObjectiveImages { get; set; }
-        public GeometryBase[] ArtifactGeometries { get; set; }
-        public Bitmap[] ArtifactImages { get; set; }
+        public Artifact Artifacts { get; set; }
     }
 }

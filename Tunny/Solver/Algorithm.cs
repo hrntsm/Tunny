@@ -9,10 +9,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Rhino;
-using Rhino.DocObjects;
-using Rhino.Geometry;
-
 using Tunny.Handler;
 using Tunny.PostProcess;
 using Tunny.PreProcess;
@@ -283,9 +279,9 @@ namespace Tunny.Solver
             SetTrialUserAttr(result, trial, optInfo);
             try
             {
-                if (result.ArtifactGeometries != null && result.ArtifactGeometries.Length > 0)
+                if (result.Artifacts.Count() > 0)
                 {
-                    UploadArtifacts(result.ArtifactGeometries, optInfo.ArtifactBackend, trial);
+                    UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
                 }
                 if (optInfo.HumanInTheLoop == null)
                 {
@@ -304,33 +300,23 @@ namespace Tunny.Solver
             return result;
         }
 
-        private void UploadArtifacts(GeometryBase[] artifacts, dynamic artifactBackend, dynamic trial)
+        private void UploadArtifacts(Artifact artifacts, dynamic artifactBackend, dynamic trial)
         {
-            var rhinoDoc = RhinoDoc.CreateHeadless("");
-            foreach (GeometryBase artifact in artifacts)
-            {
-                rhinoDoc.Objects.Add(artifact);
-            }
-
-            foreach (RhinoObject obj in rhinoDoc.Objects)
-            {
-                obj.CreateMeshes(MeshType.Render, new MeshingParameters(), false);
-            }
-
-            var option = new Rhino.FileIO.FileWriteOptions
-            {
-                FileVersion = 7,
-                IncludeRenderMeshes = true
-            };
-
             string dir = Path.GetDirectoryName(Settings.Storage.Path);
-            string artifactPath = dir + "/artifact_trial" + trial.number + ".3dm";
-            rhinoDoc.Write3dmFile(artifactPath, option);
+            string fileName = $"artifact_trial_{trial.number}";
+            string basePath = Path.Combine(dir, fileName);
+            artifacts.SaveAllArtifacts(basePath);
+            List<string> artifactPath = artifacts.ArtifactPaths;
 
             dynamic optuna = Py.Import("optuna");
-            optuna.artifacts.upload_artifact(trial, artifactPath, artifactBackend);
-            rhinoDoc.Dispose();
-            File.Delete(artifactPath);
+            foreach (string path in artifactPath)
+            {
+                optuna.artifacts.upload_artifact(trial, path, artifactBackend);
+                if (Path.GetFileNameWithoutExtension(path).Contains(fileName))
+                {
+                    File.Delete(path);
+                }
+            }
         }
 
         private static TrialGrasshopperItems TenTimesNullResultErrorMessage()

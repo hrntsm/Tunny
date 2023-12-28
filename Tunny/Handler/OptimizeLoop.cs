@@ -83,8 +83,7 @@ namespace Tunny.Handler
                 ObjectiveImages = objective.Images,
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
                 Attribute = s_component.GhInOut.GetAttributes(),
-                ArtifactGeometries = s_component.GhInOut.Artifacts.Geometries.ToArray(),
-                ArtifactImages = s_component.GhInOut.Artifacts.Images.ToArray()
+                Artifacts = s_component.GhInOut.Artifacts,
             };
         }
     }

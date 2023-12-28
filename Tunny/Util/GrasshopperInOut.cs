@@ -36,7 +36,7 @@ namespace Tunny.Util
         public List<IGH_Param> Objectives { get; private set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; private set; }
-        public Artifact Artifacts { get; private set; } = new Artifact();
+        public Artifact Artifacts { get; private set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsLoadCorrectly { get; }
@@ -463,28 +463,38 @@ namespace Tunny.Util
 
         private bool SetArtifacts()
         {
+            Artifacts = new Artifact();
             if (_component.Params.Input[3].SourceCount == 0)
             {
                 return true;
             }
 
-            IGH_StructureEnumerator enumerator = _component.Params.Input[3].Sources[0].VolatileData.AllData(true);
-            foreach (IGH_Goo goo in enumerator)
+            foreach (IGH_Param param in _component.Params.Input[3].Sources)
             {
-                bool result = goo.CastTo(out GeometryBase geometry);
-                if (result)
+                IGH_StructureEnumerator enumerator = param.VolatileData.AllData(true);
+                foreach (IGH_Goo goo in enumerator)
                 {
-                    Artifacts.Geometries.Add(geometry);
-                    continue;
-                }
+                    bool result = goo.CastTo(out GeometryBase geometry);
+                    if (result)
+                    {
+                        Artifacts.Geometries.Add(geometry);
+                        continue;
+                    }
 
-                result = goo.CastTo(out Bitmap bitmap);
-                if (result)
-                {
-                    Artifacts.Images.Add(bitmap);
+                    if (goo is GH_FishPrint fishPrint)
+                    {
+                        Artifacts.Images.Add(fishPrint.Value);
+                        continue;
+                    }
+
+                    result = goo.CastTo(out string path);
+                    if (result)
+                    {
+                        Artifacts.AddFilePathToArtifact(path);
+                    }
                 }
             }
-            return Artifacts.ArtifactCount() != 0;
+            return Artifacts.Count() != 0;
         }
     }
 }

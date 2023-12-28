@@ -101,6 +101,8 @@ namespace Tunny.Component.Optimizer
                 {
                     case Param_Geometry geometry:
                     case Param_FishPrint fPrint:
+                    case Param_String text:
+                    case Param_FilePath filePath:
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid artifact.");
