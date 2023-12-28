@@ -283,7 +283,13 @@ namespace Tunny.Solver
                 {
                     UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
                 }
-                if (optInfo.HumanInTheLoop == null)
+
+                if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
+                {
+                    dynamic optuna = Py.Import("optuna");
+                    optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
+                }
+                else if (optInfo.HumanInTheLoop == null)
                 {
                     optInfo.Study.tell(trial, result.ObjectiveValues.ToArray());
                 }
