@@ -13,6 +13,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - The seed value can be specified in BayesianOptimization(GP).
 - Support optuna artifact feature.
   - GeometryBase & FishPrint & file path are supported.
+- Allows Trial to FAIL.
+  - In contrast to the constraint, if the value of the objective function cannot be obtained properly due to divergence of the solution or other reasons, it can be reflected in the trial.
 
 ### Changed
 
