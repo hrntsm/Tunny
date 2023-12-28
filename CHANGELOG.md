@@ -10,9 +10,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
-for new features.
-
-- Added the seed value can be specified in BayesianOptimization(GP).
+- The seed value can be specified in BayesianOptimization(GP).
+- Support optuna artifact feature.
+  - GeometryBase & FishPrint & file path are supported.
 
 ### Changed
 
