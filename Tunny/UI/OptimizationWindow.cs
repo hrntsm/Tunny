@@ -44,7 +44,6 @@ namespace Tunny.UI
 
         private void RunPythonInstaller()
         {
-
             PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
             if (_settings.CheckPythonLibraries)
             {
