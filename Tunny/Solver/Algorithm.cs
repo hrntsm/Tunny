@@ -145,11 +145,12 @@ namespace Tunny.Solver
         private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
         {
             dynamic optuna = Py.Import("optuna");
+            string studyName = Settings.StudyName == null || Settings.StudyName == "" ? "no-name-" + Guid.NewGuid().ToString("D") : Settings.StudyName;
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
                 storage: storage,
-                study_name: Settings.StudyName,
+                study_name: studyName,
                 load_if_exists: Settings.Optimize.ContinueStudy
             );
         }
