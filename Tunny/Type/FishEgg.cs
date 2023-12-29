@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Tunny.Util;
+using Tunny.PreProcess;
 
 namespace Tunny.Type
 {

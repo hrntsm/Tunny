@@ -18,6 +18,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
+using Tunny.PreProcess;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -30,12 +31,12 @@ namespace Tunny.Util
         private readonly GH_Component _component;
         private List<GalapagosGeneListObject> _genePool;
         private GH_FishAttribute _attributes;
-        private List<GeometryBase> _artifacts;
         private List<GH_NumberSlider> Sliders { get; set; }
 
         public List<IGH_Param> Objectives { get; private set; }
         public string ComponentFolder { get; }
         public List<Variable> Variables { get; private set; }
+        public Artifact Artifacts { get; private set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsLoadCorrectly { get; }
@@ -462,37 +463,38 @@ namespace Tunny.Util
 
         private bool SetArtifacts()
         {
-            _artifacts = new List<GeometryBase>();
+            Artifacts = new Artifact();
             if (_component.Params.Input[3].SourceCount == 0)
             {
                 return true;
             }
-            else if (_component.Params.Input[3].SourceCount >= 2)
-            {
-                return ShowIncorrectArtifactInputMessage();
-            }
 
-            IGH_StructureEnumerator enumerator = _component.Params.Input[3].Sources[0].VolatileData.AllData(true);
-            foreach (IGH_Goo goo in enumerator)
+            foreach (IGH_Param param in _component.Params.Input[3].Sources)
             {
-                bool result = goo.CastTo(out GeometryBase geometry);
-                if (result)
+                IGH_StructureEnumerator enumerator = param.VolatileData.AllData(true);
+                foreach (IGH_Goo goo in enumerator)
                 {
-                    _artifacts.Add(geometry);
+                    bool result = goo.CastTo(out GeometryBase geometry);
+                    if (result)
+                    {
+                        Artifacts.Geometries.Add(geometry);
+                        continue;
+                    }
+
+                    if (goo is GH_FishPrint fishPrint)
+                    {
+                        Artifacts.Images.Add(fishPrint.Value);
+                        continue;
+                    }
+
+                    result = goo.CastTo(out string path);
+                    if (result)
+                    {
+                        Artifacts.AddFilePathToArtifact(path);
+                    }
                 }
             }
-            return _artifacts.Count != 0;
-        }
-
-        private static bool ShowIncorrectArtifactInputMessage()
-        {
-            TunnyMessageBox.Show("Inputs to Artifact should be flatten.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
-        }
-
-        public GeometryBase[] GetArtifacts()
-        {
-            return _artifacts.ToArray();
+            return Artifacts.Count() != 0;
         }
     }
 }

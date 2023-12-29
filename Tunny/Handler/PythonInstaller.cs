@@ -3,11 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
+using Tunny.Util;
+
 namespace Tunny.Handler
 {
     public static class PythonInstaller
     {
-        public static string Path { get; set; } = ".";
+        public static string ComponentFolderPath { get; set; }
         public static void Run(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
@@ -20,18 +22,19 @@ namespace Tunny.Handler
 
         private static string[] UnzipLibraries()
         {
-            if (Directory.Exists(Path + "/python"))
+            string envPath = TunnyVariables.TunnyEnvPath;
+            if (Directory.Exists(envPath + "/python"))
             {
-                Directory.Delete(Path + "/python", true);
+                Directory.Delete(envPath + "/python", true);
             }
-            ZipFile.ExtractToDirectory(Path + "/Lib/python.zip", Path + "/python");
+            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/python.zip", envPath + "/python");
 
-            if (Directory.Exists(Path + "/Lib/whl"))
+            if (Directory.Exists(envPath + "/Lib/whl"))
             {
-                Directory.Delete(Path + "/Lib/whl", true);
+                Directory.Delete(envPath + "/Lib/whl", true);
             }
-            ZipFile.ExtractToDirectory(Path + "/Lib/whl.zip", Path + "/Lib/whl");
-            return Directory.GetFiles(Path + "/Lib/whl");
+            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/whl.zip", envPath + "/Lib/whl");
+            return Directory.GetFiles(envPath + "/Lib/whl");
         }
 
         private static void InstallPackages(BackgroundWorker worker, string[] packageList)
@@ -40,11 +43,11 @@ namespace Tunny.Handler
             for (int i = 0; i < num; i++)
             {
                 double progress = (double)i / num * 100d;
-                string packageName = System.IO.Path.GetFileName(packageList[i]).Split('-')[0];
+                string packageName = Path.GetFileName(packageList[i]).Split('-')[0];
                 worker.ReportProgress((int)progress, "Now installing " + packageName + "...");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = Path + "/python/python.exe",
+                    FileName = TunnyVariables.TunnyEnvPath + "/python/python.exe",
                     Arguments = "-m pip install --no-deps " + packageList[i],
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
@@ -61,7 +64,7 @@ namespace Tunny.Handler
 
         internal static string GetEmbeddedPythonPath()
         {
-            return Path + "/python";
+            return TunnyVariables.TunnyEnvPath + "/python";
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 
-namespace Tunny.Util
+namespace Tunny.PreProcess
 {
     [Serializable]
     public class Variable

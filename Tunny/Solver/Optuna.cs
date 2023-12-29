@@ -12,6 +12,8 @@ using Python.Runtime;
 
 using Tunny.Component.Params;
 using Tunny.Handler;
+using Tunny.PostProcess;
+using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Type;
 using Tunny.UI;

@@ -9,7 +9,7 @@ namespace Tunny.Settings
 {
     public class Storage
     {
-        public string Path { get; set; } = "/fish.log";
+        public string Path { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/fish.log";
         public StorageType Type { get; set; } = StorageType.Journal;
 
         public string GetArtifactBackendPath()

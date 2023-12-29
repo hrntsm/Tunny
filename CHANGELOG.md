@@ -10,13 +10,20 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
-for new features.
-
-- Added the seed value can be specified in BayesianOptimization(GP).
+- The seed value can be specified in BayesianOptimization(GP).
+- Support optuna artifact feature.
+  - GeometryBase & FishPrint & file path are supported.
+- Allows Trial to FAIL.
+  - In contrast to the constraint, if the value of the objective function cannot be obtained properly due to divergence of the solution or other reasons, it can be reflected in the trial.
 
 ### Changed
 
-for changes in existing functionality.
+- Tunny Python runtime environment location to [UserProfile]/.tunny_env
+- Moved settings file location to [UserProfile]/.tunny_env
+- Storage's default path to the desktop.
+  - Previously, it was in the same folder as the Tunny component .gha file.
+- Default StudyName set to empty.
+  - If you don't input a name in Tunny UI, Optuna will automatically assign a StudyName.
 
 ### Deprecated
 
@@ -28,9 +35,8 @@ for now removed features.
 
 ### Fixed
 
-for any bug fixes.
-
 - The seed value of the sampler was not used.
+- Failure to launch Optuna-Dashboard from tab.
 
 ### Security
 
