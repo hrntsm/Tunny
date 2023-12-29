@@ -6,9 +6,9 @@ using System.Linq;
 
 using Grasshopper.GUI;
 
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
-using Tunny.Settings;
 using Tunny.Storage;
 
 namespace Tunny.UI

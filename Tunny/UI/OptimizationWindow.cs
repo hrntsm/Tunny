@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -17,12 +17,6 @@ namespace Tunny.UI
     {
         private readonly FishingComponent _component;
         private TunnySettings _settings;
-        internal enum GrasshopperStates
-        {
-            RequestSent,
-            RequestProcessing,
-            RequestProcessed
-        }
         internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(FishingComponent component)

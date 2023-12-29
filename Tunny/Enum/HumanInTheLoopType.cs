@@ -1,4 +1,4 @@
-namespace Tunny.Settings
+namespace Tunny.Enum
 {
     public enum HumanInTheLoopType
     {

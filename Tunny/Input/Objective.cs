@@ -6,9 +6,11 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 
+using Python.Runtime;
+
 using Rhino.Geometry;
 
-using Tunny.Settings;
+using Tunny.Enum;
 using Tunny.Type;
 
 namespace Tunny.Input
@@ -90,6 +92,16 @@ namespace Tunny.Input
                 nickNames.Add(source.NickName);
             }
             return nickNames.ToArray();
+        }
+
+        public PyList GetPyListStyleNickname()
+        {
+            var name = new PyList();
+            foreach (string objName in GetNickNames())
+            {
+                name.Append(new PyString(objName));
+            }
+            return name;
         }
     }
 }

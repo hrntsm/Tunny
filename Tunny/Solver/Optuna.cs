@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;

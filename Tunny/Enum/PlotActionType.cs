@@ -1,4 +1,4 @@
-namespace Tunny.PostProcess
+namespace Tunny.Enum
 {
     public enum PlotActionType
     {

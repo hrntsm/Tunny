@@ -1,5 +1,7 @@
 using System;
 
+using Tunny.Enum;
+
 namespace Tunny.Storage
 {
     public class Trial

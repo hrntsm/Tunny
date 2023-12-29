@@ -1,5 +1,5 @@
+using Tunny.Enum;
 using Tunny.Settings.Sampler;
-using Tunny.Solver;
 
 namespace Tunny.Settings
 {

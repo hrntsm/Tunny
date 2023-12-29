@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
@@ -71,10 +72,10 @@ namespace Tunny.Solver
                     switch (Objective.HumanInTheLoopType)
                     {
                         case HumanInTheLoopType.Slider:
-                            HitlSliderOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
+                            HumanSliderInputOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
                             break;
                         case HumanInTheLoopType.Preferential:
-                            HitlPreferentialOptimization(nTrials, storage, artifactBackend, out xTest, out result, out study);
+                            PreferentialOptimization(nTrials, storage, artifactBackend, out xTest, out result, out study);
                             break;
                         default:
                             NormalOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
@@ -87,9 +88,9 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        private void HitlPreferentialOptimization(int nTrials, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        private void PreferentialOptimization(int nTrials, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
-            var HitlPrefer = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
+            var preferentialOpt = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
             if (Objective.Length > 1)
             {
                 TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
@@ -97,12 +98,12 @@ namespace Tunny.Solver
             // TODO: nBatch should be set by user
             int nBatch = 6;
             string[] objNickName = Objective.GetNickNames();
-            study = HitlPrefer.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
+            study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(nTrials, 0, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), objNickName, false);
-            HitlPrefer.WakeOptunaDashboard(Settings.Storage);
-            optInfo.HitlPreferential = HitlPrefer;
-            RunHitlPreferentialOptimize(optInfo, nBatch, out xTest, out result);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), false);
+            preferentialOpt.WakeOptunaDashboard(Settings.Storage);
+            optInfo.Preferential = preferentialOpt;
+            RunPreferentialOptimize(optInfo, nBatch, out xTest, out result);
         }
 
         private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
@@ -110,22 +111,24 @@ namespace Tunny.Solver
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), objNickName);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
             RunOptimize(optInfo, out xTest, out result);
         }
 
-        private void HitlSliderOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        private void HumanSliderInputOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
+            // TODO: nBatch should be set by user
+            int nBatch = 4;
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), objNickName);
-            var HitlSlider = new HumanInTheLoop.Slider(Path.GetDirectoryName(Settings.Storage.Path));
-            HitlSlider.WakeOptunaDashboard(Settings.Storage);
-            HitlSlider.SetObjective(study, objNickName);
-            HitlSlider.SetWidgets(study, objNickName);
-            optInfo.HitlSlider = HitlSlider;
-            RunHitlPreferentialOptimize(optInfo, 4, out xTest, out result);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
+            var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
+            humanSliderInput.WakeOptunaDashboard(Settings.Storage);
+            humanSliderInput.SetObjective(study, objNickName);
+            humanSliderInput.SetWidgets(study, objNickName);
+            optInfo.HumanSliderInput = humanSliderInput;
+            RunPreferentialOptimize(optInfo, nBatch, out xTest, out result);
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
@@ -136,16 +139,6 @@ namespace Tunny.Solver
                 name.Append(objName + ",");
             }
             name.Remove(name.Length - 1, 1);
-            return name;
-        }
-
-        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
-        {
-            var name = new PyList();
-            foreach (string objName in nicknames)
-            {
-                name.Append(new PyString(objName));
-            }
             return name;
         }
 
@@ -250,7 +243,7 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private void RunHitlPreferentialOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
+        private void RunPreferentialOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
         {
             xTest = new double[Variables.Count];
             result = new TrialGrasshopperItems();
@@ -284,7 +277,7 @@ namespace Tunny.Solver
             int nullCount = 0;
             while (true)
             {
-                if (optInfo.HitlPreferential != null && !optInfo.Study.should_generate())
+                if (optInfo.Preferential != null && !optInfo.Study.should_generate())
                 {
                     System.Threading.Thread.Sleep(100);
                     continue;
@@ -301,13 +294,13 @@ namespace Tunny.Solver
 
                 ProgressState pState = SetProgressState(optInfo, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                if (optInfo.HitlSlider != null)
+                if (optInfo.HumanSliderInput != null)
                 {
-                    optInfo.HitlSlider.SaveNote(optInfo.Study, trial, result.Objectives.Images);
+                    optInfo.HumanSliderInput.SaveNote(optInfo.Study, trial, result.Objectives.Images);
                 }
-                else if (optInfo.HitlPreferential != null && result.Objectives.Images.Length == 1)
+                else if (optInfo.Preferential != null && result.Objectives.Images.Length == 1)
                 {
-                    optInfo.HitlPreferential.UploadArtifact(optInfo.Study, trial, result.Objectives.Images[0]);
+                    optInfo.Preferential.UploadArtifact(optInfo.Study, trial, result.Objectives.Images[0]);
                 }
 
                 if (nullCount >= 10)
@@ -336,7 +329,7 @@ namespace Tunny.Solver
                     dynamic optuna = Py.Import("optuna");
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
                 }
-                else if (optInfo.HitlSlider == null && optInfo.HitlPreferential == null)
+                else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
                 {
                     optInfo.Study.tell(trial, result.Objectives.Numbers);
                 }
@@ -480,13 +473,13 @@ namespace Tunny.Solver
             gc.collect();
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, string[] objectiveName, bool setMetricNames = true)
+        private void SetStudyUserAttr(dynamic study, StringBuilder variableName, bool setMetricNames = true)
         {
             study.set_user_attr("variable_names", variableName.ToString());
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
             if (setMetricNames)
             {
-                study.set_metric_names(NicknameToPyList(objectiveName));
+                study.set_metric_names(Objective.GetPyListStyleNickname());
             }
         }
 
@@ -507,7 +500,7 @@ namespace Tunny.Solver
                 SetNonGeometricAttr(result, trial);
             }
 
-            if (result.Objectives.Length != 0 && optSet.HitlSlider != null)
+            if (result.Objectives.Length != 0 && optSet.HumanSliderInput != null)
             {
                 int imageCount = 0;
                 for (int i = 0; i < result.Objectives.Length + result.Objectives.Images.Length; i++)
@@ -585,12 +578,5 @@ namespace Tunny.Solver
             }
             return sampler;
         }
-    }
-
-    public enum GcAfterTrial
-    {
-        Always,
-        HasGeometry,
-        NoExecute,
     }
 }

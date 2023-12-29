@@ -11,14 +11,14 @@ using Tunny.UI;
 
 namespace Tunny.Solver.HumanInTheLoop
 {
-    public class Slider
+    public class HumanSliderInput
     {
         private readonly PyModule _importedLibrary;
         private readonly dynamic _artifactBackend;
         private readonly dynamic _artifactPath;
         private readonly string _basePath;
 
-        public Slider(string path)
+        public HumanSliderInput(string path)
         {
             PyModule importedLibrary = Py.CreateScope();
             SetStdOutErrDirection(path, importedLibrary);

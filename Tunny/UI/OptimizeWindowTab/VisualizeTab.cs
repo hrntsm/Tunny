@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.PostProcess;
 using Tunny.Solver;

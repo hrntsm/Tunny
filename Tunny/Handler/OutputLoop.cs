@@ -7,6 +7,7 @@ using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Solver;

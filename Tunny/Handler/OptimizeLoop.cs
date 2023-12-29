@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
-using Tunny.UI;
 
 namespace Tunny.Handler
 {
@@ -39,9 +39,9 @@ namespace Tunny.Handler
 
             if (s_component != null)
             {
-                s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+                s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
                 s_worker?.ReportProgress(100, pState);
-                while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+                while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
                 { /* just wait until the cows come home */ }
             }
 
@@ -68,10 +68,10 @@ namespace Tunny.Handler
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
-            s_component.OptimizationWindow.GrasshopperStatus = OptimizationWindow.GrasshopperStates.RequestSent;
+            s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
 
             s_worker.ReportProgress(progress, pState);
-            while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
+            while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
             return new TrialGrasshopperItems
