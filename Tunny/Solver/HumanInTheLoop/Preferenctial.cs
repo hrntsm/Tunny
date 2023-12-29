@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -100,9 +101,10 @@ namespace Tunny.Solver.HumanInTheLoop
         {
             dynamic createStudy = _importedLibrary.Get("create_study");
             dynamic preferentialGPSampler = _importedLibrary.Get("PreferentialGPSampler");
+            string name = studyName == null || studyName == "" ? "no-name-" + Guid.NewGuid().ToString("D") : studyName;
             dynamic study = createStudy(
                 n_generate: nGenerate,
-                study_name: studyName,
+                study_name: name,
                 sampler: preferentialGPSampler(),
                 storage: storage
             );

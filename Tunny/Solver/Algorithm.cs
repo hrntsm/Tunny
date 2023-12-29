@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 using Python.Runtime;
@@ -88,18 +89,16 @@ namespace Tunny.Solver
             PythonEngine.Shutdown();
         }
 
-        private void PreferentialOptimization(int nTrials, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
             var preferentialOpt = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
             if (Objective.Length > 1)
             {
                 TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
             }
-            // TODO: nBatch should be set by user
-            int nBatch = 6;
             string[] objNickName = Objective.GetNickNames();
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
-            var optInfo = new OptimizationHandlingInfo(nTrials, 0, study, storage, artifactBackend, FishEgg, objNickName);
+            var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), false);
             preferentialOpt.WakeOptunaDashboard(Settings.Storage);
             optInfo.Preferential = preferentialOpt;
@@ -115,13 +114,12 @@ namespace Tunny.Solver
             RunOptimize(optInfo, out xTest, out result);
         }
 
-        private void HumanSliderInputOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
             // TODO: nBatch should be set by user
-            int nBatch = 4;
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
-            var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
+            var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
             var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
             humanSliderInput.WakeOptunaDashboard(Settings.Storage);
@@ -199,7 +197,7 @@ namespace Tunny.Solver
 
         private void SetResultValues(int nObjective, dynamic study, double[] xTest)
         {
-            if (nObjective == 1)
+            if (nObjective == 1 && Objective.HumanInTheLoopType != HumanInTheLoopType.Preferential)
             {
                 double[] values = (double[])study.best_params.values();
                 string[] keys = (string[])study.best_params.keys();
@@ -303,9 +301,9 @@ namespace Tunny.Solver
             int nullCount = 0;
             while (true)
             {
-                if (optInfo.Preferential != null && !optInfo.Study.should_generate())
+                if (optInfo.Preferential != null && !optInfo.Study.should_generate() && !OptimizeLoop.IsForcedStopOptimize)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    Thread.Sleep(100);
                     continue;
                 }
 
