@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using Python.Runtime;
 
 using Tunny.Handler;
+using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
@@ -300,18 +300,18 @@ namespace Tunny.Solver
                 result = EvalFunc(pState, progress);
                 if (optInfo.HitlSlider != null)
                 {
-                    optInfo.HitlSlider.SaveNote(optInfo.Study, trial, result.ObjectiveImages);
+                    optInfo.HitlSlider.SaveNote(optInfo.Study, trial, result.Objectives.Images);
                 }
-                else if (optInfo.HitlPreferential != null && result.ObjectiveImages.Length == 1)
+                else if (optInfo.HitlPreferential != null && result.Objectives.Images.Length == 1)
                 {
-                    optInfo.HitlPreferential.UploadArtifact(optInfo.Study, trial, result.ObjectiveImages[0]);
+                    optInfo.HitlPreferential.UploadArtifact(optInfo.Study, trial, result.Objectives.Images[0]);
                 }
 
                 if (nullCount >= 10)
                 {
                     return TenTimesNullResultErrorMessage();
                 }
-                else if (result.ObjectiveValues.Contains(double.NaN))
+                else if (result.Objectives.Numbers.Contains(double.NaN))
                 {
                     nullCount++;
                 }
@@ -335,7 +335,7 @@ namespace Tunny.Solver
                 }
                 else if (optInfo.HitlSlider == null && optInfo.HitlPreferential == null)
                 {
-                    optInfo.Study.tell(trial, result.ObjectiveValues.ToArray());
+                    optInfo.Study.tell(trial, result.Objectives.Numbers);
                 }
             }
             catch (Exception e)
@@ -504,15 +504,15 @@ namespace Tunny.Solver
                 SetNonGeometricAttr(result, trial);
             }
 
-            if (result.ObjectiveValues.Length != 0 && optSet.HitlSlider != null)
+            if (result.Objectives.Length != 0 && optSet.HitlSlider != null)
             {
                 int imageCount = 0;
-                for (int i = 0; i < result.ObjectiveValues.Length + result.ObjectiveImages.Length; i++)
+                for (int i = 0; i < result.Objectives.Length + result.Objectives.Images.Length; i++)
                 {
                     if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
                     {
                         var key = new PyString("result_" + optSet.ObjectiveNames[i]);
-                        var value = new PyFloat(result.ObjectiveValues[i - imageCount]);
+                        var value = new PyFloat(result.Objectives.Numbers[i - imageCount]);
                         trial.set_user_attr(key, value);
                     }
                     else

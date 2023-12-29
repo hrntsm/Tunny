@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,7 +17,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
-using Tunny.PreProcess;
+using Tunny.Input;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -33,8 +32,8 @@ namespace Tunny.Util
         private GH_FishAttribute _attributes;
         private List<GH_NumberSlider> Sliders { get; set; }
 
-        public List<IGH_Param> Objectives { get; private set; }
         public string ComponentFolder { get; }
+        public Objective Objectives { get; private set; }
         public List<Variable> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
@@ -124,7 +123,7 @@ namespace Tunny.Util
             return false;
         }
 
-        private void SetInputSliderValues(ICollection<Variable> variables)
+        private void SetInputSliderValues(List<Variable> variables)
         {
             int i = 0;
 
@@ -172,7 +171,7 @@ namespace Tunny.Util
             }
         }
 
-        private void SetInputGenePoolValues(ICollection<Variable> variables)
+        private void SetInputGenePoolValues(List<Variable> variables)
         {
             var nickNames = new List<string>();
             for (int i = 0; i < _genePool.Count; i++)
@@ -220,7 +219,7 @@ namespace Tunny.Util
                 return ShowIncorrectObjectiveInputMessage(unsupportedObjectives);
             }
             if (!CheckObjectiveNicknameDuplication(_component.Params.Input[1].Sources.ToArray())) { return false; }
-            Objectives = _component.Params.Input[1].Sources.ToList();
+            Objectives = new Objective(_component.Params.Input[1].Sources.ToList());
             return true;
         }
 
@@ -352,52 +351,12 @@ namespace Tunny.Util
             SetArtifacts();
         }
 
-        public TunnyObjective GetObjectiveValues()
-        {
-            var numbers = new List<double>();
-            var images = new List<Bitmap>();
-
-            foreach (IGH_StructureEnumerator ghEnumerator in Objectives.Select(objective => objective.VolatileData.AllData(false)))
-            {
-                if (ghEnumerator.Count() > 1)
-                {
-                    TunnyMessageBox.Show(
-                        "Tunny doesn't handle list input.\nSeparate each objective if you want multiple objectives",
-                        "Tunny",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    return new TunnyObjective();
-                }
-                foreach (IGH_Goo goo in ghEnumerator)
-                {
-                    switch (goo)
-                    {
-                        case GH_Number num:
-                            numbers.Add(num.Value);
-                            break;
-                        case null:
-                            numbers.Add(double.NaN);
-                            break;
-                        case GH_FishPrint print:
-                            images.Add(print.Value);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            return new TunnyObjective(numbers.ToArray(), images.ToArray());
-        }
-
         public string[] GetGeometryJson()
         {
             var json = new List<string>();
 
             if (_attributes.Value == null
-                || !_attributes.Value.ContainsKey("Geometry")
-                || !(_attributes.Value["Geometry"] is List<object> geometries))
+                || !_attributes.Value.TryGetValue("Geometry", out object value) || !(value is List<object> geometries))
             {
                 return json.ToArray();
             }

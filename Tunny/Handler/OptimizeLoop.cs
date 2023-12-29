@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-using Grasshopper.Kernel;
-
 using Tunny.Component.Optimizer;
+using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Solver;
 using Tunny.Type;
@@ -53,7 +51,7 @@ namespace Tunny.Handler
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<Variable> variables = s_component.GhInOut.Variables;
-            List<IGH_Param> objectives = s_component.GhInOut.Objectives;
+            Objective objectives = s_component.GhInOut.Objectives;
             Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
             bool hasConstraint = s_component.GhInOut.HasConstraint;
 
@@ -76,11 +74,9 @@ namespace Tunny.Handler
             while (s_component.OptimizationWindow.GrasshopperStatus != OptimizationWindow.GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
-            TunnyObjective objective = s_component.GhInOut.GetObjectiveValues();
             return new TrialGrasshopperItems
             {
-                ObjectiveValues = objective.Numbers,
-                ObjectiveImages = objective.Images,
+                Objectives = s_component.GhInOut.Objectives,
                 GeometryJson = s_component.GhInOut.GetGeometryJson(),
                 Attribute = s_component.GhInOut.GetAttributes(),
                 Artifacts = s_component.GhInOut.Artifacts,

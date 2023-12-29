@@ -7,9 +7,9 @@ using System.Linq;
 using Grasshopper.GUI;
 
 using Tunny.Handler;
+using Tunny.Input;
 using Tunny.Settings;
 using Tunny.Storage;
-using Tunny.Type;
 
 namespace Tunny.UI
 {
@@ -116,7 +116,7 @@ namespace Tunny.UI
 
         private bool CheckObjectivesCount(GH_DocumentEditor ghCanvas)
         {
-            TunnyObjective value = _component.GhInOut.GetObjectiveValues();
+            Objective value = _component.GhInOut.Objectives;
             if (value.Length == 0)
             {
                 ghCanvas.EnableUI();

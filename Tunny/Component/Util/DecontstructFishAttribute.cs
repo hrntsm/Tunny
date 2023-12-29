@@ -57,7 +57,7 @@ namespace Tunny.Component.Util
             SetDataTreeToDataAccess(DA, nicknames, outputValues);
         }
 
-        private void SetOutputValues(ICollection<string> nicknames, IDictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
+        private void SetOutputValues(List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
         {
             //FIXME: This process should be done once, but foreach executes it every time.
             _keys = value.Keys.ToList();
@@ -92,7 +92,7 @@ namespace Tunny.Component.Util
             }
         }
 
-        private static IEnumerable<IGH_Goo> GetGooFromAttributeObject(object value)
+        private static List<IGH_Goo> GetGooFromAttributeObject(object value)
         {
             switch (value)
             {

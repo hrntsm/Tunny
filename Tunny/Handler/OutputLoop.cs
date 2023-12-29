@@ -55,7 +55,7 @@ namespace Tunny.Handler
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
-        private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
+        private static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
             fishes.Add(new Fish
             {
@@ -74,7 +74,7 @@ namespace Tunny.Handler
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
-            string[] nickNames = s_component.GhInOut.Objectives.Select(x => x.NickName).ToArray();
+            string[] nickNames = s_component.GhInOut.Objectives.Sources.Select(x => x.NickName).ToArray();
             var objectives = new Dictionary<string, double>();
             if (model.Objectives == null)
             {
