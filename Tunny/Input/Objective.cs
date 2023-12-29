@@ -21,6 +21,9 @@ namespace Tunny.Input
         public GeometryBase[] Geometries { get; private set; }
         public HumanInTheLoopType HumanInTheLoopType { get; private set; }
 
+        public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
+        public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
+
         public Objective(List<IGH_Param> sources)
         {
             var numbers = new List<double>();
@@ -28,6 +31,17 @@ namespace Tunny.Input
             var geometries = new List<GeometryBase>();
             Sources = sources;
 
+            SetParamsValue(sources, numbers, images, geometries);
+
+            Numbers = numbers.ToArray();
+            Images = images.ToArray();
+            Geometries = geometries.ToArray();
+
+            SetHumanInTheLoopType();
+        }
+
+        private static void SetParamsValue(List<IGH_Param> sources, List<double> numbers, List<Bitmap> images, List<GeometryBase> geometries)
+        {
             foreach (IGH_StructureEnumerator ghEnumerator in sources.Select(objective => objective.VolatileData.AllData(false)))
             {
                 foreach (IGH_Goo goo in ghEnumerator)
@@ -50,21 +64,23 @@ namespace Tunny.Input
                     }
                 }
             }
-
-            Numbers = numbers.ToArray();
-            Images = images.ToArray();
-            Geometries = geometries.ToArray();
         }
 
-        public Objective(double[] numbers, Bitmap[] images, GeometryBase[] geometries)
+        private void SetHumanInTheLoopType()
         {
-            Numbers = numbers;
-            Images = images;
-            Geometries = geometries;
+            switch (NoNumberLength)
+            {
+                case 0:
+                    HumanInTheLoopType = HumanInTheLoopType.None;
+                    break;
+                case 1:
+                    HumanInTheLoopType = HumanInTheLoopType.Preferential;
+                    break;
+                default:
+                    HumanInTheLoopType = HumanInTheLoopType.Slider;
+                    break;
+            }
         }
-
-        public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
-        public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
 
         public string[] GetNickNames()
         {
