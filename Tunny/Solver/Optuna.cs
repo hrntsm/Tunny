@@ -37,7 +37,6 @@ namespace Tunny.Solver
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
-            string[] objNickName = objectives.GetNickNames();
             TrialGrasshopperItems Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
@@ -45,7 +44,7 @@ namespace Tunny.Solver
 
             try
             {
-                var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.XOpt;
                 ShowEndMessages(optimize.EndState);

@@ -8,6 +8,7 @@ using Grasshopper.Kernel.Types;
 
 using Rhino.Geometry;
 
+using Tunny.Settings;
 using Tunny.Type;
 
 namespace Tunny.Input
@@ -18,7 +19,7 @@ namespace Tunny.Input
         public double[] Numbers { get; private set; }
         public Bitmap[] Images { get; private set; }
         public GeometryBase[] Geometries { get; private set; }
-        public bool IsHumanInTheLoop { get; private set; }
+        public HumanInTheLoopType HumanInTheLoopType { get; private set; }
 
         public Objective(List<IGH_Param> sources)
         {
@@ -62,8 +63,8 @@ namespace Tunny.Input
             Geometries = geometries;
         }
 
-        public int Length => Numbers.Length + Images.Length + Geometries.Length > 0 ? 1 : 0;
-        public int NoNumberLength => Images.Length + Geometries.Length > 0 ? 1 : 0;
+        public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
+        public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
 
         public string[] GetNickNames()
         {
