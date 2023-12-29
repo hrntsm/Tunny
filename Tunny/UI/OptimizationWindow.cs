@@ -127,9 +127,27 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
-            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
-            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
-            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
+            if (type != HumanInTheLoopType.None)
+            {
+                Text = "Tunny (Human in the Loop mode)";
+                samplerComboBox.SelectedIndex = 1; // GP
+                samplerComboBox.Enabled = false;
+                nTrialText.Text = "Number of batches";
+                nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;
+                timeoutNumUpDown.Value = 0;
+                timeoutNumUpDown.Enabled = false;
+            }
+            else
+            {
+                Text = "Tunny";
+                samplerComboBox.Enabled = true;
+                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                nTrialText.Text = "Number of trials";
+                nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+                timeoutNumUpDown.Enabled = true;
+                timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            }
 
             // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;
