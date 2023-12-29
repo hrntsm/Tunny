@@ -4,12 +4,14 @@ using System.Linq;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 
 using Python.Runtime;
 
 using Rhino.Geometry;
 
+using Tunny.Component.Params;
 using Tunny.Enum;
 using Tunny.Type;
 
@@ -70,17 +72,17 @@ namespace Tunny.Input
 
         private void SetHumanInTheLoopType()
         {
-            switch (NoNumberLength)
+            if (NoNumberLength == 0)
             {
-                case 0:
-                    HumanInTheLoopType = HumanInTheLoopType.None;
-                    break;
-                case 1:
-                    HumanInTheLoopType = HumanInTheLoopType.Preferential;
-                    break;
-                default:
-                    HumanInTheLoopType = HumanInTheLoopType.Slider;
-                    break;
+                HumanInTheLoopType = HumanInTheLoopType.None;
+            }
+            else if (NoNumberLength == 1 && Length == 1)
+            {
+                HumanInTheLoopType = HumanInTheLoopType.Preferential;
+            }
+            else
+            {
+                HumanInTheLoopType = HumanInTheLoopType.HumanSliderInput;
             }
         }
 
@@ -89,7 +91,17 @@ namespace Tunny.Input
             var nickNames = new List<string>();
             foreach (IGH_Param source in Sources)
             {
-                nickNames.Add(source.NickName);
+                switch (source)
+                {
+                    case Param_Number param:
+                        nickNames.Add(param.NickName);
+                        break;
+                    case Param_FishPrint param:
+                        nickNames.Add("Human-in-the-Loop " + param.NickName);
+                        break;
+                    default:
+                        break;
+                }
             }
             return nickNames.ToArray();
         }

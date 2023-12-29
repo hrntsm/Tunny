@@ -3,7 +3,7 @@ namespace Tunny.Enum
     public enum HumanInTheLoopType
     {
         None,
-        Slider,
+        HumanSliderInput,
         Preferential
     }
 }

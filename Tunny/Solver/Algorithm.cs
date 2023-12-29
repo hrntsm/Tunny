@@ -71,7 +71,7 @@ namespace Tunny.Solver
                     dynamic study;
                     switch (Objective.HumanInTheLoopType)
                     {
-                        case HumanInTheLoopType.Slider:
+                        case HumanInTheLoopType.HumanSliderInput:
                             HumanSliderInputOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
                             break;
                         case HumanInTheLoopType.Preferential:
@@ -128,7 +128,7 @@ namespace Tunny.Solver
             humanSliderInput.SetObjective(study, objNickName);
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;
-            RunPreferentialOptimize(optInfo, nBatch, out xTest, out result);
+            RunHumanSidlerInputOptimize(optInfo, nBatch, out xTest, out result);
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
@@ -259,6 +259,31 @@ namespace Tunny.Solver
                     break;
                 }
                 if (HumanInTheLoop.Preferential.GetRunningTrialNumber(optInfo.Study) >= nBatch)
+                {
+                    continue;
+                }
+                result = RunSingleOptimizeStep(optInfo, xTest, trialNum, startTime);
+                trialNum++;
+            }
+
+            SaveInMemoryStudy(optInfo.Storage);
+        }
+
+        private void RunHumanSidlerInputOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
+        {
+            xTest = new double[Variables.Count];
+            result = new TrialGrasshopperItems();
+            int trialNum = 0;
+            DateTime startTime = DateTime.Now;
+            EnqueueTrial(optInfo.Study, optInfo.EnqueueItems);
+
+            while (true)
+            {
+                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
+                {
+                    break;
+                }
+                if (HumanInTheLoop.HumanSliderInput.GetRunningTrialNumber(optInfo.Study) >= nBatch)
                 {
                     continue;
                 }
@@ -504,7 +529,7 @@ namespace Tunny.Solver
             if (result.Objectives.Length != 0 && optSet.HumanSliderInput != null)
             {
                 int imageCount = 0;
-                for (int i = 0; i < result.Objectives.Length + result.Objectives.Images.Length; i++)
+                for (int i = 0; i < result.Objectives.Length; i++)
                 {
                     if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
                     {
