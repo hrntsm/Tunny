@@ -9,7 +9,7 @@ namespace Tunny.Settings
         public string Version { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         public Optimize Optimize { get; set; } = new Optimize();
         public Result Result { get; set; } = new Result();
-        public string StudyName { get; set; } = "study1";
+        public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
 

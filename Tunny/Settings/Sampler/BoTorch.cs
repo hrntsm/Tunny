@@ -5,6 +5,7 @@ namespace Tunny.Settings.Sampler
     /// </summary>
     public class BoTorch
     {
+        public int? Seed { get; set; }
         public int NStartupTrials { get; set; } = 10;
     }
 }

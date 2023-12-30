@@ -5,13 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-
 using Python.Runtime;
 
-using Tunny.Component.Params;
+using Tunny.Enum;
 using Tunny.Handler;
+using Tunny.Input;
+using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Type;
 using Tunny.UI;
@@ -35,19 +34,24 @@ namespace Tunny.Solver
 
         public bool RunSolver(
             List<Variable> variables,
-            IEnumerable<IGH_Param> objectives,
+            Objective objectives,
             Dictionary<string, FishEgg> fishEggs,
-            Func<ProgressState, int, EvaluatedGHResult> evaluate)
+            Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
-            string[] objNickName = GetObjectiveNickName(objectives);
-            EvaluatedGHResult Eval(ProgressState pState, int progress)
+            TrialGrasshopperItems Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
             }
 
+            if (_settings.Storage.Type != StorageType.Sqlite && objectives.HumanInTheLoopType != HumanInTheLoopType.None)
+            {
+                TunnyMessageBox.Show("Human-in-the-Loop only supports SQlite storage.In the \"File\" tab, select \"Set file path\" and change the file type to sqlite storage", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             try
             {
-                var optimize = new Algorithm(variables, _hasConstraint, objNickName, fishEggs, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 XOpt = optimize.XOpt;
                 ShowEndMessages(optimize.EndState);
@@ -59,41 +63,6 @@ namespace Tunny.Solver
                 ShowErrorMessages(e);
                 return false;
             }
-        }
-
-        private string[] GetObjectiveNickName(IEnumerable<IGH_Param> objectives)
-        {
-            string[] objNickName = new string[objectives.Count()];
-            int hitlCount = 0;
-            foreach ((IGH_Param ghParam, int i) in objectives.Select((ghParam, i) => (ghParam, i)))
-            {
-                switch (ghParam)
-                {
-                    case Param_Number param:
-                        objNickName[i] = param.NickName;
-                        break;
-                    case Param_FishPrint param:
-                        objNickName[i] = "Human-in-the-Loop " + param.NickName;
-                        _settings.Optimize.IsHumanInTheLoop = true;
-                        hitlCount++;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (hitlCount == 0)
-            {
-                _settings.Optimize.IsHumanInTheLoop = false;
-            }
-            // FIXME: Fix JournalStorage when the usage of JournalStorage is understood.
-            else if (_settings.Storage.Type != StorageType.Sqlite)
-            {
-                string message = "Human-in-the-Loop is not available with the current storage type.\nPlease change the storage type to Sqlite.";
-                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new ArgumentException(message);
-            }
-
-            return objNickName;
         }
 
         private static void ShowEndMessages(EndState endState)
@@ -150,7 +119,7 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return modelResult.ToArray();
                 }
 
@@ -221,32 +190,13 @@ namespace Tunny.Solver
             for (int i = 0; i < bestTrials.Length; i++)
             {
                 dynamic trial = bestTrials[i];
-                bool isFeasible = CheckFeasible(trial);
                 if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
-                if (isFeasible)
-                {
-                    ParseTrial(modelResult, trial);
-                }
+                ParseTrial(modelResult, trial);
                 worker.ReportProgress(i * 100 / bestTrials.Length);
             }
-        }
-
-        private static bool CheckFeasible(dynamic trial)
-        {
-            string[] keys = (string[])trial.user_attrs.keys();
-            if (keys.Contains("Constraint"))
-            {
-                double[] constraint = (double[])trial.user_attrs["Constraint"];
-                if (constraint.Max() > 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)

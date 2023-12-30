@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.9.0] -2023-12-30
+
+### Added
+
+- The seed value can be specified in BayesianOptimization(GP).
+- Support optuna artifact feature.
+  - GeometryBase & FishPrint & file path are supported.
+- Allows Trial to FAIL.
+  - In contrast to the constraint, if the value of the objective function cannot be obtained properly due to divergence of the solution or other reasons, it can be reflected in the trial.
+  - It works by inputting a bool value in the Attributes with the key "IsFAIL".
+- Preferential optimization support.
+  - Human-in-the-loop optimization with PreferentialOptimization for single-objective images, and human-in-the-loop optimization with sliders for multi-objective images.
+
+### Changed
+
+- Tunny Python runtime environment location to [UserProfile]/.tunny_env
+- Moved settings file location to [UserProfile]/.tunny_env
+- Storage's default path to the desktop.
+  - Previously, it was in the same folder as the Tunny component .gha file.
+- Default StudyName set to empty.
+  - If you don't input a name in Tunny UI, study Name using GUID will be automatically inserted.
+
+### Fixed
+
+- The seed value of the sampler was not used.
+- Failure to launch Optuna-Dashboard from tab.
+
 ## [v0.8.2] -2023-09-04
 
 ### Changed

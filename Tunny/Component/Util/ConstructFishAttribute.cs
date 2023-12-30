@@ -59,7 +59,7 @@ namespace Tunny.Component.Util
             DA.SetData(0, dict);
         }
 
-        private void GetInputData(IGH_DataAccess DA, int paramCount, IDictionary<string, object> dict)
+        private void GetInputData(IGH_DataAccess DA, int paramCount, Dictionary<string, object> dict)
         {
             for (int i = 0; i < paramCount; i++)
             {

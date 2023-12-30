@@ -6,10 +6,10 @@ using System.Linq;
 
 using Grasshopper.GUI;
 
+using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Settings;
+using Tunny.Input;
 using Tunny.Storage;
-using Tunny.Type;
 
 namespace Tunny.UI
 {
@@ -116,14 +116,14 @@ namespace Tunny.UI
 
         private bool CheckObjectivesCount(GH_DocumentEditor ghCanvas)
         {
-            TunnyObjective value = _component.GhInOut.GetObjectiveValues();
-            if (value.Length == 0)
+            int length = _component.GhInOut.Objectives.Length;
+            if (length == 0)
             {
                 ghCanvas.EnableUI();
                 optimizeRunButton.Enabled = true;
                 return false;
             }
-            else if (value.Length > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
+            else if (length > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
             {
                 return CmaEsSupportOneObjectiveMessage(ghCanvas);
             }

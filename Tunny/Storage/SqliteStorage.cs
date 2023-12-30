@@ -6,6 +6,7 @@ using System.IO;
 
 using Python.Runtime;
 
+using Tunny.Enum;
 using Tunny.Util;
 
 namespace Tunny.Storage
@@ -35,7 +36,7 @@ namespace Tunny.Storage
                     while (reader.Read())
                     {
                         long studyId = (long)reader["study_id"];
-                        _ = Enum.TryParse((string)reader["state"], out TrialState trialState);
+                        _ = System.Enum.TryParse((string)reader["state"], out TrialState trialState);
 
                         SetTrialInfoFromStudySummaries(studySummaries, reader, studyId, trialState);
                     }

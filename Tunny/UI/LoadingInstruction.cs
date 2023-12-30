@@ -85,10 +85,8 @@ namespace Tunny.UI
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string componentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindObjectByName("Tunny", true, true).Location);
-
-            string pythonDirectory = PythonInstaller.GetEmbeddedPythonPath();
-            string dashboardPath = pythonDirectory + "/Scripts/optuna-dashboard.exe";
+            string pythonDirectory = Path.Combine(TunnyVariables.TunnyEnvPath, "python");
+            string dashboardPath = Path.Combine(pythonDirectory, "Scripts", "optuna-dashboard.exe");
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))
             {
@@ -99,13 +97,13 @@ namespace Tunny.UI
             }
             else
             {
-                RunOptunaDashboard(componentFolder, dashboardPath);
+                RunOptunaDashboard(dashboardPath);
             }
         }
 
-        private static void RunOptunaDashboard(string componentFolder, string dashboardPath)
+        private static void RunOptunaDashboard(string dashboardPath)
         {
-            string settingsPath = componentFolder + @"\Settings.json";
+            string settingsPath = TunnyVariables.OptimizeSettingsPath;
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
@@ -121,7 +119,14 @@ namespace Tunny.UI
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 storagePath = GetStorageArgument(ofd.FileName);
-                DashboardHandler.RunDashboardProcess(dashboardPath, storagePath);
+                string arguments = storagePath;
+                string backendPath = Path.GetDirectoryName(ofd.FileName) + "/artifacts";
+                if (Directory.Exists(backendPath))
+                {
+                    arguments += " --artifact-dir " + backendPath;
+                }
+
+                DashboardHandler.RunDashboardProcess(dashboardPath, arguments);
             }
         }
 

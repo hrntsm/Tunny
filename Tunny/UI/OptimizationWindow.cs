@@ -6,9 +6,10 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Solver;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -16,12 +17,6 @@ namespace Tunny.UI
     {
         private readonly FishingComponent _component;
         private TunnySettings _settings;
-        internal enum GrasshopperStates
-        {
-            RequestSent,
-            RequestProcessing,
-            RequestProcessed
-        }
         internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(FishingComponent component)
@@ -43,7 +38,7 @@ namespace Tunny.UI
 
         private void RunPythonInstaller()
         {
-            PythonInstaller.Path = _component.GhInOut.ComponentFolder;
+            PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
             if (_settings.CheckPythonLibraries)
             {
                 var installer = new PythonInstallDialog()
@@ -82,7 +77,7 @@ namespace Tunny.UI
 
         private void LoadSettingJson()
         {
-            string settingsPath = _component.GhInOut.ComponentFolder + @"\Settings.json";
+            string settingsPath = TunnyVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
                 _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
@@ -93,7 +88,7 @@ namespace Tunny.UI
                 {
                     Storage = new Settings.Storage
                     {
-                        Path = _component.GhInOut.ComponentFolder + @"\fish.log",
+                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
                         Type = StorageType.Journal
                     }
                 };
@@ -123,7 +118,7 @@ namespace Tunny.UI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
             GetUIValues();
-            _settings.Serialize(_component.GhInOut.ComponentFolder + @"\Settings.json");
+            _settings.Serialize(TunnyVariables.OptimizeSettingsPath);
 
             //TODO: use cancelAsync to stop the background worker safely
             optimizeBackgroundWorker?.Dispose();
@@ -132,9 +127,27 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
-            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
-            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
-            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
+            if (type != HumanInTheLoopType.None)
+            {
+                Text = "Tunny (Human in the Loop mode)";
+                samplerComboBox.SelectedIndex = 1; // GP
+                samplerComboBox.Enabled = false;
+                nTrialText.Text = "Number of batches";
+                nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;
+                timeoutNumUpDown.Value = 0;
+                timeoutNumUpDown.Enabled = false;
+            }
+            else
+            {
+                Text = "Tunny";
+                samplerComboBox.Enabled = true;
+                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                nTrialText.Text = "Number of trials";
+                nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+                timeoutNumUpDown.Enabled = true;
+                timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            }
 
             // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;
@@ -166,7 +179,7 @@ namespace Tunny.UI
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
-            _settings.Optimize.Sampler = GetSamplerSettings();
+            _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
         }
     }

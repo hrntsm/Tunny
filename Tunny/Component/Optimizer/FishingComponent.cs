@@ -40,9 +40,11 @@ namespace Tunny.Component.Optimizer
             pManager.AddGenericParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
             pManager.AddGenericParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
             pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Artifacts", "Artfs", "Connect artifacts here. Not required.", GH_ParamAccess.item);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
+            Params.Input[3].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -54,6 +56,7 @@ namespace Tunny.Component.Optimizer
         {
             CheckVariablesInput(Params.Input[0].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
+            CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
             DA.SetDataList(0, Fishes);
         }
@@ -86,6 +89,24 @@ namespace Tunny.Component.Optimizer
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid objective.");
+                        break;
+                }
+            }
+        }
+
+        private void CheckArtifactsInput(IEnumerable<Guid> inputGuids)
+        {
+            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
+            {
+                switch (docObject)
+                {
+                    case Param_Geometry geometry:
+                    case Param_FishPrint fPrint:
+                    case Param_String text:
+                    case Param_FilePath filePath:
+                        break;
+                    default:
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid artifact.");
                         break;
                 }
             }

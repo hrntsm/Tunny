@@ -1,13 +1,22 @@
 ﻿using System;
+using System.IO;
 
+using Python.Runtime;
+
+using Tunny.Enum;
 using Tunny.Storage;
 
 namespace Tunny.Settings
 {
     public class Storage
     {
-        public string Path { get; set; } = "/fish.log";
+        public string Path { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/fish.log";
         public StorageType Type { get; set; } = StorageType.Journal;
+
+        public string GetArtifactBackendPath()
+        {
+            return System.IO.Path.GetDirectoryName(Path) + "/artifacts";
+        }
 
         public string GetOptunaStoragePath()
         {
@@ -79,14 +88,34 @@ namespace Tunny.Settings
 
             return storage;
         }
-    }
 
-    public enum StorageType
-    {
-        InMemory,
-        Sqlite,
-        Postgres,
-        MySql,
-        Journal,
+        public dynamic CreateNewOptunaArtifactBackend(bool useInnerPythonEngine)
+        {
+            dynamic backend;
+
+            if (useInnerPythonEngine)
+            {
+                PythonEngine.Initialize();
+                using (Py.GIL())
+                {
+                    backend = CreateArtifactBackendProcess();
+                }
+                PythonEngine.Shutdown();
+            }
+            else
+            {
+                backend = CreateArtifactBackendProcess();
+            }
+
+            return backend;
+        }
+
+        private dynamic CreateArtifactBackendProcess()
+        {
+            dynamic optuna = Py.Import("optuna");
+            string backendPath = GetArtifactBackendPath();
+            Directory.CreateDirectory(backendPath);
+            return optuna.artifacts.FileSystemArtifactStore(base_path: backendPath);
+        }
     }
 }

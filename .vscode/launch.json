@@ -5,11 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Rhino8 WIP",
+      "name": "Run Rhino8",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "C:/Program Files/Rhino 8 WIP/System/Rhino.exe",
+      "program": "C:/Program Files/Rhino 8/System/Rhino.exe",
       "args": ["/nosplash"],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",

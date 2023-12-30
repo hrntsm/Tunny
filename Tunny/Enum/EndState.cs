@@ -1,4 +1,4 @@
-namespace Tunny.Solver
+namespace Tunny.Enum
 {
     public enum EndState
     {

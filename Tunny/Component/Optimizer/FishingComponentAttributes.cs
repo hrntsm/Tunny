@@ -66,14 +66,16 @@ namespace Tunny.Component.Optimizer
                         new Wire(3, Color.DarkBlue),
                         new Wire(3, Color.Green),
                         new Wire(3, Color.DarkMagenta),
+                        new Wire(3, Color.Crimson),
                     })
                     : (new[]
                     {
                         new Wire(2, Color.FromArgb(Convert.ToInt32("3300008B", 16))),
                         new Wire(2, Color.FromArgb(Convert.ToInt32("33008000", 16))),
                         new Wire(2, Color.FromArgb(Convert.ToInt32("338B008B", 16))),
+                        new Wire(2, Color.FromArgb(Convert.ToInt32("33DC143C", 16))),
                     });
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     DrawPath(canvas, graphics, Owner.Params.Input[i], wires[i]);
                 }
@@ -85,9 +87,10 @@ namespace Tunny.Component.Optimizer
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("9900008B", 16))),
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("99008000", 16))),
                     new SolidBrush(Color.FromArgb(Convert.ToInt32("998B008B", 16))),
+                    new SolidBrush(Color.FromArgb(Convert.ToInt32("99DC143C", 16))),
                 };
-                Pen[] edge = new[] { Pens.DarkBlue, Pens.Green, Pens.DarkMagenta };
-                for (int i = 0; i < 3; i++)
+                Pen[] edge = new[] { Pens.DarkBlue, Pens.Green, Pens.DarkMagenta, Pens.Crimson };
+                for (int i = 0; i < 4; i++)
                 {
                     foreach (Guid guid in Owner.Params.Input[i].Sources.Select(s => s.InstanceGuid))
                     {

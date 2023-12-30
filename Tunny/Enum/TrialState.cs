@@ -1,4 +1,4 @@
-namespace Tunny.Storage
+namespace Tunny.Enum
 {
     public enum TrialState
     {

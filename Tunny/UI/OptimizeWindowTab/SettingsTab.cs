@@ -1,7 +1,7 @@
 using System;
 
+using Tunny.Enum;
 using Tunny.Settings.Sampler;
-using Tunny.Solver;
 
 namespace Tunny.UI
 {
@@ -194,101 +194,88 @@ namespace Tunny.UI
             qmcWarnAsyncSeedingCheckBox.Checked = qmc.WarnAsynchronousSeeding;
         }
 
-        private SamplerSettings GetSamplerSettings()
+        private SamplerSettings GetSamplerSettings(SamplerSettings sampler)
         {
-            return new SamplerSettings
-            {
-                Tpe = GetTpeSettings(),
-                BoTorch = GetBoTorchSettings(),
-                NsgaII = GetNsga2Settings(),
-                NsgaIII = GetNsga3Settings(),
-                CmaEs = GetCmaEsSettings(),
-                QMC = GetQMCSettings()
-            };
+            sampler.Tpe = GetTpeSettings(sampler.Tpe);
+            sampler.BoTorch = GetBoTorchSettings(sampler.BoTorch);
+            sampler.NsgaII = GetNsga2Settings(sampler.NsgaII);
+            sampler.NsgaIII = GetNsga3Settings(sampler.NsgaIII);
+            sampler.CmaEs = GetCmaEsSettings(sampler.CmaEs);
+            sampler.QMC = GetQMCSettings(sampler.QMC);
+            return sampler;
         }
 
-        private Tpe GetTpeSettings()
+        private Tpe GetTpeSettings(Tpe tpe)
         {
-            return new Tpe
-            {
-                NStartupTrials = (int)tpeStartupNumUpDown.Value,
-                NEICandidates = (int)tpeEINumUpDown.Value,
-                PriorWeight = (double)tpePriorNumUpDown.Value,
-                ConsiderPrior = tpeConsiderPriorCheckBox.Checked,
-                Multivariate = tpeMultivariateCheckBox.Checked,
-                ConsiderEndpoints = tpeConsiderEndpointsCheckBox.Checked,
-                Group = tpeGroupCheckBox.Checked,
-                ConsiderMagicClip = tpeConsiderMagicClipCheckBox.Checked,
-                ConstantLiar = tpeConstantLiarCheckBox.Checked,
-                WarnIndependentSampling = tpeWarnIndependentSamplingCheckBox.Checked
-            };
+            tpe.NStartupTrials = (int)tpeStartupNumUpDown.Value;
+            tpe.NEICandidates = (int)tpeEINumUpDown.Value;
+            tpe.PriorWeight = (double)tpePriorNumUpDown.Value;
+            tpe.ConsiderPrior = tpeConsiderPriorCheckBox.Checked;
+            tpe.Multivariate = tpeMultivariateCheckBox.Checked;
+            tpe.ConsiderEndpoints = tpeConsiderEndpointsCheckBox.Checked;
+            tpe.Group = tpeGroupCheckBox.Checked;
+            tpe.ConsiderMagicClip = tpeConsiderMagicClipCheckBox.Checked;
+            tpe.ConstantLiar = tpeConstantLiarCheckBox.Checked;
+            tpe.WarnIndependentSampling = tpeWarnIndependentSamplingCheckBox.Checked;
+            return tpe;
         }
 
-        private BoTorch GetBoTorchSettings()
+        private BoTorch GetBoTorchSettings(BoTorch boTorch)
         {
-            return new BoTorch
-            {
-                NStartupTrials = (int)boTorchStartupNumUpDown.Value
-            };
+            boTorch.NStartupTrials = (int)boTorchStartupNumUpDown.Value;
+            return boTorch;
         }
 
-        private NSGAII GetNsga2Settings()
+        private NSGAII GetNsga2Settings(NSGAII nsgaII)
         {
-            return new NSGAII
-            {
-                MutationProb = nsga2MutationProbCheckBox.Checked
-                    ? (double?)nsga2MutationProbUpDown.Value : null,
-                CrossoverProb = (double)nsga2CrossoverProbUpDown.Value,
-                SwappingProb = (double)nsga2SwappingProbUpDown.Value,
-                PopulationSize = (int)nsga2PopulationSizeUpDown.Value,
-                Crossover = nsga2CrossoverCheckBox.Checked
-                    ? nsga2CrossoverComboBox.Text : string.Empty,
-            };
+            nsgaII.MutationProb = nsga2MutationProbCheckBox.Checked
+                ? (double?)nsga2MutationProbUpDown.Value : null;
+            nsgaII.CrossoverProb = (double)nsga2CrossoverProbUpDown.Value;
+            nsgaII.SwappingProb = (double)nsga2SwappingProbUpDown.Value;
+            nsgaII.PopulationSize = (int)nsga2PopulationSizeUpDown.Value;
+            nsgaII.Crossover = nsga2CrossoverCheckBox.Checked
+                ? nsga2CrossoverComboBox.Text : string.Empty;
+            return nsgaII;
         }
 
-        private NSGAIII GetNsga3Settings()
+        private NSGAIII GetNsga3Settings(NSGAIII nsgaIII)
         {
-            return new NSGAIII
-            {
-                MutationProb = nsga3MutationProbCheckBox.Checked
-                    ? (double?)nsga3MutationProbUpDown.Value : null,
-                CrossoverProb = (double)nsga3CrossoverProbUpDown.Value,
-                SwappingProb = (double)nsga3SwappingProbUpDown.Value,
-                PopulationSize = (int)nsga3PopulationSizeUpDown.Value,
-                Crossover = nsga3CrossoverCheckBox.Checked
-                    ? nsga3CrossoverComboBox.Text : string.Empty,
-            };
-        }
-        private CmaEs GetCmaEsSettings()
-        {
-            return new CmaEs
-            {
-                NStartupTrials = (int)cmaEsStartupNumUpDown.Value,
-                Sigma0 = cmaEsSigmaCheckBox.Checked
-                    ? (double?)cmaEsSigmaNumUpDown.Value : null,
-                WarnIndependentSampling = cmaEsWarnIndependentSamplingCheckBox.Checked,
-                ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked,
-                UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked,
-                RestartStrategy = cmaEsRestartCheckBox.Checked
-                    ? "ipop" : string.Empty,
-                IncPopsize = (int)cmaEsIncPopSizeUpDown.Value,
-                PopulationSize = cmaEsRestartCheckBox.Checked
-                    ? (int?)cmaEsPopulationSizeUpDown.Value : null,
-                UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked,
-                WarmStartStudyName = cmaEsWarmStartComboBox.Text,
-                WithMargin = cmaEsWithMarginCheckBox.Checked,
-            };
+            nsgaIII.MutationProb = nsga3MutationProbCheckBox.Checked
+                ? (double?)nsga3MutationProbUpDown.Value : null;
+            nsgaIII.CrossoverProb = (double)nsga3CrossoverProbUpDown.Value;
+            nsgaIII.SwappingProb = (double)nsga3SwappingProbUpDown.Value;
+            nsgaIII.PopulationSize = (int)nsga3PopulationSizeUpDown.Value;
+            nsgaIII.Crossover = nsga3CrossoverCheckBox.Checked
+                ? nsga3CrossoverComboBox.Text : string.Empty;
+            return nsgaIII;
         }
 
-        private QuasiMonteCarlo GetQMCSettings()
+        private CmaEs GetCmaEsSettings(CmaEs cmaEs)
         {
-            return new QuasiMonteCarlo
-            {
-                QmcType = qmcTypeComboBox.SelectedIndex == 0 ? "sobol" : "halton",
-                Scramble = qmcScrambleCheckBox.Checked,
-                WarnIndependentSampling = qmcWarnIndependentSamplingCheckBox.Checked,
-                WarnAsynchronousSeeding = qmcWarnAsyncSeedingCheckBox.Checked
-            };
+            cmaEs.NStartupTrials = (int)cmaEsStartupNumUpDown.Value;
+            cmaEs.Sigma0 = cmaEsSigmaCheckBox.Checked
+                ? (double?)cmaEsSigmaNumUpDown.Value : null;
+            cmaEs.WarnIndependentSampling = cmaEsWarnIndependentSamplingCheckBox.Checked;
+            cmaEs.ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked;
+            cmaEs.UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked;
+            cmaEs.RestartStrategy = cmaEsRestartCheckBox.Checked
+                ? "ipop" : string.Empty;
+            cmaEs.IncPopsize = (int)cmaEsIncPopSizeUpDown.Value;
+            cmaEs.PopulationSize = cmaEsRestartCheckBox.Checked
+                ? (int?)cmaEsPopulationSizeUpDown.Value : null;
+            cmaEs.UseWarmStart = cmaEsWarmStartCmaEsCheckBox.Checked;
+            cmaEs.WarmStartStudyName = cmaEsWarmStartComboBox.Text;
+            cmaEs.WithMargin = cmaEsWithMarginCheckBox.Checked;
+            return cmaEs;
+        }
+
+        private QuasiMonteCarlo GetQMCSettings(QuasiMonteCarlo qmc)
+        {
+            qmc.QmcType = qmcTypeComboBox.SelectedIndex == 0 ? "sobol" : "halton";
+            qmc.Scramble = qmcScrambleCheckBox.Checked;
+            qmc.WarnIndependentSampling = qmcWarnIndependentSamplingCheckBox.Checked;
+            qmc.WarnAsynchronousSeeding = qmcWarnAsyncSeedingCheckBox.Checked;
+            return qmc;
         }
 
         private void RunGarbageCollectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
