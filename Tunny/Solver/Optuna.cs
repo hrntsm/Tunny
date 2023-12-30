@@ -113,7 +113,7 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return modelResult.ToArray();
                 }
 
@@ -184,32 +184,13 @@ namespace Tunny.Solver
             for (int i = 0; i < bestTrials.Length; i++)
             {
                 dynamic trial = bestTrials[i];
-                bool isFeasible = CheckFeasible(trial);
                 if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
-                if (isFeasible)
-                {
-                    ParseTrial(modelResult, trial);
-                }
+                ParseTrial(modelResult, trial);
                 worker.ReportProgress(i * 100 / bestTrials.Length);
             }
-        }
-
-        private static bool CheckFeasible(dynamic trial)
-        {
-            string[] keys = (string[])trial.user_attrs.keys();
-            if (keys.Contains("Constraint"))
-            {
-                double[] constraint = (double[])trial.user_attrs["Constraint"];
-                if (constraint.Max() > 0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)

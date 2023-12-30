@@ -43,6 +43,10 @@ namespace Tunny.Handler
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+                if (s_component.GhInOut.HasConstraint)
+                {
+                    TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 foreach (ModelResult result in modelResult)
                 {
@@ -75,7 +79,7 @@ namespace Tunny.Handler
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
-            string[] nickNames = s_component.GhInOut.Objectives.Sources.Select(x => x.NickName).ToArray();
+            string[] nickNames = s_component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
             if (model.Objectives == null)
             {
