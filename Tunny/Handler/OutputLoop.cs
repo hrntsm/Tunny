@@ -7,6 +7,7 @@ using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Solver;
@@ -42,6 +43,10 @@ namespace Tunny.Handler
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+                if (s_component.GhInOut.HasConstraint)
+                {
+                    TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 
                 foreach (ModelResult result in modelResult)
                 {
@@ -55,7 +60,7 @@ namespace Tunny.Handler
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
-        private static void SetResultToFish(ICollection<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
+        private static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
             fishes.Add(new Fish
             {
@@ -74,7 +79,7 @@ namespace Tunny.Handler
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
-            string[] nickNames = s_component.GhInOut.Objectives.Select(x => x.NickName).ToArray();
+            string[] nickNames = s_component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
             if (model.Objectives == null)
             {

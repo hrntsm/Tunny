@@ -3,6 +3,7 @@ using System.IO;
 
 using Python.Runtime;
 
+using Tunny.Enum;
 using Tunny.Storage;
 
 namespace Tunny.Settings
@@ -116,14 +117,5 @@ namespace Tunny.Settings
             Directory.CreateDirectory(backendPath);
             return optuna.artifacts.FileSystemArtifactStore(base_path: backendPath);
         }
-    }
-
-    public enum StorageType
-    {
-        InMemory,
-        Sqlite,
-        Postgres,
-        MySql,
-        Journal,
     }
 }

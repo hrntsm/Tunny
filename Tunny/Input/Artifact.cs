@@ -7,7 +7,7 @@ using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
 
-namespace Tunny.PreProcess
+namespace Tunny.Input
 {
     public class Artifact
     {

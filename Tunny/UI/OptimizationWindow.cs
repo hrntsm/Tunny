@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using Grasshopper.GUI;
 
 using Tunny.Component.Optimizer;
+using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Util;
 
 namespace Tunny.UI
@@ -17,12 +17,6 @@ namespace Tunny.UI
     {
         private readonly FishingComponent _component;
         private TunnySettings _settings;
-        internal enum GrasshopperStates
-        {
-            RequestSent,
-            RequestProcessing,
-            RequestProcessed
-        }
         internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(FishingComponent component)
@@ -133,9 +127,27 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
-            samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
-            nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
-            timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
+            if (type != HumanInTheLoopType.None)
+            {
+                Text = "Tunny (Human in the Loop mode)";
+                samplerComboBox.SelectedIndex = 1; // GP
+                samplerComboBox.Enabled = false;
+                nTrialText.Text = "Number of batches";
+                nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;
+                timeoutNumUpDown.Value = 0;
+                timeoutNumUpDown.Enabled = false;
+            }
+            else
+            {
+                Text = "Tunny";
+                samplerComboBox.Enabled = true;
+                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                nTrialText.Text = "Number of trials";
+                nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
+                timeoutNumUpDown.Enabled = true;
+                timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
+            }
 
             // Study Name GroupBox
             studyNameTextBox.Text = _settings.StudyName;

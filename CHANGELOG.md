@@ -15,6 +15,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - GeometryBase & FishPrint & file path are supported.
 - Allows Trial to FAIL.
   - In contrast to the constraint, if the value of the objective function cannot be obtained properly due to divergence of the solution or other reasons, it can be reflected in the trial.
+  - It works by inputting a bool value in the Attributes with the key "IsFAIL".
+- Preferential optimization support.
+  - Human-in-the-loop optimization with PreferentialOptimization for single-objective images, and human-in-the-loop optimization with sliders for multi-objective images.
 
 ### Changed
 
@@ -23,7 +26,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Storage's default path to the desktop.
   - Previously, it was in the same folder as the Tunny component .gha file.
 - Default StudyName set to empty.
-  - If you don't input a name in Tunny UI, Optuna will automatically assign a StudyName.
+  - If you don't input a name in Tunny UI, study Name using GUID will be automatically inserted.
 
 ### Deprecated
 

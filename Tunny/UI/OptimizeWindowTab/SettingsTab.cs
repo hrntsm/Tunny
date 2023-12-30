@@ -1,7 +1,7 @@
 using System;
 
+using Tunny.Enum;
 using Tunny.Settings.Sampler;
-using Tunny.Solver;
 
 namespace Tunny.UI
 {

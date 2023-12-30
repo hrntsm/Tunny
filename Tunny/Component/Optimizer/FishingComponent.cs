@@ -85,6 +85,7 @@ namespace Tunny.Component.Optimizer
                 switch (docObject)
                 {
                     case Param_Number number:
+                    case Param_FishPrint fPrint:
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid objective.");

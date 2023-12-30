@@ -5,13 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Enum;
 using Tunny.Handler;
+using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.PreProcess;
 using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
@@ -26,19 +28,19 @@ namespace Tunny.Solver
 
         private List<Variable> Variables { get; }
         private bool HasConstraints { get; }
-        private string[] ObjNickName { get; }
+        private Objective Objective { get; }
         private TunnySettings Settings { get; }
         private Func<ProgressState, int, TrialGrasshopperItems> EvalFunc { get; }
         private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
-            List<Variable> variables, bool hasConstraint, string[] objNickName, Dictionary<string, FishEgg> fishEgg,
+            List<Variable> variables, bool hasConstraint, Objective objective, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
             Func<ProgressState, int, TrialGrasshopperItems> evalFunc)
         {
             Variables = variables;
             HasConstraints = hasConstraint;
-            ObjNickName = objNickName;
+            Objective = objective;
             FishEgg = fishEgg;
             Settings = settings;
             EvalFunc = evalFunc;
@@ -51,7 +53,7 @@ namespace Tunny.Solver
             int samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
-            string[] directions = SetDirectionValues(ObjNickName.Length);
+            string[] directions = SetDirectionValues(Objective.Length);
 
             PythonEngine.Initialize();
             IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
@@ -65,33 +67,70 @@ namespace Tunny.Solver
                 double[] xTest = null;
                 TrialGrasshopperItems result = null;
 
-                if (CheckExistStudyParameter(ObjNickName.Length, optuna, storage))
+                if (CheckExistStudyParameter(Objective.Length, optuna, storage))
                 {
-                    dynamic study = CreateStudy(directions, sampler, storage);
-                    var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, ObjNickName);
-                    SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), ObjNickName);
-                    if (Settings.Optimize.IsHumanInTheLoop)
+                    dynamic study;
+                    switch (Objective.HumanInTheLoopType)
                     {
-                        var humanInTheLoop = new HumanInTheLoop(Path.GetDirectoryName(Settings.Storage.Path));
-
-                        // FIXME: This step will fix optuna v3.2
-                        study = HumanInTheLoop.FixStudyCachedStorage(study);
-
-                        humanInTheLoop.WakeOptunaDashboard(Settings.Storage);
-                        humanInTheLoop.SetObjective(study, ObjNickName);
-                        humanInTheLoop.SetWidgets(study, ObjNickName);
-                        optInfo.HumanInTheLoop = humanInTheLoop;
-                        RunHumanInTheLoopOptimize(optInfo, 3, out xTest, out result);
+                        case HumanInTheLoopType.HumanSliderInput:
+                            HumanSliderInputOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
+                            break;
+                        case HumanInTheLoopType.Preferential:
+                            PreferentialOptimization(nTrials, storage, artifactBackend, out xTest, out result, out study);
+                            break;
+                        default:
+                            NormalOptimization(nTrials, timeout, directions, sampler, storage, artifactBackend, out xTest, out result, out study);
+                            break;
                     }
-                    else
-                    {
-                        RunOptimize(optInfo, out xTest, out result);
-                    }
-                    SetResultValues(ObjNickName.Length, study, xTest);
+                    SetResultValues(Objective.Length, study, xTest);
                 }
             }
             PythonEngine.EndAllowThreads(allowThreadsPtr);
             PythonEngine.Shutdown();
+        }
+
+        private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        {
+            if (Settings.Storage.Type != StorageType.Sqlite)
+            {
+                TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports SQlite storage. ", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException("Human-in-the-Loop Preferential only supports SQlite storage. ");
+            }
+            var preferentialOpt = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
+            if (Objective.Length > 1)
+            {
+                TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
+            }
+            string[] objNickName = Objective.GetNickNames();
+            study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
+            var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), false);
+            preferentialOpt.WakeOptunaDashboard(Settings.Storage);
+            optInfo.Preferential = preferentialOpt;
+            RunPreferentialOptimize(optInfo, nBatch, out xTest, out result);
+        }
+
+        private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        {
+            study = CreateStudy(directions, sampler, storage);
+            string[] objNickName = Objective.GetNickNames();
+            var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
+            RunOptimize(optInfo, out xTest, out result);
+        }
+
+        private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
+        {
+            study = CreateStudy(directions, sampler, storage);
+            string[] objNickName = Objective.GetNickNames();
+            var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
+            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
+            var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
+            humanSliderInput.WakeOptunaDashboard(Settings.Storage);
+            humanSliderInput.SetObjective(study, objNickName);
+            humanSliderInput.SetWidgets(study, objNickName);
+            optInfo.HumanSliderInput = humanSliderInput;
+            RunHumanSidlerInputOptimize(optInfo, nBatch, out xTest, out result);
         }
 
         private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
@@ -105,24 +144,15 @@ namespace Tunny.Solver
             return name;
         }
 
-        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
-        {
-            var name = new PyList();
-            foreach (string objName in nicknames)
-            {
-                name.Append(new PyString(objName));
-            }
-            return name;
-        }
-
         private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
         {
             dynamic optuna = Py.Import("optuna");
+            string studyName = Settings.StudyName == null || Settings.StudyName == "" ? "no-name-" + Guid.NewGuid().ToString("D") : Settings.StudyName;
             return optuna.create_study(
                 sampler: sampler,
                 directions: directions,
                 storage: storage,
-                study_name: Settings.StudyName,
+                study_name: studyName,
                 load_if_exists: Settings.Optimize.ContinueStudy
             );
         }
@@ -171,7 +201,7 @@ namespace Tunny.Solver
 
         private void SetResultValues(int nObjective, dynamic study, double[] xTest)
         {
-            if (nObjective == 1)
+            if (nObjective == 1 && Objective.HumanInTheLoopType != HumanInTheLoopType.Preferential)
             {
                 double[] values = (double[])study.best_params.values();
                 string[] keys = (string[])study.best_params.keys();
@@ -216,7 +246,7 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private void RunHumanInTheLoopOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
+        private void RunPreferentialOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
         {
             xTest = new double[Variables.Count];
             result = new TrialGrasshopperItems();
@@ -230,7 +260,32 @@ namespace Tunny.Solver
                 {
                     break;
                 }
-                if (HumanInTheLoop.GetRunningTrialNumber(optInfo.Study) >= nBatch)
+                if (HumanInTheLoop.Preferential.GetRunningTrialNumber(optInfo.Study) >= nBatch)
+                {
+                    continue;
+                }
+                result = RunSingleOptimizeStep(optInfo, xTest, trialNum, startTime);
+                trialNum++;
+            }
+
+            SaveInMemoryStudy(optInfo.Storage);
+        }
+
+        private void RunHumanSidlerInputOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] xTest, out TrialGrasshopperItems result)
+        {
+            xTest = new double[Variables.Count];
+            result = new TrialGrasshopperItems();
+            int trialNum = 0;
+            DateTime startTime = DateTime.Now;
+            EnqueueTrial(optInfo.Study, optInfo.EnqueueItems);
+
+            while (true)
+            {
+                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
+                {
+                    break;
+                }
+                if (HumanInTheLoop.HumanSliderInput.GetRunningTrialNumber(optInfo.Study) >= nBatch)
                 {
                     continue;
                 }
@@ -243,13 +298,21 @@ namespace Tunny.Solver
 
         private TrialGrasshopperItems RunSingleOptimizeStep(OptimizationHandlingInfo optInfo, double[] xTest, int trialNum, DateTime startTime)
         {
+            dynamic trial;
             int progress = trialNum * 100 / optInfo.NTrials;
-            dynamic trial = optInfo.Study.ask();
             var result = new TrialGrasshopperItems();
 
             int nullCount = 0;
             while (true)
             {
+                if (optInfo.Preferential != null && !optInfo.Study.should_generate() && !OptimizeLoop.IsForcedStopOptimize)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
+
+                trial = optInfo.Study.ask();
+
                 for (int j = 0; j < Variables.Count; j++)
                 {
                     xTest[j] = Variables[j].IsInteger
@@ -259,15 +322,21 @@ namespace Tunny.Solver
 
                 ProgressState pState = SetProgressState(optInfo, xTest, trialNum, startTime);
                 result = EvalFunc(pState, progress);
-                optInfo.HumanInTheLoop?.SaveNote(optInfo.Study, trial, result.ObjectiveImages);
+                if (optInfo.HumanSliderInput != null)
+                {
+                    optInfo.HumanSliderInput.SaveNote(optInfo.Study, trial, result.Objectives.Images);
+                }
+                else if (optInfo.Preferential != null && result.Objectives.Images.Length == 1)
+                {
+                    optInfo.Preferential.UploadArtifact(trial, result.Objectives.Images[0]);
+                }
 
                 if (nullCount >= 10)
                 {
                     return TenTimesNullResultErrorMessage();
                 }
-                else if (result.ObjectiveValues.Contains(double.NaN))
+                else if (result.Objectives.Numbers.Contains(double.NaN))
                 {
-                    trial = optInfo.Study.ask();
                     nullCount++;
                 }
                 else
@@ -283,15 +352,14 @@ namespace Tunny.Solver
                 {
                     UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
                 }
-
                 if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
                 {
                     dynamic optuna = Py.Import("optuna");
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
                 }
-                else if (optInfo.HumanInTheLoop == null)
+                else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
                 {
-                    optInfo.Study.tell(trial, result.ObjectiveValues.ToArray());
+                    optInfo.Study.tell(trial, result.Objectives.Numbers);
                 }
             }
             catch (Exception e)
@@ -365,7 +433,7 @@ namespace Tunny.Solver
             return new ProgressState
             {
                 TrialNumber = trialNum,
-                ObjectiveNum = ObjNickName.Length,
+                ObjectiveNum = Objective.Length,
                 BestValues = bestValues,
                 Values = xTest.Select(v => (decimal)v).ToList(),
                 HypervolumeRatio = hypervolumeRatio,
@@ -381,7 +449,7 @@ namespace Tunny.Solver
             {
                 dynamic[] bestTrials = study.best_trials;
                 bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
-                hypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || ObjNickName.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study);
+                hypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || Objective.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study);
             }
             else
             {
@@ -433,11 +501,14 @@ namespace Tunny.Solver
             gc.collect();
         }
 
-        private static void SetStudyUserAttr(dynamic study, StringBuilder variableName, string[] objectiveName)
+        private void SetStudyUserAttr(dynamic study, StringBuilder variableName, bool setMetricNames = true)
         {
             study.set_user_attr("variable_names", variableName.ToString());
-            study.set_metric_names(NicknameToPyList(objectiveName)); // new in Optuna 3.2
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
+            if (setMetricNames)
+            {
+                study.set_metric_names(Objective.GetPyListStyleNickname());
+            }
         }
 
         private static void SetTrialUserAttr(TrialGrasshopperItems result, dynamic trial, OptimizationHandlingInfo optSet)
@@ -457,15 +528,15 @@ namespace Tunny.Solver
                 SetNonGeometricAttr(result, trial);
             }
 
-            if (result.ObjectiveValues.Length != 0 && optSet.HumanInTheLoop != null)
+            if (result.Objectives.Length != 0 && optSet.HumanSliderInput != null)
             {
                 int imageCount = 0;
-                for (int i = 0; i < result.ObjectiveValues.Length + result.ObjectiveImages.Length; i++)
+                for (int i = 0; i < result.Objectives.Length; i++)
                 {
                     if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
                     {
                         var key = new PyString("result_" + optSet.ObjectiveNames[i]);
-                        var value = new PyFloat(result.ObjectiveValues[i - imageCount]);
+                        var value = new PyFloat(result.Objectives.Numbers[i - imageCount]);
                         trial.set_user_attr(key, value);
                     }
                     else
@@ -535,12 +606,5 @@ namespace Tunny.Solver
             }
             return sampler;
         }
-    }
-
-    public enum GcAfterTrial
-    {
-        Always,
-        HasGeometry,
-        NoExecute,
     }
 }

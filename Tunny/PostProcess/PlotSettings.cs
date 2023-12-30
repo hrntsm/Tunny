@@ -1,3 +1,5 @@
+using Tunny.Enum;
+
 namespace Tunny.PostProcess
 {
     public class PlotSettings
