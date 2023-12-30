@@ -91,6 +91,11 @@ namespace Tunny.Solver
 
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
+            if (Settings.Storage.Type != StorageType.Sqlite)
+            {
+                TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports SQlite storage. ", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException("Human-in-the-Loop Preferential only supports SQlite storage. ");
+            }
             var preferentialOpt = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
             if (Objective.Length > 1)
             {
@@ -116,7 +121,6 @@ namespace Tunny.Solver
 
         private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] xTest, out TrialGrasshopperItems result, out dynamic study)
         {
-            // TODO: nBatch should be set by user
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);

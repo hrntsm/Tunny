@@ -43,6 +43,12 @@ namespace Tunny.Solver
                 return evaluate(pState, progress);
             }
 
+            if (_settings.Storage.Type != StorageType.Sqlite && objectives.HumanInTheLoopType != HumanInTheLoopType.None)
+            {
+                TunnyMessageBox.Show("Human-in-the-Loop only supports SQlite storage.In the \"File\" tab, select \"Set file path\" and change the file type to sqlite storage", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             try
             {
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
