@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 
 using Newtonsoft.Json;
@@ -16,7 +17,12 @@ namespace Tunny.Settings
         public void Serialize(string path)
         {
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
-            System.IO.File.WriteAllText(path, json);
+            string dirPath = Path.GetDirectoryName(path);
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            File.WriteAllText(path, json);
         }
 
         public static TunnySettings Deserialize(string json)
