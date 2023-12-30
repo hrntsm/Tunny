@@ -328,7 +328,7 @@ namespace Tunny.Solver
                 }
                 else if (optInfo.Preferential != null && result.Objectives.Images.Length == 1)
                 {
-                    optInfo.Preferential.UploadArtifact(optInfo.Study, trial, result.Objectives.Images[0]);
+                    optInfo.Preferential.UploadArtifact(trial, result.Objectives.Images[0]);
                 }
 
                 if (nullCount >= 10)
