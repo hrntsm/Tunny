@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -yyyy-mm-dd
+## [v0.9.0] -2023-12-30
 
 ### Added
 
@@ -28,22 +28,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Default StudyName set to empty.
   - If you don't input a name in Tunny UI, study Name using GUID will be automatically inserted.
 
-### Deprecated
-
-for soon-to-be removed features.
-
-### Removed
-
-for now removed features.
-
 ### Fixed
 
 - The seed value of the sampler was not used.
 - Failure to launch Optuna-Dashboard from tab.
-
-### Security
-
-in case of vulnerabilities.
 
 ## [v0.8.2] -2023-09-04
 
