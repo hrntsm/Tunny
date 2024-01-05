@@ -1,4 +1,4 @@
-namespace Tunny.Enum
+namespace Tunny.Optuna.Trial
 {
     public enum TrialState
     {

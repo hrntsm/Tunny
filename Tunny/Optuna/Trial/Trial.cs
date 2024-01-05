@@ -1,8 +1,6 @@
 using System;
 
-using Tunny.Enum;
-
-namespace Tunny.Storage
+namespace Tunny.Optuna.Trial
 {
     public class Trial
     {

@@ -6,7 +6,7 @@ using System.IO;
 
 using Python.Runtime;
 
-using Tunny.Enum;
+using Tunny.Optuna.Trial;
 using Tunny.Util;
 
 namespace Tunny.Storage

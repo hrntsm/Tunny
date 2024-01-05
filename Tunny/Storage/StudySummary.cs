@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using Tunny.Optuna.Trial;
+
 namespace Tunny.Storage
 {
     public class StudySummary
