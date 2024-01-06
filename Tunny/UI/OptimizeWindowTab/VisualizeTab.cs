@@ -4,9 +4,9 @@ using System.Linq;
 
 using Tunny.Enum;
 using Tunny.Handler;
+using Tunny.Optuna.Study;
 using Tunny.PostProcess;
 using Tunny.Solver;
-using Tunny.Storage;
 
 namespace Tunny.UI
 {
@@ -40,10 +40,10 @@ namespace Tunny.UI
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.SystemAttributes["study:metric_names"].ToArray());
+                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.SystemAttrs["study:metric_names"].ToArray());
 
                 visualizeObjectiveListBox.Items.Clear();
-                visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
+                visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttrs["variable_names"].ToArray());
             }
         }
 

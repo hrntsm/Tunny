@@ -6,6 +6,7 @@ using System.IO;
 
 using Python.Runtime;
 
+using Tunny.Optuna.Study;
 using Tunny.Optuna.Trial;
 using Tunny.Util;
 
@@ -26,41 +27,6 @@ namespace Tunny.Storage
             return hasStudiesTable > 0;
         }
 
-        private static void GetTrials(List<StudySummary> studySummaries, SQLiteConnection connection)
-        {
-            using (var command = new SQLiteCommand(connection))
-            {
-                command.CommandText = "SELECT * FROM trials";
-                using (SQLiteDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        long studyId = (long)reader["study_id"];
-                        _ = System.Enum.TryParse((string)reader["state"], out TrialState trialState);
-
-                        SetTrialInfoFromStudySummaries(studySummaries, reader, studyId, trialState);
-                    }
-                }
-            }
-
-            foreach (StudySummary summary in studySummaries)
-            {
-                summary.NTrials = summary.Trials.Count;
-            }
-        }
-
-        private static void SetTrialInfoFromStudySummaries(List<StudySummary> studySummaries, SQLiteDataReader reader, long studyId, TrialState trialState)
-        {
-            studySummaries.Find(x => x.StudyId == studyId).Trials.Add(new Trial
-            {
-                TrialId = (int)(long)reader["trial_id"],
-                Number = (int)(long)reader["number"],
-                State = trialState,
-                DatetimeStart = (DateTime)reader["datetime_start"],
-                DatetimeComplete = (DateTime)reader["datetime_complete"],
-            });
-        }
-
         private static void GetStudyAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)
         {
             using (var command = new SQLiteCommand(connection))
@@ -77,7 +43,7 @@ namespace Tunny.Storage
                         {
                             string valueJson = (string)reader["value_json"];
                             string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');
-                            studySummaries.Find(x => x.StudyId == studyId).UserAttributes.Add(key, values);
+                            studySummaries.Find(x => x.StudyId == studyId).UserAttrs.Add(key, values);
                         }
                     }
                 }
@@ -96,7 +62,7 @@ namespace Tunny.Storage
                         {
                             string valueJson = (string)reader["value_json"];
                             string[] values = valueJson.Replace("\"", "").Replace("[", "").Replace("]", "").Replace(" ", "").Split(',');
-                            studySummaries.Find(x => x.StudyId == studyId).SystemAttributes.Add(key, values);
+                            studySummaries.Find(x => x.StudyId == studyId).SystemAttrs.Add(key, values);
                         }
                     }
                 }
@@ -115,13 +81,16 @@ namespace Tunny.Storage
                         long studyId = (long)studyReader["study_id"];
                         string studyName = (string)studyReader["study_name"];
 
-                        studySummaries.Add(new StudySummary
-                        {
-                            StudyId = (int)studyId,
-                            StudyName = studyName,
-                            SystemAttributes = new Dictionary<string, string[]>(),
-                            UserAttributes = new Dictionary<string, string[]>()
-                        });
+                        var summary = new StudySummary(studyName,
+                                                       StudyDirection.NotSet,
+                                                       new Trial(),
+                                                       new Dictionary<string, string[]>(),
+                                                       new Dictionary<string, string[]>(),
+                                                       100,
+                                                       DateTime.Now,
+                                                       (int)studyId);
+
+                        studySummaries.Add(summary);
                     }
                 }
             }
