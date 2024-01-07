@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using Python.Runtime;
 
-using Tunny.Optuna.Storage;
+using Tunny.Optuna.Storage.Journal;
 using Tunny.Optuna.Study;
 using Tunny.Optuna.Trial;
 using Tunny.Util;

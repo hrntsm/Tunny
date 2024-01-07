@@ -1,4 +1,4 @@
-namespace Tunny.Optuna.Storage
+namespace Tunny.Optuna.Storage.Journal
 {
     public enum JournalOperation
     {
