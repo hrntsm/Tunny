@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Newtonsoft.Json.Linq;
 
@@ -11,6 +12,12 @@ namespace Optuna.Storage.Journal
 {
     public class JournalStorage : BaseStorage
     {
+        private readonly List<Study.Study> _studies = new List<Study.Study>();
+        private int nextStudyId = 0;
+        private readonly Dictionary<int, List<int>> _studyIdToTrialIds = new Dictionary<int, List<int>>();
+        private readonly Dictionary<int, List<int>> _trialIdToStudyId = new Dictionary<int, List<int>>();
+        private int _trialId = 0;
+
         public JournalStorage(string path)
         {
             if (File.Exists(path) == false)
@@ -37,23 +44,64 @@ namespace Optuna.Storage.Journal
                     continue;
                 }
 
-                var jObject = JObject.Parse(log);
-                var opCode = (JournalOperation)Enum.ToObject(typeof(JournalOperation), (int)jObject["op_code"]);
+                var logObject = JObject.Parse(log);
+                var opCode = (JournalOperation)Enum.ToObject(typeof(JournalOperation), (int)logObject["op_code"]);
                 switch (opCode)
                 {
                     case JournalOperation.CreateStudy:
+                        StudyDirection[] studyDirections = logObject["directions"].ToObject<StudyDirection[]>();
+                        string studyName = logObject["study_name"].ToString();
+                        CreateNewStudy(studyDirections, studyName);
                         break;
                     case JournalOperation.DeleteStudy:
                         break;
                     case JournalOperation.SetStudyUserAttr:
+                        {
+                            int studyId = (int)logObject["study_id"];
+                            var userAttr = (JObject)logObject["user_attr"];
+                            foreach (KeyValuePair<string, JToken> item in userAttr)
+                            {
+                                var values = item.Value.Select(v => v.ToString()).ToList();
+                                SetStudyUserAttr(studyId, item.Key, values);
+                            }
+                        }
                         break;
                     case JournalOperation.SetStudySystemAttr:
+                        {
+                            int studyId = (int)logObject["study_id"];
+                            var systemAttr = (JObject)logObject["system_attr"];
+                            foreach (KeyValuePair<string, JToken> item in systemAttr)
+                            {
+                                var values = item.Value.Select(v => v.ToString()).ToList();
+                                SetStudySystemAttr((int)logObject["study_id"], item.Key, values);
+                            }
+                        }
                         break;
                     case JournalOperation.CreateTrial:
+                        {
+                            int studyId = (int)logObject["study_id"];
+                            var trial = new Trial.Trial
+                            {
+                                DatetimeStart = (DateTime)logObject["datetime_start"]
+                            };
+                            CreateNewTrial(studyId, trial);
+                        }
                         break;
                     case JournalOperation.SetTrialParam:
+                        {
+                            int trialId = (int)logObject["trial_id"];
+                            string paramName = (string)logObject["param_name"];
+                            double paramValueInternal = (double)logObject["param_value_internal"];
+                            SetTrailParam(trialId, paramName, paramValueInternal, null);
+                        }
                         break;
                     case JournalOperation.SetTrialStateValues:
+                        {
+                            int trialId = (int)logObject["trial_id"];
+                            double[] trialValues = logObject["values"].Select(v => v.ToObject<double>()).ToArray();
+                            var trialState = (TrialState)Enum.ToObject(typeof(TrialState), (int)logObject["state"]);
+                            SetTrialStateValue(trialId, trialState, trialValues);
+                        }
                         break;
                     case JournalOperation.SetTrialIntermediateValue:
                         break;
@@ -70,14 +118,18 @@ namespace Optuna.Storage.Journal
             throw new System.NotImplementedException();
         }
 
-        public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
+        public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName = "")
         {
-            throw new System.NotImplementedException();
+            _studies.Add(new Study.Study(nextStudyId, studyName, studyDirections));
+            return nextStudyId++;
         }
 
         public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
         {
-            throw new System.NotImplementedException();
+            Trial.Trial trial = templateTrial != null ? templateTrial : new Trial.Trial();
+            trial.TrialId = _trialId++;
+            _studies[studyId].Trials.Add(trial);
+            return _trialId;
         }
 
         public override void DeleteStudy(int studyId)
@@ -172,17 +224,19 @@ namespace Optuna.Storage.Journal
 
         public override void SetStudySystemAttr(int studyId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            _studies[studyId].SystemAttrs[key] = value;
         }
 
         public override void SetStudyUserAttr(int studyId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            _studies[studyId].UserAttrs[key] = value;
         }
 
         public override void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
         {
-            throw new System.NotImplementedException();
+            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
+                            .Trials.First(t => t.TrialId == trialId);
+            trial.Params[paramName] = paramValueInternal;
         }
 
         public override void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
@@ -192,7 +246,11 @@ namespace Optuna.Storage.Journal
 
         public override bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
         {
-            throw new System.NotImplementedException();
+            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
+                            .Trials.First(t => t.TrialId == trialId);
+            trial.State = state;
+            trial.Values = values;
+            return true;
         }
 
         public override void SetTrialSystemAttr(int trialId, string key, object value)
