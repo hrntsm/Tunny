@@ -115,7 +115,7 @@ namespace Optuna.Storage.Journal
 
         public override void CheckTrialIsUpdatable(int trialId, TrialState trialState)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName = "")
@@ -134,92 +134,94 @@ namespace Optuna.Storage.Journal
 
         public override void DeleteStudy(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Study.Study[] GetAllStudies()
         {
-            throw new System.NotImplementedException();
+            return _studies.ToArray();
         }
 
         public override Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Trial.Trial GetBestTrial(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override int GetNTrials(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override StudyDirection[] GetStudyDirections(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override int GetStudyIdFromName(string studyName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override string GetStudyNameFromId(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Dictionary<string, object> GetStudySystemAttrs(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Dictionary<string, object> GetStudyUserAttrs(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Trial.Trial GetTrial(int trialId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override int GetTrialNumberFromId(int trialId)
         {
-            throw new System.NotImplementedException();
+            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
+                            .Trials.First(t => t.TrialId == trialId);
+            return trial.Number;
         }
 
         public override double GetTrialParam(int trialId, string paramName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Dictionary<string, object> GetTrialParams(int trialId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Dictionary<string, object> GetTrialSystemAttrs(int trialId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override Dictionary<string, object> GetTrialUserAttrs(int trialId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void RemoveSession()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void SetStudySystemAttr(int studyId, string key, object value)
@@ -241,7 +243,7 @@ namespace Optuna.Storage.Journal
 
         public override void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
@@ -255,12 +257,12 @@ namespace Optuna.Storage.Journal
 
         public override void SetTrialSystemAttr(int trialId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void SetTrialUserAttr(int trialId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
