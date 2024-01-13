@@ -4,10 +4,11 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 
+using Optuna.Study;
+using Optuna.Trial;
+
 using Python.Runtime;
 
-using Tunny.Optuna.Study;
-using Tunny.Optuna.Trial;
 using Tunny.Util;
 
 namespace Tunny.Storage
@@ -84,8 +85,8 @@ namespace Tunny.Storage
                         var summary = new StudySummary(studyName,
                                                        StudyDirection.NotSet,
                                                        new Trial(),
-                                                       new Dictionary<string, string[]>(),
-                                                       new Dictionary<string, string[]>(),
+                                                       new Dictionary<string, object>(),
+                                                       new Dictionary<string, object>(),
                                                        100,
                                                        DateTime.Now,
                                                        (int)studyId);

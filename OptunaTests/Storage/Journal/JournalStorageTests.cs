@@ -36,11 +36,11 @@ namespace Optuna.Storage.Journal.Tests
             Assert.AreEqual(8, best3ObjsTrials.Length);
 
             // check study system attributes
-            var metricName = studies[0].SystemAttrs["study:metric_names"] as List<string>;
+            string[] metricName = studies[0].SystemAttrs["study:metric_names"] as string[];
             Assert.AreEqual("v0", metricName[0]);
 
             //check study user attributes
-            var tunnyVersion = studies[0].UserAttrs["tunny_version"] as List<string>;
+            string[] tunnyVersion = studies[0].UserAttrs["tunny_version"] as string[];
             Assert.AreEqual("0.9.1", tunnyVersion[0]);
 
             // check trials
@@ -53,6 +53,10 @@ namespace Optuna.Storage.Journal.Tests
             Assert.AreEqual(1780, trial0.Values[0]);
             Assert.AreEqual(Trial.TrialState.COMPLETE, trial0.State);
             Assert.AreEqual(-11d, trial0.Params["x"]);
+            string[] trialSystemAttr = trial0.SystemAttrs["constraints"] as string[];
+            Assert.AreEqual("-780", trialSystemAttr[0]);
+            string[] trialUserAttr = trial0.UserAttrs["Constraint"] as string[];
+            Assert.AreEqual("75", trialUserAttr[1]);
         }
     }
 }

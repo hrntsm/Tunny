@@ -1,4 +1,4 @@
-using Tunny.Optuna.Study;
+using Optuna.Study;
 
 namespace Tunny.Storage
 {
