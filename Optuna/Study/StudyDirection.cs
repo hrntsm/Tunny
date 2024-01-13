@@ -4,6 +4,6 @@ namespace Optuna.Study
     {
         NotSet,
         Minimize,
-        Maximize
+        Maximize,
     }
 }

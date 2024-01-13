@@ -13,9 +13,7 @@ namespace Optuna.Storage.Journal
     public class JournalStorage : BaseStorage
     {
         private readonly List<Study.Study> _studies = new List<Study.Study>();
-        private int nextStudyId = 0;
-        private readonly Dictionary<int, List<int>> _studyIdToTrialIds = new Dictionary<int, List<int>>();
-        private readonly Dictionary<int, List<int>> _trialIdToStudyId = new Dictionary<int, List<int>>();
+        private int _nextStudyId = 0;
         private int _trialId = 0;
 
         public JournalStorage(string path)
@@ -62,6 +60,10 @@ namespace Optuna.Storage.Journal
                             foreach (KeyValuePair<string, JToken> item in userAttr)
                             {
                                 var values = item.Value.Select(v => v.ToString()).ToList();
+                                if (values == null || values.Count == 0)
+                                {
+                                    values = new List<string> { item.Value.ToString() };
+                                }
                                 SetStudyUserAttr(studyId, item.Key, values);
                             }
                         }
@@ -73,7 +75,11 @@ namespace Optuna.Storage.Journal
                             foreach (KeyValuePair<string, JToken> item in systemAttr)
                             {
                                 var values = item.Value.Select(v => v.ToString()).ToList();
-                                SetStudySystemAttr((int)logObject["study_id"], item.Key, values);
+                                if (values == null || values.Count == 0)
+                                {
+                                    values = new List<string> { item.Value.ToString() };
+                                }
+                                SetStudySystemAttr(studyId, item.Key, values);
                             }
                         }
                         break;
@@ -106,8 +112,34 @@ namespace Optuna.Storage.Journal
                     case JournalOperation.SetTrialIntermediateValue:
                         break;
                     case JournalOperation.SetTrialUserAttr:
+                        {
+                            int trialId = (int)logObject["trial_id"];
+                            var userAttr = (JObject)logObject["user_attr"];
+                            foreach (KeyValuePair<string, JToken> item in userAttr)
+                            {
+                                var values = item.Value.Select(v => v.ToString()).ToList();
+                                if (values == null || values.Count == 0)
+                                {
+                                    values = new List<string> { item.Value.ToString() };
+                                }
+                                SetTrialUserAttr(trialId, item.Key, values);
+                            }
+                        }
                         break;
                     case JournalOperation.SetTrialSystemAttr:
+                        {
+                            int trialId = (int)logObject["trial_id"];
+                            var systemAttr = (JObject)logObject["system_attr"];
+                            foreach (KeyValuePair<string, JToken> item in systemAttr)
+                            {
+                                var values = item.Value.Select(v => v.ToString()).ToList();
+                                if (values == null || values.Count == 0)
+                                {
+                                    values = new List<string> { item.Value.ToString() };
+                                }
+                                SetTrialSystemAttr(trialId, item.Key, values);
+                            }
+                        }
                         break;
                 }
             }
@@ -120,14 +152,15 @@ namespace Optuna.Storage.Journal
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName = "")
         {
-            _studies.Add(new Study.Study(nextStudyId, studyName, studyDirections));
-            return nextStudyId++;
+            _studies.Add(new Study.Study(this, _nextStudyId, studyName, studyDirections));
+            return _nextStudyId++;
         }
 
         public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
         {
             Trial.Trial trial = templateTrial != null ? templateTrial : new Trial.Trial();
             trial.TrialId = _trialId++;
+            trial.Number = _studies[studyId].Trials.Count;
             _studies[studyId].Trials.Add(trial);
             return _trialId;
         }
@@ -144,79 +177,98 @@ namespace Optuna.Storage.Journal
 
         public override Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].Trials.ToArray();
         }
 
         public override Trial.Trial GetBestTrial(int studyId)
         {
-            throw new NotImplementedException();
+            List<Trial.Trial> allTrials = _studies[studyId].Trials.FindAll(trial => trial.State == TrialState.COMPLETE);
+
+            if (allTrials.Count == 0)
+            {
+                throw new InvalidOperationException("No trials are completed yet.");
+            }
+
+            StudyDirection[] directions = GetStudyDirections(studyId);
+            if (directions.Length != 1)
+            {
+                throw new InvalidOperationException("Study is multi-objective.");
+            }
+
+            if (directions[0] == StudyDirection.Maximize)
+            {
+                return allTrials.OrderByDescending(trial => trial.Values[0]).First();
+            }
+            else
+            {
+                return allTrials.OrderBy(trial => trial.Values[0]).First();
+            }
         }
 
         public override int GetNTrials(int studyId)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].Trials.Count;
         }
 
         public override StudyDirection[] GetStudyDirections(int studyId)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].Directions;
         }
 
         public override int GetStudyIdFromName(string studyName)
         {
-            throw new NotImplementedException();
+            return _studies.First(s => s.StudyName == studyName).StudyId;
         }
 
         public override string GetStudyNameFromId(int studyId)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].StudyName;
         }
 
         public override Dictionary<string, object> GetStudySystemAttrs(int studyId)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].SystemAttrs;
         }
 
         public override Dictionary<string, object> GetStudyUserAttrs(int studyId)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].UserAttrs;
         }
 
         public override Trial.Trial GetTrial(int trialId)
         {
-            throw new NotImplementedException();
+            return _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
+                            .Trials.First(t => t.TrialId == trialId);
         }
 
         public override int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
-            throw new NotImplementedException();
+            return _studies[studyId].Trials.Find(t => t.Number == trialNumber).TrialId;
         }
 
         public override int GetTrialNumberFromId(int trialId)
         {
-            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
-                            .Trials.First(t => t.TrialId == trialId);
-            return trial.Number;
+            return GetTrial(trialId).Number;
         }
 
         public override double GetTrialParam(int trialId, string paramName)
         {
-            throw new NotImplementedException();
+            return (double)GetTrial(trialId).Params[paramName];
         }
 
         public override Dictionary<string, object> GetTrialParams(int trialId)
         {
-            throw new NotImplementedException();
+            return GetTrial(trialId).Params.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         public override Dictionary<string, object> GetTrialSystemAttrs(int trialId)
         {
-            throw new NotImplementedException();
+            return GetTrial(trialId).SystemAttrs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         public override Dictionary<string, object> GetTrialUserAttrs(int trialId)
         {
-            throw new NotImplementedException();
+            return GetTrial(trialId).UserAttrs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         public override void RemoveSession()
@@ -236,9 +288,7 @@ namespace Optuna.Storage.Journal
 
         public override void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
         {
-            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
-                            .Trials.First(t => t.TrialId == trialId);
-            trial.Params[paramName] = paramValueInternal;
+            GetTrial(trialId).Params[paramName] = paramValueInternal;
         }
 
         public override void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
@@ -248,8 +298,7 @@ namespace Optuna.Storage.Journal
 
         public override bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
         {
-            Trial.Trial trial = _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
-                            .Trials.First(t => t.TrialId == trialId);
+            Trial.Trial trial = GetTrial(trialId);
             trial.State = state;
             trial.Values = values;
             return true;
@@ -257,12 +306,12 @@ namespace Optuna.Storage.Journal
 
         public override void SetTrialSystemAttr(int trialId, string key, object value)
         {
-            throw new NotImplementedException();
+            GetTrial(trialId).SystemAttrs[key] = value;
         }
 
         public override void SetTrialUserAttr(int trialId, string key, object value)
         {
-            throw new NotImplementedException();
+            GetTrial(trialId).UserAttrs[key] = value;
         }
     }
 }
