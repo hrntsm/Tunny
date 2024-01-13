@@ -10,7 +10,7 @@ namespace Optuna.Storage.Journal.Tests
         [TestMethod()]
         public void JournalStorageTest()
         {
-            var storage = new JournalStorage(@"TestFile\journal.log");
+            var storage = new JournalStorage(@"TestFile/journal.log");
 
             // check studies
             Study.Study[] studies = storage.GetAllStudies();
