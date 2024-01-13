@@ -104,7 +104,7 @@ namespace Tunny.Solver
             string[] objNickName = Objective.GetNickNames();
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)), false);
+            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)), false);
             preferentialOpt.WakeOptunaDashboard(Settings.Storage);
             optInfo.Preferential = preferentialOpt;
             RunPreferentialOptimize(optInfo, nBatch, out xTest, out result);
@@ -115,7 +115,7 @@ namespace Tunny.Solver
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
             RunOptimize(optInfo, out xTest, out result);
         }
 
@@ -124,7 +124,7 @@ namespace Tunny.Solver
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToAttr(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
             var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
             humanSliderInput.WakeOptunaDashboard(Settings.Storage);
             humanSliderInput.SetObjective(study, objNickName);
@@ -133,14 +133,13 @@ namespace Tunny.Solver
             RunHumanSidlerInputOptimize(optInfo, nBatch, out xTest, out result);
         }
 
-        private static StringBuilder NicknameToAttr(IEnumerable<string> nicknames)
+        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
         {
-            var name = new StringBuilder();
-            foreach (string objName in nicknames)
+            var name = new PyList();
+            foreach (string nickname in nicknames)
             {
-                name.Append(objName + ",");
+                name.Append(new PyString(nickname));
             }
-            name.Remove(name.Length - 1, 1);
             return name;
         }
 
@@ -501,9 +500,9 @@ namespace Tunny.Solver
             gc.collect();
         }
 
-        private void SetStudyUserAttr(dynamic study, StringBuilder variableName, bool setMetricNames = true)
+        private void SetStudyUserAttr(dynamic study, PyList variableName, bool setMetricNames = true)
         {
-            study.set_user_attr("variable_names", variableName.ToString());
+            study.set_user_attr("variable_names", variableName);
             study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
             if (setMetricNames)
             {
