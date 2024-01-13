@@ -1,4 +1,4 @@
-name: dotnet package
+name: dotnet optuna tests
 
 on: [pull_request]
 
