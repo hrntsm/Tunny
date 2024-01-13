@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 
-using Tunny.Optuna.Study;
-using Tunny.Optuna.Trial;
+using Optuna.Study;
+using Optuna.Trial;
 
-namespace Tunny.Optuna.Storage.Journal
+namespace Optuna.Storage
 {
-    public class JournalStorage : BaseStorage
+    public class RDBStorage : BaseStorage
     {
-        public JournalStorage()
+        public RDBStorage(string url)
         {
+            throw new System.NotImplementedException();
         }
 
         public override void CheckTrialIsUpdatable(int trialId, TrialState trialState)

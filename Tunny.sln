@@ -4,10 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tunny", "Tunny\Tunny.csproj", "{623ABE73-A37F-4E26-AD90-B5C55AB4AFFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0266339-DF8D-45F6-977A-9D951ADAC659} = {B0266339-DF8D-45F6-977A-9D951ADAC659}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optuna", "Optuna\Optuna.csproj", "{B0266339-DF8D-45F6-977A-9D951ADAC659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptunaTests", "OptunaTests\OptunaTests.csproj", "{1CBEA9DF-2E3D-4935-8468-A4511DE84F33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OptunaTests", "OptunaTests\OptunaTests.csproj", "{1CBEA9DF-2E3D-4935-8468-A4511DE84F33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

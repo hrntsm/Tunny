@@ -4,10 +4,11 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 
+using Optuna.Study;
+using Optuna.Trial;
+
 using Python.Runtime;
 
-using Tunny.Optuna.Study;
-using Tunny.Optuna.Trial;
 using Tunny.Util;
 
 namespace Tunny.Storage

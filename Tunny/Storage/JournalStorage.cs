@@ -5,11 +5,12 @@ using System.Linq;
 
 using Newtonsoft.Json;
 
+using Optuna.Storage.Journal;
+using Optuna.Study;
+using Optuna.Trial;
+
 using Python.Runtime;
 
-using Tunny.Optuna.Storage.Journal;
-using Tunny.Optuna.Study;
-using Tunny.Optuna.Trial;
 using Tunny.Util;
 
 namespace Tunny.Storage

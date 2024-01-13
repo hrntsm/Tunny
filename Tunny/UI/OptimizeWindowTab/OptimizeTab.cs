@@ -6,9 +6,10 @@ using System.Linq;
 
 using Grasshopper.GUI;
 
+using Optuna.Study;
+
 using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Optuna.Study;
 using Tunny.Storage;
 
 namespace Tunny.UI

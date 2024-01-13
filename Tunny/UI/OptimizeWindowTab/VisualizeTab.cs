@@ -2,9 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Optuna.Study;
 using Tunny.PostProcess;
 using Tunny.Solver;
 
