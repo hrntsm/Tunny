@@ -10,16 +10,16 @@ namespace Optuna.Study
         public int StudyId { get; }
         public string StudyName { get; }
         public Trial.Trial BestTrial { get; }
-        public Dictionary<string, string[]> SystemAttrs { get; }
-        public Dictionary<string, string[]> UserAttrs { get; }
+        public Dictionary<string, object> SystemAttrs { get; }
+        public Dictionary<string, object> UserAttrs { get; }
         public int NTrials { get; }
         public DateTime DatetimeStart { get; }
 
         public StudySummary(string studyName,
                             StudyDirection? direction,
                             Trial.Trial bestTrial,
-                            Dictionary<string, string[]> userAttrs,
-                            Dictionary<string, string[]> systemAttrs,
+                            Dictionary<string, object> userAttrs,
+                            Dictionary<string, object> systemAttrs,
                             int nTrials,
                             DateTime datetimeStart,
                             int studyId,

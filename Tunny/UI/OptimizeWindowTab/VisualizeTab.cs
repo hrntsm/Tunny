@@ -41,10 +41,12 @@ namespace Tunny.UI
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.SystemAttrs["study:metric_names"].ToArray());
+                string[] metricNames = visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
+                visualizeVariableListBox.Items.AddRange(metricNames);
 
                 visualizeObjectiveListBox.Items.Clear();
-                visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttrs["variable_names"].ToArray());
+                string[] variableNames = visualizeStudySummary.UserAttrs["variable_names"] as string[];
+                visualizeObjectiveListBox.Items.AddRange(variableNames);
             }
         }
 

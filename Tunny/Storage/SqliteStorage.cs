@@ -85,8 +85,8 @@ namespace Tunny.Storage
                         var summary = new StudySummary(studyName,
                                                        StudyDirection.NotSet,
                                                        new Trial(),
-                                                       new Dictionary<string, string[]>(),
-                                                       new Dictionary<string, string[]>(),
+                                                       new Dictionary<string, object>(),
+                                                       new Dictionary<string, object>(),
                                                        100,
                                                        DateTime.Now,
                                                        (int)studyId);

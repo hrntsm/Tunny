@@ -59,10 +59,10 @@ namespace Optuna.Storage.Journal
                             var userAttr = (JObject)logObject["user_attr"];
                             foreach (KeyValuePair<string, JToken> item in userAttr)
                             {
-                                var values = item.Value.Select(v => v.ToString()).ToList();
-                                if (values == null || values.Count == 0)
+                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                                if (values == null || values.Length == 0)
                                 {
-                                    values = new List<string> { item.Value.ToString() };
+                                    values = new string[] { item.Value.ToString() };
                                 }
                                 SetStudyUserAttr(studyId, item.Key, values);
                             }
@@ -74,10 +74,10 @@ namespace Optuna.Storage.Journal
                             var systemAttr = (JObject)logObject["system_attr"];
                             foreach (KeyValuePair<string, JToken> item in systemAttr)
                             {
-                                var values = item.Value.Select(v => v.ToString()).ToList();
-                                if (values == null || values.Count == 0)
+                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                                if (values == null || values.Length == 0)
                                 {
-                                    values = new List<string> { item.Value.ToString() };
+                                    values = new string[] { item.Value.ToString() };
                                 }
                                 SetStudySystemAttr(studyId, item.Key, values);
                             }
@@ -117,10 +117,10 @@ namespace Optuna.Storage.Journal
                             var userAttr = (JObject)logObject["user_attr"];
                             foreach (KeyValuePair<string, JToken> item in userAttr)
                             {
-                                var values = item.Value.Select(v => v.ToString()).ToList();
-                                if (values == null || values.Count == 0)
+                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                                if (values == null || values.Length == 0)
                                 {
-                                    values = new List<string> { item.Value.ToString() };
+                                    values = new string[] { item.Value.ToString() };
                                 }
                                 SetTrialUserAttr(trialId, item.Key, values);
                             }
@@ -132,10 +132,10 @@ namespace Optuna.Storage.Journal
                             var systemAttr = (JObject)logObject["system_attr"];
                             foreach (KeyValuePair<string, JToken> item in systemAttr)
                             {
-                                var values = item.Value.Select(v => v.ToString()).ToList();
-                                if (values == null || values.Count == 0)
+                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                                if (values == null || values.Length == 0)
                                 {
-                                    values = new List<string> { item.Value.ToString() };
+                                    values = new string[] { item.Value.ToString() };
                                 }
                                 SetTrialSystemAttr(trialId, item.Key, values);
                             }

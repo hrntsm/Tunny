@@ -92,124 +92,36 @@ namespace Optuna.Study
                 throw new ArgumentException("Study is not multi-objective.");
             }
 
-            return GetParetoFrontTrials();
+            return MultiObjective.GetParetoFrontTrials(Trials, Directions);
         }
 
-        private Trial.Trial[] GetParetoFrontTrials()
+        public static StudySummary[] GetAllStudySummaries(BaseStorage storage)
         {
-            return GetParetoFrontTrialsByTrials(Trials, Directions);
-        }
-
-        private Trial.Trial[] GetParetoFrontTrialsByTrials(List<Trial.Trial> trials, StudyDirection[] directions)
-        {
-            if (directions.Length == 2)
+            Study[] studies = storage.GetAllStudies();
+            var studySummaries = new StudySummary[studies.Length];
+            for (int i = 0; i < studies.Length; i++)
             {
-                return GetParetoFrontTrials2D(trials, directions);
-            }
-            else
-            {
-                return GetParetoFrontTrialsND(trials, directions);
-            }
-        }
+                Trial.Trial[] allTrials = storage.GetAllTrials(studies[i].StudyId);
+                IEnumerable<Trial.Trial> completeTrials = allTrials.Where(trial => trial.State == TrialState.COMPLETE);
 
-        private Trial.Trial[] GetParetoFrontTrials2D(List<Trial.Trial> trials, StudyDirection[] directions)
-        {
-            List<Trial.Trial> targetTrials = trials.FindAll(trial => trial.State == TrialState.COMPLETE);
-
-            int nTrials = targetTrials.Count;
-            if (nTrials == 0)
-            {
-                return new Trial.Trial[0];
-            }
-
-            targetTrials.Sort((trial1, trial2) =>
-            {
-                double trial1Value1 = NormalizeValue(trial1.Values[0], directions[0]);
-                double trial1Value2 = NormalizeValue(trial1.Values[1], directions[1]);
-
-                double trial2Value1 = NormalizeValue(trial2.Values[0], directions[0]);
-                double trial2Value2 = NormalizeValue(trial2.Values[1], directions[1]);
-
-                int compare1 = trial1Value1.CompareTo(trial2Value1);
-                return compare1 == 0 ? trial1Value2.CompareTo(trial2Value2) : compare1;
-            });
-
-            Trial.Trial lastNonDominatedTrial = targetTrials[0];
-            var paretoFront = new List<Trial.Trial> { lastNonDominatedTrial };
-            foreach (Trial.Trial trial in targetTrials)
-            {
-                if (Dominates(lastNonDominatedTrial, trial, directions))
+                StudyDirection direction = StudyDirection.NotSet;
+                StudyDirection[] directions = Array.Empty<StudyDirection>();
+                Trial.Trial bestTrial = null;
+                if (studies[i].Directions.Length == 1)
                 {
-                    continue;
+                    direction = studies[i].Directions[0];
+                    bestTrial = storage.GetBestTrial(studies[i].StudyId);
                 }
-                paretoFront.Add(trial);
-                lastNonDominatedTrial = trial;
-            }
-            paretoFront.OrderBy(trial => trial.Number);
-            return paretoFront.ToArray();
-        }
-
-        private Trial.Trial[] GetParetoFrontTrialsND(List<Trial.Trial> trials, StudyDirection[] directions)
-        {
-            var paretoFront = new List<Trial.Trial>();
-            List<Trial.Trial> targetTrials = trials.FindAll(trial => trial.State == TrialState.COMPLETE);
-
-            foreach (Trial.Trial trial in targetTrials)
-            {
-                bool dominated = false;
-                foreach (Trial.Trial otherTrial in targetTrials)
+                else
                 {
-                    if (trial == otherTrial)
-                    {
-                        continue;
-                    }
-                    if (Dominates(otherTrial, trial, directions))
-                    {
-                        dominated = true;
-                        break;
-                    }
+                    directions = studies[i].Directions;
                 }
-                if (!dominated)
-                {
-                    paretoFront.Add(trial);
-                }
+
+                DateTime datetimeStart = allTrials.Min(trial => trial.DatetimeStart);
+
+                studySummaries[i] = new StudySummary(studies[i].StudyName, direction, bestTrial, studies[i].UserAttrs, studies[i].SystemAttrs, allTrials.Length, datetimeStart, studies[i].StudyId, directions);
             }
-
-            return paretoFront.ToArray();
-        }
-
-        /// <summary>
-        /// NOTE: Optuna returns the exact same result with False, but this method returns True.
-        /// Therefore, there may be fewer than Optuna results.
-        /// </summary>
-        private bool Dominates(Trial.Trial trial0, Trial.Trial trial1, StudyDirection[] directions)
-        {
-            double[] value0 = trial0.Values;
-            double[] value1 = trial1.Values;
-
-            IEnumerable<double> normalizedValues0 = value0.Zip(directions, (v, d) => NormalizeValue(v, d));
-            IEnumerable<double> normalizedValues1 = value1.Zip(directions, (v, d) => NormalizeValue(v, d));
-
-            if (normalizedValues0 == normalizedValues1)
-            {
-                return false;
-            }
-
-            return normalizedValues0.Zip(normalizedValues1, (v0, v1) => v0 <= v1).All(x => x);
-        }
-
-        private double NormalizeValue(double? value, StudyDirection direction)
-        {
-            if (value == null)
-            {
-                value = double.PositiveInfinity;
-            }
-
-            if (direction == StudyDirection.Maximize)
-            {
-                value = -value.Value;
-            }
-            return value.Value;
+            return studySummaries;
         }
     }
 }
