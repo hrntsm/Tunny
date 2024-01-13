@@ -7,6 +7,9 @@ using Newtonsoft.Json;
 
 using Python.Runtime;
 
+using Tunny.Optuna.Storage.Journal;
+using Tunny.Optuna.Study;
+using Tunny.Optuna.Trial;
 using Tunny.Util;
 
 namespace Tunny.Storage
@@ -14,7 +17,7 @@ namespace Tunny.Storage
     public class JournalStorage : PythonInit, IStorage
     {
         [JsonProperty("op_code")]
-        public int OpCode { get; set; }
+        public JournalOperation OpCode { get; set; }
 
         [JsonProperty("worker_id")]
         public string WorkerId { get; set; }
@@ -101,9 +104,9 @@ namespace Tunny.Storage
             }
 
             JournalStorage[] storage = Deserialize(journalStorageString);
-            var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
-            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == 3).GroupBy(x => x.StudyId);
-            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2).GroupBy(x => x.StudyId);
+            var studyName = storage.Where(x => x.OpCode == JournalOperation.CreateStudy).Select(x => x.StudyName).Distinct().ToList();
+            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == JournalOperation.SetStudyUserAttr).GroupBy(x => x.StudyId);
+            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == JournalOperation.SetStudySystemAttr).GroupBy(x => x.StudyId);
             var studySummaries = new StudySummary[studyName.Count];
 
             SetStudySummaries(studyName, systemAttr, userAttr, studySummaries);
@@ -121,16 +124,16 @@ namespace Tunny.Storage
                     continue;
                 }
 
-                var studySummary = new StudySummary
-                {
-                    StudyId = group.user.Key.Value,
-                    StudyName = studyName[i],
-                    UserAttributes = new Dictionary<string, string[]>(),
-                    SystemAttributes = new Dictionary<string, string[]>(),
-                    Trials = new List<Trial>()
-                };
-                SetStudySummaryValue(group.user, group.system, studySummary);
-                studySummaries[i++] = studySummary;
+                var summary = new StudySummary(studyName[i],
+                                               StudyDirection.NotSet,
+                                               new Trial(),
+                                               new Dictionary<string, string[]>(),
+                                               new Dictionary<string, string[]>(),
+                                               100,
+                                               DateTime.Now,
+                                               group.user.Key.Value);
+                SetStudySummaryValue(group.user, group.system, summary);
+                studySummaries[i++] = summary;
             }
         }
 
@@ -169,13 +172,13 @@ namespace Tunny.Storage
                 }
             }
 
-            if (studySummary.SystemAttributes.TryGetValue(item.Key, out string[] value))
+            if (studySummary.SystemAttrs.TryGetValue(item.Key, out string[] value))
             {
                 _ = value.Union(values);
             }
             else
             {
-                studySummary.SystemAttributes.Add(item.Key, values);
+                studySummary.SystemAttrs.Add(item.Key, values);
             }
         }
 
@@ -191,13 +194,13 @@ namespace Tunny.Storage
                 values = strArray;
             }
 
-            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
+            if (studySummary.UserAttrs.TryGetValue(item.Key, out string[] value))
             {
                 _ = value.Union(values);
             }
             else
             {
-                studySummary.UserAttributes.Add(item.Key, values);
+                studySummary.UserAttrs.Add(item.Key, values);
             }
         }
 

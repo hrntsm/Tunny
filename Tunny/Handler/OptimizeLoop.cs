@@ -60,7 +60,7 @@ namespace Tunny.Handler
                 return new[] { double.NaN };
             }
 
-            var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
+            var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };

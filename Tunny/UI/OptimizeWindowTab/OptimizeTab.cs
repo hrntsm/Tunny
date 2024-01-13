@@ -8,7 +8,7 @@ using Grasshopper.GUI;
 
 using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Input;
+using Tunny.Optuna.Study;
 using Tunny.Storage;
 
 namespace Tunny.UI
@@ -172,7 +172,7 @@ namespace Tunny.UI
 
                 outputTargetStudyComboBox.Items.AddRange(studyNames);
 
-                if (!_summaries[0].SystemAttributes.ContainsKey("study:metric_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
+                if (!_summaries[0].SystemAttrs.ContainsKey("study:metric_names") || !_summaries[0].UserAttrs.ContainsKey("variable_names"))
                 {
                     return;
                 }

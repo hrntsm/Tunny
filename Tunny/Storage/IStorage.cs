@@ -1,3 +1,5 @@
+using Tunny.Optuna.Study;
+
 namespace Tunny.Storage
 {
     public interface IStorage : ICreateStorage
