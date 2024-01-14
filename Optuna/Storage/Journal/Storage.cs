@@ -16,11 +16,18 @@ namespace Optuna.Storage.Journal
         private int _nextStudyId = 0;
         private int _trialId = 0;
 
-        public JournalStorage(string path)
+        public JournalStorage(string path, bool makeFile = false)
         {
             if (File.Exists(path) == false)
             {
-                throw new FileNotFoundException($"File not found: {path}");
+                if (makeFile == false)
+                {
+                    throw new FileNotFoundException($"File not found: {path}");
+                }
+                else
+                {
+                    File.Create(path).Close();
+                }
             }
 
             var logs = new List<string>();
@@ -152,8 +159,13 @@ namespace Optuna.Storage.Journal
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName = "")
         {
-            _studies.Add(new Study.Study(this, _nextStudyId, studyName, studyDirections));
-            return _nextStudyId++;
+            string[] studyNames = _studies.Select(s => s.StudyName).ToArray();
+            if (!studyNames.Contains(studyName))
+            {
+                _studies.Add(new Study.Study(this, _nextStudyId, studyName, studyDirections));
+                _nextStudyId++;
+            }
+            return _nextStudyId;
         }
 
         public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)

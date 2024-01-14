@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,6 +7,15 @@ namespace Optuna.Storage.Journal.Tests
     [TestClass()]
     public class JournalStorageTests
     {
+        [TestMethod()]
+        public void MakeFileIfNotExistTest()
+        {
+            string path = @"TestFile/created.log";
+            _ = new JournalStorage(path, true);
+            Assert.IsTrue(File.Exists(path));
+            File.Delete(path);
+        }
+
         [TestMethod()]
         public void JournalStorageTest()
         {

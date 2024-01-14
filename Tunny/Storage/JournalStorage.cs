@@ -15,7 +15,7 @@ namespace Tunny.Storage
 
         public StudySummary[] GetStudySummaries(string storagePath)
         {
-            var storage = new Optuna.Storage.Journal.JournalStorage(storagePath);
+            var storage = new Optuna.Storage.Journal.JournalStorage(storagePath, true);
             StudySummary[] studySummaries = Study.GetAllStudySummaries(storage);
 
             var oldFormatVersion = new Version("0.9.1");
