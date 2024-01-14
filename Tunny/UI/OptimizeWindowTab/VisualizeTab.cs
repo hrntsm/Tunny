@@ -20,14 +20,11 @@ namespace Tunny.UI
                 ResultFileNotExistErrorMessage();
                 return;
             }
-            string argument = _settings.Storage.GetOptunaStorageCommandLinePathByExtension();
-            string backendPath = _settings.Storage.GetArtifactBackendPath();
-            if (Directory.Exists(backendPath))
-            {
-                argument += " --artifact-dir " + backendPath;
-            }
+            string dashboardPath = Path.Combine(PythonInstaller.GetEmbeddedPythonPath(), "Scripts", "optuna-dashboard.exe");
+            string storagePath = _settings.Storage.Path;
 
-            DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", argument);
+            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
+            dashboard.Run();
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
