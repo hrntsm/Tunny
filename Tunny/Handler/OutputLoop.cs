@@ -42,7 +42,7 @@ namespace Tunny.Handler
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (s_component.GhInOut.HasConstraint)
+                if (s_component.GhInOut.HasConstraint && Indices[0] == -1)
                 {
                     TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
