@@ -149,7 +149,14 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
-            UpdateStudyComboBox(_settings.Storage.Path);
+            try
+            {
+                UpdateStudyComboBox(_settings.Storage.Path);
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("The storage file loading error.\nPlease check the storage path or use new storage file.", "Error");
+            }
         }
 
         private void UpdateStudyComboBox(string storagePath)
