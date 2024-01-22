@@ -117,9 +117,21 @@ namespace Optuna.Study
                     directions = studies[i].Directions;
                 }
 
-                DateTime datetimeStart = allTrials.Min(trial => trial.DatetimeStart);
+                DateTime datetimeStart = DateTime.MinValue;
+                if (allTrials.Length != 0)
+                {
+                    datetimeStart = allTrials.Min(trial => trial.DatetimeStart);
+                }
 
-                studySummaries[i] = new StudySummary(studies[i].StudyName, direction, bestTrial, studies[i].UserAttrs, studies[i].SystemAttrs, allTrials.Length, datetimeStart, studies[i].StudyId, directions);
+                studySummaries[i] = new StudySummary(studies[i].StudyName,
+                                                     direction,
+                                                     bestTrial,
+                                                     studies[i].UserAttrs,
+                                                     studies[i].SystemAttrs,
+                                                     allTrials.Length,
+                                                     datetimeStart,
+                                                     studies[i].StudyId,
+                                                     directions);
             }
             return studySummaries;
         }
