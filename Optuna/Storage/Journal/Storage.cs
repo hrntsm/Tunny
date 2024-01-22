@@ -12,7 +12,7 @@ namespace Optuna.Storage.Journal
 {
     public class JournalStorage : BaseStorage
     {
-        private readonly List<Study.Study> _studies = new List<Study.Study>();
+        private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
         private int _nextStudyId = 0;
         private int _trialId = 0;
 
@@ -59,6 +59,10 @@ namespace Optuna.Storage.Journal
                         CreateNewStudy(studyDirections, studyName);
                         break;
                     case JournalOperation.DeleteStudy:
+                        {
+                            int studyId = (int)logObject["study_id"];
+                            DeleteStudy(studyId);
+                        }
                         break;
                     case JournalOperation.SetStudyUserAttr:
                         {
@@ -159,10 +163,10 @@ namespace Optuna.Storage.Journal
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName = "")
         {
-            string[] studyNames = _studies.Select(s => s.StudyName).ToArray();
+            string[] studyNames = _studies.Values.Select(s => s.StudyName).ToArray();
             if (!studyNames.Contains(studyName))
             {
-                _studies.Add(new Study.Study(this, _nextStudyId, studyName, studyDirections));
+                _studies.Add(_nextStudyId, new Study.Study(this, _nextStudyId, studyName, studyDirections));
                 _nextStudyId++;
             }
             return _nextStudyId;
@@ -179,12 +183,12 @@ namespace Optuna.Storage.Journal
 
         public override void DeleteStudy(int studyId)
         {
-            throw new NotImplementedException();
+            _studies.Remove(studyId);
         }
 
         public override Study.Study[] GetAllStudies()
         {
-            return _studies.ToArray();
+            return _studies.Values.ToArray();
         }
 
         public override Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
@@ -198,7 +202,7 @@ namespace Optuna.Storage.Journal
 
             if (allTrials.Count == 0)
             {
-                throw new InvalidOperationException("No trials are completed yet.");
+                return null;
             }
 
             StudyDirection[] directions = GetStudyDirections(studyId);
@@ -229,7 +233,7 @@ namespace Optuna.Storage.Journal
 
         public override int GetStudyIdFromName(string studyName)
         {
-            return _studies.First(s => s.StudyName == studyName).StudyId;
+            return _studies.Values.First(s => s.StudyName == studyName).StudyId;
         }
 
         public override string GetStudyNameFromId(int studyId)
@@ -249,8 +253,8 @@ namespace Optuna.Storage.Journal
 
         public override Trial.Trial GetTrial(int trialId)
         {
-            return _studies.First(s => s.Trials.Any(t => t.TrialId == trialId))
-                            .Trials.First(t => t.TrialId == trialId);
+            return _studies.Values.First(s => s.Trials.Any(t => t.TrialId == trialId))
+                           .Trials.First(t => t.TrialId == trialId);
         }
 
         public override int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
