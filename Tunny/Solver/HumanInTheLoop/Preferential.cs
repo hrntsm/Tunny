@@ -34,7 +34,8 @@ namespace Tunny.Solver.HumanInTheLoop
                 n_generate: nGenerate,
                 study_name: name,
                 sampler: preferentialGPSampler(),
-                storage: storage
+                storage: storage,
+                load_if_exists: true
             );
             dynamic registerPreferenceFeedbackComponent = _importedLibrary.Get("register_preference_feedback_component");
             _userAttrKey = objectiveName;
