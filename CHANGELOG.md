@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -2024-xx-xx
+
+### Added
+
+for new features.
+
+### Changed
+
+- Use new JournalStorage handler to improve stability.
+
+### Deprecated
+
+for soon-to-be removed features.
+
+### Removed
+
+for now removed features.
+
+### Fixed
+
+- Does not work when human-in-the-loop continues.
+- Error when reading older versions of JournalStorage.
+- without constraint notification timing when output result.
+
+### Security
+
+in case of vulnerabilities.
+
 ## [v0.9.1] -2023-12-30
 
 ### Fixed
