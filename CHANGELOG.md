@@ -11,12 +11,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - Use new JournalStorage handler to improve stability.
+  - old format journal storage result new can open in tunny.
 
 ### Fixed
 
 - Does not work when human-in-the-loop continues.
 - Error when reading older versions of JournalStorage.
 - without constraint notification timing when output result.
+- in-memory optimization result saving error.
 
 ## [v0.9.1] -2023-12-30
 
