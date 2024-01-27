@@ -9,7 +9,7 @@ summary
 
 | Name              | Version   | License                                           |
 |-------------------|-----------|---------------------------------------------------|
-| Jinja2            | 3.1.2     | BSD License                                       |
+| Jinja2            | 3.1.3     | BSD License                                       |
 | Mako              | 1.2.4     | MIT License                                       |
 | MarkupSafe        | 2.1.3     | BSD License                                       |
 | PyYAML            | 6.0.1     | MIT License                                       |
@@ -57,7 +57,7 @@ summary
 ----------------------------------------------------------------------------------------------------
 
 Jinja2
-3.1.2
+3.1.3
 BSD License
 https://palletsprojects.com/p/jinja/
 Copyright 2007 Pallets
