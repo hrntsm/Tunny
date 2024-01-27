@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+
+using Optuna.Study;
+
 namespace Tunny.Storage
 {
     public class StorageHandler : IStorage

@@ -10,7 +10,6 @@ using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.PostProcess;
 using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -36,14 +35,14 @@ namespace Tunny.Handler
 
             if (s_component != null)
             {
-                var optunaSolver = new Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+                var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
                 ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
                 if (modelResult.Length == 0)
                 {
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (s_component.GhInOut.HasConstraint)
+                if (s_component.GhInOut.HasConstraint && Indices[0] == -1)
                 {
                     TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

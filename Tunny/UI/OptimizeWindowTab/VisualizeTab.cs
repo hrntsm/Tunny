@@ -2,11 +2,12 @@ using System;
 using System.IO;
 using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.PostProcess;
 using Tunny.Solver;
-using Tunny.Storage;
 
 namespace Tunny.UI
 {
@@ -19,14 +20,11 @@ namespace Tunny.UI
                 ResultFileNotExistErrorMessage();
                 return;
             }
-            string argument = _settings.Storage.GetOptunaStorageCommandLinePathByExtension();
-            string backendPath = _settings.Storage.GetArtifactBackendPath();
-            if (Directory.Exists(backendPath))
-            {
-                argument += " --artifact-dir " + backendPath;
-            }
+            string dashboardPath = Path.Combine(PythonInstaller.GetEmbeddedPythonPath(), "Scripts", "optuna-dashboard.exe");
+            string storagePath = _settings.Storage.Path;
 
-            DashboardHandler.RunDashboardProcess(PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe", argument);
+            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
+            dashboard.Run();
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
@@ -40,10 +38,23 @@ namespace Tunny.UI
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                visualizeVariableListBox.Items.AddRange(visualizeStudySummary.SystemAttributes["study:metric_names"].ToArray());
+                var oldFormatVersion = new Version("0.9.1");
+                string versionString = (visualizeStudySummary.UserAttrs["tunny_version"] as string[])[0];
+                var version = new Version(versionString);
+                string[] metricNames = Array.Empty<string>();
+                if (version <= oldFormatVersion)
+                {
+                    metricNames = visualizeStudySummary.UserAttrs["objective_names"] as string[];
+                }
+                else
+                {
+                    metricNames = visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
+                }
+                visualizeVariableListBox.Items.AddRange(metricNames);
 
                 visualizeObjectiveListBox.Items.Clear();
-                visualizeObjectiveListBox.Items.AddRange(visualizeStudySummary.UserAttributes["variable_names"].ToArray());
+                string[] variableNames = visualizeStudySummary.UserAttrs["variable_names"] as string[];
+                visualizeObjectiveListBox.Items.AddRange(variableNames);
             }
         }
 

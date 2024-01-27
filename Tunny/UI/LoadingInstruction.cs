@@ -8,7 +8,6 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-using Tunny.Handler;
 using Tunny.Resources;
 using Tunny.Settings;
 using Tunny.Util;
@@ -118,31 +117,8 @@ namespace Tunny.UI
             };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                storagePath = GetStorageArgument(ofd.FileName);
-                string arguments = storagePath;
-                string backendPath = Path.GetDirectoryName(ofd.FileName) + "/artifacts";
-                if (Directory.Exists(backendPath))
-                {
-                    arguments += " --artifact-dir " + backendPath;
-                }
-
-                DashboardHandler.RunDashboardProcess(dashboardPath, arguments);
-            }
-        }
-
-        private static string GetStorageArgument(string path)
-        {
-            switch (Path.GetExtension(path))
-            {
-                case null:
-                    return string.Empty;
-                case ".sqlite3":
-                case ".db":
-                    return @"sqlite:///" + $"\"{path}\"";
-                case ".log":
-                    return $"\"{path}\"";
-                default:
-                    throw new NotImplementedException();
+                var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
+                dashboard.Run();
             }
         }
 

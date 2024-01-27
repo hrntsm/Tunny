@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Forms;
 
 using Tunny.Enum;
 using Tunny.Handler;
@@ -36,6 +37,11 @@ namespace Tunny.UI
             OutputLoop.Mode = mode;
             OutputLoop.Settings = _settings;
             OutputLoop.StudyName = outputTargetStudyComboBox.Text;
+            if (string.IsNullOrEmpty(OutputLoop.StudyName))
+            {
+                TunnyMessageBox.Show("Please select study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             OutputLoop.NickNames = _component.GhInOut.Variables.Select(x => x.NickName).ToArray();
             bool result = SetOutputIndices(mode);
             if (result)

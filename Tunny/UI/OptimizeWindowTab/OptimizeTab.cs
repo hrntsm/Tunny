@@ -6,9 +6,10 @@ using System.Linq;
 
 using Grasshopper.GUI;
 
+using Optuna.Study;
+
 using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Input;
 using Tunny.Storage;
 
 namespace Tunny.UI
@@ -148,7 +149,14 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
-            UpdateStudyComboBox(_settings.Storage.Path);
+            try
+            {
+                UpdateStudyComboBox(_settings.Storage.Path);
+            }
+            catch (Exception)
+            {
+                TunnyMessageBox.Show("The storage file loading error.\nPlease check the storage path or use new storage file.", "Error");
+            }
         }
 
         private void UpdateStudyComboBox(string storagePath)
@@ -172,7 +180,7 @@ namespace Tunny.UI
 
                 outputTargetStudyComboBox.Items.AddRange(studyNames);
 
-                if (!_summaries[0].SystemAttributes.ContainsKey("study:metric_names") || !_summaries[0].UserAttributes.ContainsKey("variable_names"))
+                if (!_summaries[0].SystemAttrs.ContainsKey("study:metric_names") || !_summaries[0].UserAttrs.ContainsKey("variable_names"))
                 {
                     return;
                 }

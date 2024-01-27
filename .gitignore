@@ -460,3 +460,4 @@ $RECYCLE.BIN/
 ## add by me
 Tunny/Lib/python.zip
 Tunny/Lib/whl.zip
+!OptunaTests/TestFile/*.log

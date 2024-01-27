@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-using Newtonsoft.Json;
+using Optuna.Study;
 
 using Python.Runtime;
 
@@ -13,192 +11,30 @@ namespace Tunny.Storage
 {
     public class JournalStorage : PythonInit, IStorage
     {
-        [JsonProperty("op_code")]
-        public int OpCode { get; set; }
-
-        [JsonProperty("worker_id")]
-        public string WorkerId { get; set; }
-
-        [JsonProperty("study_name")]
-        public string StudyName { get; set; }
-
-        [JsonProperty("study_id")]
-        public int? StudyId { get; set; }
-
-        [JsonProperty("trial_id")]
-        public int? TrialId { get; set; }
-
-        [JsonProperty("datetime_start")]
-        public DateTime? DatetimeStart { get; set; }
-
-        [JsonProperty("datetime_complete")]
-        public DateTime? DatetimeComplete { get; set; }
-
-        [JsonProperty("directions")]
-        public int[] Directions { get; set; }
-
-        [JsonProperty("system_attr")]
-        public Dictionary<string, object> SystemAttr { get; set; }
-
-        [JsonProperty("user_attr")]
-        public Dictionary<string, object> UserAttr { get; set; }
-
-        [JsonProperty("param_name")]
-        public string ParamName { get; set; }
-
-        [JsonProperty("param_value_internal")]
-        public double? ParamValueInternal { get; set; }
-
-        [JsonProperty("distribution")]
-        public string Distribution { get; set; }
-
-        [JsonProperty("state")]
-        public int? State { get; set; }
-
-        [JsonProperty("values")]
-        public double?[] Values { get; set; }
-
-        [JsonIgnore]
         public dynamic Storage { get; set; }
-
-        public static JournalStorage Deserialize(string json)
-        {
-            return JsonConvert.DeserializeObject<JournalStorage>(json);
-        }
-
-        public static JournalStorage[] Deserialize(List<string> json)
-        {
-            return Deserialize(json.ToArray());
-        }
-
-        public static JournalStorage[] Deserialize(string[] json)
-        {
-            var journalStorage = new JournalStorage[json.Length];
-            for (int i = 0; i < json.Length; i++)
-            {
-                journalStorage[i] = JsonConvert.DeserializeObject<JournalStorage>(json[i]);
-            }
-
-            return journalStorage;
-        }
 
         public StudySummary[] GetStudySummaries(string storagePath)
         {
-            if (File.Exists(storagePath) == false)
+            var storage = new Optuna.Storage.Journal.JournalStorage(storagePath, true);
+            StudySummary[] studySummaries = Study.GetAllStudySummaries(storage);
+
+            var oldFormatVersion = new Version("0.9.1");
+            foreach (StudySummary studySummary in studySummaries)
             {
-                return Array.Empty<StudySummary>();
-            }
-            var journalStorageString = new List<string>();
-            using (FileStream fs = File.Open(storagePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var sr = new StreamReader(fs))
+                string versionString = (studySummary.UserAttrs["tunny_version"] as string[])[0];
+                var version = new Version(versionString);
+                if (version <= oldFormatVersion)
                 {
-                    while (sr.Peek() >= 0)
-                    {
-                        journalStorageString.Add(sr.ReadLine());
-                    }
+                    UpdateVariableNamesAttr(studySummary);
                 }
             }
-
-            JournalStorage[] storage = Deserialize(journalStorageString);
-            var studyName = storage.Where(x => x.OpCode == 0).Select(x => x.StudyName).Distinct().ToList();
-            IEnumerable<IGrouping<int?, JournalStorage>> systemAttr = storage.Where(x => x.OpCode == 3).GroupBy(x => x.StudyId);
-            IEnumerable<IGrouping<int?, JournalStorage>> userAttr = storage.Where(x => x.OpCode == 2).GroupBy(x => x.StudyId);
-            var studySummaries = new StudySummary[studyName.Count];
-
-            SetStudySummaries(studyName, systemAttr, userAttr, studySummaries);
 
             return studySummaries;
         }
 
-        private static void SetStudySummaries(IReadOnlyList<string> studyName, IEnumerable<IGrouping<int?, JournalStorage>> systemAttr, IEnumerable<IGrouping<int?, JournalStorage>> userAttr, IList<StudySummary> studySummaries)
+        private static void UpdateVariableNamesAttr(StudySummary studySummary)
         {
-            int i = 0;
-            foreach (var group in userAttr.Zip(systemAttr, (user, system) => new { user, system }))
-            {
-                if (group.user.Key == null)
-                {
-                    continue;
-                }
-
-                var studySummary = new StudySummary
-                {
-                    StudyId = group.user.Key.Value,
-                    StudyName = studyName[i],
-                    UserAttributes = new Dictionary<string, string[]>(),
-                    SystemAttributes = new Dictionary<string, string[]>(),
-                    Trials = new List<Trial>()
-                };
-                SetStudySummaryValue(group.user, group.system, studySummary);
-                studySummaries[i++] = studySummary;
-            }
-        }
-
-        private static void SetStudySummaryValue(IEnumerable<JournalStorage> user, IEnumerable<JournalStorage> system, StudySummary studySummary)
-        {
-            foreach (var journal in user.Zip(system, (u, s) => new { u, s }))
-            {
-                foreach (KeyValuePair<string, object> item in journal.u.UserAttr)
-                {
-                    SetUserAttr(studySummary, item);
-                }
-                foreach (KeyValuePair<string, object> item in journal.s.SystemAttr)
-                {
-                    SetSystemAttr(studySummary, item);
-                }
-            }
-        }
-
-        private static void SetSystemAttr(StudySummary studySummary, KeyValuePair<string, object> item)
-        {
-            string[] values = Array.Empty<string>();
-            if (item.Value is string str)
-            {
-                values = str.Split(',');
-            }
-            else if (item.Value is string[] strArray)
-            {
-                values = strArray;
-            }
-            else if (item.Value is Newtonsoft.Json.Linq.JArray strJArray)
-            {
-                values = new string[strJArray.Count];
-                for (int i = 0; i < strJArray.Count; i++)
-                {
-                    values[i] = strJArray[i].ToString();
-                }
-            }
-
-            if (studySummary.SystemAttributes.TryGetValue(item.Key, out string[] value))
-            {
-                _ = value.Union(values);
-            }
-            else
-            {
-                studySummary.SystemAttributes.Add(item.Key, values);
-            }
-        }
-
-        private static void SetUserAttr(StudySummary studySummary, KeyValuePair<string, object> item)
-        {
-            string[] values = Array.Empty<string>();
-            if (item.Value is string str)
-            {
-                values = str.Split(',');
-            }
-            else if (item.Value is string[] strArray)
-            {
-                values = strArray;
-            }
-
-            if (studySummary.UserAttributes.TryGetValue(item.Key, out string[] value))
-            {
-                _ = value.Union(values);
-            }
-            else
-            {
-                studySummary.UserAttributes.Add(item.Key, values);
-            }
+            studySummary.UserAttrs["variable_names"] = (studySummary.UserAttrs["variable_names"] as string[])[0].Split(',').ToArray();
         }
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
