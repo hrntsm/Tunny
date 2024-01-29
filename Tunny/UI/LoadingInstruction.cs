@@ -8,6 +8,8 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Serilog;
+
 using Tunny.Resources;
 using Tunny.Settings;
 using Tunny.Util;
@@ -23,7 +25,16 @@ namespace Tunny.UI
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
+            InitializeLogger();
             return GH_LoadingInstruction.Proceed;
+        }
+
+        private static void InitializeLogger()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(path: TunnyVariables.LogPath, rollingInterval: RollingInterval.Day, formatProvider: System.Globalization.CultureInfo.InvariantCulture)
+                .CreateLogger();
+            Log.Information("Tunny is loaded.");
         }
 
         void RegisterTunnyMenuItems(GH_Canvas canvas)
