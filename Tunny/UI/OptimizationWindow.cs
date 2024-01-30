@@ -155,7 +155,7 @@ namespace Tunny.UI
                 Log.Information("Set Tunny normal optimization mode");
                 Text = "Tunny";
                 samplerComboBox.Enabled = true;
-                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                samplerComboBox.SelectedIndex = (int)_settings.Optimize.SelectSampler;
                 nTrialText.Text = "Number of trials";
                 nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
                 timeoutNumUpDown.Enabled = true;
@@ -180,7 +180,7 @@ namespace Tunny.UI
         }
         private void GetUIValues()
         {
-            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.Optimize.SelectSampler = (SamplerType)samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;

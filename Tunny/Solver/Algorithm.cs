@@ -52,10 +52,11 @@ namespace Tunny.Solver
         {
             EndState = EndState.Error;
             OptimizeLoop.IsForcedStopOptimize = false;
-            int samplerType = Settings.Optimize.SelectSampler;
+            SamplerType samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = SetDirectionValues(Objective.Length);
+            Log.Information($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {(SamplerType)samplerType} sampler.");
 
             PythonEngine.Initialize();
             IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
@@ -597,37 +598,36 @@ namespace Tunny.Solver
             }
         }
 
-        private dynamic SetSamplerSettings(int samplerType, dynamic optuna, bool hasConstraints)
+        private dynamic SetSamplerSettings(SamplerType samplerType, dynamic optuna, bool hasConstraints)
         {
             dynamic sampler;
             switch (samplerType)
             {
-                case 0:
-                case 7:
+                case SamplerType.TPE:
                     sampler = Sampler.TPE(optuna, Settings, hasConstraints);
                     break;
-                case 1:
+                case SamplerType.BoTorch:
                     sampler = Sampler.BoTorch(optuna, Settings, hasConstraints);
                     break;
-                case 2:
+                case SamplerType.NSGAII:
                     sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
                     break;
-                case 3:
+                case SamplerType.NSGAIII:
                     sampler = Sampler.NSGAIII(optuna, Settings, hasConstraints);
                     break;
-                case 4:
+                case SamplerType.CmaEs:
                     sampler = Sampler.CmaEs(optuna, Settings);
                     break;
-                case 5:
+                case SamplerType.QMC:
                     sampler = Sampler.QMC(optuna, Settings);
                     break;
-                case 6:
+                case SamplerType.Random:
                     sampler = Sampler.Random(optuna, Settings);
                     break;
                 default:
-                    throw new ArgumentException("Unknown sampler type");
+                    throw new ArgumentException("Invalid sampler type.");
             }
-            if (samplerType > 4 && hasConstraints)
+            if ((int)samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
