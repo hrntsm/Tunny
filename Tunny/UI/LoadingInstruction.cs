@@ -32,9 +32,28 @@ namespace Tunny.UI
         private static void InitializeLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(path: TunnyVariables.LogPath, rollingInterval: RollingInterval.Day, formatProvider: System.Globalization.CultureInfo.InvariantCulture)
+                .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: System.Globalization.CultureInfo.InvariantCulture)
                 .CreateLogger();
             Log.Information("Tunny is loaded.");
+            CheckAndDeleteOldLogFiles();
+        }
+
+        private static void CheckAndDeleteOldLogFiles()
+        {
+            string logDirectory = TunnyVariables.LogPath;
+            string logFilePattern = "*.txt";
+
+            DateTime threshold = DateTime.Now.AddDays(-7);
+
+            var directory = new DirectoryInfo(logDirectory);
+            FileInfo[] logFiles = directory.GetFiles(logFilePattern);
+            foreach (FileInfo file in logFiles)
+            {
+                if (file.LastWriteTime < threshold)
+                {
+                    file.Delete();
+                }
+            }
         }
 
         void RegisterTunnyMenuItems(GH_Canvas canvas)
