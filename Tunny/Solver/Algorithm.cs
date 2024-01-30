@@ -56,7 +56,7 @@ namespace Tunny.Solver
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = SetDirectionValues(Objective.Length);
-            Log.Information($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {(SamplerType)samplerType} sampler.");
+            Log.Information($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             PythonEngine.Initialize();
             IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
