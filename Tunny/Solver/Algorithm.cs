@@ -20,6 +20,7 @@ using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -58,10 +59,12 @@ namespace Tunny.Solver
             string[] directions = SetDirectionValues(Objective.Length);
             Log.Information($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
-            PythonEngine.Initialize();
-            IntPtr allowThreadsPtr = PythonEngine.BeginAllowThreads();
+            InitializePythonEngine();
             using (Py.GIL())
             {
+                Log.Debug("Wake Python GIL.");
+                PythonEngine.Exec("a == 1");
+
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
@@ -88,8 +91,20 @@ namespace Tunny.Solver
                     SetResultValues(Objective.Length, study, parameter);
                 }
             }
-            PythonEngine.EndAllowThreads(allowThreadsPtr);
             PythonEngine.Shutdown();
+            Log.Debug("Shutdown PythonEngine.");
+        }
+
+        private static void InitializePythonEngine()
+        {
+            Log.Debug("Check PythonEngine status.");
+            if (PythonEngine.IsInitialized)
+            {
+                PythonEngine.Shutdown();
+                Log.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
+            }
+            PythonEngine.Initialize();
+            Log.Debug("Initialize PythonEngine.");
         }
 
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out double[] parameter, out TrialGrasshopperItems result, out dynamic study)

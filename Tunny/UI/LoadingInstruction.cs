@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
+
+using Python.Runtime;
 
 using Serilog;
 
@@ -32,7 +35,9 @@ namespace Tunny.UI
         private static void InitializeLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: System.Globalization.CultureInfo.InvariantCulture)
+                .MinimumLevel.Verbose()
+                .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+                .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
                 .CreateLogger();
             Log.Information("Tunny is loaded.");
             CheckAndDeleteOldLogFiles();

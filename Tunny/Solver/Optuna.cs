@@ -97,7 +97,7 @@ namespace Tunny.Solver
 
         private static void ShowErrorMessages(Exception e)
         {
-            Log.Error(e.Message);
+            Log.Error("Optimization end with exception: {0}", e.Message);
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
                 "Please send below message (& gh file if possible) to Tunny support.\n" +
