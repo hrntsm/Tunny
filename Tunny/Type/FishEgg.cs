@@ -8,15 +8,28 @@ namespace Tunny.Type
     [Serializable]
     public class FishEgg
     {
-        public bool IsInteger { get; set; }
-        public string NickName { get; set; }
-        public List<double> Values { get; set; }
+        public bool IsInteger { get; }
+        public bool IsCategorical { get; }
+        public bool IsNumber => !IsCategorical;
+        public string NickName { get; }
+        public List<double> Values { get; }
+        public string Category { get; }
 
-        public FishEgg(Variable variable)
+        public FishEgg(VariableBase variable)
         {
-            IsInteger = variable.IsInteger;
             NickName = variable.NickName;
-            Values = new List<double> { variable.Value };
+            switch (variable)
+            {
+                case NumberVariable numberVariable:
+                    IsCategorical = false;
+                    IsInteger = numberVariable.IsInteger;
+                    Values = new List<double> { numberVariable.Value };
+                    break;
+                case CategoricalVariable categoricalVariable:
+                    IsCategorical = true;
+                    Category = categoricalVariable.SelectedItem;
+                    break;
+            }
         }
     }
 }
