@@ -58,7 +58,7 @@ namespace Tunny.Component.Util
         private void LayFishEgg()
         {
             var ghIO = new GrasshopperInOut(this, getVariableOnly: true);
-            List<Variable> variables = ghIO.Variables;
+            List<NumberVariable> variables = ghIO.Variables;
 
             bool isContainedVariableSets = false;
             if (_fishEggs.Count > 0)
@@ -72,10 +72,10 @@ namespace Tunny.Component.Util
             }
         }
 
-        private bool CheckVariableSetsIsContained(IEnumerable<Variable> variables)
+        private bool CheckVariableSetsIsContained(IEnumerable<NumberVariable> variables)
         {
             int sameValueCount = 0;
-            foreach (Variable variable in variables)
+            foreach (NumberVariable variable in variables)
             {
                 if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
                 {
@@ -86,9 +86,9 @@ namespace Tunny.Component.Util
             return isContainVariableSets;
         }
 
-        private void AddVariablesToFishEgg(IEnumerable<Variable> variables)
+        private void AddVariablesToFishEgg(IEnumerable<NumberVariable> variables)
         {
-            foreach (Variable variable in variables)
+            foreach (NumberVariable variable in variables)
             {
                 if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg))
                 {

@@ -3,27 +3,24 @@ using System;
 namespace Tunny.Input
 {
     [Serializable]
-    public class Variable
+    public class NumberVariable : VariableBase
     {
         public double LowerBond { get; }
         public double UpperBond { get; }
         public bool IsInteger { get; }
-        public string NickName { get; }
         public double Epsilon { get; }
         public double Value { get; }
-        public Guid InstanceId { get; }
 
-        public Variable(
+        public NumberVariable(
             double lowerBond, double upperBond, bool isInteger, string nickName, double epsilon,
             double value, Guid id)
+        : base(nickName, id)
         {
             LowerBond = lowerBond;
             UpperBond = upperBond;
             IsInteger = isInteger;
-            NickName = nickName;
             Epsilon = epsilon;
             Value = value;
-            InstanceId = id;
         }
     }
 }
