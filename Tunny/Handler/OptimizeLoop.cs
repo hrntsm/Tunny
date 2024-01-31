@@ -50,7 +50,7 @@ namespace Tunny.Handler
 
         private static double[] RunOptimizationLoop(BackgroundWorker worker)
         {
-            List<Variable> variables = s_component.GhInOut.Variables;
+            List<VariableBase> variables = s_component.GhInOut.Variables;
             Objective objectives = s_component.GhInOut.Objectives;
             Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
             bool hasConstraint = s_component.GhInOut.HasConstraint;

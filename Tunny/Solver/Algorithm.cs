@@ -20,7 +20,6 @@ using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -29,7 +28,7 @@ namespace Tunny.Solver
         public double[] XOpt { get; private set; }
         public EndState EndState { get; private set; }
 
-        private List<Variable> Variables { get; }
+        private List<VariableBase> Variables { get; }
         private bool HasConstraints { get; }
         private Objective Objective { get; }
         private TunnySettings Settings { get; }
@@ -37,7 +36,7 @@ namespace Tunny.Solver
         private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
-            List<Variable> variables, bool hasConstraint, Objective objective, Dictionary<string, FishEgg> fishEgg,
+            List<VariableBase> variables, bool hasConstraint, Objective objective, Dictionary<string, FishEgg> fishEgg,
             TunnySettings settings,
             Func<ProgressState, int, TrialGrasshopperItems> evalFunc)
         {
@@ -317,7 +316,7 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private TrialGrasshopperItems RunSingleOptimizeStep(OptimizationHandlingInfo optInfo, double[] parameter, int trialNum, DateTime startTime)
+        private TrialGrasshopperItems RunSingleOptimizeStep(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, DateTime startTime)
         {
             dynamic trial;
             int progress = trialNum * 100 / optInfo.NTrials;
@@ -333,13 +332,7 @@ namespace Tunny.Solver
                 }
 
                 trial = optInfo.Study.ask();
-
-                for (int j = 0; j < Variables.Count; j++)
-                {
-                    parameter[j] = Variables[j].IsInteger
-                    ? trial.suggest_int(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon)
-                    : trial.suggest_float(Variables[j].NickName, Variables[j].LowerBond, Variables[j].UpperBond, step: Variables[j].Epsilon);
-                }
+                SetOptimizationParameter(parameter, trial);
 
                 ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime);
                 result = EvalFunc(pState, progress);
@@ -396,6 +389,26 @@ namespace Tunny.Solver
             }
 
             return result;
+        }
+
+        private void SetOptimizationParameter(Parameter[] parameter, dynamic trial)
+        {
+            foreach ((VariableBase variable, int i) in Variables.Select((v, i) => (v, i)))
+            {
+                string name = variable.NickName;
+                switch (variable)
+                {
+                    case NumberVariable number:
+                        parameter[i] = new Parameter(number.IsInteger
+                            ? trial.suggest_int(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
+                            : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
+                        );
+                        break;
+                    case CategoricalVariable category:
+                        parameter[i] = new Parameter(trial.suggest_categorical(name, category.Categories));
+                        break;
+                }
+            }
         }
 
         private void SetTrialResultLog(int trialNum, TrialGrasshopperItems result, OptimizationHandlingInfo optInfo, double[] parameter)

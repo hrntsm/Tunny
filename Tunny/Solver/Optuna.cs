@@ -33,7 +33,7 @@ namespace Tunny.Solver
         }
 
         public bool RunSolver(
-            List<Variable> variables,
+            List<VariableBase> variables,
             Objective objectives,
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, TrialGrasshopperItems> evaluate)
