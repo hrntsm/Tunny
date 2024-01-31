@@ -5,6 +5,8 @@ using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
+using Serilog;
+
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
@@ -21,6 +23,7 @@ namespace Tunny.UI
 
         public OptimizationWindow(FishingComponent component)
         {
+            Log.Information("OptimizationWindow is open");
             InitializeComponent();
 
             _component = component;
@@ -41,6 +44,7 @@ namespace Tunny.UI
             PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
             if (_settings.CheckPythonLibraries)
             {
+                Log.Information("Run Python installer");
                 var installer = new PythonInstallDialog()
                 {
                     StartPosition = FormStartPosition.CenterScreen
@@ -48,6 +52,10 @@ namespace Tunny.UI
                 installer.Show(Owner);
                 _settings.CheckPythonLibraries = false;
                 checkPythonLibrariesCheckBox.Checked = false;
+            }
+            else
+            {
+                Log.Information("Skip Python installer");
             }
         }
 
@@ -80,10 +88,12 @@ namespace Tunny.UI
             string settingsPath = TunnyVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
+                Log.Information("Load existing setting.json");
                 _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
             }
             else
             {
+                Log.Information("There is no configuration file. Create a new one.");
                 _settings = new TunnySettings
                 {
                     Storage = new Settings.Storage
@@ -127,9 +137,11 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
+            Log.Information("Set UI values");
             HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
             if (type != HumanInTheLoopType.None)
             {
+                Log.Information("Set Tunny Human-in-the-loop mode");
                 Text = "Tunny (Human in the Loop mode)";
                 samplerComboBox.SelectedIndex = 1; // GP
                 samplerComboBox.Enabled = false;
@@ -140,9 +152,10 @@ namespace Tunny.UI
             }
             else
             {
+                Log.Information("Set Tunny normal optimization mode");
                 Text = "Tunny";
                 samplerComboBox.Enabled = true;
-                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                samplerComboBox.SelectedIndex = (int)_settings.Optimize.SelectSampler;
                 nTrialText.Text = "Number of trials";
                 nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
                 timeoutNumUpDown.Enabled = true;
@@ -167,7 +180,7 @@ namespace Tunny.UI
         }
         private void GetUIValues()
         {
-            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            _settings.Optimize.SelectSampler = (SamplerType)samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;

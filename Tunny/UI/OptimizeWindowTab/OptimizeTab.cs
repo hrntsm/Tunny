@@ -8,6 +8,8 @@ using Grasshopper.GUI;
 
 using Optuna.Study;
 
+using Serilog;
+
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Storage;
@@ -153,9 +155,12 @@ namespace Tunny.UI
             {
                 UpdateStudyComboBox(_settings.Storage.Path);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                TunnyMessageBox.Show("The storage file loading error.\nPlease check the storage path or use new storage file.", "Error");
+                Log.Error(e.Message);
+                string message = "The storage file loading error.Please check the storage path or use new storage file.";
+                Log.Error(message);
+                TunnyMessageBox.Show(message, "Error");
             }
         }
 
@@ -166,6 +171,7 @@ namespace Tunny.UI
             outputTargetStudyComboBox.Items.Clear();
             cmaEsWarmStartComboBox.Items.Clear();
 
+            Log.Information("Get study summaries from storage file: {0}", storagePath);
             _summaries = new StorageHandler().GetStudySummaries(storagePath);
 
             if (_summaries.Length > 0)

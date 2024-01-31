@@ -3,6 +3,8 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Serilog;
+
 using Tunny.Enum;
 using Tunny.PostProcess;
 using Tunny.Settings;
@@ -30,6 +32,7 @@ namespace Tunny.Solver
             }
             catch (Exception e)
             {
+                Log.Error(e.Message);
                 TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
@@ -53,9 +56,12 @@ namespace Tunny.Solver
                     dynamic fig = CreateFigure(study, pSettings);
                     FigureActions(fig, pSettings);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Error(e.Message);
+                    string message = "This visualization type is not supported in this study case.";
+                    Log.Error(message);
+                    TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             PythonEngine.Shutdown();
@@ -309,9 +315,12 @@ namespace Tunny.Solver
                 fig = TruncateParetoFrontPlotHover(fig, study);
                 return ClusteringParetoFrontPlot(fig, study, pSettings.ClusterCount);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                TunnyMessageBox.Show("Clustering Error", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error(e.Message);
+                string message = "Clustering Error";
+                Log.Error(message);
+                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return null;
         }

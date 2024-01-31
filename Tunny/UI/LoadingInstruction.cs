@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
+
+using Python.Runtime;
+
+using Serilog;
 
 using Tunny.Resources;
 using Tunny.Settings;
@@ -23,7 +28,37 @@ namespace Tunny.UI
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
+            InitializeLogger();
             return GH_LoadingInstruction.Proceed;
+        }
+
+        private static void InitializeLogger()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
+                .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
+                .CreateLogger();
+            Log.Information("Tunny is loaded.");
+            CheckAndDeleteOldLogFiles();
+        }
+
+        private static void CheckAndDeleteOldLogFiles()
+        {
+            string logDirectory = TunnyVariables.LogPath;
+            string logFilePattern = "*.txt";
+
+            DateTime threshold = DateTime.Now.AddDays(-7);
+
+            var directory = new DirectoryInfo(logDirectory);
+            FileInfo[] logFiles = directory.GetFiles(logFilePattern);
+            foreach (FileInfo file in logFiles)
+            {
+                if (file.LastWriteTime < threshold)
+                {
+                    file.Delete();
+                }
+            }
         }
 
         void RegisterTunnyMenuItems(GH_Canvas canvas)
