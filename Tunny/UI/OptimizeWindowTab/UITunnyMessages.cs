@@ -2,8 +2,6 @@ using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
-using Serilog;
-
 namespace Tunny.UI
 {
     public partial class OptimizationWindow
@@ -51,7 +49,6 @@ namespace Tunny.UI
         // OutputTab ==========================
         private static bool IncorrectParseModeNumberInputMessage()
         {
-            Log.Warning("Incorrect parse mode number input.");
             TunnyMessageBox.Show(
                 "The model number format of the input is incorrect. \nPlease use a comma separator as follows.\n\"1,2,3\"",
                 "Tunny");

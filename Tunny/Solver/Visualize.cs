@@ -32,7 +32,6 @@ namespace Tunny.Solver
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
                 TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
@@ -58,9 +57,7 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
                     string message = "This visualization type is not supported in this study case.";
-                    Log.Error(message);
                     TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -315,11 +312,9 @@ namespace Tunny.Solver
                 fig = TruncateParetoFrontPlotHover(fig, study);
                 return ClusteringParetoFrontPlot(fig, study, pSettings.ClusterCount);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Log.Error(e.Message);
-                string message = "Clustering Error";
-                Log.Error(message);
+                string message = "Clustering plot Error";
                 TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return null;

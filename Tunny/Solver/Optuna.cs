@@ -7,8 +7,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Serilog;
-
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -97,7 +95,6 @@ namespace Tunny.Solver
 
         private static void ShowErrorMessages(Exception e)
         {
-            Log.Error("Optimization end with exception: {0}", e.Message);
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
                 "Please send below message (& gh file if possible) to Tunny support.\n" +
@@ -122,7 +119,6 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
                     TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return modelResult.ToArray();
                 }
@@ -167,7 +163,6 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
                     TunnyMessageBox.Show("Error\n\n" + e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 worker.ReportProgress(i * 100 / resultNum.Count);
