@@ -213,7 +213,8 @@ namespace Tunny.Util
                 string nickName = valueList.NickName;
                 Guid id = valueList.InstanceGuid;
                 string[] categories = valueList.ListItems.Select(value => value.Name).ToArray();
-                variables.Add(new CategoricalVariable(categories, nickName, id));
+                string selectedItem = valueList.FirstSelectedItem.Name;
+                variables.Add(new CategoricalVariable(categories, selectedItem, nickName, id));
             }
         }
 
