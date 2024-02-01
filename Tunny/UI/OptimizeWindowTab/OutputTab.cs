@@ -117,10 +117,11 @@ namespace Tunny.UI
                     _component.ExpireSolution(true);
                     break;
                 case OutputMode.ReflectToSliders:
-                    var decimalVar = _component.Fishes[0].Variables
-                            .Select(x => (decimal)x.Value).ToList();
-                    _component.GhInOut.NewSolution(decimalVar);
-                    break;
+                    throw new NotImplementedException("Reflect to sliders is not implemented.");
+                // var decimalVar = _component.Fishes[0].Variables
+                //         .Select(x => (decimal)x.Value).ToList();
+                // _component.GhInOut.NewSolution(decimalVar);
+                // break;
                 default:
                     throw new ArgumentException("Unsupported output mode.");
             }

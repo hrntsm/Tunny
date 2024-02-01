@@ -20,7 +20,7 @@ namespace Tunny.Solver
 {
     public class Optuna : PythonInit
     {
-        public double[] XOpt { get; private set; }
+        public Parameter[] OptimalParameters { get; private set; }
         private readonly string _componentFolder;
         private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
@@ -53,7 +53,7 @@ namespace Tunny.Solver
             {
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
-                XOpt = optimize.XOpt;
+                OptimalParameters = optimize.OptimalParameters;
                 ShowEndMessages(optimize.EndState);
 
                 return true;

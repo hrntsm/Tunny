@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Tunny.Input
 {
     public class Parameter
@@ -15,6 +17,18 @@ namespace Tunny.Input
         public Parameter(string category)
         {
             Category = category;
+        }
+
+        public override string ToString()
+        {
+            if (HasCategory)
+            {
+                return Category;
+            }
+            else
+            {
+                return Number.ToString(CultureInfo.InvariantCulture);
+            }
         }
     }
 }

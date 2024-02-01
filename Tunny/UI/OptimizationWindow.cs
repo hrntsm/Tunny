@@ -10,6 +10,7 @@ using Serilog;
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
+using Tunny.Input;
 using Tunny.Settings;
 using Tunny.Util;
 
@@ -106,7 +107,7 @@ namespace Tunny.UI
             }
         }
 
-        private void UpdateGrasshopper(IList<decimal> parameters)
+        private void UpdateGrasshopper(IList<Parameter> parameters)
         {
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
 

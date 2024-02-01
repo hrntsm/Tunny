@@ -26,15 +26,14 @@ namespace Tunny.Handler
             s_component = e.Argument as FishingComponent;
             s_component?.GhInOutInstantiate();
 
-            double[] result = RunOptimizationLoop(s_worker);
-            if (result == null || double.IsNaN(result[0]))
+            Parameter[] optimalParams = RunOptimizationLoop(s_worker);
+            if (optimalParams == null || optimalParams.Length == 0)
             {
                 return;
             }
-            var decimalResults = result.Select(Convert.ToDecimal).ToList();
             var pState = new ProgressState
             {
-                Values = decimalResults
+                Parameter = optimalParams
             };
 
             if (s_component != null)
@@ -48,7 +47,7 @@ namespace Tunny.Handler
             s_worker?.CancelAsync();
         }
 
-        private static double[] RunOptimizationLoop(BackgroundWorker worker)
+        private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
         {
             List<VariableBase> variables = s_component.GhInOut.Variables;
             Objective objectives = s_component.GhInOut.Objectives;
@@ -57,13 +56,13 @@ namespace Tunny.Handler
 
             if (worker.CancellationPending)
             {
-                return new[] { double.NaN };
+                return Array.Empty<Parameter>();
             }
 
             var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
-            return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
+            return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();
         }
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)

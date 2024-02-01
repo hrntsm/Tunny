@@ -25,7 +25,7 @@ namespace Tunny.Solver
 {
     public class Algorithm
     {
-        public double[] XOpt { get; private set; }
+        public Parameter[] OptimalParameters { get; private set; }
         public EndState EndState { get; private set; }
 
         private List<VariableBase> Variables { get; }
@@ -62,14 +62,13 @@ namespace Tunny.Solver
             using (Py.GIL())
             {
                 Log.Debug("Wake Python GIL.");
-                PythonEngine.Exec("a == 1");
 
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
                 dynamic artifactBackend = Settings.Storage.CreateNewOptunaArtifactBackend(false);
 
-                double[] parameter = null;
+                Parameter[] parameter = null;
                 TrialGrasshopperItems result = null;
 
                 if (CheckExistStudyParameter(Objective.Length, optuna, storage))
@@ -106,7 +105,7 @@ namespace Tunny.Solver
             Log.Debug("Initialize PythonEngine.");
         }
 
-        private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out double[] parameter, out TrialGrasshopperItems result, out dynamic study)
+        private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             if (Settings.Storage.Type != StorageType.Sqlite)
             {
@@ -127,7 +126,7 @@ namespace Tunny.Solver
             RunPreferentialOptimize(optInfo, nBatch, out parameter, out result);
         }
 
-        private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] parameter, out TrialGrasshopperItems result, out dynamic study)
+        private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
@@ -136,7 +135,7 @@ namespace Tunny.Solver
             RunOptimize(optInfo, out parameter, out result);
         }
 
-        private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out double[] parameter, out TrialGrasshopperItems result, out dynamic study)
+        private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             study = CreateStudy(directions, sampler, storage);
             string[] objNickName = Objective.GetNickNames();
@@ -219,13 +218,14 @@ namespace Tunny.Solver
             }
         }
 
-        private void SetResultValues(int nObjective, dynamic study, double[] parameter)
+        private void SetResultValues(int nObjective, dynamic study, Parameter[] parameter)
         {
             if (nObjective == 1 && Objective.HumanInTheLoopType != HumanInTheLoopType.Preferential)
             {
-                double[] values = (double[])study.best_params.values();
+                PyObject[] pyBestParams = study.best_params.values();
+                string[] values = pyBestParams.Select(x => x.ToString()).ToArray();
                 string[] keys = (string[])study.best_params.keys();
-                double[] opt = new double[Variables.Count];
+                var opt = new Parameter[Variables.Count];
 
                 for (int i = 0; i < Variables.Count; i++)
                 {
@@ -233,21 +233,21 @@ namespace Tunny.Solver
                     {
                         if (keys[j] == Variables[i].NickName)
                         {
-                            opt[i] = values[j];
+                            opt[i] = double.TryParse(values[j], out double num) ? new Parameter(num) : new Parameter(values[j]);
                         }
                     }
                 }
-                XOpt = opt;
+                OptimalParameters = opt;
             }
             else
             {
-                XOpt = parameter;
+                OptimalParameters = parameter;
             }
         }
 
-        private void RunOptimize(OptimizationHandlingInfo optInfo, out double[] parameter, out TrialGrasshopperItems result)
+        private void RunOptimize(OptimizationHandlingInfo optInfo, out Parameter[] parameter, out TrialGrasshopperItems result)
         {
-            parameter = new double[Variables.Count];
+            parameter = new Parameter[Variables.Count];
             result = new TrialGrasshopperItems();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
@@ -266,9 +266,9 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private void RunPreferentialOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] parameter, out TrialGrasshopperItems result)
+        private void RunPreferentialOptimize(OptimizationHandlingInfo optInfo, int nBatch, out Parameter[] parameter, out TrialGrasshopperItems result)
         {
-            parameter = new double[Variables.Count];
+            parameter = new Parameter[Variables.Count];
             result = new TrialGrasshopperItems();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
@@ -291,9 +291,9 @@ namespace Tunny.Solver
             SaveInMemoryStudy(optInfo.Storage);
         }
 
-        private void RunHumanSidlerInputOptimize(OptimizationHandlingInfo optInfo, int nBatch, out double[] parameter, out TrialGrasshopperItems result)
+        private void RunHumanSidlerInputOptimize(OptimizationHandlingInfo optInfo, int nBatch, out Parameter[] parameter, out TrialGrasshopperItems result)
         {
-            parameter = new double[Variables.Count];
+            parameter = new Parameter[Variables.Count];
             result = new TrialGrasshopperItems();
             int trialNum = 0;
             DateTime startTime = DateTime.Now;
@@ -399,19 +399,20 @@ namespace Tunny.Solver
                 switch (variable)
                 {
                     case NumberVariable number:
-                        parameter[i] = new Parameter(number.IsInteger
+                        double numParam = number.IsInteger
                             ? trial.suggest_int(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
-                            : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
-                        );
+                            : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon);
+                        parameter[i] = new Parameter(numParam);
                         break;
                     case CategoricalVariable category:
-                        parameter[i] = new Parameter(trial.suggest_categorical(name, category.Categories));
+                        string catParam = (string)trial.suggest_categorical(name, category.Categories);
+                        parameter[i] = new Parameter(catParam);
                         break;
                 }
             }
         }
 
-        private void SetTrialResultLog(int trialNum, TrialGrasshopperItems result, OptimizationHandlingInfo optInfo, double[] parameter)
+        private void SetTrialResultLog(int trialNum, TrialGrasshopperItems result, OptimizationHandlingInfo optInfo, Parameter[] parameter)
         {
             var sb = new StringBuilder();
             sb.Append("Trial " + trialNum + " finished with values: {");
@@ -483,7 +484,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, double[] parameter, int trialNum, DateTime startTime)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime)
         {
             ComputeBestValues(optSet.Study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
             return new ProgressState
@@ -491,7 +492,7 @@ namespace Tunny.Solver
                 TrialNumber = trialNum,
                 ObjectiveNum = Objective.Length,
                 BestValues = bestValues,
-                Values = parameter.Select(v => (decimal)v).ToList(),
+                Parameter = parameter,
                 HypervolumeRatio = hypervolumeRatio,
                 EstimatedTimeRemaining = optSet.Timeout <= 0
                     ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (optSet.NTrials - trialNum) / (trialNum + 1))

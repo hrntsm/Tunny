@@ -307,7 +307,27 @@ namespace Tunny.Util
             return false;
         }
 
-        private bool SetSliderValues(IList<decimal> parameters)
+        private void SetCategoryValues(string[] categoryParameters)
+        {
+            int i = 0;
+            foreach (GH_ValueList valueList in _valueLists)
+            {
+                if (valueList == null)
+                {
+                    return;
+                }
+                string[] categories = valueList.ListItems.Select(item => item.Name).ToArray();
+                int index = Array.IndexOf(categories, categoryParameters[i++]);
+                if (index == -1)
+                {
+                    return;
+                }
+                valueList.SelectItem(index);
+                valueList.ExpireSolution(false);
+            }
+        }
+
+        private bool SetSliderValues(decimal[] parameters)
         {
             int i = 0;
 
@@ -365,9 +385,12 @@ namespace Tunny.Util
             while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
         }
 
-        public void NewSolution(IList<decimal> parameters)
+        public void NewSolution(IList<Parameter> parameters)
         {
-            SetSliderValues(parameters);
+            decimal[] decimalParameters = parameters.Where(p => p.HasNumber).Select(p => (decimal)p.Number).ToArray();
+            string[] categoryParameters = parameters.Where(p => p.HasCategory).Select(p => p.Category).ToArray();
+            SetSliderValues(decimalParameters);
+            SetCategoryValues(categoryParameters);
             Recalculate();
             SetObjectives();
             SetAttributes();
