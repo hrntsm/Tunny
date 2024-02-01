@@ -20,19 +20,20 @@ namespace Tunny.UI
 
         private static void WriteLog(string message, MessageBoxIcon icon)
         {
+            string noLineBreakMessage = message.Replace("\n", " ");
             switch (icon)
             {
                 case MessageBoxIcon.Error:
-                    Log.Error(message);
+                    Log.Error(noLineBreakMessage);
                     break;
                 case MessageBoxIcon.Warning:
-                    Log.Warning(message);
+                    Log.Warning(noLineBreakMessage);
                     break;
                 case MessageBoxIcon.Information:
-                    Log.Information(message);
+                    Log.Information(noLineBreakMessage);
                     break;
                 default:
-                    Log.Debug(message);
+                    Log.Debug(noLineBreakMessage);
                     break;
             }
         }
