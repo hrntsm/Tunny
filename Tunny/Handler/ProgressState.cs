@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 
+using Tunny.Input;
+
 namespace Tunny.Handler
 {
     public class ProgressState
     {
-        public IList<decimal> Values { get; set; }
+        public IList<Parameter> Parameter { get; set; }
         public int TrialNumber { get; set; }
         public int ObjectiveNum { get; set; }
         public double[][] BestValues { get; set; }

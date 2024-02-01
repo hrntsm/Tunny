@@ -69,9 +69,10 @@ namespace Tunny.Component.Optimizer
             {
                 switch (docObject)
                 {
-                    case GH_NumberSlider slider:
-                    case GalapagosGeneListObject genePool:
-                    case Param_FishEgg fishEgg:
+                    case GH_ValueList _:
+                    case GH_NumberSlider _:
+                    case GalapagosGeneListObject _:
+                    case Param_FishEgg _:
                         break;
                     default:
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid variable.");

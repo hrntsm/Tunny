@@ -117,9 +117,7 @@ namespace Tunny.UI
                     _component.ExpireSolution(true);
                     break;
                 case OutputMode.ReflectToSliders:
-                    var decimalVar = _component.Fishes[0].Variables
-                            .Select(x => (decimal)x.Value).ToList();
-                    _component.GhInOut.NewSolution(decimalVar);
+                    _component.GhInOut.NewSolution(_component.Fishes[0].GetParameterClassFormatVariables());
                     break;
                 default:
                     throw new ArgumentException("Unsupported output mode.");

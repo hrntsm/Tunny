@@ -7,8 +7,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Serilog;
-
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -22,7 +20,7 @@ namespace Tunny.Solver
 {
     public class Optuna : PythonInit
     {
-        public double[] XOpt { get; private set; }
+        public Parameter[] OptimalParameters { get; private set; }
         private readonly string _componentFolder;
         private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
@@ -35,7 +33,7 @@ namespace Tunny.Solver
         }
 
         public bool RunSolver(
-            List<Variable> variables,
+            List<VariableBase> variables,
             Objective objectives,
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, TrialGrasshopperItems> evaluate)
@@ -55,7 +53,7 @@ namespace Tunny.Solver
             {
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
-                XOpt = optimize.XOpt;
+                OptimalParameters = optimize.OptimalParameters;
                 ShowEndMessages(optimize.EndState);
 
                 return true;
@@ -97,7 +95,6 @@ namespace Tunny.Solver
 
         private static void ShowErrorMessages(Exception e)
         {
-            Log.Error("Optimization end with exception: {0}", e.Message);
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
                 "Please send below message (& gh file if possible) to Tunny support.\n" +
@@ -122,7 +119,6 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
                     TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return modelResult.ToArray();
                 }
@@ -167,7 +163,6 @@ namespace Tunny.Solver
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e.Message);
                     TunnyMessageBox.Show("Error\n\n" + e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 worker.ReportProgress(i * 100 / resultNum.Count);
@@ -219,10 +214,10 @@ namespace Tunny.Solver
             }
         }
 
-        private static Dictionary<string, double> ParseVariables(dynamic trial)
+        private static Dictionary<string, object> ParseVariables(dynamic trial)
         {
-            var variables = new Dictionary<string, double>();
-            double[] values = (double[])trial.@params.values();
+            var variables = new Dictionary<string, object>();
+            object[] values = (object[])trial.@params.values();
             string[] keys = (string[])trial.@params.keys();
             for (int i = 0; i < keys.Length; i++)
             {

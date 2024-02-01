@@ -70,7 +70,7 @@ namespace Tunny.Handler
             });
         }
 
-        private static Dictionary<string, double> SetVariables(ModelResult model, IEnumerable<string> nickNames)
+        private static Dictionary<string, object> SetVariables(ModelResult model, IEnumerable<string> nickNames)
         {
             return nickNames.SelectMany(name => model.Variables.Where(obj => obj.Key == name))
                 .ToDictionary(variable => variable.Key, variable => variable.Value);

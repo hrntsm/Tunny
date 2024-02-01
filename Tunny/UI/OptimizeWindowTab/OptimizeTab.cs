@@ -155,11 +155,9 @@ namespace Tunny.UI
             {
                 UpdateStudyComboBox(_settings.Storage.Path);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Log.Error(e.Message);
                 string message = "The storage file loading error.Please check the storage path or use new storage file.";
-                Log.Error(message);
                 TunnyMessageBox.Show(message, "Error");
             }
         }
@@ -226,7 +224,7 @@ namespace Tunny.UI
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
             var pState = (ProgressState)e.UserState;
-            UpdateGrasshopper(pState.Values);
+            UpdateGrasshopper(pState.Parameter);
             const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"

@@ -7,13 +7,15 @@ using Newtonsoft.Json;
 
 using Rhino.Geometry;
 
+using Tunny.Input;
+
 namespace Tunny.Type
 {
     [Serializable]
     public class Fish
     {
         public int ModelNumber { get; set; }
-        public Dictionary<string, double> Variables { get; set; }
+        public Dictionary<string, object> Variables { get; set; }
         public Dictionary<string, double> Objectives { get; set; }
         public Dictionary<string, object> Attributes { get; set; }
 
@@ -37,6 +39,28 @@ namespace Tunny.Type
         public static Fish DeserializeFromJson(string json)
         {
             return JsonConvert.DeserializeObject<Fish>(json);
+        }
+
+        public Parameter[] GetParameterClassFormatVariables()
+        {
+            var parameters = new List<Parameter>();
+            if (Variables == null)
+            {
+                return parameters.ToArray();
+            }
+
+            foreach (KeyValuePair<string, object> variable in Variables)
+            {
+                if (variable.Value is double v)
+                {
+                    parameters.Add(new Parameter(v));
+                }
+                else
+                {
+                    parameters.Add(new Parameter(variable.Value.ToString()));
+                }
+            }
+            return parameters.ToArray();
         }
 
         public static string ToBase64(Fish fish)

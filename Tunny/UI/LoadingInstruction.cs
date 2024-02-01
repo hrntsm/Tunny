@@ -9,8 +9,6 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-using Python.Runtime;
-
 using Serilog;
 
 using Tunny.Resources;

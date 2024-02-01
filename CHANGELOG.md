@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.11.0] -yyyy-mm-dd
+
+### Added
+
+- Categorical optimization.
+- log output.
+
+### Changed
+
+for changes in existing functionality.
+
+### Deprecated
+
+for soon-to-be removed features.
+
+### Removed
+
+for now removed features.
+
+### Fixed
+
+for any bug fixes.
+
+### Security
+
+in case of vulnerabilities.
+
 ## [v0.10.0] -2024-01-27
 
 ### Changed

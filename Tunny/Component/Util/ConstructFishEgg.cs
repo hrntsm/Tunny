@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
+using Serilog;
+
 using Tunny.Component.Params;
 using Tunny.Input;
 using Tunny.Type;
@@ -58,7 +60,7 @@ namespace Tunny.Component.Util
         private void LayFishEgg()
         {
             var ghIO = new GrasshopperInOut(this, getVariableOnly: true);
-            List<Variable> variables = ghIO.Variables;
+            List<VariableBase> variables = ghIO.Variables;
 
             bool isContainedVariableSets = false;
             if (_fishEggs.Count > 0)
@@ -72,31 +74,61 @@ namespace Tunny.Component.Util
             }
         }
 
-        private bool CheckVariableSetsIsContained(IEnumerable<Variable> variables)
+        private bool CheckVariableSetsIsContained(IEnumerable<VariableBase> variables)
         {
             int sameValueCount = 0;
-            foreach (Variable variable in variables)
+            foreach (VariableBase variable in variables)
             {
-                if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg) && egg.Values.Contains(variable.Value))
+                string name = variable.NickName;
+                switch (variable)
                 {
-                    sameValueCount++;
+                    case NumberVariable number:
+                        if (_fishEggs.TryGetValue(name, out FishEgg eggNum) && eggNum.Values.Contains(number.Value))
+                        {
+                            sameValueCount++;
+                        }
+                        break;
+                    case CategoricalVariable category:
+                        if (_fishEggs.TryGetValue(name, out FishEgg eggCat) && eggCat.Category == category.SelectedItem)
+                        {
+                            sameValueCount++;
+                        }
+                        continue;
                 }
             }
             bool isContainVariableSets = sameValueCount == _fishEggs.Count;
             return isContainVariableSets;
         }
 
-        private void AddVariablesToFishEgg(IEnumerable<Variable> variables)
+        private void AddVariablesToFishEgg(IEnumerable<VariableBase> variables)
         {
-            foreach (Variable variable in variables)
+            foreach (VariableBase variable in variables)
             {
-                if (_fishEggs.TryGetValue(variable.NickName, out FishEgg egg))
+                string name = variable.NickName;
+                switch (variable)
                 {
-                    egg.Values.Add(variable.Value);
-                }
-                else
-                {
-                    _fishEggs.Add(variable.NickName, new FishEgg(variable));
+                    case NumberVariable number:
+                        if (_fishEggs.TryGetValue(name, out FishEgg eggNum))
+                        {
+                            eggNum.Values.Add(number.Value);
+                        }
+                        else
+                        {
+                            _fishEggs.Add(name, new FishEgg(number));
+                        }
+                        break;
+                    case CategoricalVariable category:
+                        if (_fishEggs.TryGetValue(name, out FishEgg eggCat))
+                        {
+                            string message = $"This Categorical variable {name} is already contained in fish egg.";
+                            Log.Error(message);
+                            throw new ArgumentException(message);
+                        }
+                        else
+                        {
+                            _fishEggs.Add(name, new FishEgg(category));
+                        }
+                        break;
                 }
             }
         }
