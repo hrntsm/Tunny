@@ -142,6 +142,7 @@ namespace Tunny.Util
                 {
                     nickName = "param" + i++;
                 }
+
                 double eps = Convert.ToDouble(slider.Slider.Epsilon);
                 switch (slider.Slider.Type)
                 {
@@ -166,7 +167,10 @@ namespace Tunny.Util
                         isInteger = false;
                         break;
                 }
-
+                if (!isInteger)
+                {
+                    eps = Math.Pow(10, (-slider.Slider.DecimalPlaces));
+                }
                 variables.Add(new Variable(Convert.ToDouble(lowerBond), Convert.ToDouble(upperBond), isInteger, nickName, eps, Convert.ToDouble(value), id));
             }
         }
