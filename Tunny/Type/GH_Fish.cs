@@ -128,7 +128,7 @@ namespace Tunny.Type
         {
             sb.AppendLine("Variables:");
             sb.AppendLine("------------------------------------");
-            foreach (KeyValuePair<string, double> variable in m_value.Variables)
+            foreach (KeyValuePair<string, object> variable in m_value.Variables)
             {
                 sb.AppendLine("  \"" + variable.Key + "\": " + variable.Value + "");
             }

@@ -214,10 +214,10 @@ namespace Tunny.Solver
             }
         }
 
-        private static Dictionary<string, double> ParseVariables(dynamic trial)
+        private static Dictionary<string, object> ParseVariables(dynamic trial)
         {
-            var variables = new Dictionary<string, double>();
-            double[] values = (double[])trial.@params.values();
+            var variables = new Dictionary<string, object>();
+            object[] values = (object[])trial.@params.values();
             string[] keys = (string[])trial.@params.keys();
             for (int i = 0; i < keys.Length; i++)
             {
