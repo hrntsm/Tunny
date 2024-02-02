@@ -13,9 +13,25 @@ Your comments, problems, and opinions posted in [Discussion](https://github.com/
 
 Feel free to post it.
 
+## Branch structure
+
+Tunny's branch structure is as follows
+
+- main
+    - The latest version of the code that has been released can be found here.
+    - Development content is not included.
+- develop
+    - Development for the next version will take place here.
+    - There is always a buildable development version here.
+    - **If you want to add some feature, Please fork and PullRquest this branch.**
+- feature/xxx
+    - Branches prefixed with feature represent branches where additional functionality is being developed.
+- fix/xxx
+    - A branch prefixed with fix indicates a branch that is fixing a bug.
+
 ## Submitting changes
 
-Please send a [GitHub Pull Request](https://github.com/hrntsm/Tunny/pull/new/main) with a clear list of what you've done (read more about [pull requests](http://help.github.com/pull-requests/)).
+Please send a [GitHub Pull Request](https://github.com/hrntsm/Tunny/compare/develop...) with a clear list of what you've done (read more about [pull requests](http://help.github.com/pull-requests/)).
 When you send a pull request, we will love you forever if you include examples.
 Please follow our coding conventions (below) and make sure all of your commits are atomic (one feature per commit).
 
