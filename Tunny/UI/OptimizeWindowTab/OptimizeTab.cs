@@ -224,7 +224,7 @@ namespace Tunny.UI
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
             var pState = (ProgressState)e.UserState;
-            UpdateGrasshopper(pState.Parameter);
+            _component.UpdateGrasshopper(pState.Parameter);
             const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"

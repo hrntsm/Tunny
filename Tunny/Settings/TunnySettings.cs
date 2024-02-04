@@ -1,7 +1,13 @@
+using System;
 using System.IO;
 using System.Reflection;
 
 using Newtonsoft.Json;
+
+using Serilog;
+
+using Tunny.Enum;
+using Tunny.Util;
 
 namespace Tunny.Settings
 {
@@ -33,6 +39,30 @@ namespace Tunny.Settings
         public void CreateNewSettingsFile(string path)
         {
             Serialize(path);
+        }
+
+        public static TunnySettings LoadFromJson()
+        {
+            TunnySettings settings;
+            string settingsPath = TunnyVariables.OptimizeSettingsPath;
+            if (File.Exists(settingsPath))
+            {
+                Log.Information("Load existing setting.json");
+                settings = Deserialize(File.ReadAllText(settingsPath));
+            }
+            else
+            {
+                settings = new TunnySettings
+                {
+                    Storage = new Storage
+                    {
+                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
+                        Type = StorageType.Journal
+                    }
+                };
+                settings.CreateNewSettingsFile(settingsPath);
+            }
+            return settings;
         }
     }
 }

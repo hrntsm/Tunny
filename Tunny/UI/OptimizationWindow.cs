@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -10,7 +8,6 @@ using Serilog;
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
-using Tunny.Input;
 using Tunny.Settings;
 using Tunny.Util;
 
@@ -19,8 +16,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow : Form
     {
         private readonly FishingComponent _component;
-        private TunnySettings _settings;
-        internal GrasshopperStates GrasshopperStatus;
+        private readonly TunnySettings _settings;
 
         public OptimizationWindow(FishingComponent component)
         {
@@ -33,7 +29,7 @@ namespace Tunny.UI
             {
                 FormClosingXButton(this, null);
             }
-            LoadSettingJson();
+            _settings = TunnySettings.LoadFromJson();
             SetUIValues();
             RunPythonInstaller();
             SetOptimizeBackgroundWorker();
@@ -82,39 +78,6 @@ namespace Tunny.UI
         {
             optimizeBackgroundWorker.Dispose();
             outputResultBackgroundWorker.Dispose();
-        }
-
-        private void LoadSettingJson()
-        {
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
-            if (File.Exists(settingsPath))
-            {
-                Log.Information("Load existing setting.json");
-                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
-            }
-            else
-            {
-                Log.Information("There is no configuration file. Create a new one.");
-                _settings = new TunnySettings
-                {
-                    Storage = new Settings.Storage
-                    {
-                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
-                        Type = StorageType.Journal
-                    }
-                };
-                _settings.CreateNewSettingsFile(settingsPath);
-            }
-        }
-
-        private void UpdateGrasshopper(IList<Parameter> parameters)
-        {
-            GrasshopperStatus = GrasshopperStates.RequestProcessing;
-
-            //Calculate Grasshopper
-            _component.GhInOut.NewSolution(parameters);
-
-            GrasshopperStatus = GrasshopperStates.RequestProcessed;
         }
 
         private void OptimizationWindow_Load(object sender, EventArgs e)

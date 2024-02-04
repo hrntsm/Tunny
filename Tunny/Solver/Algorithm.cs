@@ -12,6 +12,7 @@ using Python.Runtime;
 
 using Serilog;
 
+using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -428,7 +429,12 @@ namespace Tunny.Solver
             }
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
-            Log.Information(sb.ToString());
+            string message = sb.ToString();
+            Log.Information(message);
+            if (OptimizeLoop.Component is ZombieFishComponent component)
+            {
+                component.SetInfo(message);
+            }
         }
 
         private void UploadArtifacts(Artifact artifacts, dynamic artifactBackend, dynamic trial)

@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Type;
 
 namespace Tunny.Handler
@@ -16,15 +14,15 @@ namespace Tunny.Handler
     internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
-        private static FishingComponent s_component;
+        public static OptimizeComponentBase Component;
         public static TunnySettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as FishingComponent;
-            s_component?.GhInOutInstantiate();
+            Component = e.Argument as OptimizeComponentBase;
+            Component?.GhInOutInstantiate();
 
             Parameter[] optimalParams = RunOptimizationLoop(s_worker);
             if (optimalParams == null || optimalParams.Length == 0)
@@ -36,11 +34,11 @@ namespace Tunny.Handler
                 Parameter = optimalParams
             };
 
-            if (s_component != null)
+            if (Component != null)
             {
-                s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
-                s_worker?.ReportProgress(100, pState);
-                while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
+                Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+                s_worker.ReportProgress(100, pState);
+                while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
                 { /* just wait until the cows come home */ }
             }
 
@@ -49,17 +47,17 @@ namespace Tunny.Handler
 
         private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
         {
-            List<VariableBase> variables = s_component.GhInOut.Variables;
-            Objective objectives = s_component.GhInOut.Objectives;
-            Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
-            bool hasConstraint = s_component.GhInOut.HasConstraint;
+            List<VariableBase> variables = Component.GhInOut.Variables;
+            Objective objectives = Component.GhInOut.Objectives;
+            Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
+            bool hasConstraint = Component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
             {
                 return Array.Empty<Parameter>();
             }
 
-            var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
+            var optunaSolver = new Solver.Optuna(Component.GhInOut.ComponentFolder, Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();
@@ -67,18 +65,17 @@ namespace Tunny.Handler
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
-            s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
-
+            Component.GrasshopperStatus = GrasshopperStates.RequestSent;
             s_worker.ReportProgress(progress, pState);
-            while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
+            while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
             return new TrialGrasshopperItems
             {
-                Objectives = s_component.GhInOut.Objectives,
-                GeometryJson = s_component.GhInOut.GetGeometryJson(),
-                Attribute = s_component.GhInOut.GetAttributes(),
-                Artifacts = s_component.GhInOut.Artifacts,
+                Objectives = Component.GhInOut.Objectives,
+                GeometryJson = Component.GhInOut.GetGeometryJson(),
+                Attribute = Component.GhInOut.GetAttributes(),
+                Artifacts = Component.GhInOut.Artifacts,
             };
         }
     }

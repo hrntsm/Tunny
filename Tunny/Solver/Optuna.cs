@@ -7,6 +7,9 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Serilog;
+
+using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -54,7 +57,7 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
-                ShowEndMessages(optimize.EndState);
+                EndMessage(optimize);
 
                 return true;
             }
@@ -65,7 +68,42 @@ namespace Tunny.Solver
             }
         }
 
-        private static void ShowEndMessages(EndState endState)
+        private static void EndMessage(Algorithm optimize)
+        {
+            switch (OptimizeLoop.Component)
+            {
+                case ZombieFishComponent zombie:
+                    ToComponentEndMessage(optimize, zombie);
+                    break;
+                default:
+                    ShowUIEndMessages(optimize.EndState);
+                    break;
+            }
+        }
+
+        private static void ToComponentEndMessage(Algorithm optimize, ZombieFishComponent zombie)
+        {
+            string message;
+            switch (optimize.EndState)
+            {
+                case EndState.Timeout:
+                    message = "Solver completed successfully.\nThe specified time has elapsed.";
+                    break;
+                case EndState.AllTrialCompleted:
+                    message = "Solver completed successfully.\nThe specified number of trials has been completed.";
+                    break;
+                case EndState.StoppedByUser:
+                    message = "Solver completed successfully.\nThe user stopped the solver.";
+                    break;
+                default:
+                    message = "Solver error.";
+                    break;
+            }
+            Log.Information(message);
+            zombie.SetInfo(message);
+        }
+
+        private static void ShowUIEndMessages(EndState endState)
         {
             switch (endState)
             {
