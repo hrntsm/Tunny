@@ -217,7 +217,30 @@ namespace Tunny.Solver
         private static Dictionary<string, object> ParseVariables(dynamic trial)
         {
             var variables = new Dictionary<string, object>();
-            object[] values = (object[])trial.@params.values();
+            object[] pyValues = (object[])trial.@params.values();
+            object[] values = new object[pyValues.Length];
+            for (int i = 0; i < pyValues.Length; i++)
+            {
+                object v = pyValues[i];
+                switch (v)
+                {
+                    case PyInt pyInt:
+                        values[i] = Convert.ToDouble(pyInt, CultureInfo.InvariantCulture);
+                        break;
+                    case PyFloat pyFloat:
+                        values[i] = Convert.ToDouble(pyFloat, CultureInfo.InvariantCulture);
+                        break;
+                    case PyString pyString:
+                        values[i] = pyString.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case double num:
+                        values[i] = num;
+                        break;
+                    case string str:
+                        values[i] = str;
+                        break;
+                }
+            }
             string[] keys = (string[])trial.@params.keys();
             for (int i = 0; i < keys.Length; i++)
             {
