@@ -11,11 +11,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Categorical optimization.
-- log output.
+  - Sample gh file also added
+- Log output.
+  - Improved ease of support.
 
 ### Changed
 
-for changes in existing functionality.
+- DeconstructFish comopnent output
+  - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
 
 ### Deprecated
 
@@ -27,7 +30,7 @@ for now removed features.
 
 ### Fixed
 
-for any bug fixes.
+- When launching a window, if all the objectives are null, the window will not launch.
 
 ### Security
 
