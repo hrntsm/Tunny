@@ -50,6 +50,10 @@ namespace Tunny.Input
             {
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
+                    if (goo == null)
+                    {
+                        continue;
+                    }
                     bool result = goo.CastTo(out GeometryBase geometry);
                     if (result)
                     {
