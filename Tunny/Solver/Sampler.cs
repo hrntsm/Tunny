@@ -4,6 +4,7 @@ using Python.Runtime;
 
 using Tunny.Settings;
 using Tunny.Settings.Sampler;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -11,6 +12,7 @@ namespace Tunny.Solver
     {
         internal static dynamic Random(dynamic optuna, TunnySettings settings)
         {
+            TLog.MethodStart();
             Settings.Sampler.Random random = settings.Optimize.Sampler.Random;
             return optuna.samplers.RandomSampler(
                 seed: random.Seed
@@ -19,6 +21,7 @@ namespace Tunny.Solver
 
         internal static dynamic CmaEs(dynamic optuna, TunnySettings settings)
         {
+            TLog.MethodStart();
             CmaEs cmaEs = settings.Optimize.Sampler.CmaEs;
             return cmaEs.UseWarmStart
                 ? optuna.samplers.CmaEsSampler(
@@ -48,6 +51,7 @@ namespace Tunny.Solver
 
         internal static dynamic NSGAII(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
+            TLog.MethodStart();
             NSGAII nsga2 = settings.Optimize.Sampler.NsgaII;
             return optuna.samplers.NSGAIISampler(
                 population_size: nsga2.PopulationSize,
@@ -62,6 +66,7 @@ namespace Tunny.Solver
 
         internal static dynamic NSGAIII(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
+            TLog.MethodStart();
             NSGAIII nsga3 = settings.Optimize.Sampler.NsgaIII;
             return optuna.samplers.NSGAIIISampler(
                 population_size: nsga3.PopulationSize,
@@ -76,6 +81,7 @@ namespace Tunny.Solver
 
         private static dynamic SetCrossover(dynamic optuna, string crossover)
         {
+            TLog.MethodStart();
             switch (crossover)
             {
                 case "Uniform":
@@ -99,6 +105,7 @@ namespace Tunny.Solver
 
         internal static dynamic TPE(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
+            TLog.MethodStart();
             Tpe tpe = settings.Optimize.Sampler.Tpe;
             return optuna.samplers.TPESampler(
                 seed: tpe.Seed,
@@ -118,6 +125,7 @@ namespace Tunny.Solver
 
         internal static dynamic BoTorch(dynamic optuna, TunnySettings settings, bool hasConstraints)
         {
+            TLog.MethodStart();
             BoTorch boTorch = settings.Optimize.Sampler.BoTorch;
             return optuna.integration.BoTorchSampler(
                 seed: boTorch.Seed,
@@ -128,6 +136,7 @@ namespace Tunny.Solver
 
         internal static dynamic QMC(dynamic optuna, TunnySettings settings)
         {
+            TLog.MethodStart();
             QuasiMonteCarlo qmc = settings.Optimize.Sampler.QMC;
             return optuna.samplers.QMCSampler(
                 qmc_type: qmc.QmcType,
@@ -139,6 +148,7 @@ namespace Tunny.Solver
 
         private static dynamic ConstraintFunc()
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def constraints(trial):\n" +

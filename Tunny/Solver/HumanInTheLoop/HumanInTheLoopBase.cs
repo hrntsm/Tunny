@@ -7,6 +7,7 @@ using Python.Runtime;
 
 using Tunny.Handler;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver.HumanInTheLoop
 {
@@ -17,12 +18,14 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public HumanInTheLoopBase(string path)
         {
+            TLog.MethodStart();
             _basePath = path;
             _artifactPath = Path.Combine(_basePath, "artifacts");
         }
 
         public PyModule ImportBaseLibrary()
         {
+            TLog.MethodStart();
             PyModule library = Py.CreateScope();
             SetStdOutErrDirection(_basePath, library);
             library.Import("os");
@@ -36,6 +39,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public static void SetStdOutErrDirection(string path, PyModule importedLibrary)
         {
+            TLog.MethodStart();
             string ioPath = Path.Combine(path, "tmp.out");
             importedLibrary.Import("sys");
             importedLibrary.Exec("path = r'" + ioPath + "'");
@@ -45,6 +49,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void WakeOptunaDashboard(Settings.Storage storage)
         {
+            TLog.MethodStart();
             if (File.Exists(storage.Path) == false)
             {
                 ResultFileNotExistErrorMessage();
@@ -68,6 +73,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public static void CheckExistDashboardProcess()
         {
+            TLog.MethodStart();
             Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
             if (dashboardProcess.Length > 0)
             {
@@ -80,6 +86,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public static void ResultFileNotExistErrorMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "Please set exist result file path.",
                 "Error",
@@ -90,6 +97,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public static int GetRunningTrialNumber(dynamic study)
         {
+            TLog.MethodStart();
             PyModule lenModule = Py.CreateScope();
             var pyCode = new StringBuilder();
             pyCode.AppendLine("import optuna");
@@ -107,6 +115,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void CheckDirectoryIsExist()
         {
+            TLog.MethodStart();
             string artifactPath = Path.Combine(_basePath, "artifacts");
             string tmpPath = Path.Combine(_basePath, "tmp");
             if (!Directory.Exists(artifactPath))

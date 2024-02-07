@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-using Serilog;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -24,16 +24,16 @@ namespace Tunny.UI
             switch (icon)
             {
                 case MessageBoxIcon.Error:
-                    Log.Error(noLineBreakMessage);
+                    TLog.Error(noLineBreakMessage);
                     break;
                 case MessageBoxIcon.Warning:
-                    Log.Warning(noLineBreakMessage);
+                    TLog.Warning(noLineBreakMessage);
                     break;
                 case MessageBoxIcon.Information:
-                    Log.Information(noLineBreakMessage);
+                    TLog.Info(noLineBreakMessage);
                     break;
                 default:
-                    Log.Debug(noLineBreakMessage);
+                    TLog.Debug(noLineBreakMessage);
                     break;
             }
         }

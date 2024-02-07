@@ -14,10 +14,13 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Sample gh file also added
 - Log output.
   - Improved ease of support.
+- Log level selector.
+  - It is located in the Misc tab of the Settings tab.
+  - There are three levels: "Verbose," "Debug," and "Information.
 
 ### Changed
 
-- DeconstructFish comopnent output
+- DeconstructFish component output
   - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
 
 ### Deprecated

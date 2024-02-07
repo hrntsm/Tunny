@@ -19,6 +19,7 @@ namespace Tunny.Storage
 
         private static bool CheckTableExist(SQLiteConnection connection)
         {
+            TLog.MethodStart();
             int hasStudiesTable;
             using (var command = new SQLiteCommand(connection))
             {
@@ -30,6 +31,7 @@ namespace Tunny.Storage
 
         private static void GetStudyAttributes(List<StudySummary> studySummaries, SQLiteConnection connection)
         {
+            TLog.MethodStart();
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT * FROM study_user_attributes";
@@ -72,6 +74,7 @@ namespace Tunny.Storage
 
         private static void GetStudy(List<StudySummary> studySummaries, SQLiteConnection connection)
         {
+            TLog.MethodStart();
             using (var command = new SQLiteCommand(connection))
             {
                 command.CommandText = "SELECT * FROM studies";
@@ -99,6 +102,7 @@ namespace Tunny.Storage
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
+            TLog.MethodStart();
             string sqlitePath = storageSetting.GetOptunaStoragePathByExtension();
             if (useInnerPythonEngine)
             {
@@ -119,12 +123,14 @@ namespace Tunny.Storage
 
         private void CreateStorageProcess(string sqlitePath)
         {
+            TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
             Storage = optuna.storages.RDBStorage(sqlitePath);
         }
 
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
+            TLog.MethodStart();
             string storage = storageSetting.GetOptunaStoragePath();
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -137,6 +143,7 @@ namespace Tunny.Storage
 
         public StudySummary[] GetStudySummaries(string storagePath)
         {
+            TLog.MethodStart();
             var studySummaries = new List<StudySummary>();
             if (!File.Exists(storagePath))
             {

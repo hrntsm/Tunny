@@ -3,6 +3,8 @@ using System.Text;
 
 using Python.Runtime;
 
+using Tunny.Util;
+
 namespace Tunny.Solver.HumanInTheLoop
 {
     public class HumanSliderInput : HumanInTheLoopBase
@@ -12,6 +14,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public HumanSliderInput(string path) : base(path)
         {
+            TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
             importedLibrary.Exec("from optuna_dashboard import save_note");
             importedLibrary.Exec("from optuna_dashboard import SliderWidget");
@@ -28,6 +31,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SetObjective(dynamic study, string[] objectiveNames)
         {
+            TLog.MethodStart();
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
             var pyNameList = new PyList();
             foreach (string objectiveName in objectiveNames)
@@ -39,6 +43,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SetWidgets(dynamic study, string[] objectiveNames)
         {
+            TLog.MethodStart();
             dynamic registerObjectiveFromWidgets = _importedLibrary.Get("register_objective_form_widgets");
             dynamic sliderWidget = _importedLibrary.Get("SliderWidget");
             dynamic objectiveUserAttrRef = _importedLibrary.Get("ObjectiveUserAttrRef");
@@ -62,6 +67,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SaveNote(dynamic study, dynamic trial, Bitmap[] bitmaps)
         {
+            TLog.MethodStart();
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             var noteText = new StringBuilder();
             noteText.AppendLine("# Image");

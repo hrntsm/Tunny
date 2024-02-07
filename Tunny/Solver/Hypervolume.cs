@@ -5,6 +5,7 @@ using System.Linq;
 using Python.Runtime;
 
 using Tunny.PostProcess;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -12,6 +13,7 @@ namespace Tunny.Solver
     {
         public static dynamic CreateFigure(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             var trials = (dynamic[])study.trials;
             int[] objIndex = pSettings.TargetObjectiveIndex;
 
@@ -42,6 +44,7 @@ namespace Tunny.Solver
 
         private static PyList ComputeHypervolume(List<double[]> trialValues, double[] maxObjValues, out PyList trialNumbers)
         {
+            TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
             dynamic np = Py.Import("numpy");
 
@@ -71,6 +74,7 @@ namespace Tunny.Solver
 
         private static dynamic CreateHypervolumeFigure(int trialLength, PyList hvs, PyList trialNumbers)
         {
+            TLog.MethodStart();
             dynamic go = Py.Import("plotly.graph_objects");
 
             var plotItems = new PyDict();
@@ -92,6 +96,7 @@ namespace Tunny.Solver
 
         public static double Compute2dHypervolumeRatio(dynamic study)
         {
+            TLog.MethodStart();
             var trials = (dynamic[])study.trials;
             var trialValues = new List<double[]>();
             for (int i = 0; i < trials.Length - 1; i++)
@@ -110,6 +115,7 @@ namespace Tunny.Solver
 
         private static double ComputeRatio(dynamic[] trials, int baseIndex, int targetIndex, double[] maxObjectiveValues)
         {
+            TLog.MethodStart();
             dynamic np = Py.Import("numpy");
             var rpObj = new PyList();
 
@@ -127,6 +133,7 @@ namespace Tunny.Solver
 
         private static double Wfg(dynamic[] trials, int baseIndex, dynamic referencePoint)
         {
+            TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
             dynamic np = Py.Import("numpy");
 

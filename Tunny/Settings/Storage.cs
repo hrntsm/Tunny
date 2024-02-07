@@ -5,6 +5,7 @@ using Python.Runtime;
 
 using Tunny.Enum;
 using Tunny.Storage;
+using Tunny.Util;
 
 namespace Tunny.Settings
 {
@@ -15,11 +16,13 @@ namespace Tunny.Settings
 
         private string GetArtifactBackendPath()
         {
+            TLog.MethodStart();
             return System.IO.Path.GetDirectoryName(Path) + "/artifacts";
         }
 
         public string GetOptunaStoragePath()
         {
+            TLog.MethodStart();
             switch (Type)
             {
                 case StorageType.InMemory:
@@ -38,6 +41,7 @@ namespace Tunny.Settings
 
         public string GetOptunaStoragePathByExtension()
         {
+            TLog.MethodStart();
             switch (System.IO.Path.GetExtension(Path))
             {
                 case null:
@@ -54,6 +58,7 @@ namespace Tunny.Settings
 
         public string GetOptunaStorageCommandLinePathByExtension()
         {
+            TLog.MethodStart();
             switch (System.IO.Path.GetExtension(Path))
             {
                 case null:
@@ -70,6 +75,7 @@ namespace Tunny.Settings
 
         public dynamic CreateNewOptunaStorage(bool useInnerPythonEngine)
         {
+            TLog.MethodStart();
             dynamic storage;
             switch (Type)
             {
@@ -91,6 +97,7 @@ namespace Tunny.Settings
 
         public dynamic CreateNewOptunaArtifactBackend(bool useInnerPythonEngine)
         {
+            TLog.MethodStart();
             dynamic backend;
 
             if (useInnerPythonEngine)
@@ -112,6 +119,7 @@ namespace Tunny.Settings
 
         private dynamic CreateArtifactBackendProcess()
         {
+            TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
             string backendPath = GetArtifactBackendPath();
             Directory.CreateDirectory(backendPath);

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -20,6 +21,7 @@ namespace Tunny.Solver
                                         dynamic artifactBackend, Dictionary<string, FishEgg> enqueueItems,
                                         string[] objectiveNames)
         {
+            TLog.MethodStart();
             NTrials = nTrials;
             Timeout = timeout;
             Study = study;

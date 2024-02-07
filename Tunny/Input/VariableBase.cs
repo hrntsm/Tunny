@@ -1,5 +1,7 @@
 using System;
 
+using Tunny.Util;
+
 namespace Tunny.Input
 {
     public class VariableBase
@@ -9,6 +11,7 @@ namespace Tunny.Input
 
         public VariableBase(string nickName, Guid id)
         {
+            TLog.MethodStart();
             NickName = nickName;
             InstanceId = id;
         }

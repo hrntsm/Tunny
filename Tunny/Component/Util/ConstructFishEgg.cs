@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 
-using Serilog;
-
 using Tunny.Component.Params;
 using Tunny.Input;
 using Tunny.Type;
@@ -121,7 +119,7 @@ namespace Tunny.Component.Util
                         if (_fishEggs.TryGetValue(name, out FishEgg eggCat))
                         {
                             string message = $"This Categorical variable {name} is already contained in fish egg.";
-                            Log.Error(message);
+                            TLog.Error(message);
                             throw new ArgumentException(message);
                         }
                         else
