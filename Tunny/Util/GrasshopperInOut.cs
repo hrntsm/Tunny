@@ -43,6 +43,7 @@ namespace Tunny.Util
 
         public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)
         {
+            TLog.MethodStart();
             _component = component;
             ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
             _document = _component.OnPingDocument();
@@ -55,6 +56,7 @@ namespace Tunny.Util
 
         private bool SetVariables()
         {
+            TLog.MethodStart();
             _sliders = new List<GH_NumberSlider>();
             _valueLists = new List<GH_ValueList>();
             _genePool = new List<GalapagosGeneListObject>();
@@ -77,6 +79,7 @@ namespace Tunny.Util
 
         private static void NoVariableInputError()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "No input variables found. \nPlease connect a number slider to the input of the component.",
                 "Tunny",
@@ -86,6 +89,7 @@ namespace Tunny.Util
 
         private bool FilterInputVariables()
         {
+            TLog.MethodStart();
             var errorInputGuids = new List<Guid>();
             foreach ((IGH_DocumentObject docObject, int _) in _inputGuids.Select((guid, i) => (_document.FindObject(guid, false), i)))
             {
@@ -116,11 +120,13 @@ namespace Tunny.Util
 
         private bool CheckHasIncorrectVariableInput(IReadOnlyCollection<Guid> errorInputGuids)
         {
+            TLog.MethodStart();
             return errorInputGuids.Count <= 0 || ShowIncorrectVariableInputMessage(errorInputGuids);
         }
 
         private bool ShowIncorrectVariableInputMessage(IEnumerable<Guid> errorGuids)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "Input variables must be either a number slider or a gene pool.\nError input will automatically remove.",
                 "Tunny",
@@ -136,6 +142,7 @@ namespace Tunny.Util
 
         private void SetInputSliderValues(List<VariableBase> variables)
         {
+            TLog.MethodStart();
             int i = 0;
 
             foreach (GH_NumberSlider slider in _sliders)
@@ -184,6 +191,7 @@ namespace Tunny.Util
 
         private void SetInputGenePoolValues(List<VariableBase> variables)
         {
+            TLog.MethodStart();
             var nickNames = new List<string>();
             for (int i = 0; i < _genePool.Count; i++)
             {
@@ -208,6 +216,7 @@ namespace Tunny.Util
 
         private void SetInputValueItem(List<VariableBase> variables)
         {
+            TLog.MethodStart();
             foreach (GH_ValueList valueList in _valueLists)
             {
                 string nickName = valueList.NickName;
@@ -220,6 +229,7 @@ namespace Tunny.Util
 
         private bool SetObjectives()
         {
+            TLog.MethodStart();
             if (_component.Params.Input[1].SourceCount == 0)
             {
                 return ShowNoObjectiveFoundMessage();
@@ -248,12 +258,14 @@ namespace Tunny.Util
 
         private static bool ShowNoObjectiveFoundMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show("No objective found.\nPlease connect number or FishPrint to the objective.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         private static bool CheckObjectiveNicknameDuplication(IEnumerable<IGH_Param> objectives)
         {
+            TLog.MethodStart();
             var nickname = objectives.Select(x => x.NickName)
                                      .GroupBy(name => name).Where(name => name.Count() > 1).Select(group => group.Key).ToList();
             if (nickname.Count > 0)
@@ -266,6 +278,7 @@ namespace Tunny.Util
 
         private bool ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show("Objective supports only the Number or FishPrint input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             foreach (IGH_Param unsupportedSource in unsupportedSources)
             {
@@ -278,6 +291,7 @@ namespace Tunny.Util
 
         private bool SetAttributes()
         {
+            TLog.MethodStart();
             _attributes = new GH_FishAttribute();
             if (_component.Params.Input[2].SourceCount == 0)
             {
@@ -303,12 +317,14 @@ namespace Tunny.Util
 
         private static bool ShowIncorrectAttributeInputMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show("Inputs to Attribute should be grouped together into one FishAttribute.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         private void SetCategoryValues(string[] categoryParameters)
         {
+            TLog.MethodStart();
             int i = 0;
             foreach (GH_ValueList valueList in _valueLists)
             {
@@ -329,6 +345,7 @@ namespace Tunny.Util
 
         private bool SetSliderValues(decimal[] parameters)
         {
+            TLog.MethodStart();
             int i = 0;
 
             foreach (GH_NumberSlider slider in _sliders)
@@ -375,11 +392,13 @@ namespace Tunny.Util
 
         private static decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
         {
+            TLog.MethodStart();
             return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
 
         private void Recalculate()
         {
+            TLog.MethodStart();
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
             _document.NewSolution(true);
             while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
@@ -387,6 +406,7 @@ namespace Tunny.Util
 
         public void NewSolution(IList<Parameter> parameters)
         {
+            TLog.MethodStart();
             decimal[] decimalParameters = parameters.Where(p => p.HasNumber).Select(p => (decimal)p.Number).ToArray();
             string[] categoryParameters = parameters.Where(p => p.HasCategory).Select(p => p.Category).ToArray();
             SetSliderValues(decimalParameters);
@@ -399,6 +419,7 @@ namespace Tunny.Util
 
         public string[] GetGeometryJson()
         {
+            TLog.MethodStart();
             var json = new List<string>();
 
             if (_attributes.Value == null
@@ -420,6 +441,7 @@ namespace Tunny.Util
 
         public Dictionary<string, List<string>> GetAttributes()
         {
+            TLog.MethodStart();
             var attrs = new Dictionary<string, List<string>>();
             if (_attributes.Value == null)
             {
@@ -454,6 +476,7 @@ namespace Tunny.Util
 
         private void AddGooValues(string key, List<string> value)
         {
+            TLog.MethodStart();
             if (_attributes.Value[key] is List<object> objList)
             {
                 foreach (object param in objList)
@@ -468,6 +491,7 @@ namespace Tunny.Util
 
         private bool SetArtifacts()
         {
+            TLog.MethodStart();
             Artifacts = new Artifact();
             if (_component.Params.Input[3].SourceCount == 0)
             {

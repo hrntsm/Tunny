@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Rhino.Geometry;
 
 using Tunny.Input;
+using Tunny.Util;
 
 namespace Tunny.Type
 {
@@ -21,6 +22,7 @@ namespace Tunny.Type
 
         public List<GeometryBase> GetGeometries()
         {
+            TLog.MethodStart();
             var geometries = new List<GeometryBase>();
             if (Attributes == null)
             {
@@ -33,16 +35,19 @@ namespace Tunny.Type
 
         public string SerializeToJson()
         {
+            TLog.MethodStart();
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         public static Fish DeserializeFromJson(string json)
         {
+            TLog.MethodStart();
             return JsonConvert.DeserializeObject<Fish>(json);
         }
 
         public Parameter[] GetParameterClassFormatVariables()
         {
+            TLog.MethodStart();
             var parameters = new List<Parameter>();
             if (Variables == null)
             {
@@ -65,6 +70,7 @@ namespace Tunny.Type
 
         public static string ToBase64(Fish fish)
         {
+            TLog.MethodStart();
             using (var ms = new MemoryStream())
             {
                 new BinaryFormatter().Serialize(ms, fish);
@@ -74,6 +80,7 @@ namespace Tunny.Type
 
         public static Fish FromBase64(string base64String)
         {
+            TLog.MethodStart();
             byte[] bytes = Convert.FromBase64String(base64String);
             using (var ms = new MemoryStream(bytes))
             {

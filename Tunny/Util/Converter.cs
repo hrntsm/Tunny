@@ -11,6 +11,7 @@ namespace Tunny.Util
     {
         public static IGH_GeometricGoo GeometryBaseToGoo(GeometryBase geometryBase)
         {
+            TLog.MethodStart();
             switch (geometryBase)
             {
                 case Mesh mesh:
@@ -30,12 +31,14 @@ namespace Tunny.Util
 
         public static string GooToString(IGH_Goo goo, bool isGeometryBaseToJson)
         {
+            TLog.MethodStart();
             var option = new SerializationOptions();
             return GooToString(goo, isGeometryBaseToJson, option);
         }
 
         private static string GooToString(IGH_Goo goo, bool isGeometryBaseToJson, SerializationOptions option)
         {
+            TLog.MethodStart();
             if (isGeometryBaseToJson)
             {
                 switch (goo)

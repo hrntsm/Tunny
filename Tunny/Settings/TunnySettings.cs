@@ -3,6 +3,8 @@ using System.Reflection;
 
 using Newtonsoft.Json;
 
+using Tunny.Util;
+
 namespace Tunny.Settings
 {
     public class TunnySettings
@@ -16,6 +18,7 @@ namespace Tunny.Settings
 
         public void Serialize(string path)
         {
+            TLog.MethodStart();
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             string dirPath = Path.GetDirectoryName(path);
             if (!Directory.Exists(dirPath))
@@ -27,11 +30,13 @@ namespace Tunny.Settings
 
         public static TunnySettings Deserialize(string json)
         {
+            TLog.MethodStart();
             return JsonConvert.DeserializeObject<TunnySettings>(json);
         }
 
         public void CreateNewSettingsFile(string path)
         {
+            TLog.MethodStart();
             Serialize(path);
         }
     }

@@ -24,6 +24,7 @@ namespace Tunny.UI
 
         public OptimizationWindow(FishingComponent component)
         {
+            TLog.MethodStart();
             Log.Information("OptimizationWindow is open");
             InitializeComponent();
 
@@ -42,6 +43,7 @@ namespace Tunny.UI
 
         private void RunPythonInstaller()
         {
+            TLog.MethodStart();
             PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
             if (_settings.CheckPythonLibraries)
             {
@@ -62,6 +64,7 @@ namespace Tunny.UI
 
         private void SetOptimizeBackgroundWorker()
         {
+            TLog.MethodStart();
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
@@ -71,6 +74,7 @@ namespace Tunny.UI
 
         private void SetOutputResultBackgroundWorker()
         {
+            TLog.MethodStart();
             outputResultBackgroundWorker.DoWork += OutputLoop.Run;
             outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
             outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;
@@ -80,12 +84,14 @@ namespace Tunny.UI
 
         public void BGDispose()
         {
+            TLog.MethodStart();
             optimizeBackgroundWorker.Dispose();
             outputResultBackgroundWorker.Dispose();
         }
 
         private void LoadSettingJson()
         {
+            TLog.MethodStart();
             string settingsPath = TunnyVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
@@ -109,6 +115,7 @@ namespace Tunny.UI
 
         private void UpdateGrasshopper(IList<Parameter> parameters)
         {
+            TLog.MethodStart();
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
 
             //Calculate Grasshopper
@@ -119,6 +126,7 @@ namespace Tunny.UI
 
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -126,6 +134,7 @@ namespace Tunny.UI
 
         private void FormClosingXButton(object sender, FormClosingEventArgs e)
         {
+            TLog.MethodStart();
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
             GetUIValues();
@@ -138,6 +147,7 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
+            TLog.MethodStart();
             Log.Information("Set UI values");
             HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
             if (type != HumanInTheLoopType.None)
@@ -181,6 +191,7 @@ namespace Tunny.UI
         }
         private void GetUIValues()
         {
+            TLog.MethodStart();
             _settings.Optimize.SelectSampler = (SamplerType)samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;

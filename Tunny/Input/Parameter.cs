@@ -1,5 +1,7 @@
 using System.Globalization;
 
+using Tunny.Util;
+
 namespace Tunny.Input
 {
     public class Parameter
@@ -11,16 +13,19 @@ namespace Tunny.Input
 
         public Parameter(double number)
         {
+            TLog.MethodStart();
             Number = number;
         }
 
         public Parameter(string category)
         {
+            TLog.MethodStart();
             Category = category;
         }
 
         public override string ToString()
         {
+            TLog.MethodStart();
             if (HasCategory)
             {
                 return Category;

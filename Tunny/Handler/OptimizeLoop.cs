@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Handler
 {
@@ -22,6 +21,7 @@ namespace Tunny.Handler
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as FishingComponent;
             s_component?.GhInOutInstantiate();
@@ -49,6 +49,7 @@ namespace Tunny.Handler
 
         private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
         {
+            TLog.MethodStart();
             List<VariableBase> variables = s_component.GhInOut.Variables;
             Objective objectives = s_component.GhInOut.Objectives;
             Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
@@ -67,6 +68,7 @@ namespace Tunny.Handler
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
+            TLog.MethodStart();
             s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
 
             s_worker.ReportProgress(progress, pState);

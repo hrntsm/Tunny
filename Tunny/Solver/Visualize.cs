@@ -3,8 +3,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Serilog;
-
 using Tunny.Enum;
 using Tunny.PostProcess;
 using Tunny.Settings;
@@ -20,12 +18,14 @@ namespace Tunny.Solver
 
         public Visualize(TunnySettings settings, bool hasConstraint)
         {
+            TLog.MethodStart();
             _settings = settings;
             _hasConstraint = hasConstraint;
         }
 
         private static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
         {
+            TLog.MethodStart();
             try
             {
                 return optuna.load_study(storage: storage, study_name: studyName);
@@ -39,6 +39,7 @@ namespace Tunny.Solver
 
         public void Plot(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -66,6 +67,7 @@ namespace Tunny.Solver
 
         private dynamic CreateFigure(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             switch (pSettings.PlotTypeName)
             {
                 case "contour":
@@ -93,6 +95,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeSlice(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, objective_name, objective_index, variable_name):\n" +
@@ -111,6 +114,7 @@ namespace Tunny.Solver
 
         private dynamic VisualizeParetoFront(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def constraints(trial):\n" +
@@ -137,6 +141,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeParamImportances(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, objective_name, objective_index):\n" +
@@ -154,6 +159,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeParallelCoordinate(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, objective_name, objective_index, variable_name):\n" +
@@ -172,6 +178,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeOptimizationHistory(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, objective_name, objective_index):\n" +
@@ -189,6 +196,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeEDF(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, objective_name, objective_index):\n" +
@@ -206,6 +214,7 @@ namespace Tunny.Solver
 
         private static dynamic VisualizeContour(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def visualize(study, variable_names, objective_name, objective_index):\n" +
@@ -224,6 +233,7 @@ namespace Tunny.Solver
 
         private static dynamic TruncateParetoFrontPlotHover(dynamic fig, dynamic study)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def truncate(fig, study):\n" +
@@ -253,6 +263,7 @@ namespace Tunny.Solver
 
         private static void FigureActions(dynamic fig, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             if (fig != null && pSettings.PlotActionType == PlotActionType.Show)
             {
                 fig.show();
@@ -265,6 +276,7 @@ namespace Tunny.Solver
 
         private static void SaveFigure(dynamic fig, string name)
         {
+            TLog.MethodStart();
             var sfd = new SaveFileDialog
             {
                 FileName = name + ".html",
@@ -279,6 +291,7 @@ namespace Tunny.Solver
 
         public void ClusteringPlot(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -306,6 +319,7 @@ namespace Tunny.Solver
 
         private dynamic CreateClusterFigure(dynamic study, PlotSettings pSettings)
         {
+            TLog.MethodStart();
             try
             {
                 dynamic fig = VisualizeParetoFront(study, pSettings);
@@ -322,6 +336,7 @@ namespace Tunny.Solver
 
         private static dynamic ClusteringParetoFrontPlot(dynamic fig, dynamic study, int numCluster)
         {
+            TLog.MethodStart();
             PyModule ps = Py.CreateScope();
             //FIXME: Rewrite to c-sharp code.
             ps.Exec(

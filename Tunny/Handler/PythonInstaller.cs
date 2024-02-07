@@ -12,8 +12,10 @@ namespace Tunny.Handler
     public static class PythonInstaller
     {
         public static string ComponentFolderPath { get; set; }
+
         public static void Run(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             var worker = sender as BackgroundWorker;
             worker?.ReportProgress(0, "Unzip library...");
             Log.Information("Unzip library...");
@@ -25,6 +27,7 @@ namespace Tunny.Handler
 
         private static string[] UnzipLibraries()
         {
+            TLog.MethodStart();
             string envPath = TunnyVariables.TunnyEnvPath;
             Log.Information("Unzip Python libraries: " + envPath);
             if (Directory.Exists(envPath + "/python"))
@@ -43,6 +46,7 @@ namespace Tunny.Handler
 
         private static void InstallPackages(BackgroundWorker worker, string[] packageList)
         {
+            TLog.MethodStart();
             int num = packageList.Length;
             for (int i = 0; i < num; i++)
             {
@@ -71,6 +75,7 @@ namespace Tunny.Handler
 
         internal static string GetEmbeddedPythonPath()
         {
+            TLog.MethodStart();
             return TunnyVariables.TunnyEnvPath + "/python";
         }
     }
