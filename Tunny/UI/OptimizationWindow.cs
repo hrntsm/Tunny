@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
+
+using Serilog.Events;
 
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
@@ -17,7 +18,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow : Form
     {
         private readonly FishingComponent _component;
-        private TunnySettings _settings;
+        private readonly TunnySettings _settings;
         internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(FishingComponent component)
@@ -32,7 +33,7 @@ namespace Tunny.UI
             {
                 FormClosingXButton(this, null);
             }
-            LoadSettingJson();
+            _settings = TunnySettings.LoadFromJson();
             SetUIValues();
             RunPythonInstaller();
             SetOptimizeBackgroundWorker();
@@ -87,29 +88,6 @@ namespace Tunny.UI
             outputResultBackgroundWorker.Dispose();
         }
 
-        private void LoadSettingJson()
-        {
-            TLog.MethodStart();
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
-            if (File.Exists(settingsPath))
-            {
-                TLog.Info("Load existing setting.json");
-                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
-            }
-            else
-            {
-                TLog.Info("There is no configuration file. Create a new one.");
-                _settings = new TunnySettings
-                {
-                    Storage = new Settings.Storage
-                    {
-                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
-                        Type = StorageType.Journal
-                    }
-                };
-                _settings.CreateNewSettingsFile(settingsPath);
-            }
-        }
 
         private void UpdateGrasshopper(IList<Parameter> parameters)
         {
@@ -186,6 +164,7 @@ namespace Tunny.UI
             InitializeSamplerSettings();
 
             runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
+            miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
         }
         private void GetUIValues()
         {
@@ -204,6 +183,7 @@ namespace Tunny.UI
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
+            _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
         }
     }
 }

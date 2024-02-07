@@ -4,20 +4,38 @@ using System.IO;
 using System.Runtime.CompilerServices;
 
 using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+
+using Tunny.Settings;
 
 namespace Tunny.Util
 {
     public static class TLog
     {
+        private static readonly LoggingLevelSwitch LevelSwitch = new LoggingLevelSwitch();
+
         public static void InitializeLogger()
         {
+            SetInitialLogLevels();
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.ControlledBy(LevelSwitch)
                 .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
                 .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
                 .CreateLogger();
             Log.Information("Tunny is loaded.");
             CheckAndDeleteOldLogFiles();
+        }
+
+        private static void SetInitialLogLevels()
+        {
+            var settings = TunnySettings.LoadFromJson();
+            LevelSwitch.MinimumLevel = settings.LogLevel;
+        }
+
+        public static void SetLoggingLevel(LogEventLevel level)
+        {
+            LevelSwitch.MinimumLevel = level;
         }
 
         private static void CheckAndDeleteOldLogFiles()

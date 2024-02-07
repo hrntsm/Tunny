@@ -1,8 +1,12 @@
+using System;
 using System.IO;
 using System.Reflection;
 
 using Newtonsoft.Json;
 
+using Serilog.Events;
+
+using Tunny.Enum;
 using Tunny.Util;
 
 namespace Tunny.Settings
@@ -15,6 +19,7 @@ namespace Tunny.Settings
         public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
+        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
         public void Serialize(string path)
         {
@@ -38,6 +43,33 @@ namespace Tunny.Settings
         {
             TLog.MethodStart();
             Serialize(path);
+        }
+
+        public static TunnySettings LoadFromJson()
+        {
+            TLog.MethodStart();
+            TunnySettings settings;
+            string settingsPath = TunnyVariables.OptimizeSettingsPath;
+            if (File.Exists(settingsPath))
+            {
+                TLog.Info("Load existing setting.json");
+                settings = Deserialize(File.ReadAllText(settingsPath));
+            }
+            else
+            {
+                TLog.Info("There is no configuration file. Create a new one.");
+                settings = new TunnySettings
+                {
+                    Storage = new Storage
+                    {
+                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
+                        Type = StorageType.Journal
+                    }
+                };
+                settings.CreateNewSettingsFile(settingsPath);
+            }
+
+            return settings;
         }
     }
 }

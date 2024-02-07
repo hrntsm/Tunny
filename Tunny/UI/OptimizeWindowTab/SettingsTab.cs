@@ -1,5 +1,7 @@
 using System;
 
+using Serilog.Events;
+
 using Tunny.Enum;
 using Tunny.Settings.Sampler;
 using Tunny.Util;
@@ -313,6 +315,14 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
+        }
+
+        private void MiscLogComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            var level = (LogEventLevel)miscLogComboBox.SelectedIndex;
+            TLog.SetLoggingLevel(level);
+            _settings.LogLevel = level;
         }
     }
 }
