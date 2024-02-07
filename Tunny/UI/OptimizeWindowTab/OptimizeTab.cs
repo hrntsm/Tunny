@@ -8,8 +8,6 @@ using Grasshopper.GUI;
 
 using Optuna.Study;
 
-using Serilog;
-
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Storage;
@@ -180,7 +178,7 @@ namespace Tunny.UI
             outputTargetStudyComboBox.Items.Clear();
             cmaEsWarmStartComboBox.Items.Clear();
 
-            Log.Information("Get study summaries from storage file: {0}", storagePath);
+            TLog.Info($"Get study summaries from storage file: {storagePath}");
             _summaries = new StorageHandler().GetStudySummaries(storagePath);
 
             if (_summaries.Length > 0)

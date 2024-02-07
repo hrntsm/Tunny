@@ -12,8 +12,6 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 
-using Serilog;
-
 using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
@@ -117,7 +115,7 @@ namespace Tunny.Component.Optimizer
 
         public void GhInOutInstantiate()
         {
-            Log.Information("Instantiate GrasshopperInOut");
+            TLog.Info("Instantiate GrasshopperInOut");
             GhInOut = new GrasshopperInOut(this);
         }
 

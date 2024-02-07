@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
-using Serilog;
-
 using Tunny.Util;
 
 namespace Tunny.Handler
@@ -18,7 +16,7 @@ namespace Tunny.Handler
             TLog.MethodStart();
             var worker = sender as BackgroundWorker;
             worker?.ReportProgress(0, "Unzip library...");
-            Log.Information("Unzip library...");
+            TLog.Info("Unzip library...");
             string[] packageList = UnzipLibraries();
             InstallPackages(worker, packageList);
 
@@ -29,7 +27,7 @@ namespace Tunny.Handler
         {
             TLog.MethodStart();
             string envPath = TunnyVariables.TunnyEnvPath;
-            Log.Information("Unzip Python libraries: " + envPath);
+            TLog.Info("Unzip Python libraries: " + envPath);
             if (Directory.Exists(envPath + "/python"))
             {
                 Directory.Delete(envPath + "/python", true);
@@ -54,7 +52,7 @@ namespace Tunny.Handler
                 string packageName = Path.GetFileName(packageList[i]).Split('-')[0];
                 string state = "Installing " + packageName + "...";
                 worker.ReportProgress((int)progress, state);
-                Log.Information(state);
+                TLog.Info(state);
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = TunnyVariables.TunnyEnvPath + "/python/python.exe",
@@ -70,7 +68,7 @@ namespace Tunny.Handler
                     process.WaitForExit();
                 }
             }
-            Log.Information("Finish to install Python");
+            TLog.Info("Finish to install Python");
         }
 
         internal static string GetEmbeddedPythonPath()
