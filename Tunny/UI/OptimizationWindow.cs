@@ -43,8 +43,8 @@ namespace Tunny.UI
         private void RunPythonInstaller()
         {
             TLog.MethodStart();
-            PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
-            if (_settings.CheckPythonLibraries)
+            string tunnyAssembleVersion = TunnyVariables.Version.ToString(3);
+            if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
                 TLog.Info("Run Python installer");
                 var installer = new PythonInstallDialog()
@@ -52,6 +52,7 @@ namespace Tunny.UI
                     StartPosition = FormStartPosition.CenterScreen
                 };
                 installer.Show(Owner);
+                _settings.Version = tunnyAssembleVersion;
                 _settings.CheckPythonLibraries = false;
                 checkPythonLibrariesCheckBox.Checked = false;
             }

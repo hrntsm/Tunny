@@ -9,8 +9,6 @@ namespace Tunny.Handler
 {
     public static class PythonInstaller
     {
-        public static string ComponentFolderPath { get; set; }
-
         public static void Run(object sender, DoWorkEventArgs e)
         {
             TLog.MethodStart();
@@ -27,18 +25,19 @@ namespace Tunny.Handler
         {
             TLog.MethodStart();
             string envPath = TunnyVariables.TunnyEnvPath;
+            string componentFolderPath = TunnyVariables.ComponentFolder;
             TLog.Info("Unzip Python libraries: " + envPath);
             if (Directory.Exists(envPath + "/python"))
             {
                 Directory.Delete(envPath + "/python", true);
             }
-            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/python.zip", envPath + "/python");
+            ZipFile.ExtractToDirectory(componentFolderPath + "/Lib/python.zip", envPath + "/python");
 
             if (Directory.Exists(envPath + "/Lib/whl"))
             {
                 Directory.Delete(envPath + "/Lib/whl", true);
             }
-            ZipFile.ExtractToDirectory(ComponentFolderPath + "/Lib/whl.zip", envPath + "/Lib/whl");
+            ZipFile.ExtractToDirectory(componentFolderPath + "/Lib/whl.zip", envPath + "/Lib/whl");
             return Directory.GetFiles(envPath + "/Lib/whl");
         }
 

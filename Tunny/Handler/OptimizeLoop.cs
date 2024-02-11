@@ -60,7 +60,7 @@ namespace Tunny.Handler
                 return Array.Empty<Parameter>();
             }
 
-            var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
+            var optunaSolver = new Solver.Optuna(Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();

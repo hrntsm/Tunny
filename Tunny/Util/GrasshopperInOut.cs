@@ -33,7 +33,6 @@ namespace Tunny.Util
         private List<GH_NumberSlider> _sliders;
         private List<GH_ValueList> _valueLists;
 
-        public string ComponentFolder { get; }
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
@@ -45,7 +44,6 @@ namespace Tunny.Util
         {
             TLog.MethodStart();
             _component = component;
-            ComponentFolder = Path.GetDirectoryName(Grasshopper.Instances.ComponentServer.FindAssemblyByObject(_component).Location);
             _document = _component.OnPingDocument();
             _inputGuids = new List<Guid>();
 

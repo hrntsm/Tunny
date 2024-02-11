@@ -21,14 +21,12 @@ namespace Tunny.Solver
     public class Optuna : PythonInit
     {
         public Parameter[] OptimalParameters { get; private set; }
-        private readonly string _componentFolder;
         private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
 
-        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint)
+        public Optuna(TunnySettings settings, bool hasConstraint)
         {
             TLog.MethodStart();
-            _componentFolder = componentFolder;
             _settings = settings;
             _hasConstraint = hasConstraint;
         }
