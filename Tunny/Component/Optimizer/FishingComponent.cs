@@ -85,7 +85,8 @@ namespace Tunny.Component.Optimizer
 
         private sealed class FishingComponentAttributes : OptimizerAttributeBase
         {
-            public FishingComponentAttributes(IGH_Component component) : base(component)
+            public FishingComponentAttributes(IGH_Component component)
+              : base(component, Color.CornflowerBlue, Color.DarkBlue, Color.Black)
             {
             }
 

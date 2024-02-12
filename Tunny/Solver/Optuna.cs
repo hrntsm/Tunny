@@ -7,8 +7,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Serilog;
-
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
@@ -99,7 +97,7 @@ namespace Tunny.Solver
                     message = "Solver error.";
                     break;
             }
-            Log.Information(message);
+            TLog.Info(message);
             zombie.SetInfo(message);
         }
 

@@ -9,8 +9,15 @@ namespace Tunny.Component.Optimizer
 {
     internal class OptimizerAttributeBase : Tunny_ComponentAttributes
     {
-        public OptimizerAttributeBase(IGH_Component component) : base(component)
+        private readonly Color _capsuleFillColor;
+        private readonly Color _capsuleEdgeColor;
+        private readonly Color _capsuleTextColor;
+
+        public OptimizerAttributeBase(IGH_Component component, Color fill, Color edge, Color text) : base(component)
         {
+            _capsuleFillColor = fill;
+            _capsuleEdgeColor = edge;
+            _capsuleTextColor = text;
         }
 
         protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
@@ -37,7 +44,7 @@ namespace Tunny.Component.Optimizer
 
         private void DrawObjects(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
         {
-            var style = new GH_PaletteStyle(Color.CornflowerBlue, Color.DarkBlue, Color.Black);
+            var style = new GH_PaletteStyle(_capsuleFillColor, _capsuleEdgeColor, _capsuleTextColor);
             GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
             GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
             GH_PaletteStyle hiddenStyle = GH_Skin.palette_hidden_standard;

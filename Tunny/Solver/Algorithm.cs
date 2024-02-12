@@ -10,8 +10,6 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Serilog;
-
 using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 using GalapagosComponents;
@@ -7,8 +8,6 @@ using GalapagosComponents;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
-
-using Serilog;
 
 using Tunny.Component.Params;
 using Tunny.Enum;
@@ -33,7 +32,7 @@ namespace Tunny.Component.Optimizer
 
         public void GhInOutInstantiate()
         {
-            Log.Information("Instantiate GrasshopperInOut");
+            TLog.Info("Instantiate GrasshopperInOut");
             GhInOut = new GrasshopperInOut(this);
         }
 
@@ -46,7 +45,7 @@ namespace Tunny.Component.Optimizer
 
         public override void CreateAttributes()
         {
-            m_attributes = new OptimizerAttributeBase(this);
+            m_attributes = new OptimizerAttributeBase(this, Color.DimGray, Color.Black, Color.White);
         }
 
         protected void CheckVariablesInput(IEnumerable<Guid> inputGuids)
