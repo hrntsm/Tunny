@@ -37,7 +37,7 @@ namespace Tunny.Handler
 
             if (s_component != null)
             {
-                var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+                var optunaSolver = new Solver.Optuna(Settings, s_component.GhInOut.HasConstraint);
                 ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
                 if (modelResult.Length == 0)
                 {
