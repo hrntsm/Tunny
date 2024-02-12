@@ -1,5 +1,7 @@
 using System;
 
+using Tunny.Util;
+
 namespace Tunny.Input
 {
     [Serializable]
@@ -11,6 +13,7 @@ namespace Tunny.Input
         public CategoricalVariable(string[] categories, string selectedItem, string nickName, Guid id)
          : base(nickName, id)
         {
+            TLog.MethodStart();
             Categories = categories;
             SelectedItem = selectedItem;
         }

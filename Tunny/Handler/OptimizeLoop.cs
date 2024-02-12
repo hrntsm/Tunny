@@ -8,6 +8,7 @@ using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Handler
 {
@@ -20,6 +21,7 @@ namespace Tunny.Handler
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
             Component = e.Argument as OptimizeComponentBase;
             Component?.GhInOutInstantiate();
@@ -47,6 +49,7 @@ namespace Tunny.Handler
 
         private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
         {
+            TLog.MethodStart();
             List<VariableBase> variables = Component.GhInOut.Variables;
             Objective objectives = Component.GhInOut.Objectives;
             Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
@@ -57,7 +60,7 @@ namespace Tunny.Handler
                 return Array.Empty<Parameter>();
             }
 
-            var optunaSolver = new Solver.Optuna(Component.GhInOut.ComponentFolder, Settings, hasConstraint);
+            var optunaSolver = new Solver.Optuna(Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
             return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();
@@ -65,7 +68,9 @@ namespace Tunny.Handler
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
+            TLog.MethodStart();
             Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+
             s_worker.ReportProgress(progress, pState);
             while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             { /*just wait*/ }

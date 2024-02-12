@@ -51,16 +51,6 @@ namespace Tunny.Component.Optimizer
             DA.SetDataList(0, Fishes);
         }
 
-        public override void RemovedFromDocument(GH_Document document)
-        {
-            base.RemovedFromDocument(document);
-            if (OptimizationWindow != null)
-            {
-                OptimizationWindow.BGDispose();
-                OptimizationWindow.Dispose();
-            }
-        }
-
         public void Dispose()
         {
             if (OptimizationWindow != null)

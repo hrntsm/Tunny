@@ -4,7 +4,7 @@ using System.Reflection;
 
 using Newtonsoft.Json;
 
-using Serilog;
+using Serilog.Events;
 
 using Tunny.Enum;
 using Tunny.Util;
@@ -19,9 +19,11 @@ namespace Tunny.Settings
         public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
+        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
         public void Serialize(string path)
         {
+            TLog.MethodStart();
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             string dirPath = Path.GetDirectoryName(path);
             if (!Directory.Exists(dirPath))
@@ -33,11 +35,13 @@ namespace Tunny.Settings
 
         public static TunnySettings Deserialize(string json)
         {
+            TLog.MethodStart();
             return JsonConvert.DeserializeObject<TunnySettings>(json);
         }
 
         public void CreateNewSettingsFile(string path)
         {
+            TLog.MethodStart();
             Serialize(path);
         }
 
@@ -47,7 +51,7 @@ namespace Tunny.Settings
             string settingsPath = TunnyVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
-                Log.Information("Load existing setting.json");
+                TLog.Info("Load existing setting.json");
                 settings = Deserialize(File.ReadAllText(settingsPath));
             }
             else

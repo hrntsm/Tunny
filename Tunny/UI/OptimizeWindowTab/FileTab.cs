@@ -13,25 +13,30 @@ namespace Tunny.UI
     {
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             File.Delete(_settings.Storage.Path);
         }
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("https://github.com/hrntsm/Tunny/blob/main/LICENSE");
         }
         private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
         }
 
         private void SetResultFilePathButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             var sfd = new SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
@@ -57,6 +62,7 @@ namespace Tunny.UI
 
         private void OutputDebugLogButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (File.Exists(TunnyVariables.TunnyEnvPath + "\\debug.log"))
             {
                 File.Delete(TunnyVariables.TunnyEnvPath + "\\debug.log");

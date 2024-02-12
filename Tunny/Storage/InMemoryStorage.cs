@@ -10,6 +10,7 @@ namespace Tunny.Storage
 
         public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
+            TLog.MethodStart();
             if (useInnerPythonEngine)
             {
                 PythonEngine.Initialize();
@@ -29,6 +30,7 @@ namespace Tunny.Storage
 
         private void CreateStorageProcess()
         {
+            TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
             Storage = optuna.storages.InMemoryStorage();
         }

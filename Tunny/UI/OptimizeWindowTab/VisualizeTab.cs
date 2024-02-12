@@ -8,6 +8,7 @@ using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.PostProcess;
 using Tunny.Solver;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -15,6 +16,7 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (File.Exists(_settings.Storage.Path) == false)
             {
                 ResultFileNotExistErrorMessage();
@@ -29,11 +31,13 @@ namespace Tunny.UI
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             UpdateVisualizeListBox();
         }
 
         private void UpdateVisualizeListBox()
         {
+            TLog.MethodStart();
             StudySummary visualizeStudySummary = _summaries.FirstOrDefault(s => s.StudyName == visualizeTargetStudyComboBox.Text);
             if (visualizeStudySummary != null)
             {
@@ -60,6 +64,7 @@ namespace Tunny.UI
 
         private void VisualizeType_Changed(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (visualizeTypeComboBox.SelectedItem.ToString() == "clustering")
             {
                 visualizeClusterNumUpDown.Enabled = true;
@@ -79,16 +84,19 @@ namespace Tunny.UI
 
         private void VisualizeShowPlotButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Plot(PlotActionType.Show);
         }
 
         private void VisualizeSavePlotButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Plot(PlotActionType.Save);
         }
 
         private void Plot(PlotActionType pActionType)
         {
+            TLog.MethodStart();
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
             var pSettings = new PlotSettings
             {
@@ -117,6 +125,7 @@ namespace Tunny.UI
 
         private static bool CheckTargetValues(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             switch (pSettings.PlotTypeName)
             {
                 case "contour":
@@ -135,6 +144,7 @@ namespace Tunny.UI
 
         private static bool CheckOneObjectives(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
@@ -146,6 +156,7 @@ namespace Tunny.UI
 
         private static bool CheckHypervolumeTargets(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length != 2)
             {
@@ -156,6 +167,7 @@ namespace Tunny.UI
 
         private static bool CheckParetoFrontTargets(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
             {
@@ -167,6 +179,7 @@ namespace Tunny.UI
 
         private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
         {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {

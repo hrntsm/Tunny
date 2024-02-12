@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Tunny.Input;
+using Tunny.Util;
 
 namespace Tunny.Type
 {
@@ -17,6 +18,7 @@ namespace Tunny.Type
 
         public FishEgg(VariableBase variable)
         {
+            TLog.MethodStart();
             NickName = variable.NickName;
             switch (variable)
             {

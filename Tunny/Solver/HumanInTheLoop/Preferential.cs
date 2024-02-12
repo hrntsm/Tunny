@@ -3,6 +3,8 @@ using System.Drawing;
 
 using Python.Runtime;
 
+using Tunny.Util;
+
 namespace Tunny.Solver.HumanInTheLoop
 {
     public class Preferential : HumanInTheLoopBase
@@ -13,6 +15,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public Preferential(string path) : base(path)
         {
+            TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
             importedLibrary.Exec("from optuna_dashboard.artifact.file_system import FileSystemBackend");
             importedLibrary.Exec("from optuna_dashboard.artifact import upload_artifact");
@@ -27,6 +30,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public dynamic CreateStudy(int nGenerate, string studyName, dynamic storage, string objectiveName)
         {
+            TLog.MethodStart();
             dynamic createStudy = _importedLibrary.Get("create_study");
             dynamic preferentialGPSampler = _importedLibrary.Get("PreferentialGPSampler");
             string name = studyName == null || studyName == "" ? "no-name-" + Guid.NewGuid().ToString("D") : studyName;
@@ -45,6 +49,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void UploadArtifact(dynamic trial, Bitmap image)
         {
+            TLog.MethodStart();
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             CheckDirectoryIsExist();
             string path = $"{_basePath}/tmp/image_{trial.number}.png";

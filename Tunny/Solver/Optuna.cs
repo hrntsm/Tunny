@@ -24,13 +24,12 @@ namespace Tunny.Solver
     public class Optuna : PythonInit
     {
         public Parameter[] OptimalParameters { get; private set; }
-        private readonly string _componentFolder;
         private readonly bool _hasConstraint;
         private readonly TunnySettings _settings;
 
-        public Optuna(string componentFolder, TunnySettings settings, bool hasConstraint)
+        public Optuna(TunnySettings settings, bool hasConstraint)
         {
-            _componentFolder = componentFolder;
+            TLog.MethodStart();
             _settings = settings;
             _hasConstraint = hasConstraint;
         }
@@ -41,6 +40,7 @@ namespace Tunny.Solver
             Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
+            TLog.MethodStart();
             TrialGrasshopperItems Eval(ProgressState pState, int progress)
             {
                 return evaluate(pState, progress);
@@ -105,6 +105,7 @@ namespace Tunny.Solver
 
         private static void ShowUIEndMessages(EndState endState)
         {
+            TLog.MethodStart();
             switch (endState)
             {
                 case EndState.Timeout:
@@ -133,6 +134,7 @@ namespace Tunny.Solver
 
         private static void ShowErrorMessages(Exception e)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "Tunny runtime error:\n" +
                 "Please send below message (& gh file if possible) to Tunny support.\n" +
@@ -143,6 +145,7 @@ namespace Tunny.Solver
 
         public ModelResult[] GetModelResult(int[] resultNum, string studyName, BackgroundWorker worker)
         {
+            TLog.MethodStart();
             var modelResult = new List<ModelResult>();
             PythonEngine.Initialize();
             using (Py.GIL())
@@ -170,6 +173,7 @@ namespace Tunny.Solver
 
         private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
+            TLog.MethodStart();
             if (resultNum[0] == -1)
             {
                 ParatoSolutions(modelResult, study, worker);
@@ -186,6 +190,7 @@ namespace Tunny.Solver
 
         private static void UseModelNumber(IReadOnlyList<int> resultNum, ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
+            TLog.MethodStart();
             for (int i = 0; i < resultNum.Count; i++)
             {
                 int res = resultNum[i];
@@ -209,6 +214,7 @@ namespace Tunny.Solver
 
         private static void AllTrials(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
+            TLog.MethodStart();
             var trials = (dynamic[])study.trials;
             for (int i = 0; i < trials.Length; i++)
             {
@@ -224,6 +230,7 @@ namespace Tunny.Solver
 
         private void ParatoSolutions(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
         {
+            TLog.MethodStart();
             var bestTrials = (dynamic[])study.best_trials;
             for (int i = 0; i < bestTrials.Length; i++)
             {
@@ -239,6 +246,7 @@ namespace Tunny.Solver
 
         private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
         {
+            TLog.MethodStart();
             var trialResult = new ModelResult
             {
                 Number = (int)trial.number,
@@ -254,8 +262,32 @@ namespace Tunny.Solver
 
         private static Dictionary<string, object> ParseVariables(dynamic trial)
         {
+            TLog.MethodStart();
             var variables = new Dictionary<string, object>();
-            object[] values = (object[])trial.@params.values();
+            object[] pyValues = (object[])trial.@params.values();
+            object[] values = new object[pyValues.Length];
+            for (int i = 0; i < pyValues.Length; i++)
+            {
+                object v = pyValues[i];
+                switch (v)
+                {
+                    case PyInt pyInt:
+                        values[i] = Convert.ToDouble(pyInt, CultureInfo.InvariantCulture);
+                        break;
+                    case PyFloat pyFloat:
+                        values[i] = Convert.ToDouble(pyFloat, CultureInfo.InvariantCulture);
+                        break;
+                    case PyString pyString:
+                        values[i] = pyString.ToString(CultureInfo.InvariantCulture);
+                        break;
+                    case double num:
+                        values[i] = num;
+                        break;
+                    case string str:
+                        values[i] = str;
+                        break;
+                }
+            }
             string[] keys = (string[])trial.@params.keys();
             for (int i = 0; i < keys.Length; i++)
             {
@@ -267,6 +299,7 @@ namespace Tunny.Solver
 
         private static Dictionary<string, List<string>> ParseAttributes(dynamic trial)
         {
+            TLog.MethodStart();
             var attributes = new Dictionary<string, List<string>>();
             string[] keys = (string[])trial.user_attrs.keys();
             foreach (string key in keys)

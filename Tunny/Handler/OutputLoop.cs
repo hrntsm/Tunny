@@ -12,6 +12,7 @@ using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Type;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Handler
 {
@@ -28,6 +29,7 @@ namespace Tunny.Handler
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
             s_component = e.Argument as FishingComponent;
 
@@ -35,7 +37,7 @@ namespace Tunny.Handler
 
             if (s_component != null)
             {
-                var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+                var optunaSolver = new Solver.Optuna(Settings, s_component.GhInOut.HasConstraint);
                 ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
                 if (modelResult.Length == 0)
                 {
@@ -61,6 +63,7 @@ namespace Tunny.Handler
 
         private static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
+            TLog.MethodStart();
             fishes.Add(new Fish
             {
                 ModelNumber = model.Number,
@@ -72,12 +75,14 @@ namespace Tunny.Handler
 
         private static Dictionary<string, object> SetVariables(ModelResult model, IEnumerable<string> nickNames)
         {
+            TLog.MethodStart();
             return nickNames.SelectMany(name => model.Variables.Where(obj => obj.Key == name))
                 .ToDictionary(variable => variable.Key, variable => variable.Value);
         }
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
+            TLog.MethodStart();
             string[] nickNames = s_component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
             if (model.Objectives == null)
@@ -100,6 +105,7 @@ namespace Tunny.Handler
 
         private static Dictionary<string, object> SetAttributes(ModelResult model)
         {
+            TLog.MethodStart();
             var attribute = new Dictionary<string, object>();
             foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
             {

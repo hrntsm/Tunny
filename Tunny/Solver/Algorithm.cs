@@ -21,6 +21,7 @@ using Tunny.Settings;
 using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -57,12 +58,12 @@ namespace Tunny.Solver
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = SetDirectionValues(Objective.Length);
-            Log.Information($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
+            TLog.Info($"Optimization started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             InitializePythonEngine();
             using (Py.GIL())
             {
-                Log.Debug("Wake Python GIL.");
+                TLog.Debug("Wake Python GIL.");
 
                 dynamic optuna = Py.Import("optuna");
                 dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
@@ -91,19 +92,19 @@ namespace Tunny.Solver
                 }
             }
             PythonEngine.Shutdown();
-            Log.Debug("Shutdown PythonEngine.");
+            TLog.Debug("Shutdown PythonEngine.");
         }
 
         private static void InitializePythonEngine()
         {
-            Log.Debug("Check PythonEngine status.");
+            TLog.Debug("Check PythonEngine status.");
             if (PythonEngine.IsInitialized)
             {
                 PythonEngine.Shutdown();
-                Log.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
+                TLog.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
             }
             PythonEngine.Initialize();
-            Log.Debug("Initialize PythonEngine.");
+            TLog.Debug("Initialize PythonEngine.");
         }
 
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
@@ -371,7 +372,7 @@ namespace Tunny.Solver
                 {
                     dynamic optuna = Py.Import("optuna");
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
-                    Log.Warning($"Trial {trialNum} failed.");
+                    TLog.Warning($"Trial {trialNum} failed.");
                 }
                 else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
                 {
@@ -381,7 +382,7 @@ namespace Tunny.Solver
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                TLog.Error(e.Message);
                 throw new ArgumentException(e.Message);
             }
             finally
@@ -430,11 +431,11 @@ namespace Tunny.Solver
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
             string message = sb.ToString();
-            Log.Information(message);
             if (OptimizeLoop.Component is ZombieFishComponent component)
             {
                 component.SetInfo(message);
             }
+            TLog.Info(sb.ToString());
         }
 
         private void UploadArtifacts(Artifact artifacts, dynamic artifactBackend, dynamic trial)

@@ -1,5 +1,7 @@
 using System;
 
+using Tunny.Util;
+
 namespace Tunny.Input
 {
     [Serializable]
@@ -16,6 +18,7 @@ namespace Tunny.Input
             double value, Guid id)
         : base(nickName, id)
         {
+            TLog.MethodStart();
             LowerBond = lowerBond;
             UpperBond = upperBond;
             IsInteger = isInteger;
