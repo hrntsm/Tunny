@@ -68,6 +68,7 @@ namespace Tunny.Solver
 
         private static void EndMessage(Algorithm optimize)
         {
+            TLog.MethodStart();
             switch (OptimizeLoop.Component)
             {
                 case ZombieFishComponent zombie:
@@ -81,17 +82,24 @@ namespace Tunny.Solver
 
         private static void ToComponentEndMessage(Algorithm optimize, ZombieFishComponent zombie)
         {
+            TLog.MethodStart();
             string message;
             switch (optimize.EndState)
             {
                 case EndState.Timeout:
-                    message = "Solver completed successfully.\nThe specified time has elapsed.";
+                    message = "Solver completed successfully. The specified time has elapsed.";
                     break;
                 case EndState.AllTrialCompleted:
-                    message = "Solver completed successfully.\nThe specified number of trials has been completed.";
+                    message = "Solver completed successfully. The specified number of trials has been completed.";
                     break;
                 case EndState.StoppedByUser:
-                    message = "Solver completed successfully.\nThe user stopped the solver.";
+                    message = "Solver completed successfully. The user stopped the solver.";
+                    break;
+                case EndState.DirectionNumNotMatch:
+                    message = "Solver error. The number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".";
+                    break;
+                case EndState.UseExitStudyWithoutContinue:
+                    message = "Solver error. \"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.";
                     break;
                 default:
                     message = "Solver error.";
@@ -118,7 +126,7 @@ namespace Tunny.Solver
                 case EndState.DirectionNumNotMatch:
                     TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
-                case EndState.UseExitStudyWithoutLoading:
+                case EndState.UseExitStudyWithoutContinue:
                     TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.Error:
