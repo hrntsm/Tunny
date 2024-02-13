@@ -35,8 +35,14 @@ namespace Tunny.Input
         public void SaveAllArtifacts(string basePath)
         {
             TLog.MethodStart();
-            SaveRhino3dm(basePath);
-            SaveImage(basePath);
+            if (Geometries.Count > 0)
+            {
+                SaveRhino3dm(basePath);
+            }
+            if (Images.Count > 0)
+            {
+                SaveImage(basePath);
+            }
         }
 
         public void SaveRhino3dm(string basePath)
