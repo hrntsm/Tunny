@@ -34,6 +34,7 @@ for now removed features.
 ### Fixed
 
 - When launching a window, if all the objectives are null, the window will not launch.
+- Empty 3dm is always saved even if you want to save only images in artifact.
 
 ### Security
 
