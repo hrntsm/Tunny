@@ -56,7 +56,7 @@ namespace Tunny.Solver
                     dynamic fig = CreateFigure(study, pSettings);
                     FigureActions(fig, pSettings);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     string message = "This visualization type is not supported in this study case.";
                     TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);

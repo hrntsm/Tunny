@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
+using Tunny.Core;
 using Tunny.Enum;
 using Tunny.Storage;
 using Tunny.Util;
@@ -63,19 +64,20 @@ namespace Tunny.UI
         private void OutputDebugLogButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            if (File.Exists(TunnyVariables.TunnyEnvPath + "\\debug.log"))
+            string path = TEnvVariables.TunnyEnvPath + "\\debug.log";
+            if (File.Exists(path))
             {
-                File.Delete(TunnyVariables.TunnyEnvPath + "\\debug.log");
+                File.Delete(path);
             }
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "PowerShell.exe";
-                process.StartInfo.Arguments = $"tree {TunnyVariables.TunnyEnvPath} > {TunnyVariables.TunnyEnvPath}\\debug.log";
+                process.StartInfo.Arguments = $"tree {TEnvVariables.TunnyEnvPath} > {path}";
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
             }
-            TunnyMessageBox.Show("Debug log file is created at\n" + TunnyVariables.TunnyEnvPath + "\\debug.log", "Tunny");
+            TunnyMessageBox.Show("Debug log file is created at\n" + path, "Tunny");
         }
     }
 }

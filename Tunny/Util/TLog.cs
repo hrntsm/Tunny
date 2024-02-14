@@ -7,6 +7,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
+using Tunny.Core;
 using Tunny.Settings;
 
 namespace Tunny.Util
@@ -21,7 +22,7 @@ namespace Tunny.Util
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
-                .WriteTo.File(path: TunnyVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
+                .WriteTo.File(path: TEnvVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
                 .CreateLogger();
             Log.Information("Tunny is loaded.");
             CheckAndDeleteOldLogFiles();
@@ -40,7 +41,7 @@ namespace Tunny.Util
 
         private static void CheckAndDeleteOldLogFiles()
         {
-            string logDirectory = TunnyVariables.LogPath;
+            string logDirectory = TEnvVariables.LogPath;
             string logFilePattern = "*.txt";
 
             DateTime threshold = DateTime.Now.AddDays(-7);

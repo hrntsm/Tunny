@@ -17,7 +17,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Log level selector.
   - It is located in the Misc tab of the Settings tab.
   - There are three levels: "Verbose," "Debug," and "Information.
-- Sample python code to create a gif animation
+- Sample python code to create a gif animation.
+- Tunny.Core csproj for improve develop environment.
 
 ### Changed
 

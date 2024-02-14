@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
+using Tunny.Core;
 using Tunny.Util;
 
 namespace Tunny.Handler
@@ -24,8 +25,8 @@ namespace Tunny.Handler
         private static string[] UnzipLibraries()
         {
             TLog.MethodStart();
-            string envPath = TunnyVariables.TunnyEnvPath;
-            string componentFolderPath = TunnyVariables.ComponentFolder;
+            string envPath = TEnvVariables.TunnyEnvPath;
+            string componentFolderPath = TEnvVariables.ComponentFolder;
             TLog.Info("Unzip Python libraries: " + envPath);
             if (Directory.Exists(envPath + "/python"))
             {
@@ -54,7 +55,7 @@ namespace Tunny.Handler
                 TLog.Info(state);
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = TunnyVariables.TunnyEnvPath + "/python/python.exe",
+                    FileName = TEnvVariables.TunnyEnvPath + "/python/python.exe",
                     Arguments = "-m pip install --no-deps " + packageList[i],
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
@@ -73,7 +74,7 @@ namespace Tunny.Handler
         internal static string GetEmbeddedPythonPath()
         {
             TLog.MethodStart();
-            return TunnyVariables.TunnyEnvPath + "/python";
+            return TEnvVariables.TunnyEnvPath + "/python";
         }
     }
 }
