@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 using Serilog.Events;
 
+using Tunny.Core;
 using Tunny.Enum;
 using Tunny.Util;
 
@@ -49,7 +50,7 @@ namespace Tunny.Settings
         {
             TLog.MethodStart();
             TunnySettings settings;
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
+            string settingsPath = TEnvVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
                 TLog.Info("Load existing setting.json");

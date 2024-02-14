@@ -7,6 +7,7 @@ using Grasshopper.GUI;
 using Serilog.Events;
 
 using Tunny.Component.Optimizer;
+using Tunny.Core;
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -43,7 +44,7 @@ namespace Tunny.UI
         private void RunPythonInstaller()
         {
             TLog.MethodStart();
-            string tunnyAssembleVersion = TunnyVariables.Version.ToString(3);
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString(3);
             if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
                 TLog.Info("Run Python installer");
@@ -115,7 +116,7 @@ namespace Tunny.UI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
             GetUIValues();
-            _settings.Serialize(TunnyVariables.OptimizeSettingsPath);
+            _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
 
             //TODO: use cancelAsync to stop the background worker safely
             optimizeBackgroundWorker?.Dispose();

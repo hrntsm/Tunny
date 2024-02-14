@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Tunny.Util
+namespace Tunny.Core
 {
-    public static class TunnyVariables
+    public static class TEnvVariables
     {
         public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
         public static string TunnyEnvPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".tunny_env");
