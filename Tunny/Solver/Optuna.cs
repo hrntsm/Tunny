@@ -230,7 +230,7 @@ namespace Tunny.Solver
                     break;
                 }
                 ParseTrial(modelResult, trial);
-                worker.ReportProgress(i * 100 / trials.Length);
+                worker?.ReportProgress(i * 100 / trials.Length);
             }
         }
 
@@ -246,7 +246,7 @@ namespace Tunny.Solver
                     break;
                 }
                 ParseTrial(modelResult, trial);
-                worker.ReportProgress(i * 100 / bestTrials.Length);
+                worker?.ReportProgress(i * 100 / bestTrials.Length);
             }
         }
 
