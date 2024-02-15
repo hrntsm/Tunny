@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 
@@ -17,7 +16,7 @@ using Tunny.Settings;
 using Tunny.Type;
 namespace Tunny.Component.Optimizer
 {
-    public class ZombieFishComponent : OptimizeComponentBase
+    public class BoneFishComponent : OptimizeComponentBase
     {
         private int _count;
         private bool _running;
@@ -25,9 +24,9 @@ namespace Tunny.Component.Optimizer
         private Fish[] _allFishes;
         private string _state;
 
-        public ZombieFishComponent()
-          : base("Zombie Fish", "Zombie",
-            "Zombie Fish is an optimization component wrapped in optuna without UI."
+        public BoneFishComponent()
+          : base("Bone Fish", "Born",
+            "Bone Fish is an optimization component wrapped in optuna without UI."
             )
         {
         }
@@ -158,7 +157,7 @@ namespace Tunny.Component.Optimizer
             _info = info;
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Resources.Resource.BoneFish;
         public override Guid ComponentGuid => new Guid("c6b7612e-ee01-47ad-bc7d-713d76b274ab");
     }
 }

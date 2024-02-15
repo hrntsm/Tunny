@@ -71,7 +71,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             switch (OptimizeLoop.Component)
             {
-                case ZombieFishComponent zombie:
+                case BoneFishComponent zombie:
                     ToComponentEndMessage(optimize, zombie);
                     break;
                 default:
@@ -80,7 +80,7 @@ namespace Tunny.Solver
             }
         }
 
-        private static void ToComponentEndMessage(Algorithm optimize, ZombieFishComponent zombie)
+        private static void ToComponentEndMessage(Algorithm optimize, BoneFishComponent zombie)
         {
             TLog.MethodStart();
             string message;
