@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace Tunny.Component.Optimizer
         private bool _running;
         private string _info;
         private Fish[] _allFishes;
+        private string _state;
 
         public ZombieFishComponent()
           : base("Zombie Fish", "Zombie",
@@ -69,6 +71,15 @@ namespace Tunny.Component.Optimizer
                 _info = "No optimization has been performed yet.";
             }
 
+            if (start && _state == "Finish")
+            {
+                _state = "Start";
+                DA.SetData(0, _info);
+                DA.SetDataList(1, _allFishes);
+                DA.SetDataList(2, Fishes);
+                return;
+            }
+
             if (start && stop)
             {
                 OptimizeLoop.IsForcedStopOptimize = true;
@@ -80,6 +91,8 @@ namespace Tunny.Component.Optimizer
                 _count = 0;
                 GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
                 ghCanvas?.DisableUI();
+                Params.Output[1].ClearData();
+                Params.Output[2].ClearData();
 
                 OptimizeLoop.Settings = TunnySettings.LoadFromJson();
                 var worker = new BackgroundWorker
@@ -95,8 +108,6 @@ namespace Tunny.Component.Optimizer
             }
 
             DA.SetData(0, _info);
-            DA.SetDataList(1, _allFishes);
-            DA.SetDataList(2, Fishes);
         }
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
@@ -117,13 +128,13 @@ namespace Tunny.Component.Optimizer
             var optunaSolver = new Solver.Optuna(OptimizeLoop.Settings, GhInOut.HasConstraint);
             List<Fish> allFishes = GetFishes(optunaSolver, -10);
             _allFishes = allFishes.ToArray();
-            Params.Output[1].ClearData();
             Params.Output[1].AddVolatileDataList(new GH_Path(0), allFishes.Select(x => new GH_Fish(x)));
 
             List<Fish> bestFishes = GetFishes(optunaSolver, -1);
             Fishes = bestFishes.ToArray();
-            Params.Output[2].ClearData();
             Params.Output[2].AddVolatileDataList(new GH_Path(0), bestFishes.Select(x => new GH_Fish(x)));
+            _state = "Finish";
+            ExpireSolution(true);
 
             GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
             Message = "Finish";
