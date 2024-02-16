@@ -48,7 +48,6 @@ namespace Tunny.Settings
 
         public static TunnySettings LoadFromJson()
         {
-            TLog.MethodStart();
             TunnySettings settings;
             string settingsPath = TEnvVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
@@ -58,7 +57,6 @@ namespace Tunny.Settings
             }
             else
             {
-                TLog.Info("There is no configuration file. Create a new one.");
                 settings = new TunnySettings
                 {
                     Storage = new Storage
@@ -69,7 +67,6 @@ namespace Tunny.Settings
                 };
                 settings.CreateNewSettingsFile(settingsPath);
             }
-
             return settings;
         }
     }

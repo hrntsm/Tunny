@@ -6,7 +6,7 @@ namespace Tunny.Enum
         Timeout,
         StoppedByUser,
         DirectionNumNotMatch,
-        UseExitStudyWithoutLoading,
+        UseExitStudyWithoutContinue,
         Error
     }
 }

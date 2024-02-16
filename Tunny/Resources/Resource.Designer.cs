@@ -63,6 +63,16 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap BoneFish {
+            get {
+                object obj = ResourceManager.GetObject("BoneFish", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap ConstructFishAttribute {
             get {
                 object obj = ResourceManager.GetObject("ConstructFishAttribute", resourceCulture);

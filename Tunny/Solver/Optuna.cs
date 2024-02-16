@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Tunny.Component.Optimizer;
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Input;
@@ -54,7 +55,7 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
-                ShowEndMessages(optimize.EndState);
+                EndMessage(optimize);
 
                 return true;
             }
@@ -65,7 +66,50 @@ namespace Tunny.Solver
             }
         }
 
-        private static void ShowEndMessages(EndState endState)
+        private static void EndMessage(Algorithm optimize)
+        {
+            TLog.MethodStart();
+            switch (OptimizeLoop.Component)
+            {
+                case BoneFishComponent zombie:
+                    ToComponentEndMessage(optimize, zombie);
+                    break;
+                default:
+                    ShowUIEndMessages(optimize.EndState);
+                    break;
+            }
+        }
+
+        private static void ToComponentEndMessage(Algorithm optimize, BoneFishComponent zombie)
+        {
+            TLog.MethodStart();
+            string message;
+            switch (optimize.EndState)
+            {
+                case EndState.Timeout:
+                    message = "Solver completed successfully. The specified time has elapsed.";
+                    break;
+                case EndState.AllTrialCompleted:
+                    message = "Solver completed successfully. The specified number of trials has been completed.";
+                    break;
+                case EndState.StoppedByUser:
+                    message = "Solver completed successfully. The user stopped the solver.";
+                    break;
+                case EndState.DirectionNumNotMatch:
+                    message = "Solver error. The number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".";
+                    break;
+                case EndState.UseExitStudyWithoutContinue:
+                    message = "Solver error. \"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.";
+                    break;
+                default:
+                    message = "Solver error.";
+                    break;
+            }
+            TLog.Info(message);
+            zombie.SetInfo(message);
+        }
+
+        private static void ShowUIEndMessages(EndState endState)
         {
             TLog.MethodStart();
             switch (endState)
@@ -82,7 +126,7 @@ namespace Tunny.Solver
                 case EndState.DirectionNumNotMatch:
                     TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
-                case EndState.UseExitStudyWithoutLoading:
+                case EndState.UseExitStudyWithoutContinue:
                     TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.Error:
@@ -186,7 +230,7 @@ namespace Tunny.Solver
                     break;
                 }
                 ParseTrial(modelResult, trial);
-                worker.ReportProgress(i * 100 / trials.Length);
+                worker?.ReportProgress(i * 100 / trials.Length);
             }
         }
 
@@ -202,7 +246,7 @@ namespace Tunny.Solver
                     break;
                 }
                 ParseTrial(modelResult, trial);
-                worker.ReportProgress(i * 100 / bestTrials.Length);
+                worker?.ReportProgress(i * 100 / bestTrials.Length);
             }
         }
 
