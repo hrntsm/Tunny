@@ -1,15 +1,42 @@
+using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
 
 using Optuna.Study;
 using Optuna.Trial;
 
-namespace Optuna.Storage
+namespace Optuna.Storage.RDB
 {
-    public class RDBStorage : BaseStorage
+    public class SqliteStorage : BaseStorage
     {
-        public RDBStorage(string url)
+        private int _nextStudyId;
+        private readonly SQLiteConnectionStringBuilder _sqliteConnection;
+
+        public SqliteStorage(string filePath, bool createIfNotExist = false)
         {
-            throw new System.NotImplementedException();
+            CheckFileExist(filePath, createIfNotExist);
+
+            _sqliteConnection = new SQLiteConnectionStringBuilder
+            {
+                DataSource = filePath,
+                Version = 3,
+            };
+        }
+
+        private static void CheckFileExist(string filePath, bool createIfNotExist)
+        {
+            if (!File.Exists(filePath))
+            {
+                if (!createIfNotExist)
+                {
+                    throw new ArgumentException("The specified database does not exist.");
+                }
+                else
+                {
+                    SQLiteConnection.CreateFile(filePath);
+                }
+            }
         }
 
         public override void CheckTrialIsUpdatable(int trialId, TrialState trialState)
@@ -19,7 +46,22 @@ namespace Optuna.Storage
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
         {
-            throw new System.NotImplementedException();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                string createTableQuery = "CREATE TABLE IF NOT EXISTS studies (study_id INTEGER, study_name VARCHAR(512));";
+                using (var command = new SQLiteCommand(createTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "INSERT INTO studies (study_name) VALUES (@studyName);";
+                    command.Parameters.AddWithValue("@studyName", studyName);
+                    command.ExecuteNonQuery();
+                }
+                return _nextStudyId++;
+            }
         }
 
         public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
