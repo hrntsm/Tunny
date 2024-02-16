@@ -12,13 +12,14 @@ using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Type;
 using Tunny.UI;
+using Tunny.Util;
 
 namespace Tunny.Handler
 {
     internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
-        private static FishingComponent s_component;
+        public static OptimizeComponentBase Component;
         public static TunnySettings Settings;
         public static string StudyName;
         public static string[] NickNames;
@@ -28,21 +29,22 @@ namespace Tunny.Handler
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as FishingComponent;
+            Component = e.Argument as FishingComponent;
 
             var fishes = new List<Fish>();
 
-            if (s_component != null)
+            if (Component != null)
             {
-                var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
+                var optunaSolver = new Solver.Optuna(Settings, Component.GhInOut.HasConstraint);
                 ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
                 if (modelResult.Length == 0)
                 {
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (s_component.GhInOut.HasConstraint && Indices[0] == -1)
+                if (Component.GhInOut.HasConstraint && Indices[0] == -1)
                 {
                     TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -51,7 +53,7 @@ namespace Tunny.Handler
                 {
                     SetResultToFish(fishes, result, NickNames);
                 }
-                s_component.Fishes = fishes.ToArray();
+                Component.Fishes = fishes.ToArray();
             }
 
             s_worker?.ReportProgress(100);
@@ -59,8 +61,9 @@ namespace Tunny.Handler
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
-        private static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
+        public static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
         {
+            TLog.MethodStart();
             fishes.Add(new Fish
             {
                 ModelNumber = model.Number,
@@ -70,15 +73,17 @@ namespace Tunny.Handler
             });
         }
 
-        private static Dictionary<string, double> SetVariables(ModelResult model, IEnumerable<string> nickNames)
+        private static Dictionary<string, object> SetVariables(ModelResult model, IEnumerable<string> nickNames)
         {
+            TLog.MethodStart();
             return nickNames.SelectMany(name => model.Variables.Where(obj => obj.Key == name))
                 .ToDictionary(variable => variable.Key, variable => variable.Value);
         }
 
         private static Dictionary<string, double> SetObjectives(ModelResult model)
         {
-            string[] nickNames = s_component.GhInOut.Objectives.GetNickNames();
+            TLog.MethodStart();
+            string[] nickNames = Component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
             if (model.Objectives == null)
             {
@@ -100,6 +105,7 @@ namespace Tunny.Handler
 
         private static Dictionary<string, object> SetAttributes(ModelResult model)
         {
+            TLog.MethodStart();
             var attribute = new Dictionary<string, object>();
             foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
             {

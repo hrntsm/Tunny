@@ -30,13 +30,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Optuna\Optuna.csproj" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="pythonnet" Version="3.0.1" />
-    <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.116" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
+    <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.116" />
+    <ProjectReference Include="..\Optuna\Optuna.csproj" />
+    <ProjectReference Include="..\Tunny.Core\Tunny.Core.csproj" />
     <Reference Include="GalapagosComponents">
       <HintPath>Lib\GalapagosComponents.dll</HintPath>
       <Private>false</Private>

@@ -14,6 +14,7 @@ using Rhino.Geometry;
 using Tunny.Component.Params;
 using Tunny.Enum;
 using Tunny.Type;
+using Tunny.Util;
 
 namespace Tunny.Input
 {
@@ -30,6 +31,7 @@ namespace Tunny.Input
 
         public Objective(List<IGH_Param> sources)
         {
+            TLog.MethodStart();
             var numbers = new List<double>();
             var images = new List<Bitmap>();
             var geometries = new List<GeometryBase>();
@@ -46,10 +48,15 @@ namespace Tunny.Input
 
         private static void SetParamsValue(List<IGH_Param> sources, List<double> numbers, List<Bitmap> images, List<GeometryBase> geometries)
         {
+            TLog.MethodStart();
             foreach (IGH_StructureEnumerator ghEnumerator in sources.Select(objective => objective.VolatileData.AllData(false)))
             {
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
+                    if (goo == null)
+                    {
+                        continue;
+                    }
                     bool result = goo.CastTo(out GeometryBase geometry);
                     if (result)
                     {
@@ -72,6 +79,7 @@ namespace Tunny.Input
 
         private void SetHumanInTheLoopType()
         {
+            TLog.MethodStart();
             if (NoNumberLength == 0)
             {
                 HumanInTheLoopType = HumanInTheLoopType.None;
@@ -88,6 +96,7 @@ namespace Tunny.Input
 
         public string[] GetNickNames()
         {
+            TLog.MethodStart();
             var nickNames = new List<string>();
             foreach (IGH_Param source in Sources)
             {
@@ -108,6 +117,7 @@ namespace Tunny.Input
 
         public PyList GetPyListStyleNickname()
         {
+            TLog.MethodStart();
             var name = new PyList();
             foreach (string objName in GetNickNames())
             {

@@ -6,6 +6,44 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.11.0] -yyyy-mm-dd
+
+### Added
+
+- Bone Fish component
+  - It is Tunny UI less mode component.
+- Categorical optimization.
+  - Sample gh file also added
+- Log output.
+  - Improved ease of support.
+- Log level selector.
+  - It is located in the Misc tab of the Settings tab.
+  - There are three levels: "Verbose," "Debug," and "Information.
+- Sample python code to create a gif animation.
+- Tunny.Core csproj for improve develop environment.
+
+### Changed
+
+- DeconstructFish component output
+  - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
+
+### Deprecated
+
+for soon-to-be removed features.
+
+### Removed
+
+for now removed features.
+
+### Fixed
+
+- When launching a window, if all the objectives are null, the window will not launch.
+- Empty 3dm is always saved even if you want to save only images in artifact.
+
+### Security
+
+in case of vulnerabilities.
+
 ## [v0.10.0] -2024-01-27
 
 ### Changed

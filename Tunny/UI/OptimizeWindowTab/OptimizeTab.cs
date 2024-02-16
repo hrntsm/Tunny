@@ -11,6 +11,7 @@ using Optuna.Study;
 using Tunny.Enum;
 using Tunny.Handler;
 using Tunny.Storage;
+using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -20,6 +21,7 @@ namespace Tunny.UI
 
         private void InMemoryCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (inMemoryCheckBox.Checked)
             {
                 continueStudyCheckBox.Checked = false;
@@ -38,6 +40,7 @@ namespace Tunny.UI
 
         private void ContinueStudyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (continueStudyCheckBox.Checked)
             {
                 existingStudyComboBox.Enabled = true;
@@ -56,11 +59,13 @@ namespace Tunny.UI
 
         private void CopyStudyCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             studyNameTextBox.Enabled = copyStudyCheckBox.Checked;
         }
 
         private void OptimizeRunButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.DisableUI();
 
@@ -84,6 +89,7 @@ namespace Tunny.UI
 
         private bool CheckInputValue(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             bool checkResult = CheckObjectivesCount(ghCanvas);
 
             switch (checkResult)
@@ -106,6 +112,7 @@ namespace Tunny.UI
 
         private bool CheckSameStudyName(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             if (existingStudyComboBox.Text == string.Empty)
             {
                 return SameStudyNameMassage(ghCanvas);
@@ -117,6 +124,7 @@ namespace Tunny.UI
 
         private bool CheckObjectivesCount(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             int length = _component.GhInOut.Objectives.Length;
             if (length == 0)
             {
@@ -134,6 +142,7 @@ namespace Tunny.UI
 
         private void OptimizeStopButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
             OptimizeLoop.IsForcedStopOptimize = true;
@@ -149,23 +158,27 @@ namespace Tunny.UI
 
         private void UpdateStudyComboBox()
         {
+            TLog.MethodStart();
             try
             {
                 UpdateStudyComboBox(_settings.Storage.Path);
             }
             catch (Exception)
             {
-                TunnyMessageBox.Show("The storage file loading error.\nPlease check the storage path or use new storage file.", "Error");
+                string message = "The storage file loading error.Please check the storage path or use new storage file.";
+                TunnyMessageBox.Show(message, "Error");
             }
         }
 
         private void UpdateStudyComboBox(string storagePath)
         {
+            TLog.MethodStart();
             existingStudyComboBox.Items.Clear();
             visualizeTargetStudyComboBox.Items.Clear();
             outputTargetStudyComboBox.Items.Clear();
             cmaEsWarmStartComboBox.Items.Clear();
 
+            TLog.Info($"Get study summaries from storage file: {storagePath}");
             _summaries = new StorageHandler().GetStudySummaries(storagePath);
 
             if (_summaries.Length > 0)
@@ -191,6 +204,7 @@ namespace Tunny.UI
 
         private void UpdateVisualizeTargetStudyComboBox()
         {
+            TLog.MethodStart();
             if (visualizeTargetStudyComboBox.Items.Count > 0 && visualizeTargetStudyComboBox.Items.Count - 1 < visualizeTargetStudyComboBox.SelectedIndex)
             {
                 visualizeTargetStudyComboBox.SelectedIndex = 0;
@@ -203,6 +217,7 @@ namespace Tunny.UI
 
         private void UpdateExistingStudyComboBox()
         {
+            TLog.MethodStart();
             if (existingStudyComboBox.Items.Count > 0 && existingStudyComboBox.Items.Count - 1 < existingStudyComboBox.SelectedIndex)
             {
                 existingStudyComboBox.SelectedIndex = 0;
@@ -219,8 +234,9 @@ namespace Tunny.UI
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
+            TLog.MethodStart();
             var pState = (ProgressState)e.UserState;
-            UpdateGrasshopper(pState.Values);
+            _component.UpdateGrasshopper(pState.Parameter);
             const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"
@@ -236,6 +252,7 @@ namespace Tunny.UI
 
         private void SetBestValues(ProgressChangedEventArgs e, ProgressState pState)
         {
+            TLog.MethodStart();
             if (pState.BestValues == null)
             {
                 optimizeBestValueLabel.Text = @"BestValue: #";

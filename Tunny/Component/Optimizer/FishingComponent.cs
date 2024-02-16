@@ -1,37 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-using GalapagosComponents;
-
 using Grasshopper;
 using Grasshopper.GUI;
+using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
 using Tunny.Resources;
-using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Component.Optimizer
 {
-    public partial class FishingComponent : GH_Component, IDisposable
+    public partial class FishingComponent : OptimizeComponentBase, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
-        internal GrasshopperInOut GhInOut;
-        internal Fish[] Fishes;
-
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
 
         public FishingComponent()
           : base("Tunny", "Tunny",
-            "Tunny is an optimization component wrapped in optuna.",
-            "Tunny", "Optimizer")
+            "Tunny is an optimization component wrapped in optuna."
+            )
         {
         }
 
@@ -61,72 +51,6 @@ namespace Tunny.Component.Optimizer
             DA.SetDataList(0, Fishes);
         }
 
-        private void CheckVariablesInput(IEnumerable<Guid> inputGuids)
-        {
-            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
-            {
-                switch (docObject)
-                {
-                    case GH_NumberSlider slider:
-                    case GalapagosGeneListObject genePool:
-                    case Param_FishEgg fishEgg:
-                        break;
-                    default:
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid variable.");
-                        break;
-                }
-            }
-        }
-
-        private void CheckObjectivesInput(IEnumerable<Guid> inputGuids)
-        {
-            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
-            {
-                switch (docObject)
-                {
-                    case Param_Number number:
-                    case Param_FishPrint fPrint:
-                        break;
-                    default:
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid objective.");
-                        break;
-                }
-            }
-        }
-
-        private void CheckArtifactsInput(IEnumerable<Guid> inputGuids)
-        {
-            foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
-            {
-                switch (docObject)
-                {
-                    case Param_Geometry geometry:
-                    case Param_FishPrint fPrint:
-                    case Param_String text:
-                    case Param_FilePath filePath:
-                        break;
-                    default:
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"{docObject} input is not a valid artifact.");
-                        break;
-                }
-            }
-        }
-
-        public void GhInOutInstantiate()
-        {
-            GhInOut = new GrasshopperInOut(this);
-        }
-
-        public override void RemovedFromDocument(GH_Document document)
-        {
-            base.RemovedFromDocument(document);
-            if (OptimizationWindow != null)
-            {
-                OptimizationWindow.BGDispose();
-                OptimizationWindow.Dispose();
-            }
-        }
-
         public void Dispose()
         {
             if (OptimizationWindow != null)
@@ -135,11 +59,6 @@ namespace Tunny.Component.Optimizer
                 OptimizationWindow.Dispose();
             }
             GC.SuppressFinalize(this);
-        }
-
-        public override void CreateAttributes()
-        {
-            m_attributes = new FishingComponentAttributes(this);
         }
 
         private void ShowOptimizationWindow()
@@ -157,6 +76,25 @@ namespace Tunny.Component.Optimizer
                 owner.FormShepard.RegisterForm(OptimizationWindow);
             }
             OptimizationWindow.Show(owner);
+        }
+
+        public override void CreateAttributes()
+        {
+            m_attributes = new FishingComponentAttributes(this);
+        }
+
+        private sealed class FishingComponentAttributes : OptimizerAttributeBase
+        {
+            public FishingComponentAttributes(IGH_Component component)
+              : base(component, Color.CornflowerBlue, Color.DarkBlue, Color.Black)
+            {
+            }
+
+            public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
+            {
+                ((FishingComponent)Owner).ShowOptimizationWindow();
+                return GH_ObjectResponse.Handled;
+            }
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;

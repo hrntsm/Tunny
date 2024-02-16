@@ -13,14 +13,14 @@ namespace Optuna.Storage.Journal
     public class JournalStorage : BaseStorage
     {
         private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
-        private int _nextStudyId = 0;
-        private int _trialId = 0;
+        private int _nextStudyId;
+        private int _trialId;
 
-        public JournalStorage(string path, bool makeFile = false)
+        public JournalStorage(string path, bool createIfNotExist = false)
         {
             if (File.Exists(path) == false)
             {
-                if (makeFile == false)
+                if (createIfNotExist == false)
                 {
                     throw new FileNotFoundException($"File not found: {path}");
                 }
@@ -174,7 +174,7 @@ namespace Optuna.Storage.Journal
 
         public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
         {
-            Trial.Trial trial = templateTrial != null ? templateTrial : new Trial.Trial();
+            Trial.Trial trial = templateTrial ?? new Trial.Trial();
             trial.TrialId = _trialId++;
             trial.Number = _studies[studyId].Trials.Count;
             _studies[studyId].Trials.Add(trial);

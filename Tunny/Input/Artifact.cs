@@ -7,6 +7,8 @@ using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
 
+using Tunny.Util;
+
 namespace Tunny.Input
 {
     public class Artifact
@@ -17,6 +19,7 @@ namespace Tunny.Input
 
         public void AddFilePathToArtifact(string path)
         {
+            TLog.MethodStart();
             if (File.Exists(path))
             {
                 ArtifactPaths.Add(path);
@@ -25,17 +28,26 @@ namespace Tunny.Input
 
         public int Count()
         {
+            TLog.MethodStart();
             return Geometries.Count + Images.Count;
         }
 
         public void SaveAllArtifacts(string basePath)
         {
-            SaveRhino3dm(basePath);
-            SaveImage(basePath);
+            TLog.MethodStart();
+            if (Geometries.Count > 0)
+            {
+                SaveRhino3dm(basePath);
+            }
+            if (Images.Count > 0)
+            {
+                SaveImage(basePath);
+            }
         }
 
         public void SaveRhino3dm(string basePath)
         {
+            TLog.MethodStart();
             string path = basePath + "_model.3dm";
             var rhinoDoc = RhinoDoc.CreateHeadless("");
             foreach (GeometryBase geom in Geometries)
@@ -62,6 +74,7 @@ namespace Tunny.Input
 
         public void SaveImage(string basePath)
         {
+            TLog.MethodStart();
             for (int i = 0; i < Images.Count; i++)
             {
                 Bitmap bitmap = Images[i];

@@ -461,3 +461,5 @@ $RECYCLE.BIN/
 Tunny/Lib/python.zip
 Tunny/Lib/whl.zip
 !OptunaTests/TestFile/*.log
+!OptunaTests/TestFile/*.db
+coveragereport/*

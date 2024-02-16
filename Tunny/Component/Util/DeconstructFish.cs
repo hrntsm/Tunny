@@ -30,7 +30,8 @@ namespace Tunny.Component.Util
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("Variables", "Vars", "Variables", GH_ParamAccess.tree);
+            pManager.AddNumberParameter("NumberVariables", "NumVars", "Number Variables", GH_ParamAccess.tree);
+            pManager.AddTextParameter("TextVariables", "TxtVars", "Text Variables", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Objectives", "Objs", "Objectives", GH_ParamAccess.tree);
             pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Attributes", GH_ParamAccess.tree);
         }
@@ -42,7 +43,8 @@ namespace Tunny.Component.Util
 
             var fishes = fishObjects.Select(x => (GH_Fish)x).ToList();
 
-            var variables = new GH_Structure<GH_Number>();
+            var numberVariables = new GH_Structure<GH_Number>();
+            var textVariables = new GH_Structure<GH_String>();
             var objectives = new GH_Structure<GH_Number>();
             var attributes = new GH_Structure<GH_FishAttribute>();
 
@@ -50,21 +52,29 @@ namespace Tunny.Component.Util
             {
                 Fish value = fish.Value;
                 var path = new GH_Path(0, value.ModelNumber);
-                SetVariables(variables, value, path);
+                SetVariables(numberVariables, textVariables, value, path);
                 SetObjectives(objectives, value, path);
                 SetAttributes(attributes, value, path);
             }
 
-            DA.SetDataTree(0, variables);
-            DA.SetDataTree(1, objectives);
-            DA.SetDataTree(2, attributes);
+            DA.SetDataTree(0, numberVariables);
+            DA.SetDataTree(1, textVariables);
+            DA.SetDataTree(2, objectives);
+            DA.SetDataTree(3, attributes);
         }
 
-        private static void SetVariables(GH_Structure<GH_Number> variables, Fish value, GH_Path path)
+        private static void SetVariables(GH_Structure<GH_Number> number, GH_Structure<GH_String> text, Fish value, GH_Path path)
         {
-            foreach (KeyValuePair<string, double> variable in value.Variables)
+            foreach (KeyValuePair<string, object> variable in value.Variables)
             {
-                variables.Append(new GH_Number(variable.Value), path);
+                if (variable.Value is double v)
+                {
+                    number.Append(new GH_Number(v), path);
+                }
+                else
+                {
+                    text.Append(new GH_String(variable.Value.ToString()), path);
+                }
             }
         }
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
+using Tunny.Core;
 using Tunny.Enum;
 using Tunny.Storage;
 using Tunny.Util;
@@ -13,25 +14,30 @@ namespace Tunny.UI
     {
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             File.Delete(_settings.Storage.Path);
         }
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("https://github.com/hrntsm/Tunny/blob/main/LICENSE");
         }
         private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
         }
 
         private void SetResultFilePathButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             var sfd = new SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
@@ -57,19 +63,21 @@ namespace Tunny.UI
 
         private void OutputDebugLogButton_Click(object sender, EventArgs e)
         {
-            if (File.Exists(TunnyVariables.TunnyEnvPath + "\\debug.log"))
+            TLog.MethodStart();
+            string path = TEnvVariables.TunnyEnvPath + "\\debug.log";
+            if (File.Exists(path))
             {
-                File.Delete(TunnyVariables.TunnyEnvPath + "\\debug.log");
+                File.Delete(path);
             }
             using (var process = new Process())
             {
                 process.StartInfo.FileName = "PowerShell.exe";
-                process.StartInfo.Arguments = $"tree {TunnyVariables.TunnyEnvPath} > {TunnyVariables.TunnyEnvPath}\\debug.log";
+                process.StartInfo.Arguments = $"tree {TEnvVariables.TunnyEnvPath} > {path}";
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
             }
-            TunnyMessageBox.Show("Debug log file is created at\n" + TunnyVariables.TunnyEnvPath + "\\debug.log", "Tunny");
+            TunnyMessageBox.Show("Debug log file is created at\n" + path, "Tunny");
         }
     }
 }
