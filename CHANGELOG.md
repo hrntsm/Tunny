@@ -10,6 +10,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
+- Bone Fish component
+  - It is Tunny UI less mode component.
 - Categorical optimization.
   - Sample gh file also added
 - Log output.
