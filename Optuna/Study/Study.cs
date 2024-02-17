@@ -18,9 +18,9 @@ namespace Optuna.Study
         public int StudyId { get; }
 
         private readonly bool _isMultiObjective;
-        private readonly BaseStorage _storage;
+        private readonly IStorage _storage;
 
-        public Study(BaseStorage storage, int studyID, string studyName, StudyDirection[] directions)
+        public Study(IStorage storage, int studyID, string studyName, StudyDirection[] directions)
         {
             StudyId = studyID;
             _storage = storage;
@@ -95,7 +95,7 @@ namespace Optuna.Study
             return MultiObjective.GetParetoFrontTrials(Trials, Directions);
         }
 
-        public static StudySummary[] GetAllStudySummaries(BaseStorage storage)
+        public static StudySummary[] GetAllStudySummaries(IStorage storage)
         {
             Study[] studies = storage.GetAllStudies();
             var studySummaries = new StudySummary[studies.Length];

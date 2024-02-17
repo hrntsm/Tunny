@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Optuna.Study;
@@ -9,24 +10,20 @@ using Optuna.Trial;
 
 namespace Optuna.Storage.RDB
 {
-    public class SqliteStorage : BaseStorage
+    public class SqliteStorage : IStorage
     {
-        private int _nextStudyId;
+        private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
         private readonly SQLiteConnectionStringBuilder _sqliteConnection;
+        private int _nextStudyId;
+        private int _trialId;
 
         public SqliteStorage(string filePath, bool createIfNotExist = false)
         {
-            CheckFileExist(filePath, createIfNotExist);
-
             _sqliteConnection = new SQLiteConnectionStringBuilder
             {
                 DataSource = filePath,
                 Version = 3,
             };
-        }
-
-        private static void CheckFileExist(string filePath, bool createIfNotExist)
-        {
             if (!File.Exists(filePath))
             {
                 if (!createIfNotExist)
@@ -36,22 +33,24 @@ namespace Optuna.Storage.RDB
                 else
                 {
                     SQLiteConnection.CreateFile(filePath);
+                    CreateBaseTables();
                 }
             }
+
+            GetAllStudies();
         }
 
-        public override void CheckTrialIsUpdatable(int trialId, TrialState trialState)
+        public void CheckTrialIsUpdatable(int trialId, TrialState trialState)
         {
             throw new NotImplementedException();
         }
 
-        public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
+        public int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
         {
             long maxLength;
             using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
             {
                 connection.Open();
-                CreateBaseTables(connection);
                 using (var command = new SQLiteCommand("SELECT COUNT(*) FROM studies", connection))
                 {
                     maxLength = (long)command.ExecuteScalar();
@@ -87,10 +86,11 @@ namespace Optuna.Storage.RDB
                 connection.Close();
             }
             _nextStudyId = (int)maxLength + 1;
+            _studies[_nextStudyId] = new Study.Study(this, _nextStudyId, studyName, studyDirections);
             return _nextStudyId++;
         }
 
-        private static void CreateBaseTables(SQLiteConnection connection)
+        private void CreateBaseTables()
         {
             var commands = new StringBuilder();
             commands.Append("CREATE TABLE IF NOT EXISTS alembic_version(");
@@ -170,13 +170,17 @@ namespace Optuna.Storage.RDB
             commands.Append("   library_version VARCHAR(256)");
             commands.Append(");");
 
-            using (var command = new SQLiteCommand(commands.ToString(), connection))
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
             {
-                command.ExecuteNonQuery();
+                connection.Open();
+                using (var command = new SQLiteCommand(commands.ToString(), connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                SetAlembicVersion(connection);
+                SetVersionInfo(connection);
+                connection.Close();
             }
-
-            SetAlembicVersion(connection);
-            SetVersionInfo(connection);
         }
 
         private static void SetVersionInfo(SQLiteConnection connection)
@@ -218,132 +222,166 @@ namespace Optuna.Storage.RDB
             }
         }
 
-        public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
+        public int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
+        {
+            if (templateTrial != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "INSERT INTO trials (number, study_id, datetime_start) VALUES (@number, @studyId, @datetimeStart);";
+                    command.Parameters.AddWithValue("@number", 0);
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            return 2;
+        }
+
+        public void DeleteStudy(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override void DeleteStudy(int studyId)
+        public Study.Study[] GetAllStudies()
+        {
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand("SELECT study_id, study_name FROM studies", connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int studyId = reader.GetInt32(0);
+                            string studyName = reader.GetString(1);
+                            _studies[studyId] = new Study.Study(this, studyId, studyName, GetStudyDirections(studyId));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+
+            return _studies.Values.ToArray();
+        }
+
+        public void RemoveSession()
         {
             throw new NotImplementedException();
         }
 
-        public override Study.Study[] GetAllStudies()
+        public void SetStudySystemAttr(int studyId, string key, object value)
         {
             throw new NotImplementedException();
         }
 
-        public override Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
+        public void SetStudyUserAttr(int studyId, string key, object value)
         {
             throw new NotImplementedException();
         }
 
-        public override Trial.Trial GetBestTrial(int studyId)
+        public void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetNTrials(int studyId)
+        public void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
         {
             throw new NotImplementedException();
         }
 
-        public override StudyDirection[] GetStudyDirections(int studyId)
+        public bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetStudyIdFromName(string studyName)
+        public void SetTrialSystemAttr(int trialId, string key, object value)
         {
             throw new NotImplementedException();
         }
 
-        public override string GetStudyNameFromId(int studyId)
+        public void SetTrialUserAttr(int trialId, string key, object value)
         {
             throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetStudySystemAttrs(int studyId)
+        public int GetStudyIdFromName(string studyName)
         {
             throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetStudyUserAttrs(int studyId)
+        public string GetStudyNameFromId(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override Trial.Trial GetTrial(int trialId)
+        public StudyDirection[] GetStudyDirections(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
+        public Dictionary<string, object> GetStudyUserAttrs(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetTrialNumberFromId(int trialId)
+        public Dictionary<string, object> GetStudySystemAttrs(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override double GetTrialParam(int trialId, string paramName)
+        public int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
             throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetTrialParams(int trialId)
+        public int GetTrialNumberFromId(int trialId)
         {
             throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetTrialSystemAttrs(int trialId)
+        public double GetTrialParam(int trialId, string paramName)
         {
             throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetTrialUserAttrs(int trialId)
+        public Trial.Trial GetTrial(int trialId)
         {
             throw new NotImplementedException();
         }
 
-        public override void RemoveSession()
+        public Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
         {
             throw new NotImplementedException();
         }
 
-        public override void SetStudySystemAttr(int studyId, string key, object value)
+        public int GetNTrials(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override void SetStudyUserAttr(int studyId, string key, object value)
+        public Trial.Trial GetBestTrial(int studyId)
         {
             throw new NotImplementedException();
         }
 
-        public override void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
+        public Dictionary<string, object> GetTrialParams(int trialId)
         {
             throw new NotImplementedException();
         }
 
-        public override void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
+        public Dictionary<string, object> GetTrialUserAttrs(int trialId)
         {
             throw new NotImplementedException();
         }
 
-        public override bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SetTrialSystemAttr(int trialId, string key, object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SetTrialUserAttr(int trialId, string key, object value)
+        public Dictionary<string, object> GetTrialSystemAttrs(int trialId)
         {
             throw new NotImplementedException();
         }

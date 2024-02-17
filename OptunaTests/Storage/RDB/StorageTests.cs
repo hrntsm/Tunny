@@ -24,7 +24,8 @@ namespace Optuna.Storage.RDB.Tests
 
     public class SqliteStorageTests : IClassFixture<CreateStorage>, IDisposable
     {
-        private readonly string _path = @"TestFile/created.db";
+        private readonly string _createFilePath = @"TestFile/created.db";
+        private readonly string _existFilePath = @"TestFile/sqlite.db";
         private readonly List<string> _tempDBPaths = new();
 
         [Fact()]
@@ -35,9 +36,9 @@ namespace Optuna.Storage.RDB.Tests
         }
 
         [Fact()]
-        public void CreateNewStudyTest()
+        public void CreateNewStorageTest()
         {
-            var storage = new SqliteStorage(_path, true);
+            var storage = new SqliteStorage(_createFilePath, true);
             var studyDirections = new StudyDirection[] { StudyDirection.Maximize, StudyDirection.Minimize };
             string studyName = "create_new_study_test";
             int id = storage.CreateNewStudy(studyDirections, studyName);
@@ -45,10 +46,15 @@ namespace Optuna.Storage.RDB.Tests
 
             var sqlConnection = new SQLiteConnectionStringBuilder
             {
-                DataSource = _path,
+                DataSource = _createFilePath,
                 Version = 3,
             };
 
+            CreateNewStudyTest(studyDirections, studyName, sqlConnection);
+        }
+
+        private static void CreateNewStudyTest(StudyDirection[] studyDirections, string studyName, SQLiteConnectionStringBuilder sqlConnection)
+        {
             using (var connection = new SQLiteConnection(sqlConnection.ToString()))
             {
                 connection.Open();
@@ -83,6 +89,12 @@ namespace Optuna.Storage.RDB.Tests
             string studyName = "create_new_study_test";
             storage.CreateNewStudy(studyDirections, studyName);
             Assert.Throws<InvalidOperationException>(() => storage.CreateNewStudy(studyDirections, studyName));
+        }
+
+        [Fact()]
+        public void GetAllStudiesTest()
+        {
+            var storage = new SqliteStorage(_existFilePath);
         }
 
         public void Dispose()
