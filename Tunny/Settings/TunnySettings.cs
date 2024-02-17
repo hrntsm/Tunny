@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Serilog.Events;
 
 using Tunny.Core;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Util;
 
 namespace Tunny.Settings

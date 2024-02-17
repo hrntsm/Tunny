@@ -12,7 +12,7 @@ using Python.Runtime;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Type;
 using Tunny.Util;
 

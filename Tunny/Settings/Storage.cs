@@ -3,7 +3,7 @@ using System.IO;
 
 using Python.Runtime;
 
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Storage;
 using Tunny.Util;
 

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Python.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;

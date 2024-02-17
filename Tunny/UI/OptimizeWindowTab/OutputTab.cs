@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Handler;
 using Tunny.Util;
 

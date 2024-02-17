@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using Tunny.Component.Optimizer;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Settings;

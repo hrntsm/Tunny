@@ -8,7 +8,7 @@ using Serilog.Events;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.Settings;
