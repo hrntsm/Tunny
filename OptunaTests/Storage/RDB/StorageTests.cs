@@ -40,7 +40,8 @@ namespace Optuna.Storage.RDB.Tests
             var storage = new SqliteStorage(_path, true);
             var studyDirections = new StudyDirection[] { StudyDirection.Maximize, StudyDirection.Minimize };
             string studyName = "create_new_study_test";
-            storage.CreateNewStudy(studyDirections, studyName);
+            int id = storage.CreateNewStudy(studyDirections, studyName);
+            Assert.Equal(1, id);
 
             var sqlConnection = new SQLiteConnectionStringBuilder
             {

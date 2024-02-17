@@ -47,10 +47,15 @@ namespace Optuna.Storage.RDB
 
         public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
         {
+            long maxLength;
             using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
             {
                 connection.Open();
                 CreateBaseTables(connection);
+                using (var command = new SQLiteCommand("SELECT COUNT(*) FROM studies", connection))
+                {
+                    maxLength = (long)command.ExecuteScalar();
+                }
                 using (var command = new SQLiteCommand(connection))
                 {
                     command.CommandText = "SELECT COUNT(*) FROM studies WHERE study_name = @SearchName;";
@@ -67,11 +72,6 @@ namespace Optuna.Storage.RDB
                     command.Parameters.AddWithValue("@studyName", studyName);
                     command.ExecuteNonQuery();
                 }
-                long maxLength;
-                using (var command = new SQLiteCommand("SELECT COUNT(*) FROM studies", connection))
-                {
-                    maxLength = (long)command.ExecuteScalar();
-                }
                 using (var command = new SQLiteCommand(connection))
                 {
                     for (int i = 0; i < studyDirections.Length; i++)
@@ -79,13 +79,14 @@ namespace Optuna.Storage.RDB
                         StudyDirection direction = studyDirections[i];
                         command.CommandText = "INSERT INTO study_directions (direction, study_id, objective) VALUES (@direction, @studyId, @objective);";
                         command.Parameters.AddWithValue("@direction", direction.ToString().ToUpperInvariant());
-                        command.Parameters.AddWithValue("@studyId", maxLength);
+                        command.Parameters.AddWithValue("@studyId", maxLength + 1);
                         command.Parameters.AddWithValue("@objective", i);
                         command.ExecuteNonQuery();
                     }
                 }
                 connection.Close();
             }
+            _nextStudyId = (int)maxLength + 1;
             return _nextStudyId++;
         }
 
