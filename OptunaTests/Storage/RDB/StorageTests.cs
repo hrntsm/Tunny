@@ -95,6 +95,8 @@ namespace Optuna.Storage.RDB.Tests
         public void GetAllStudiesTest()
         {
             var storage = new SqliteStorage(_existFilePath);
+            Study.Study[] studies = storage.GetAllStudies();
+            Assert.Equal(3, studies.Length);
         }
 
         public void Dispose()

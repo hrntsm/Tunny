@@ -15,7 +15,6 @@ namespace Optuna.Storage.RDB
         private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
         private readonly SQLiteConnectionStringBuilder _sqliteConnection;
         private int _nextStudyId;
-        private int _trialId;
 
         public SqliteStorage(string filePath, bool createIfNotExist = false)
         {
@@ -261,11 +260,25 @@ namespace Optuna.Storage.RDB
                         {
                             int studyId = reader.GetInt32(0);
                             string studyName = reader.GetString(1);
-                            _studies[studyId] = new Study.Study(this, studyId, studyName, GetStudyDirections(studyId));
+                            var study = new Study.Study(this, studyId, studyName, GetStudyDirections(studyId));
+                            foreach (KeyValuePair<string, object> attr in GetStudySystemAttrs(studyId))
+                            {
+                                study.SystemAttrs.Add(attr.Key, attr.Value);
+                            }
+                            foreach (KeyValuePair<string, object> attr in GetStudyUserAttrs(studyId))
+                            {
+                                study.UserAttrs.Add(attr.Key, attr.Value);
+                            }
+                            _studies[studyId] = study;
                         }
                     }
                 }
                 connection.Close();
+            }
+
+            foreach (KeyValuePair<int, Study.Study> study in _studies)
+            {
+                study.Value.Trials.AddRange(GetAllTrials(study.Key));
             }
 
             return _studies.Values.ToArray();
@@ -323,17 +336,71 @@ namespace Optuna.Storage.RDB
 
         public StudyDirection[] GetStudyDirections(int studyId)
         {
-            throw new NotImplementedException();
+            var directions = new List<StudyDirection>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT direction FROM study_directions WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            directions.Add((StudyDirection)Enum.Parse(typeof(StudyDirection), reader.GetString(0), true));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return directions.ToArray();
         }
 
         public Dictionary<string, object> GetStudyUserAttrs(int studyId)
         {
-            throw new NotImplementedException();
+            var studyUserAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM study_user_attributes WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            studyUserAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return studyUserAttrs;
         }
 
         public Dictionary<string, object> GetStudySystemAttrs(int studyId)
         {
-            throw new NotImplementedException();
+            var studySystemAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM study_system_attributes WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            studySystemAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return studySystemAttrs;
         }
 
         public int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
@@ -353,12 +420,72 @@ namespace Optuna.Storage.RDB
 
         public Trial.Trial GetTrial(int trialId)
         {
-            throw new NotImplementedException();
+            var trial = new Trial.Trial();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT number, state, datetime_start, datetime_complete FROM trials WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trial = new Trial.Trial
+                            {
+                                TrialId = trialId,
+                                Number = reader.GetInt32(0),
+                                State = (TrialState)Enum.Parse(typeof(TrialState), reader.GetString(1), true),
+                                DatetimeStart = reader.GetDateTime(2),
+                                DatetimeComplete = reader.GetDateTime(3)
+                            };
+                        }
+                    }
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT value FROM trial_values WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        var objective = new List<double>();
+                        while (reader.Read())
+                        {
+                            objective.Add(reader.GetDouble(0));
+                        }
+                        trial.Values = objective.ToArray();
+                    }
+                }
+                trial.Params = GetTrialParams(trialId);
+                trial.SystemAttrs = GetTrialSystemAttrs(trialId);
+                trial.UserAttrs = GetTrialUserAttrs(trialId);
+                connection.Close();
+            }
+            return trial;
         }
 
         public Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
         {
-            throw new NotImplementedException();
+            var trials = new List<Trial.Trial>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT trial_id FROM trials WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trials.Add(GetTrial(reader.GetInt32(0)));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trials.ToArray();
         }
 
         public int GetNTrials(int studyId)
@@ -373,17 +500,71 @@ namespace Optuna.Storage.RDB
 
         public Dictionary<string, object> GetTrialParams(int trialId)
         {
-            throw new NotImplementedException();
+            var trialParams = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT param_name, param_value FROM trial_params WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trialParams.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialParams;
         }
 
         public Dictionary<string, object> GetTrialUserAttrs(int trialId)
         {
-            throw new NotImplementedException();
+            var trialUserAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM trial_user_attributes WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trialUserAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialUserAttrs;
         }
 
         public Dictionary<string, object> GetTrialSystemAttrs(int trialId)
         {
-            throw new NotImplementedException();
+            var trialSystemAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM trial_system_attributes WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trialSystemAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialSystemAttrs;
         }
     }
 }
