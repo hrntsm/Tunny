@@ -1,4 +1,4 @@
-name: dotnet optuna tests
+name: test and coverage
 
 on: [pull_request]
 
