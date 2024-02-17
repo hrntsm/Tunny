@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.IO;
 
 using Optuna.Study;
@@ -8,8 +9,22 @@ using Xunit;
 
 namespace Optuna.Storage.RDB.Tests
 {
-    public class SqliteStorageTests : IDisposable
+    public class CreateStorage
     {
+        public CreateStorage()
+        {
+            string path = @"TestFile/created.db";
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+            _ = new SqliteStorage(path, true);
+        }
+    }
+
+    public class SqliteStorageTests : IClassFixture<CreateStorage>, IDisposable
+    {
+        private readonly string _path = @"TestFile/created.db";
         private readonly List<string> _tempDBPaths = new();
 
         [Fact()]
@@ -20,21 +35,53 @@ namespace Optuna.Storage.RDB.Tests
         }
 
         [Fact()]
-        public void CreateFileTest()
+        public void CreateNewStudyTest()
         {
-            string path = @"TestFile/created.db";
-            _tempDBPaths.Add(path);
-            _ = new SqliteStorage(path, true);
-            Assert.True(File.Exists(path));
+            var storage = new SqliteStorage(_path, true);
+            var studyDirections = new StudyDirection[] { StudyDirection.Maximize, StudyDirection.Minimize };
+            string studyName = "create_new_study_test";
+            storage.CreateNewStudy(studyDirections, studyName);
+
+            var sqlConnection = new SQLiteConnectionStringBuilder
+            {
+                DataSource = _path,
+                Version = 3,
+            };
+
+            using (var connection = new SQLiteConnection(sqlConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT study_name FROM studies";
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    Assert.True(reader.Read());
+                    Assert.Equal(studyName, reader.GetString(0));
+                }
+
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT direction FROM study_directions";
+                    SQLiteDataReader reader = command.ExecuteReader();
+                    Assert.True(reader.Read());
+                    Assert.Equal(studyDirections[0].ToString().ToUpperInvariant(), reader.GetString(0));
+                    Assert.True(reader.Read());
+                    Assert.Equal(studyDirections[1].ToString().ToUpperInvariant(), reader.GetString(0));
+                }
+                connection.Close();
+            }
         }
 
         [Fact()]
-        public void AAA()
+        public void CreateNewStudyWithSameNameTest()
         {
-            string path = @"TestFile/new_study.db";
+            string path = @"TestFile/new_study_same_name.db";
             _tempDBPaths.Add(path);
             var storage = new SqliteStorage(path, true);
-            storage.CreateNewStudy(new StudyDirection[] { StudyDirection.Maximize }, "test");
+            var studyDirections = new StudyDirection[] { StudyDirection.Maximize, StudyDirection.Minimize };
+            string studyName = "create_new_study_test";
+            storage.CreateNewStudy(studyDirections, studyName);
+            Assert.Throws<InvalidOperationException>(() => storage.CreateNewStudy(studyDirections, studyName));
         }
 
         public void Dispose()
