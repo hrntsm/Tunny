@@ -8,7 +8,7 @@ using Grasshopper.GUI;
 
 using Optuna.Study;
 
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Handler;
 using Tunny.Storage;
 using Tunny.Util;

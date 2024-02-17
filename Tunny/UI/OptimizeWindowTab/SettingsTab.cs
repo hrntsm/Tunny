@@ -2,7 +2,7 @@ using System;
 
 using Serilog.Events;
 
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Settings.Sampler;
 using Tunny.Util;
 

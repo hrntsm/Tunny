@@ -1,4 +1,4 @@
-namespace Tunny.Enum
+namespace Tunny.Core.Enum
 {
     public enum StorageType
     {

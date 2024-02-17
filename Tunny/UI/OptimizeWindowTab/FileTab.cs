@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 
 using Tunny.Core;
-using Tunny.Enum;
+using Tunny.Core.Enum;
 using Tunny.Storage;
 using Tunny.Util;
 

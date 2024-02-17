@@ -1,4 +1,4 @@
-using Tunny.Enum;
+using Tunny.Core.Enum;
 
 namespace Tunny.PostProcess
 {
