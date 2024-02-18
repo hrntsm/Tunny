@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json;
+
 using Optuna.Study;
 using Optuna.Trial;
 
@@ -336,25 +338,32 @@ namespace Optuna.Storage.RDB
 
         public StudyDirection[] GetStudyDirections(int studyId)
         {
-            var directions = new List<StudyDirection>();
-            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            if (_studies.TryGetValue(studyId, out Study.Study value))
             {
-                connection.Open();
-                using (var command = new SQLiteCommand(connection))
+                return value.Directions;
+            }
+            else
+            {
+                var directions = new List<StudyDirection>();
+                using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
                 {
-                    command.CommandText = "SELECT direction FROM study_directions WHERE study_id = @studyId;";
-                    command.Parameters.AddWithValue("@studyId", studyId);
-                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    connection.Open();
+                    using (var command = new SQLiteCommand(connection))
                     {
-                        while (reader.Read())
+                        command.CommandText = "SELECT direction FROM study_directions WHERE study_id = @studyId;";
+                        command.Parameters.AddWithValue("@studyId", studyId);
+                        using (SQLiteDataReader reader = command.ExecuteReader())
                         {
-                            directions.Add((StudyDirection)Enum.Parse(typeof(StudyDirection), reader.GetString(0), true));
+                            while (reader.Read())
+                            {
+                                directions.Add((StudyDirection)Enum.Parse(typeof(StudyDirection), reader.GetString(0), true));
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return directions.ToArray();
             }
-            return directions.ToArray();
         }
 
         public Dictionary<string, object> GetStudyUserAttrs(int studyId)
@@ -371,7 +380,7 @@ namespace Optuna.Storage.RDB
                     {
                         while (reader.Read())
                         {
-                            studyUserAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                            GetAttrs(studyUserAttrs, reader);
                         }
                     }
                 }
@@ -394,7 +403,7 @@ namespace Optuna.Storage.RDB
                     {
                         while (reader.Read())
                         {
-                            studySystemAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                            GetAttrs(studySystemAttrs, reader);
                         }
                     }
                 }
@@ -402,6 +411,7 @@ namespace Optuna.Storage.RDB
             }
             return studySystemAttrs;
         }
+
 
         public int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
@@ -490,12 +500,42 @@ namespace Optuna.Storage.RDB
 
         public int GetNTrials(int studyId)
         {
-            throw new NotImplementedException();
+            if (!_studies.ContainsKey(studyId))
+            {
+                GetAllStudies();
+            }
+            return _studies[studyId].Trials.Count;
         }
 
         public Trial.Trial GetBestTrial(int studyId)
         {
-            throw new NotImplementedException();
+            if (!_studies.ContainsKey(studyId))
+            {
+                GetAllStudies();
+            }
+
+            List<Trial.Trial> allTrials = _studies[studyId].Trials.FindAll(trial => trial.State == TrialState.COMPLETE);
+
+            if (allTrials.Count == 0)
+            {
+                return null;
+            }
+
+            StudyDirection[] directions = GetStudyDirections(studyId);
+            if (directions.Length != 1)
+            {
+                throw new InvalidOperationException("Study is multi-objective.");
+            }
+
+            if (directions[0] == StudyDirection.Maximize)
+            {
+                return allTrials.OrderByDescending(trial => trial.Values[0]).First();
+            }
+            else
+            {
+                return allTrials.OrderBy(trial => trial.Values[0]).First();
+            }
+
         }
 
         public Dictionary<string, object> GetTrialParams(int trialId)
@@ -535,7 +575,7 @@ namespace Optuna.Storage.RDB
                     {
                         while (reader.Read())
                         {
-                            trialUserAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                            GetAttrs(trialUserAttrs, reader);
                         }
                     }
                 }
@@ -558,13 +598,42 @@ namespace Optuna.Storage.RDB
                     {
                         while (reader.Read())
                         {
-                            trialSystemAttrs.Add(reader.GetString(0), reader.GetValue(1));
+                            GetAttrs(trialSystemAttrs, reader);
                         }
                     }
                 }
                 connection.Close();
             }
             return trialSystemAttrs;
+        }
+
+        private static void GetAttrs(Dictionary<string, object> attrs, SQLiteDataReader reader)
+        {
+            string value = (string)reader.GetValue(1);
+            if (!string.IsNullOrEmpty(value) && value.Contains("[") && value.Contains("]"))
+            {
+                try
+                {
+                    string[] values = JsonConvert.DeserializeObject<string[]>(value);
+                    attrs.Add(reader.GetString(0), values);
+                }
+                catch (JsonReaderException)
+                {
+                    if (value.Contains("\""))
+                    {
+                        value = value.Replace("\"", "");
+                    }
+                    attrs.Add(reader.GetString(0), new[] { value });
+                }
+            }
+            else
+            {
+                if (value.Contains("\""))
+                {
+                    value = value.Replace("\"", "");
+                }
+                attrs.Add(reader.GetString(0), new[] { value });
+            }
         }
     }
 }
