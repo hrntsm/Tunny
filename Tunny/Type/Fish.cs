@@ -5,6 +5,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 using Newtonsoft.Json;
 
+using Optuna.Trial;
+
 using Rhino.Geometry;
 
 using Tunny.Input;
@@ -19,6 +21,24 @@ namespace Tunny.Type
         public Dictionary<string, object> Variables { get; set; }
         public Dictionary<string, double> Objectives { get; set; }
         public Dictionary<string, object> Attributes { get; set; }
+
+        public Fish()
+        {
+            TLog.MethodStart();
+        }
+
+        public Fish(Trial trial, string[] objectiveNames)
+        {
+            TLog.MethodStart();
+            ModelNumber = trial.Number;
+            Variables = trial.Params;
+            Attributes = trial.UserAttrs;
+            Objectives = new Dictionary<string, double>();
+            for (int i = 0; i < objectiveNames.Length; i++)
+            {
+                Objectives.Add(objectiveNames[i], trial.Values[i]);
+            }
+        }
 
         public List<GeometryBase> GetGeometries()
         {

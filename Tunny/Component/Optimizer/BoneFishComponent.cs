@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 using Grasshopper;
 using Grasshopper.GUI;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 
+using Optuna.Study;
+
 using Tunny.Component.Params;
+using Tunny.Core;
 using Tunny.Handler;
-using Tunny.PostProcess;
 using Tunny.Settings;
 using Tunny.Type;
 namespace Tunny.Component.Optimizer
@@ -123,15 +126,19 @@ namespace Tunny.Component.Optimizer
             OptimizeLoop.IsForcedStopOptimize = true;
 
             Message = "Outputting";
-            OutputLoop.Component = this;
-            var optunaSolver = new Solver.Optuna(OptimizeLoop.Settings, GhInOut.HasConstraint);
-            List<Fish> allFishes = GetFishes(optunaSolver, -10);
-            _allFishes = allFishes.ToArray();
-            Params.Output[1].AddVolatileDataList(new GH_Path(0), allFishes.Select(x => new GH_Fish(x)));
+            Study[] studies = OptimizeLoop.Settings.Storage.GetAllStudies();
+            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeLoop.Settings.StudyName);
 
-            List<Fish> bestFishes = GetFishes(optunaSolver, -1);
-            Fishes = bestFishes.ToArray();
-            Params.Output[2].AddVolatileDataList(new GH_Path(0), bestFishes.Select(x => new GH_Fish(x)));
+            string versionString = (study.UserAttrs["tunny_version"] as string[])[0];
+            var version = new Version(versionString);
+            string[] metricNames = version <= TEnvVariables.OldStorageVersion
+                ? study.UserAttrs["objective_names"] as string[]
+                : study.SystemAttrs["study:metric_names"] as string[];
+            _allFishes = study.Trials.Select(trial => new Fish(trial, metricNames)).ToArray();
+            Params.Output[1].AddVolatileDataList(new GH_Path(0), _allFishes.Select(x => new GH_Fish(x)));
+            Fishes = study.BestTrials.Select(trial => new Fish(trial, metricNames)).ToArray();
+            Params.Output[2].AddVolatileDataList(new GH_Path(0), Fishes.Select(x => new GH_Fish(x)));
+
             _state = "Finish";
             ExpireSolution(true);
 
@@ -140,21 +147,23 @@ namespace Tunny.Component.Optimizer
             ghCanvas?.EnableUI();
         }
 
-        private List<Fish> GetFishes(Solver.Optuna optunaSolver, int outputMode)
-        {
-            ModelResult[] results = optunaSolver.GetModelResult(new[] { outputMode }, OptimizeLoop.Settings.StudyName, null);
-            var fishes = new List<Fish>();
-            foreach (ModelResult result in results)
-            {
-                OutputLoop.SetResultToFish(fishes, result, GhInOut.Variables.Select(x => x.NickName).ToArray());
-            }
-
-            return fishes;
-        }
-
         public void SetInfo(string info)
         {
             _info = info;
+        }
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            Menu_AppendItem(menu, "Open settings.json", Menu_OpenSettingsClicked);
+        }
+
+        private void Menu_OpenSettingsClicked(object sender, EventArgs e)
+        {
+            var process = new Process();
+            process.StartInfo.FileName = "notepad.exe";
+            process.StartInfo.Arguments = $"\"{TEnvVariables.OptimizeSettingsPath}\"";
+            process.Start();
         }
 
         protected override Bitmap Icon => Resources.Resource.BoneFish;
