@@ -21,11 +21,13 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - There are three levels: "Verbose," "Debug," and "Information.
 - Sample python code to create a gif animation.
 - Tunny.Core csproj for improve develop environment.
+- Class for handling SQLite in optuna.csproj.
 
 ### Changed
 
 - DeconstructFish component output
   - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
+- Use optuna.csproj sqlite handler instead of tunny.storage
 
 ### Deprecated
 

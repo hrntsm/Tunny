@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,7 +6,7 @@ using Optuna.Trial;
 
 namespace Optuna.Study
 {
-    internal class MultiObjective
+    internal sealed class MultiObjective
     {
         internal static Trial.Trial[] GetParetoFrontTrials(List<Trial.Trial> trials, StudyDirection[] directions)
         {
@@ -31,7 +32,7 @@ namespace Optuna.Study
             int nTrials = targetTrials.Count;
             if (nTrials == 0)
             {
-                return new Trial.Trial[0];
+                return Array.Empty<Trial.Trial>();
             }
 
             targetTrials.Sort((trial1, trial2) =>
@@ -57,8 +58,8 @@ namespace Optuna.Study
                 paretoFront.Add(trial);
                 lastNonDominatedTrial = trial;
             }
-            paretoFront.OrderBy(trial => trial.Number);
-            return paretoFront.ToArray();
+            IOrderedEnumerable<Trial.Trial> sortedTrials = paretoFront.OrderBy(trial => trial.Number);
+            return sortedTrials.ToArray();
         }
 
         private static Trial.Trial[] GetParetoFrontTrialsND(List<Trial.Trial> trials, StudyDirection[] directions)
