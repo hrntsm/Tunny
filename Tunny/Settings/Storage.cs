@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using Optuna.Study;
+
 using Python.Runtime;
 
 using Tunny.Core.Enum;
@@ -124,6 +126,24 @@ namespace Tunny.Settings
             string backendPath = GetArtifactBackendPath();
             Directory.CreateDirectory(backendPath);
             return optuna.artifacts.FileSystemArtifactStore(base_path: backendPath);
+        }
+
+        public Study[] GetAllStudies()
+        {
+            TLog.MethodStart();
+            Optuna.Storage.IStorage storage;
+            switch (Type)
+            {
+                case StorageType.Sqlite:
+                    storage = new Optuna.Storage.RDB.SqliteStorage(Path);
+                    break;
+                case StorageType.Journal:
+                    storage = new Optuna.Storage.Journal.JournalStorage(Path);
+                    break;
+                default:
+                    throw new ArgumentException("Storage type is not defined.");
+            }
+            return storage.GetAllStudies();
         }
     }
 }
