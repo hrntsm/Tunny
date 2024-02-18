@@ -62,6 +62,14 @@ namespace Tunny.Component.Optimizer
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
+            var settings = TunnySettings.LoadFromJson();
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString(3);
+            if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "The optimization environment has not been built; launch the UI of the Tunny component once and install Python.");
+                return;
+            }
+
             bool start = false;
             bool stop = false;
             if (!DA.GetData(4, ref start)) { return; }
@@ -96,7 +104,7 @@ namespace Tunny.Component.Optimizer
                 Params.Output[1].ClearData();
                 Params.Output[2].ClearData();
 
-                OptimizeLoop.Settings = TunnySettings.LoadFromJson();
+                OptimizeLoop.Settings = settings;
                 var worker = new BackgroundWorker
                 {
                     WorkerReportsProgress = true,
