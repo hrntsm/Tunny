@@ -412,7 +412,6 @@ namespace Optuna.Storage.RDB
             return studySystemAttrs;
         }
 
-
         public int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
             throw new NotImplementedException();
@@ -535,7 +534,6 @@ namespace Optuna.Storage.RDB
             {
                 return allTrials.OrderBy(trial => trial.Values[0]).First();
             }
-
         }
 
         public Dictionary<string, object> GetTrialParams(int trialId)
