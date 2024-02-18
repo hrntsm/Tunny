@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
+    <Version>0.11.0-beta.1</Version>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
