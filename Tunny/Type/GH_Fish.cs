@@ -91,7 +91,7 @@ namespace Tunny.Type
             }
             else
             {
-                if (attr.Value is List<string> values)
+                if (attr.Value is IEnumerable<string> values)
                 {
                     foreach (string val in values)
                     {

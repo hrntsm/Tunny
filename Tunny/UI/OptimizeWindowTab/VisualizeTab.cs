@@ -4,6 +4,7 @@ using System.Linq;
 
 using Optuna.Study;
 
+using Tunny.Core;
 using Tunny.Core.Enum;
 using Tunny.Handler;
 using Tunny.PostProcess;
@@ -42,18 +43,12 @@ namespace Tunny.UI
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                var oldFormatVersion = new Version("0.9.1");
                 string versionString = (visualizeStudySummary.UserAttrs["tunny_version"] as string[])[0];
                 var version = new Version(versionString);
                 string[] metricNames = Array.Empty<string>();
-                if (version <= oldFormatVersion)
-                {
-                    metricNames = visualizeStudySummary.UserAttrs["objective_names"] as string[];
-                }
-                else
-                {
-                    metricNames = visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
-                }
+                metricNames = version <= TEnvVariables.OldStorageVersion
+                    ? visualizeStudySummary.UserAttrs["objective_names"] as string[]
+                    : visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
                 visualizeVariableListBox.Items.AddRange(metricNames);
 
                 visualizeObjectiveListBox.Items.Clear();
