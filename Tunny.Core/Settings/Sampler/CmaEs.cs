@@ -1,3 +1,5 @@
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     /// <summary>
@@ -17,5 +19,34 @@ namespace Tunny.Settings.Sampler
         public bool UseWarmStart { get; set; }
         public string WarmStartStudyName { get; set; } = string.Empty;
         public bool WithMargin { get; set; } = true;
+
+        public dynamic ToOptuna(dynamic optuna, string storagePath)
+        {
+            TLog.MethodStart();
+            return UseWarmStart
+                ? optuna.samplers.CmaEsSampler(
+                    n_startup_trials: NStartupTrials,
+                    warn_independent_sampling: WarnIndependentSampling,
+                    seed: Seed,
+                    consider_pruned_trials: ConsiderPrunedTrials,
+                    restart_strategy: RestartStrategy == string.Empty ? null : RestartStrategy,
+                    inc_popsize: IncPopsize,
+                    popsize: PopulationSize,
+                    source_trials: optuna.load_study(study_name: WarmStartStudyName, storage: storagePath).get_trials(),
+                    with_margin: WithMargin
+                )
+                : optuna.samplers.CmaEsSampler(
+                    sigma0: Sigma0,
+                    n_startup_trials: NStartupTrials,
+                    warn_independent_sampling: WarnIndependentSampling,
+                    seed: Seed,
+                    consider_pruned_trials: ConsiderPrunedTrials,
+                    restart_strategy: RestartStrategy == string.Empty ? null : RestartStrategy,
+                    inc_popsize: IncPopsize,
+                    popsize: PopulationSize,
+                    use_separable_cma: UseSeparableCma,
+                    with_margin: WithMargin
+                );
+        }
     }
 }

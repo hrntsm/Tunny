@@ -1,3 +1,5 @@
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     /// <summary>
@@ -6,5 +8,13 @@ namespace Tunny.Settings.Sampler
     public class Random
     {
         public int? Seed { get; set; }
+
+        public dynamic ToOptuna(dynamic optuna)
+        {
+            TLog.MethodStart();
+            return optuna.samplers.RandomSampler(
+                seed: Seed
+            );
+        }
     }
 }

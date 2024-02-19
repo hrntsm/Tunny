@@ -1,3 +1,5 @@
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     /// <summary>
@@ -10,5 +12,16 @@ namespace Tunny.Settings.Sampler
         public int? Seed { get; set; }
         public bool WarnIndependentSampling { get; set; } = true;
         public bool WarnAsynchronousSeeding { get; set; } = true;
+
+        public dynamic ToOptuna(dynamic optuna)
+        {
+            TLog.MethodStart();
+            return optuna.samplers.QMCSampler(
+                qmc_type: QmcType,
+                scramble: Scramble,
+                seed: Seed,
+                warn_independent_sampling: WarnIndependentSampling
+            );
+        }
     }
 }

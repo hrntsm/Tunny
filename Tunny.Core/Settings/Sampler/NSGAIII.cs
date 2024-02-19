@@ -1,3 +1,5 @@
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     ///  <summary>
@@ -7,5 +9,19 @@ namespace Tunny.Settings.Sampler
     {
         public double[] ReferencePoints { get; set; }
         public int DividingParameter { get; set; } = 3;
+
+        public new dynamic ToOptuna(dynamic optuna, bool hasConstraints)
+        {
+            TLog.MethodStart();
+            return optuna.samplers.NSGAIIISampler(
+                population_size: PopulationSize,
+                mutation_prob: MutationProb,
+                crossover_prob: CrossoverProb,
+                swapping_prob: SwappingProb,
+                seed: Seed,
+                crossover: SetCrossover(optuna, Crossover),
+                constraints_func: hasConstraints ? SamplerSettings.ConstraintFunc() : null
+            );
+        }
     }
 }

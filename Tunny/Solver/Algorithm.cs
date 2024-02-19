@@ -666,38 +666,13 @@ namespace Tunny.Solver
         private dynamic SetSamplerSettings(SamplerType samplerType, dynamic optuna, bool hasConstraints)
         {
             TLog.MethodStart();
-            dynamic sampler;
-            switch (samplerType)
-            {
-                case SamplerType.TPE:
-                    sampler = Sampler.TPE(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.BoTorch:
-                    sampler = Sampler.BoTorch(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.NSGAII:
-                    sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.NSGAIII:
-                    sampler = Sampler.NSGAIII(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.CmaEs:
-                    sampler = Sampler.CmaEs(optuna, Settings);
-                    break;
-                case SamplerType.QMC:
-                    sampler = Sampler.QMC(optuna, Settings);
-                    break;
-                case SamplerType.Random:
-                    sampler = Sampler.Random(optuna, Settings);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid sampler type.");
-            }
+            string storagePath = Settings.Storage.GetOptunaStoragePath();
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToOptuna(optuna, samplerType, storagePath, hasConstraints);
             if ((int)samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
-            return sampler;
+            return optunaSampler;
         }
     }
 }

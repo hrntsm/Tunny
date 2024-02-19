@@ -1,3 +1,7 @@
+using System;
+
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     ///  <summary>
@@ -11,5 +15,44 @@ namespace Tunny.Settings.Sampler
         public string Crossover { get; set; } = string.Empty;
         public double CrossoverProb { get; set; } = 0.9;
         public double SwappingProb { get; set; } = 0.5;
+
+        public dynamic ToOptuna(dynamic optuna, bool hasConstraints)
+        {
+            TLog.MethodStart();
+            return optuna.samplers.NSGAIISampler(
+                population_size: PopulationSize,
+                mutation_prob: MutationProb,
+                crossover_prob: CrossoverProb,
+                swapping_prob: SwappingProb,
+                seed: Seed,
+                crossover: SetCrossover(optuna, Crossover),
+                constraints_func: hasConstraints ? SamplerSettings.ConstraintFunc() : null
+            );
+        }
+
+        protected static dynamic SetCrossover(dynamic optuna, string crossover)
+        {
+            TLog.MethodStart();
+            switch (crossover)
+            {
+                case "Uniform":
+                    return optuna.samplers.nsgaii.UniformCrossover();
+                case "BLXAlpha":
+                    return optuna.samplers.nsgaii.BLXAlphaCrossover();
+                case "SPX":
+                    return optuna.samplers.nsgaii.SPXCrossover();
+                case "SBX":
+                    return optuna.samplers.nsgaii.SBXCrossover();
+                case "VSBX":
+                    return optuna.samplers.nsgaii.VSBXCrossover();
+                case "UNDX":
+                    return optuna.samplers.nsgaii.UNDXCrossover();
+                case "":
+                    return null;
+                default:
+                    throw new ArgumentException("Unexpected crossover setting");
+            }
+        }
+
     }
 }

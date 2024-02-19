@@ -1,3 +1,5 @@
+using Tunny.Core.Util;
+
 namespace Tunny.Settings.Sampler
 {
     /// <summary>
@@ -7,5 +9,15 @@ namespace Tunny.Settings.Sampler
     {
         public int? Seed { get; set; }
         public int NStartupTrials { get; set; } = 10;
+
+        public dynamic ToOptuna(dynamic optuna, bool hasConstraints)
+        {
+            TLog.MethodStart();
+            return optuna.integration.BoTorchSampler(
+                seed: Seed,
+                n_startup_trials: NStartupTrials,
+                constraints_func: hasConstraints ? SamplerSettings.ConstraintFunc() : null
+            );
+        }
     }
 }
