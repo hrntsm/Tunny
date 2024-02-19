@@ -29,7 +29,7 @@ namespace Tunny.Core.Util
 
         private static void SetInitialLogLevels()
         {
-            var settings = TunnySettings.LoadFromJson();
+            var settings = TSettings.LoadFromJson();
             LevelSwitch.MinimumLevel = settings.LogLevel;
         }
 

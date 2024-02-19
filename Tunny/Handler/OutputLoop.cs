@@ -20,7 +20,7 @@ namespace Tunny.Handler
     {
         private static BackgroundWorker s_worker;
         public static OptimizeComponentBase Component;
-        public static TunnySettings Settings;
+        public static TSettings Settings;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;

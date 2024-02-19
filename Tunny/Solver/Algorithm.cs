@@ -33,13 +33,13 @@ namespace Tunny.Solver
         private List<VariableBase> Variables { get; }
         private bool HasConstraints { get; }
         private Objective Objective { get; }
-        private TunnySettings Settings { get; }
+        private TSettings Settings { get; }
         private Func<ProgressState, int, TrialGrasshopperItems> EvalFunc { get; }
         private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
             List<VariableBase> variables, bool hasConstraint, Objective objective, Dictionary<string, FishEgg> fishEgg,
-            TunnySettings settings,
+            TSettings settings,
             Func<ProgressState, int, TrialGrasshopperItems> evalFunc)
         {
             TLog.MethodStart();

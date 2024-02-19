@@ -18,7 +18,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow : Form
     {
         private readonly FishingComponent _component;
-        private readonly TunnySettings _settings;
+        private readonly TSettings _settings;
         internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(FishingComponent component)
@@ -33,7 +33,7 @@ namespace Tunny.UI
             {
                 FormClosingXButton(this, null);
             }
-            _settings = TunnySettings.LoadFromJson();
+            _settings = TSettings.LoadFromJson();
             SetUIValues();
             RunPythonInstaller();
             SetOptimizeBackgroundWorker();
@@ -43,7 +43,7 @@ namespace Tunny.UI
         private void RunPythonInstaller()
         {
             TLog.MethodStart();
-            string tunnyAssembleVersion = TEnvVariables.Version.ToString(3);
+            Version tunnyAssembleVersion = TEnvVariables.Version;
             if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
                 TLog.Info("Run Python installer");

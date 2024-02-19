@@ -12,10 +12,10 @@ namespace Tunny.Solver
 {
     public class Visualize : PythonInit
     {
-        private readonly TunnySettings _settings;
+        private readonly TSettings _settings;
         private readonly bool _hasConstraint;
 
-        public Visualize(TunnySettings settings, bool hasConstraint)
+        public Visualize(TSettings settings, bool hasConstraint)
         {
             TLog.MethodStart();
             _settings = settings;

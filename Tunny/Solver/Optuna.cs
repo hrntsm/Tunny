@@ -26,9 +26,9 @@ namespace Tunny.Solver
     {
         public Parameter[] OptimalParameters { get; private set; }
         private readonly bool _hasConstraint;
-        private readonly TunnySettings _settings;
+        private readonly TSettings _settings;
 
-        public Optuna(TunnySettings settings, bool hasConstraint)
+        public Optuna(TSettings settings, bool hasConstraint)
         {
             TLog.MethodStart();
             _settings = settings;

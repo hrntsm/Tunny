@@ -63,8 +63,8 @@ namespace Tunny.Component.Optimizer
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
-            var settings = TunnySettings.LoadFromJson();
-            string tunnyAssembleVersion = TEnvVariables.Version.ToString(3);
+            var settings = TSettings.LoadFromJson();
+            Version tunnyAssembleVersion = TEnvVariables.Version;
             if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "The optimization environment has not been built; launch the UI of the Tunny component once and install Python.");

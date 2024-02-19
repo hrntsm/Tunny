@@ -18,7 +18,7 @@ namespace Tunny.Handler
     {
         private static BackgroundWorker s_worker;
         public static OptimizeComponentBase Component;
-        public static TunnySettings Settings;
+        public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)

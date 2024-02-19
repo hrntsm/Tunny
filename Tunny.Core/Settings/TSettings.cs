@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Reflection;
 
 using Newtonsoft.Json;
 
@@ -11,9 +10,9 @@ using Tunny.Core.Util;
 
 namespace Tunny.Core.Settings
 {
-    public class TunnySettings
+    public class TSettings
     {
-        public string Version { get; set; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        public Version Version { get; set; } = TEnvVariables.Version;
         public Optimize Optimize { get; set; } = new Optimize();
         public Result Result { get; set; } = new Result();
         public string StudyName { get; set; } = string.Empty;
@@ -33,10 +32,10 @@ namespace Tunny.Core.Settings
             File.WriteAllText(path, json);
         }
 
-        public static TunnySettings Deserialize(string json)
+        public static TSettings Deserialize(string json)
         {
             TLog.MethodStart();
-            return JsonConvert.DeserializeObject<TunnySettings>(json);
+            return JsonConvert.DeserializeObject<TSettings>(json);
         }
 
         public void CreateNewSettingsFile(string path)
@@ -45,9 +44,9 @@ namespace Tunny.Core.Settings
             Serialize(path);
         }
 
-        public static TunnySettings LoadFromJson()
+        public static TSettings LoadFromJson()
         {
-            TunnySettings settings;
+            TSettings settings;
             string settingsPath = TEnvVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
@@ -56,7 +55,7 @@ namespace Tunny.Core.Settings
             }
             else
             {
-                settings = new TunnySettings
+                settings = new TSettings
                 {
                     Storage = new Storage
                     {
