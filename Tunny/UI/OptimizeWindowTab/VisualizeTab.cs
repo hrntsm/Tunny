@@ -4,8 +4,8 @@ using System.Linq;
 
 using Optuna.Study;
 
-using Tunny.Core.Enum;
 using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Solver;
 

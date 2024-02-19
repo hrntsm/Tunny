@@ -1,4 +1,4 @@
-using Tunny.Core.Enum;
+using Tunny.Core.TEnum;
 
 namespace Tunny.Core.Settings
 {

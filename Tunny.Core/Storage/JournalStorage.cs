@@ -39,7 +39,7 @@ namespace Tunny.Core.Storage
             studySummary.UserAttrs["variable_names"] = (studySummary.UserAttrs["variable_names"] as string[])[0].Split(',').ToArray();
         }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
+        public dynamic CreateNewTStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
             string storagePath = storageSetting.GetOptunaStoragePathByExtension();
@@ -48,19 +48,19 @@ namespace Tunny.Core.Storage
                 PythonEngine.Initialize();
                 using (Py.GIL())
                 {
-                    CreateStorageProcess(storagePath);
+                    CreateTStorageProcess(storagePath);
                 }
                 PythonEngine.Shutdown();
             }
             else
             {
-                CreateStorageProcess(storagePath);
+                CreateTStorageProcess(storagePath);
             }
 
             return Storage;
         }
 
-        private void CreateStorageProcess(string storagePath)
+        private void CreateTStorageProcess(string storagePath)
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
@@ -75,7 +75,7 @@ namespace Tunny.Core.Storage
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");
-                dynamic storage = CreateNewStorage(false, storageSetting);
+                dynamic storage = CreateNewTStorage(false, storageSetting);
                 optuna.copy_study(from_study_name: fromStudyName, to_study_name: toStudyName, from_storage: storage, to_storage: storage);
             }
             PythonEngine.Shutdown();

@@ -3,8 +3,8 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Tunny.Core.Enum;
 using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.UI;
 

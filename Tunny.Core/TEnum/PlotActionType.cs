@@ -1,4 +1,4 @@
-namespace Tunny.Core.Enum
+namespace Tunny.Core.TEnum
 {
     public enum PlotActionType
     {

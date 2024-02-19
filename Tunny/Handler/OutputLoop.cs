@@ -7,9 +7,9 @@ using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
 using Tunny.Core.PostProcess;
 using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.UI;

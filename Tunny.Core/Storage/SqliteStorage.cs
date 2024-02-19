@@ -13,7 +13,7 @@ namespace Tunny.Core.Storage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
+        public dynamic CreateNewTStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
             string sqlitePath = storageSetting.GetOptunaStoragePathByExtension();
@@ -22,19 +22,19 @@ namespace Tunny.Core.Storage
                 PythonEngine.Initialize();
                 using (Py.GIL())
                 {
-                    CreateStorageProcess(sqlitePath);
+                    CreateTStorageProcess(sqlitePath);
                 }
                 PythonEngine.Shutdown();
             }
             else
             {
-                CreateStorageProcess(sqlitePath);
+                CreateTStorageProcess(sqlitePath);
             }
 
             return Storage;
         }
 
-        private void CreateStorageProcess(string sqlitePath)
+        private void CreateTStorageProcess(string sqlitePath)
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");

@@ -11,11 +11,11 @@ using System.Windows.Forms;
 using Python.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.Storage;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Handler;
 using Tunny.Input;
@@ -552,7 +552,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 string studyName = Settings.StudyName;
-                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewTStorage(false, Settings.Storage));
             }
         }
 

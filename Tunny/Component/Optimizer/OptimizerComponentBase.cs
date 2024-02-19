@@ -10,8 +10,8 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
-using Tunny.Core.Enum;
 using Tunny.Core.Input;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.Util;

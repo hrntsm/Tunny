@@ -7,9 +7,9 @@ using Grasshopper.GUI;
 using Serilog.Events;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
 using Tunny.Core.Input;
 using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Handler;
 

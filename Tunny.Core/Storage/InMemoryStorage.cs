@@ -4,11 +4,11 @@ using Tunny.Core.Util;
 
 namespace Tunny.Core.Storage
 {
-    public class InMemoryStorage : PythonInit, ICreateStorage
+    public class InMemoryStorage : PythonInit, ICreateTStorage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
+        public dynamic CreateNewTStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
             if (useInnerPythonEngine)
@@ -16,19 +16,19 @@ namespace Tunny.Core.Storage
                 PythonEngine.Initialize();
                 using (Py.GIL())
                 {
-                    CreateStorageProcess();
+                    CreateTStorageProcess();
                 }
                 PythonEngine.Shutdown();
             }
             else
             {
-                CreateStorageProcess();
+                CreateTStorageProcess();
             }
 
             return Storage;
         }
 
-        private void CreateStorageProcess()
+        private void CreateTStorageProcess()
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");

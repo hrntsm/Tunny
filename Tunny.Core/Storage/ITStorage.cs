@@ -2,15 +2,15 @@ using Optuna.Study;
 
 namespace Tunny.Core.Storage
 {
-    public interface ITStorage : ICreateStorage
+    public interface ITStorage : ICreateTStorage
     {
         void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting);
         StudySummary[] GetStudySummaries(string storagePath);
     }
 
-    public interface ICreateStorage
+    public interface ICreateTStorage
     {
         dynamic Storage { get; set; }
-        dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting);
+        dynamic CreateNewTStorage(bool useInnerPythonEngine, Settings.Storage storageSetting);
     }
 }

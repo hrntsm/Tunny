@@ -11,10 +11,10 @@ namespace Tunny.Core.Storage
     {
         public dynamic Storage { get; set; }
 
-        public dynamic CreateNewStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
+        public dynamic CreateNewTStorage(bool useInnerPythonEngine, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
-            ICreateStorage storage;
+            ICreateTStorage storage;
 
             switch (Path.GetExtension(storageSetting.Path))
             {
@@ -31,7 +31,7 @@ namespace Tunny.Core.Storage
                 default:
                     throw new ArgumentException("Storage type not supported");
             }
-            Storage = storage.CreateNewStorage(useInnerPythonEngine, storageSetting);
+            Storage = storage.CreateNewTStorage(useInnerPythonEngine, storageSetting);
             return Storage;
         }
 

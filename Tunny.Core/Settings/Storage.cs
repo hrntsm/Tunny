@@ -5,8 +5,8 @@ using Optuna.Study;
 
 using Python.Runtime;
 
-using Tunny.Core.Enum;
 using Tunny.Core.Storage;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 
 namespace Tunny.Core.Settings
@@ -82,13 +82,13 @@ namespace Tunny.Core.Settings
             switch (Type)
             {
                 case StorageType.InMemory:
-                    storage = new InMemoryStorage().CreateNewStorage(useInnerPythonEngine, this);
+                    storage = new InMemoryStorage().CreateNewTStorage(useInnerPythonEngine, this);
                     break;
                 case StorageType.Sqlite:
-                    storage = new SqliteStorage().CreateNewStorage(useInnerPythonEngine, this);
+                    storage = new SqliteStorage().CreateNewTStorage(useInnerPythonEngine, this);
                     break;
                 case StorageType.Journal:
-                    storage = new JournalStorage().CreateNewStorage(useInnerPythonEngine, this);
+                    storage = new JournalStorage().CreateNewTStorage(useInnerPythonEngine, this);
                     break;
                 default:
                     throw new ArgumentException("Storage type is not defined.");

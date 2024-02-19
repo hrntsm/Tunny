@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using Python.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
 using Tunny.Core.PostProcess;
 using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Handler;
 using Tunny.Input;

@@ -2,7 +2,7 @@ using System;
 
 using Python.Runtime;
 
-using Tunny.Core.Enum;
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 
 namespace Tunny.Settings.Sampler
