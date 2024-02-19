@@ -4,14 +4,14 @@ using System.Linq;
 
 using Python.Runtime;
 
-using Tunny.PostProcess;
-using Tunny.Util;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 
 namespace Tunny.Solver
 {
     public static class Hypervolume
     {
-        public static dynamic CreateFigure(dynamic study, PlotSettings pSettings)
+        public static dynamic CreateFigure(dynamic study, Plot pSettings)
         {
             TLog.MethodStart();
             var trials = (dynamic[])study.trials;

@@ -3,10 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 
-using Tunny.Core;
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Handler
+namespace Tunny.Core.Handler
 {
     public static class PythonInstaller
     {

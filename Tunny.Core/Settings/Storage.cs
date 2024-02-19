@@ -6,10 +6,10 @@ using Optuna.Study;
 using Python.Runtime;
 
 using Tunny.Core.Enum;
-using Tunny.Storage;
-using Tunny.Util;
+using Tunny.Core.Storage;
+using Tunny.Core.Util;
 
-namespace Tunny.Settings
+namespace Tunny.Core.Settings
 {
     public class Storage
     {

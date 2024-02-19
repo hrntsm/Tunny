@@ -7,10 +7,9 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-using Tunny.Core;
-using Tunny.Settings;
+using Tunny.Core.Settings;
 
-namespace Tunny.Util
+namespace Tunny.Core.Util
 {
     public static class TLog
     {

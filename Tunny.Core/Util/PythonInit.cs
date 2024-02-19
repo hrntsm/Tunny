@@ -1,15 +1,14 @@
 using System;
+using System.IO;
 
-using Tunny.Handler;
-
-namespace Tunny.Util
+namespace Tunny.Core.Util
 {
     public abstract class PythonInit
     {
         protected PythonInit()
         {
             TLog.MethodStart();
-            string envPath = PythonInstaller.GetEmbeddedPythonPath() + @"\python310.dll";
+            string envPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", @"python310.dll");
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
         }
     }

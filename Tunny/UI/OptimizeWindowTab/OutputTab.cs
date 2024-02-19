@@ -5,8 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 
 using Tunny.Core.Enum;
+using Tunny.Core.Util;
 using Tunny.Handler;
-using Tunny.Util;
 
 namespace Tunny.UI
 {

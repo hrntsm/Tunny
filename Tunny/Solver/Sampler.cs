@@ -2,9 +2,9 @@ using System;
 
 using Python.Runtime;
 
-using Tunny.Settings;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Settings.Sampler;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {

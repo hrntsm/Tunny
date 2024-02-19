@@ -1,4 +1,4 @@
-namespace Tunny.Settings
+namespace Tunny.Core.Settings
 {
     public class Result
     {

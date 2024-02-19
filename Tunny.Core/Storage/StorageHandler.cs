@@ -3,11 +3,11 @@ using System.IO;
 
 using Optuna.Study;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Storage
+namespace Tunny.Core.Storage
 {
-    public class StorageHandler : IStorage
+    public class StorageHandler : ITStorage
     {
         public dynamic Storage { get; set; }
 
@@ -38,7 +38,7 @@ namespace Tunny.Storage
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
-            IStorage storage;
+            ITStorage storage;
 
             switch (Path.GetExtension(storageSetting.Path))
             {
@@ -58,7 +58,7 @@ namespace Tunny.Storage
         public StudySummary[] GetStudySummaries(string storagePath)
         {
             TLog.MethodStart();
-            IStorage storage;
+            ITStorage storage;
 
             switch (Path.GetExtension(storagePath))
             {

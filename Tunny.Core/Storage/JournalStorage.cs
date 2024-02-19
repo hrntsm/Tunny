@@ -5,11 +5,11 @@ using Optuna.Study;
 
 using Python.Runtime;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Storage
+namespace Tunny.Core.Storage
 {
-    public class JournalStorage : PythonInit, IStorage
+    public class JournalStorage : PythonInit, ITStorage
     {
         public dynamic Storage { get; set; }
 

@@ -1,7 +1,7 @@
 using Tunny.Core.Enum;
 using Tunny.Settings.Sampler;
 
-namespace Tunny.Settings
+namespace Tunny.Core.Settings
 {
     public class Optimize
     {

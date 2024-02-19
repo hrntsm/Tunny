@@ -3,10 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-using Tunny.Core;
 using Tunny.Core.Enum;
-using Tunny.Storage;
-using Tunny.Util;
+using Tunny.Core.Storage;
+using Tunny.Core.Util;
 
 namespace Tunny.UI
 {

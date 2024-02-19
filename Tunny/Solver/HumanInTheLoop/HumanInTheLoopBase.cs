@@ -5,9 +5,10 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
-using Tunny.Handler;
+using Tunny.Core.Handler;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Solver.HumanInTheLoop
 {
@@ -47,7 +48,7 @@ namespace Tunny.Solver.HumanInTheLoop
             importedLibrary.Exec("sys.stderr = open(path, 'w', encoding='utf-8')");
         }
 
-        public void WakeOptunaDashboard(Settings.Storage storage)
+        public void WakeOptunaDashboard(Storage storage)
         {
             TLog.MethodStart();
             if (File.Exists(storage.Path) == false)
@@ -59,7 +60,7 @@ namespace Tunny.Solver.HumanInTheLoop
             CheckExistDashboardProcess();
             string artifactArgument = $"--artifact-dir \"{_artifactPath}\"";
             var dashboard = new Process();
-            dashboard.StartInfo.FileName = PythonInstaller.GetEmbeddedPythonPath() + @"\Scripts\optuna-dashboard.exe";
+            dashboard.StartInfo.FileName = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
             dashboard.StartInfo.Arguments = storage.GetOptunaStorageCommandLinePathByExtension() + " " + artifactArgument;
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;

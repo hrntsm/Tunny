@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Tunny.Core
+namespace Tunny.Core.Util
 {
     public static class TEnvVariables
     {

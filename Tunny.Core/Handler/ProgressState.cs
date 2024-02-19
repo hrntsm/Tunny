@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-using Tunny.Input;
+using Tunny.Core.Input;
 
-namespace Tunny.Handler
+namespace Tunny.Core.Handler
 {
     public class ProgressState
     {

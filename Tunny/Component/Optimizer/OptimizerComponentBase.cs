@@ -11,7 +11,8 @@ using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
 using Tunny.Core.Enum;
-using Tunny.Input;
+using Tunny.Core.Input;
+using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.Util;
 

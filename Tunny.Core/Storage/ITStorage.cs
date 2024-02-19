@@ -1,8 +1,8 @@
 using Optuna.Study;
 
-namespace Tunny.Storage
+namespace Tunny.Core.Storage
 {
-    public interface IStorage : ICreateStorage
+    public interface ITStorage : ICreateStorage
     {
         void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting);
         StudySummary[] GetStudySummaries(string storagePath);

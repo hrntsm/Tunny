@@ -9,9 +9,10 @@ using Grasshopper.GUI;
 using Optuna.Study;
 
 using Tunny.Core.Enum;
+using Tunny.Core.Handler;
+using Tunny.Core.Storage;
+using Tunny.Core.Util;
 using Tunny.Handler;
-using Tunny.Storage;
-using Tunny.Util;
 
 namespace Tunny.UI
 {

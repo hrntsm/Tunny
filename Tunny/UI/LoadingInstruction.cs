@@ -8,10 +8,9 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-using Tunny.Core;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Resources;
-using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {

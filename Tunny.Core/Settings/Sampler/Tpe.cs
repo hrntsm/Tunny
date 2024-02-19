@@ -12,7 +12,7 @@ namespace Tunny.Settings.Sampler
         public bool ConsiderEndpoints { get; set; }
         public int NStartupTrials { get; set; } = 10;
         public int NEICandidates { get; set; } = 24;
-        public bool Multivariate { get; set; } = true;
+        public bool Multivariate { get; set; }
         public bool Group { get; set; }
         public bool WarnIndependentSampling { get; set; } = true;
         public bool ConstantLiar { get; set; }

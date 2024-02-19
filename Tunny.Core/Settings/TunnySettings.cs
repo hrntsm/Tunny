@@ -6,11 +6,10 @@ using Newtonsoft.Json;
 
 using Serilog.Events;
 
-using Tunny.Core;
 using Tunny.Core.Enum;
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Settings
+namespace Tunny.Core.Settings
 {
     public class TunnySettings
     {

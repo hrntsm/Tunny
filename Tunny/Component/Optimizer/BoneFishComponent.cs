@@ -13,9 +13,10 @@ using Grasshopper.Kernel.Data;
 using Optuna.Study;
 
 using Tunny.Component.Params;
-using Tunny.Core;
+using Tunny.Core.Handler;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Handler;
-using Tunny.Settings;
 using Tunny.Type;
 namespace Tunny.Component.Optimizer
 {

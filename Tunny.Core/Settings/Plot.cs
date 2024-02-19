@@ -1,8 +1,8 @@
 using Tunny.Core.Enum;
 
-namespace Tunny.PostProcess
+namespace Tunny.Core.Settings
 {
-    public class PlotSettings
+    public class Plot
     {
         public PlotActionType PlotActionType { get; set; }
         public string PlotTypeName { get; set; }

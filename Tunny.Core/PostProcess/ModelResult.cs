@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tunny.PostProcess
+namespace Tunny.Core.PostProcess
 {
     public class ModelResult
     {

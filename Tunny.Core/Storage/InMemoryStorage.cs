@@ -1,8 +1,8 @@
 using Python.Runtime;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Storage
+namespace Tunny.Core.Storage
 {
     public class InMemoryStorage : PythonInit, ICreateStorage
     {

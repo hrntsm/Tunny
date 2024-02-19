@@ -12,14 +12,16 @@ using Python.Runtime;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Enum;
+using Tunny.Core.Handler;
+using Tunny.Core.Input;
+using Tunny.Core.Settings;
+using Tunny.Core.Storage;
+using Tunny.Core.Util;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.Settings;
-using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {

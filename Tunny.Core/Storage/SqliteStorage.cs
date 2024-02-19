@@ -5,11 +5,11 @@ using Optuna.Study;
 
 using Python.Runtime;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Storage
+namespace Tunny.Core.Storage
 {
-    public class SqliteStorage : PythonInit, IStorage
+    public class SqliteStorage : PythonInit, ITStorage
     {
         public dynamic Storage { get; set; }
 

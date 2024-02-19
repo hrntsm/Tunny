@@ -1,8 +1,8 @@
 using System;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
-namespace Tunny.Input
+namespace Tunny.Core.Input
 {
     [Serializable]
     public class CategoricalVariable : VariableBase
