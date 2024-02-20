@@ -13,7 +13,7 @@ namespace Optuna.Storage.RDB.Tests
     {
         private readonly string _createFilePath = @"TestFile/created.db";
         private readonly string _existFilePath = @"TestFile/sqlite.db";
-        private readonly List<string> _tempDBPaths = new();
+        private readonly List<string> _tempDBPaths = new List<string>();
 
         [Fact()]
         public void NoFileTest()

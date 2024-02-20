@@ -4,12 +4,10 @@ using System.Linq;
 
 using Optuna.Study;
 
-using Tunny.Core;
-using Tunny.Core.Enum;
-using Tunny.Handler;
-using Tunny.PostProcess;
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Solver;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -23,7 +21,7 @@ namespace Tunny.UI
                 ResultFileNotExistErrorMessage();
                 return;
             }
-            string dashboardPath = Path.Combine(PythonInstaller.GetEmbeddedPythonPath(), "Scripts", "optuna-dashboard.exe");
+            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
             string storagePath = _settings.Storage.Path;
 
             var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
@@ -93,7 +91,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            var pSettings = new PlotSettings
+            var pSettings = new Plot
             {
                 TargetStudyName = visualizeTargetStudyComboBox.Text,
                 PlotActionType = pActionType,
@@ -118,7 +116,7 @@ namespace Tunny.UI
             }
         }
 
-        private static bool CheckTargetValues(PlotSettings pSettings)
+        private static bool CheckTargetValues(Plot pSettings)
         {
             TLog.MethodStart();
             switch (pSettings.PlotTypeName)
@@ -137,7 +135,7 @@ namespace Tunny.UI
             }
         }
 
-        private static bool CheckOneObjectives(PlotSettings pSettings)
+        private static bool CheckOneObjectives(Plot pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -149,7 +147,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckHypervolumeTargets(PlotSettings pSettings)
+        private static bool CheckHypervolumeTargets(Plot pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -160,7 +158,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
+        private static bool CheckParetoFrontTargets(Plot pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -172,7 +170,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
+        private static bool CheckOneObjSomeVarTargets(Plot pSettings)
         {
             TLog.MethodStart();
             bool result = true;

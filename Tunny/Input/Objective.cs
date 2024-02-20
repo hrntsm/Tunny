@@ -12,9 +12,9 @@ using Python.Runtime;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
-using Tunny.Core.Enum;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Type;
-using Tunny.Util;
 
 namespace Tunny.Input
 {

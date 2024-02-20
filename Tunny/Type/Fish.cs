@@ -9,8 +9,8 @@ using Optuna.Trial;
 
 using Rhino.Geometry;
 
-using Tunny.Input;
-using Tunny.Util;
+using Tunny.Core.Input;
+using Tunny.Core.Util;
 
 namespace Tunny.Type
 {

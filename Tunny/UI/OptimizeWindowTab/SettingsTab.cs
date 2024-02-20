@@ -2,9 +2,9 @@ using System;
 
 using Serilog.Events;
 
-using Tunny.Core.Enum;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Settings.Sampler;
-using Tunny.Util;
 
 namespace Tunny.UI
 {

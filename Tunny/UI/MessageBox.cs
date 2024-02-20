@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
 namespace Tunny.UI
 {

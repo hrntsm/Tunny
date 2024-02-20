@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 
 using Tunny.Component.Params;
-using Tunny.Input;
+using Tunny.Core.Input;
+using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.Util;
 

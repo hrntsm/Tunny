@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
+using Tunny.Core.Util;
 using Tunny.Type;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {

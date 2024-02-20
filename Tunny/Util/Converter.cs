@@ -5,6 +5,8 @@ using Grasshopper.Kernel.Types;
 using Rhino.FileIO;
 using Rhino.Geometry;
 
+using Tunny.Core.Util;
+
 namespace Tunny.Util
 {
     public static class Converter

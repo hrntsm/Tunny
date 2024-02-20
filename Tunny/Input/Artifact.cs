@@ -7,7 +7,7 @@ using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
 namespace Tunny.Input
 {

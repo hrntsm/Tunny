@@ -8,10 +8,9 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-using Tunny.Core;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Resources;
-using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -109,7 +108,7 @@ namespace Tunny.UI
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
-                var settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+                var settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
                 storagePath = settings.Storage.Path;
             }
             var ofd = new OpenFileDialog

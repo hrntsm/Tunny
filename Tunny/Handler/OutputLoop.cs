@@ -7,12 +7,12 @@ using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
-using Tunny.PostProcess;
-using Tunny.Settings;
+using Tunny.Core.PostProcess;
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Handler
 {
@@ -20,7 +20,7 @@ namespace Tunny.Handler
     {
         private static BackgroundWorker s_worker;
         public static OptimizeComponentBase Component;
-        public static TunnySettings Settings;
+        public static TSettings Settings;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;

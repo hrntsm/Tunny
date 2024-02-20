@@ -16,6 +16,8 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
+using Tunny.Core.Input;
+using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.Type;
 using Tunny.UI;

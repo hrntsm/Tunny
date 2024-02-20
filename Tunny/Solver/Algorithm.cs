@@ -11,15 +11,17 @@ using System.Windows.Forms;
 using Python.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Core.Enum;
+using Tunny.Core.Handler;
+using Tunny.Core.Input;
+using Tunny.Core.Settings;
+using Tunny.Core.Storage;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.Settings;
-using Tunny.Storage;
 using Tunny.Type;
 using Tunny.UI;
-using Tunny.Util;
 
 namespace Tunny.Solver
 {
@@ -31,13 +33,13 @@ namespace Tunny.Solver
         private List<VariableBase> Variables { get; }
         private bool HasConstraints { get; }
         private Objective Objective { get; }
-        private TunnySettings Settings { get; }
+        private TSettings Settings { get; }
         private Func<ProgressState, int, TrialGrasshopperItems> EvalFunc { get; }
         private Dictionary<string, FishEgg> FishEgg { get; }
 
         public Algorithm(
             List<VariableBase> variables, bool hasConstraint, Objective objective, Dictionary<string, FishEgg> fishEgg,
-            TunnySettings settings,
+            TSettings settings,
             Func<ProgressState, int, TrialGrasshopperItems> evalFunc)
         {
             TLog.MethodStart();
@@ -550,7 +552,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 string studyName = Settings.StudyName;
-                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewStorage(false, Settings.Storage));
+                optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewTStorage(false, Settings.Storage));
             }
         }
 
@@ -664,38 +666,13 @@ namespace Tunny.Solver
         private dynamic SetSamplerSettings(SamplerType samplerType, dynamic optuna, bool hasConstraints)
         {
             TLog.MethodStart();
-            dynamic sampler;
-            switch (samplerType)
-            {
-                case SamplerType.TPE:
-                    sampler = Sampler.TPE(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.BoTorch:
-                    sampler = Sampler.BoTorch(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.NSGAII:
-                    sampler = Sampler.NSGAII(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.NSGAIII:
-                    sampler = Sampler.NSGAIII(optuna, Settings, hasConstraints);
-                    break;
-                case SamplerType.CmaEs:
-                    sampler = Sampler.CmaEs(optuna, Settings);
-                    break;
-                case SamplerType.QMC:
-                    sampler = Sampler.QMC(optuna, Settings);
-                    break;
-                case SamplerType.Random:
-                    sampler = Sampler.Random(optuna, Settings);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid sampler type.");
-            }
+            string storagePath = Settings.Storage.GetOptunaStoragePath();
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToOptuna(optuna, samplerType, storagePath, hasConstraints);
             if ((int)samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
-            return sampler;
+            return optunaSampler;
         }
     }
 }

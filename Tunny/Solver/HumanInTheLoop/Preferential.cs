@@ -3,7 +3,7 @@ using System.Drawing;
 
 using Python.Runtime;
 
-using Tunny.Util;
+using Tunny.Core.Util;
 
 namespace Tunny.Solver.HumanInTheLoop
 {

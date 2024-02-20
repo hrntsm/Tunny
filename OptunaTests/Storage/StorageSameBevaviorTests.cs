@@ -12,7 +12,7 @@ namespace Optuna.Storage.Tests
         [InlineData(@"TestFile/journal.log", "log")]
         public void StorageLoadTest(string path, string type)
         {
-            IStorage storage;
+            IOptunaStorage storage;
             int offset = 0; // journal starts from 0
 
             if (type == "sqlite")

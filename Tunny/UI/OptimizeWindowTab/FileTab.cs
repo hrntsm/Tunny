@@ -3,10 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-using Tunny.Core;
-using Tunny.Core.Enum;
-using Tunny.Storage;
-using Tunny.Util;
+using Tunny.Core.Storage;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 
 namespace Tunny.UI
 {
@@ -55,7 +54,7 @@ namespace Tunny.UI
                 string storagePath = _settings.Storage.Path;
                 if (!File.Exists(storagePath))
                 {
-                    new StorageHandler().CreateNewStorage(true, _settings.Storage);
+                    new StorageHandler().CreateNewTStorage(true, _settings.Storage);
                 }
                 UpdateStudyComboBox(storagePath);
             }
