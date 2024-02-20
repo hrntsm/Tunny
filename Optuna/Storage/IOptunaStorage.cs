@@ -5,7 +5,7 @@ using Optuna.Trial;
 
 namespace Optuna.Storage
 {
-    public interface IStorage
+    public interface IOptunaStorage
     {
         // Basic study manipulation
         int CreateNewStudy(StudyDirection[] studyDirections, string studyName);

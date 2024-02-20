@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+using Optuna.Storage;
 using Optuna.Study;
 
 using Python.Runtime;
@@ -131,7 +132,7 @@ namespace Tunny.Core.Settings
         public Study[] GetAllStudies()
         {
             TLog.MethodStart();
-            Optuna.Storage.IStorage storage;
+            IOptunaStorage storage;
             switch (Type)
             {
                 case StorageType.Sqlite:

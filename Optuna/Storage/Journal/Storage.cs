@@ -10,7 +10,7 @@ using Optuna.Trial;
 
 namespace Optuna.Storage.Journal
 {
-    public class JournalStorage : IStorage
+    public class JournalStorage : IOptunaStorage
     {
         private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
         private int _nextStudyId;

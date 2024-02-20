@@ -12,7 +12,7 @@ using Optuna.Trial;
 
 namespace Optuna.Storage.RDB
 {
-    public class SqliteStorage : IStorage
+    public class SqliteStorage : IOptunaStorage
     {
         private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
         private readonly SQLiteConnectionStringBuilder _sqliteConnection;
