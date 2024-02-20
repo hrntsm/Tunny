@@ -1,18 +1,15 @@
-using Tunny.Core.Util;
-
-namespace Tunny.Settings.Sampler
+namespace Optuna.Sampler
 {
     ///  <summary>
     /// https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.NSGAIIISampler.html
     /// </summary>
-    public class NSGAIII : NSGAII
+    public class NSGAIIISampler : NSGAIISampler
     {
         public double[] ReferencePoints { get; set; }
         public int DividingParameter { get; set; } = 3;
 
-        public new dynamic ToOptuna(dynamic optuna, bool hasConstraints)
+        public new dynamic ToPython(dynamic optuna, bool hasConstraints)
         {
-            TLog.MethodStart();
             return optuna.samplers.NSGAIIISampler(
                 population_size: PopulationSize,
                 mutation_prob: MutationProb,
@@ -20,7 +17,7 @@ namespace Tunny.Settings.Sampler
                 swapping_prob: SwappingProb,
                 seed: Seed,
                 crossover: SetCrossover(optuna, Crossover),
-                constraints_func: hasConstraints ? SamplerSettings.ConstraintFunc() : null
+                constraints_func: hasConstraints ? ConstraintFunc() : null
             );
         }
     }

@@ -667,7 +667,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             string storagePath = Settings.Storage.GetOptunaStoragePath();
-            dynamic optunaSampler = Settings.Optimize.Sampler.ToOptuna(optuna, samplerType, storagePath, hasConstraints);
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(optuna, samplerType, storagePath, hasConstraints);
             if ((int)samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
