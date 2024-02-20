@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 
-using Optuna.Dashboard;
-
 using Xunit;
 
-namespace OptunaTests.Dashboard
+namespace Optuna.Dashboard.Tests
 {
     public class HandlerTests
     {
