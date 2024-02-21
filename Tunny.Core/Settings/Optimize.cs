@@ -5,7 +5,7 @@ namespace Tunny.Core.Settings
 {
     public class Optimize
     {
-        public SamplerSettings Sampler { get; set; } = new SamplerSettings();
+        public Sampler Sampler { get; set; } = new Sampler();
         public int NumberOfTrials { get; set; } = 100;
         public bool ContinueStudy { get; set; }
         public bool CopyStudy { get; set; }

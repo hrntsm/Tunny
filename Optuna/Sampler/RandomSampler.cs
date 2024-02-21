@@ -1,17 +1,12 @@
-using Tunny.Core.Util;
-
-namespace Tunny.Settings.Sampler
+namespace Optuna.Sampler
 {
     /// <summary>
     /// https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.RandomSampler.html#optuna.samplers.RandomSampler
     /// </summary>
-    public class Random
+    public class RandomSampler : SamplerBase
     {
-        public int? Seed { get; set; }
-
-        public dynamic ToOptuna(dynamic optuna)
+        public dynamic ToPython(dynamic optuna)
         {
-            TLog.MethodStart();
             return optuna.samplers.RandomSampler(
                 seed: Seed
             );

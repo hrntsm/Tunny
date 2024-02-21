@@ -1,5 +1,7 @@
 using System;
 
+using Optuna.Sampler;
+
 using Serilog.Events;
 
 using Tunny.Core.TEnum;
@@ -13,7 +15,7 @@ namespace Tunny.UI
         private void TpeDefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetTpeSettings(new Tpe());
+            SetTpeSettings(new TpeSampler());
         }
 
         private void Nsga2MutationProbCheckedChanged(object sender, EventArgs e)
@@ -31,7 +33,7 @@ namespace Tunny.UI
         private void Nsga2DefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetNsga2Settings(new NSGAII());
+            SetNsga2Settings(new NSGAIISampler());
         }
 
         private void Nsga3MutationProbCheckedChanged(object sender, EventArgs e)
@@ -49,7 +51,7 @@ namespace Tunny.UI
         private void Nsga3DefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetNsga3Settings(new NSGAIII());
+            SetNsga3Settings(new NSGAIIISampler());
         }
 
         private void CmaEsSigmaCheckedChanged(object sender, EventArgs e)
@@ -68,7 +70,7 @@ namespace Tunny.UI
         private void CmaEsDefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetCmaEsSettings(new CmaEs());
+            SetCmaEsSettings(new CmaEsSampler());
         }
 
         private void CmaEsWarmStartCmaEsCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -94,19 +96,19 @@ namespace Tunny.UI
         private void BoTorchDefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetBoTorchSettings(new BoTorch());
+            SetBoTorchSettings(new BoTorchSampler());
         }
 
         private void QmcDefaultButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            SetQMCSettings(new QuasiMonteCarlo());
+            SetQMCSettings(new QMCSampler());
         }
 
         private void InitializeSamplerSettings()
         {
             TLog.MethodStart();
-            SamplerSettings sampler = _settings.Optimize.Sampler;
+            Sampler sampler = _settings.Optimize.Sampler;
             SetTpeSettings(sampler.Tpe);
             SetBoTorchSettings(sampler.BoTorch);
             SetNsga2Settings(sampler.NsgaII);
@@ -115,7 +117,7 @@ namespace Tunny.UI
             SetQMCSettings(sampler.QMC);
         }
 
-        private void SetTpeSettings(Tpe tpe)
+        private void SetTpeSettings(TpeSampler tpe)
         {
             TLog.MethodStart();
             tpeStartupNumUpDown.Value = tpe.NStartupTrials;
@@ -131,13 +133,13 @@ namespace Tunny.UI
             tpeWarnIndependentSamplingCheckBox.Checked = tpe.WarnIndependentSampling;
         }
 
-        private void SetBoTorchSettings(BoTorch boTorch)
+        private void SetBoTorchSettings(BoTorchSampler boTorch)
         {
             TLog.MethodStart();
             boTorchStartupNumUpDown.Value = boTorch.NStartupTrials;
         }
 
-        private void SetNsga2Settings(NSGAII nsga)
+        private void SetNsga2Settings(NSGAIISampler nsga)
         {
             TLog.MethodStart();
             nsga2MutationProbCheckBox.Checked = nsga.MutationProb != null;
@@ -152,7 +154,7 @@ namespace Tunny.UI
             nsga2CrossoverComboBox.SelectedIndex = SetNsgaCrossoverSetting(nsga.Crossover);
         }
 
-        private void SetNsga3Settings(NSGAIII nsga)
+        private void SetNsga3Settings(NSGAIIISampler nsga)
         {
             TLog.MethodStart();
             nsga3MutationProbCheckBox.Checked = nsga.MutationProb != null;
@@ -190,7 +192,7 @@ namespace Tunny.UI
             }
         }
 
-        private void SetCmaEsSettings(CmaEs cmaEs)
+        private void SetCmaEsSettings(CmaEsSampler cmaEs)
         {
             TLog.MethodStart();
             cmaEsStartupNumUpDown.Value = cmaEs.NStartupTrials;
@@ -211,7 +213,7 @@ namespace Tunny.UI
                 ? (decimal)cmaEs.PopulationSize : 1;
         }
 
-        private void SetQMCSettings(QuasiMonteCarlo qmc)
+        private void SetQMCSettings(QMCSampler qmc)
         {
             TLog.MethodStart();
             qmcTypeComboBox.SelectedIndex = qmc.QmcType == "sobol" ? 0 : 1;
@@ -220,7 +222,7 @@ namespace Tunny.UI
             qmcWarnAsyncSeedingCheckBox.Checked = qmc.WarnAsynchronousSeeding;
         }
 
-        private SamplerSettings GetSamplerSettings(SamplerSettings sampler)
+        private Sampler GetSamplerSettings(Sampler sampler)
         {
             TLog.MethodStart();
             sampler.Tpe = GetTpeSettings(sampler.Tpe);
@@ -232,7 +234,7 @@ namespace Tunny.UI
             return sampler;
         }
 
-        private Tpe GetTpeSettings(Tpe tpe)
+        private TpeSampler GetTpeSettings(TpeSampler tpe)
         {
             TLog.MethodStart();
             tpe.NStartupTrials = (int)tpeStartupNumUpDown.Value;
@@ -248,14 +250,14 @@ namespace Tunny.UI
             return tpe;
         }
 
-        private BoTorch GetBoTorchSettings(BoTorch boTorch)
+        private BoTorchSampler GetBoTorchSettings(BoTorchSampler boTorch)
         {
             TLog.MethodStart();
             boTorch.NStartupTrials = (int)boTorchStartupNumUpDown.Value;
             return boTorch;
         }
 
-        private NSGAII GetNsga2Settings(NSGAII nsgaII)
+        private NSGAIISampler GetNsga2Settings(NSGAIISampler nsgaII)
         {
             TLog.MethodStart();
             nsgaII.MutationProb = nsga2MutationProbCheckBox.Checked
@@ -268,7 +270,7 @@ namespace Tunny.UI
             return nsgaII;
         }
 
-        private NSGAIII GetNsga3Settings(NSGAIII nsgaIII)
+        private NSGAIIISampler GetNsga3Settings(NSGAIIISampler nsgaIII)
         {
             TLog.MethodStart();
             nsgaIII.MutationProb = nsga3MutationProbCheckBox.Checked
@@ -281,7 +283,7 @@ namespace Tunny.UI
             return nsgaIII;
         }
 
-        private CmaEs GetCmaEsSettings(CmaEs cmaEs)
+        private CmaEsSampler GetCmaEsSettings(CmaEsSampler cmaEs)
         {
             TLog.MethodStart();
             cmaEs.NStartupTrials = (int)cmaEsStartupNumUpDown.Value;
@@ -301,7 +303,7 @@ namespace Tunny.UI
             return cmaEs;
         }
 
-        private QuasiMonteCarlo GetQMCSettings(QuasiMonteCarlo qmc)
+        private QMCSampler GetQMCSettings(QMCSampler qmc)
         {
             TLog.MethodStart();
             qmc.QmcType = qmcTypeComboBox.SelectedIndex == 0 ? "sobol" : "halton";

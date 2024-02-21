@@ -6,9 +6,9 @@ using Optuna.Trial;
 
 namespace Optuna.Study
 {
-    internal sealed class MultiObjective
+    public class MultiObjective
     {
-        internal static Trial.Trial[] GetParetoFrontTrials(List<Trial.Trial> trials, StudyDirection[] directions)
+        public static Trial.Trial[] GetParetoFrontTrials(List<Trial.Trial> trials, StudyDirection[] directions)
         {
             return GetParetoFrontTrialsByTrials(trials, directions);
         }
