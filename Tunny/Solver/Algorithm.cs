@@ -80,7 +80,7 @@ namespace Tunny.Solver
                 Parameter[] parameter = null;
                 TrialGrasshopperItems result = null;
 
-                if (CheckExistStudyParameter(Objective.Length, optuna, storage))
+                if (CheckExistStudyMatching(Objective.Length))
                 {
                     dynamic study;
                     switch (Objective.HumanInTheLoopType)
@@ -163,29 +163,21 @@ namespace Tunny.Solver
             return directions;
         }
 
-        private bool CheckExistStudyParameter(int nObjective, dynamic optuna, dynamic storage)
+        private bool CheckExistStudyMatching(int nObjective)
         {
             TLog.MethodStart();
-            PyList studySummaries = optuna.get_all_study_summaries(storage);
-            var studySummaryDict = new Dictionary<string, int>();
+            var storage = new StorageHandler();
+            StudySummary[] studySummaries = storage.GetStudySummaries(Settings.Storage.Path);
+            bool containStudyName = studySummaries.Select(s => s.StudyName).Contains(Settings.StudyName);
 
-            foreach (dynamic pyObj in studySummaries)
-            {
-                studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
-            }
-
-            return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
-        }
-
-        private bool CheckDirections(int nObjective, IReadOnlyDictionary<string, int> directions)
-        {
-            TLog.MethodStart();
-            if (!Settings.Optimize.ContinueStudy)
+            if (containStudyName && !Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutContinue;
                 return false;
             }
-            else if (directions[Settings.StudyName] == nObjective)
+
+            bool isSameObjectiveNumber = studySummaries.FirstOrDefault(s => s.StudyName == Settings.StudyName)?.Directions.Length == nObjective;
+            if (isSameObjectiveNumber)
             {
                 return true;
             }
