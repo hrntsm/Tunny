@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-using Python.Runtime;
-
 using Optuna.Study;
+
+using Python.Runtime;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
@@ -119,7 +119,7 @@ namespace Tunny.Solver
             string[] objNickName = Objective.GetNickNames();
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)), false);
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)), false);
             preferentialOpt.WakeOptunaDashboard(Settings.Storage);
             optInfo.Preferential = preferentialOpt;
             RunPreferentialOptimize(optInfo, nBatch, out parameter, out result);
@@ -132,7 +132,7 @@ namespace Tunny.Solver
             study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
             RunOptimize(optInfo, out parameter, out result);
         }
 
@@ -143,24 +143,13 @@ namespace Tunny.Solver
             study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
             var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
             humanSliderInput.WakeOptunaDashboard(Settings.Storage);
             humanSliderInput.SetObjective(study, objNickName);
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;
             RunHumanSidlerInputOptimize(optInfo, nBatch, out parameter, out result);
-        }
-
-        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
-        {
-            TLog.MethodStart();
-            var name = new PyList();
-            foreach (string nickname in nicknames)
-            {
-                name.Append(new PyString(nickname));
-            }
-            return name;
         }
 
         private static string[] SetDirectionValues(int nObjective)

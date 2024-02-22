@@ -80,7 +80,7 @@ namespace Tunny.Type
                 int maxLength = geometries.Count > 5 ? 5 : geometries.Count;
                 for (int i = 0; i < maxLength; i++)
                 {
-                    string geomString = Converter.GeometryBaseToGoo(geometries[i]).ToString();
+                    string geomString = GooConverter.GeometryBaseToGoo(geometries[i]).ToString();
                     valueStrings.Append("\n    ");
                     valueStrings.Append(geomString);
                 }

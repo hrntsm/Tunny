@@ -431,7 +431,7 @@ namespace Tunny.Util
             {
                 if (param is IGH_Goo goo)
                 {
-                    json.Add(Converter.GooToString(goo, true));
+                    json.Add(GooConverter.GooToString(goo, true));
                 }
             }
 
@@ -482,7 +482,7 @@ namespace Tunny.Util
                 {
                     if (param is IGH_Goo goo)
                     {
-                        value.Add(Converter.GooToString(goo, true));
+                        value.Add(GooConverter.GooToString(goo, true));
                     }
                 }
             }

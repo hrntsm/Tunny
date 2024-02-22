@@ -99,7 +99,7 @@ namespace Tunny.Component.Util
                 case List<string> str:
                     return str.Select(s => new GH_String(s)).Cast<IGH_Goo>().ToList();
                 case List<GeometryBase> geom:
-                    return geom.Select(Converter.GeometryBaseToGoo).Cast<IGH_Goo>().ToList();
+                    return geom.Select(GooConverter.GeometryBaseToGoo).Cast<IGH_Goo>().ToList();
                 default:
                     return new List<IGH_Goo>();
             }
