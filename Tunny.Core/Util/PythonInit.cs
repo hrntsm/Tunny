@@ -26,6 +26,5 @@ namespace Tunny.Core.Util
             PythonEngine.Initialize();
             TLog.Debug("Initialize PythonEngine.");
         }
-
     }
 }

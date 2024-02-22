@@ -12,6 +12,5 @@ namespace Tunny.Core.Util.Tests
             string path = TEnvVariables.TmpDirPath;
             Assert.True(Directory.Exists(path));
         }
-
     }
 }
