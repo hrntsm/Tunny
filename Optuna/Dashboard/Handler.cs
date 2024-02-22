@@ -14,6 +14,7 @@ namespace Optuna.Dashboard
 
         public Handler(string dashboardPath, string storagePath, string artifactDir = null, string host = "127.0.0.1", string port = "8080")
         {
+            CheckFileExist(dashboardPath, storagePath);
             _dashboardPath = dashboardPath;
             _storage = GetStorageArgument(storagePath);
             _host = host;
@@ -22,6 +23,18 @@ namespace Optuna.Dashboard
             if (!Directory.Exists(_artifactDir))
             {
                 Directory.CreateDirectory(_artifactDir);
+            }
+        }
+
+        private static void CheckFileExist(string dashboardPath, string storagePath)
+        {
+            if (!File.Exists(dashboardPath))
+            {
+                throw new FileNotFoundException("Dashboard file not found.", dashboardPath);
+            }
+            if (!File.Exists(storagePath))
+            {
+                throw new FileNotFoundException("Storage file not found.", storagePath);
             }
         }
 
@@ -35,7 +48,7 @@ namespace Optuna.Dashboard
                 case ".log":
                     return $"\"{path}\"";
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentException("Unsupported storage file.");
             }
         }
 

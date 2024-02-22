@@ -382,7 +382,7 @@ namespace Tunny.Solver
             {
                 if (result.Artifacts.Count() > 0)
                 {
-                    UploadArtifacts(result.Artifacts, optInfo.ArtifactBackend, trial);
+                    result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
                 if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
                 {
@@ -454,26 +454,6 @@ namespace Tunny.Solver
                 component.SetInfo(message);
             }
             TLog.Info(sb.ToString());
-        }
-
-        private void UploadArtifacts(Artifact artifacts, dynamic artifactBackend, dynamic trial)
-        {
-            TLog.MethodStart();
-            string dir = Path.GetDirectoryName(Settings.Storage.Path);
-            string fileName = $"artifact_trial_{trial.number}";
-            string basePath = Path.Combine(dir, fileName);
-            artifacts.SaveAllArtifacts(basePath);
-            List<string> artifactPath = artifacts.ArtifactPaths;
-
-            dynamic optuna = Py.Import("optuna");
-            foreach (string path in artifactPath)
-            {
-                optuna.artifacts.upload_artifact(trial, path, artifactBackend);
-                if (Path.GetFileNameWithoutExtension(path).Contains(fileName))
-                {
-                    File.Delete(path);
-                }
-            }
         }
 
         private static TrialGrasshopperItems TenTimesNullResultErrorMessage()
@@ -667,7 +647,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             string storagePath = Settings.Storage.GetOptunaStoragePath();
-            dynamic optunaSampler = Settings.Optimize.Sampler.ToOptuna(optuna, samplerType, storagePath, hasConstraints);
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(optuna, samplerType, storagePath, hasConstraints);
             if ((int)samplerType > 4 && hasConstraints)
             {
                 TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");

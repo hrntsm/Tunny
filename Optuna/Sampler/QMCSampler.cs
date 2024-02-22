@@ -1,21 +1,17 @@
-using Tunny.Core.Util;
-
-namespace Tunny.Settings.Sampler
+namespace Optuna.Sampler
 {
     /// <summary>
     /// https://optuna.readthedocs.io/en/latest/reference/samplers/generated/optuna.samplers.QMCSampler.html
     /// </summary>
-    public class QuasiMonteCarlo
+    public class QMCSampler : SamplerBase
     {
         public string QmcType { get; set; } = "sobol";
         public bool Scramble { get; set; }
-        public int? Seed { get; set; }
         public bool WarnIndependentSampling { get; set; } = true;
         public bool WarnAsynchronousSeeding { get; set; } = true;
 
-        public dynamic ToOptuna(dynamic optuna)
+        public dynamic ToPython(dynamic optuna)
         {
-            TLog.MethodStart();
             return optuna.samplers.QMCSampler(
                 qmc_type: QmcType,
                 scramble: Scramble,

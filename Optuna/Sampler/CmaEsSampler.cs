@@ -1,13 +1,10 @@
-using Tunny.Core.Util;
-
-namespace Tunny.Settings.Sampler
+namespace Optuna.Sampler
 {
     /// <summary>
     /// https://optuna.readthedocs.io/en/stable/reference/generated/optuna.samplers.CmaEsSampler.html
     /// </summary>
-    public class CmaEs
+    public class CmaEsSampler : SamplerBase
     {
-        public int? Seed { get; set; }
         public double? Sigma0 { get; set; }
         public int NStartupTrials { get; set; } = 1;
         public bool WarnIndependentSampling { get; set; } = true;
@@ -20,9 +17,8 @@ namespace Tunny.Settings.Sampler
         public string WarmStartStudyName { get; set; } = string.Empty;
         public bool WithMargin { get; set; } = true;
 
-        public dynamic ToOptuna(dynamic optuna, string storagePath)
+        public dynamic ToPython(dynamic optuna, string storagePath)
         {
-            TLog.MethodStart();
             return UseWarmStart
                 ? optuna.samplers.CmaEsSampler(
                     n_startup_trials: NStartupTrials,

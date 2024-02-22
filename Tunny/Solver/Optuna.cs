@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -59,6 +60,7 @@ namespace Tunny.Solver
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
                 EndMessage(optimize);
+                CleanTmpFiles();
 
                 return true;
             }
@@ -66,6 +68,17 @@ namespace Tunny.Solver
             {
                 ShowErrorMessages(e);
                 return false;
+            }
+        }
+
+        private static void CleanTmpFiles()
+        {
+            TLog.MethodStart();
+            TLog.Info("Clean tmp files");
+            var tmpDir = new DirectoryInfo(TEnvVariables.TmpDirPath);
+            foreach (FileInfo file in tmpDir.GetFiles())
+            {
+                file.Delete();
             }
         }
 
