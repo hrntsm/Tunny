@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
+using Python.Runtime;
+
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
@@ -32,7 +34,21 @@ namespace Tunny.Input
             return Geometries.Count + Images.Count;
         }
 
-        public void SaveAllArtifacts(string basePath)
+        public void UploadArtifacts(dynamic artifactBackend, dynamic trial)
+        {
+            TLog.MethodStart();
+            string fileName = $"artifact_trial_{trial.number}";
+            string basePath = Path.Combine(TEnvVariables.TmpDirPath, fileName);
+            SaveAllArtifacts(basePath);
+
+            dynamic optuna = Py.Import("optuna");
+            foreach (string path in ArtifactPaths)
+            {
+                optuna.artifacts.upload_artifact(trial, path, artifactBackend);
+            }
+        }
+
+        private void SaveAllArtifacts(string basePath)
         {
             TLog.MethodStart();
             if (Geometries.Count > 0)
@@ -45,7 +61,7 @@ namespace Tunny.Input
             }
         }
 
-        public void SaveRhino3dm(string basePath)
+        private void SaveRhino3dm(string basePath)
         {
             TLog.MethodStart();
             string path = basePath + "_model.3dm";
@@ -72,7 +88,7 @@ namespace Tunny.Input
             ArtifactPaths.Add(path);
         }
 
-        public void SaveImage(string basePath)
+        private void SaveImage(string basePath)
         {
             TLog.MethodStart();
             for (int i = 0; i < Images.Count; i++)
