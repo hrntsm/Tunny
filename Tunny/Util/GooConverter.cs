@@ -9,7 +9,7 @@ using Tunny.Core.Util;
 
 namespace Tunny.Util
 {
-    public static class Converter
+    public static class GooConverter
     {
         public static IGH_GeometricGoo GeometryBaseToGoo(GeometryBase geometryBase)
         {
@@ -35,10 +35,10 @@ namespace Tunny.Util
         {
             TLog.MethodStart();
             var option = new SerializationOptions();
-            return GooToString(goo, isGeometryBaseToJson, option);
+            return goo.GooToString(isGeometryBaseToJson, option);
         }
 
-        private static string GooToString(IGH_Goo goo, bool isGeometryBaseToJson, SerializationOptions option)
+        private static string GooToString(this IGH_Goo goo, bool isGeometryBaseToJson, SerializationOptions option)
         {
             TLog.MethodStart();
             if (isGeometryBaseToJson)

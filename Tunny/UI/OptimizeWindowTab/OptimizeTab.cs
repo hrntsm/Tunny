@@ -99,8 +99,11 @@ namespace Tunny.UI
                     checkResult = NameAlreadyExistMessage(ghCanvas);
                     break;
                 case true when copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked:
-                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, studyNameTextBox.Text, _settings.Storage);
-                    _settings.StudyName = studyNameTextBox.Text;
+                    if (string.IsNullOrEmpty(studyNameTextBox.Text))
+                    {
+                        _settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                    }
+                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, _settings.StudyName, _settings.Storage);
                     break;
                 case true when continueStudyCheckBox.Checked:
                     checkResult = CheckSameStudyName(ghCanvas);

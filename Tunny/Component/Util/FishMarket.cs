@@ -130,7 +130,7 @@ namespace Tunny.Component.Util
                 GeometryBase dupGeometry = geometry.Duplicate();
                 dupGeometry.Rotate(Vector3d.VectorAngle(Vector3d.XAxis, _settings.Plane.XAxis), Vector3d.ZAxis, modelMinPt);
                 dupGeometry.Translate(moveVec + new Vector3d(_settings.Plane.Origin) - new Vector3d(modelMinPt));
-                arrayedGeometries.Append(Converter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
+                arrayedGeometries.Append(GooConverter.GeometryBaseToGoo(dupGeometry), new GH_Path(0, _fishes[index].Value.ModelNumber));
                 movedGeometries[i] = dupGeometry;
             }
             modelMinPt = GetUnionBoundingBoxMinPt(movedGeometries);

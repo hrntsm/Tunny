@@ -23,13 +23,13 @@ using Tunny.UI;
 
 namespace Tunny.Solver
 {
-    public class Optuna : PythonInit
+    public class Solver : PythonInit
     {
         public Parameter[] OptimalParameters { get; private set; }
         private readonly bool _hasConstraint;
         private readonly TSettings _settings;
 
-        public Optuna(TSettings settings, bool hasConstraint)
+        public Solver(TSettings settings, bool hasConstraint)
         {
             TLog.MethodStart();
             _settings = settings;

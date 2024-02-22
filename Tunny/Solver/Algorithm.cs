@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
+using Optuna.Study;
 
 using Python.Runtime;
 
@@ -25,7 +26,7 @@ using Tunny.UI;
 
 namespace Tunny.Solver
 {
-    public class Algorithm
+    public class Algorithm : PythonInit
     {
         public Parameter[] OptimalParameters { get; private set; }
         public EndState EndState { get; private set; }
@@ -60,6 +61,10 @@ namespace Tunny.Solver
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = SetDirectionValues(Objective.Length);
+            if (string.IsNullOrEmpty(Settings.StudyName))
+            {
+                Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+            }
             TLog.Info($"Optimization \"{Settings.StudyName}\" started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             InitializePythonEngine();
@@ -75,7 +80,7 @@ namespace Tunny.Solver
                 Parameter[] parameter = null;
                 TrialGrasshopperItems result = null;
 
-                if (CheckExistStudyParameter(Objective.Length, optuna, storage))
+                if (CheckExistStudyMatching(Objective.Length))
                 {
                     dynamic study;
                     switch (Objective.HumanInTheLoopType)
@@ -97,19 +102,6 @@ namespace Tunny.Solver
             TLog.Debug("Shutdown PythonEngine.");
         }
 
-        private static void InitializePythonEngine()
-        {
-            TLog.MethodStart();
-            TLog.Debug("Check PythonEngine status.");
-            if (PythonEngine.IsInitialized)
-            {
-                PythonEngine.Shutdown();
-                TLog.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
-            }
-            PythonEngine.Initialize();
-            TLog.Debug("Initialize PythonEngine.");
-        }
-
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
@@ -126,7 +118,7 @@ namespace Tunny.Solver
             string[] objNickName = Objective.GetNickNames();
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)), false);
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)), false);
             preferentialOpt.WakeOptunaDashboard(Settings.Storage);
             optInfo.Preferential = preferentialOpt;
             RunPreferentialOptimize(optInfo, nBatch, out parameter, out result);
@@ -135,55 +127,28 @@ namespace Tunny.Solver
         private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            study = CreateStudy(directions, sampler, storage);
+            PyObject optuna = Py.Import("optuna");
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
             RunOptimize(optInfo, out parameter, out result);
         }
 
         private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            study = CreateStudy(directions, sampler, storage);
+            PyObject optuna = Py.Import("optuna");
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
-            SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
+            SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
             var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
             humanSliderInput.WakeOptunaDashboard(Settings.Storage);
             humanSliderInput.SetObjective(study, objNickName);
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;
             RunHumanSidlerInputOptimize(optInfo, nBatch, out parameter, out result);
-        }
-
-        private static PyList NicknameToPyList(IEnumerable<string> nicknames)
-        {
-            TLog.MethodStart();
-            var name = new PyList();
-            foreach (string nickname in nicknames)
-            {
-                name.Append(new PyString(nickname));
-            }
-            return name;
-        }
-
-        private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
-        {
-            TLog.MethodStart();
-            dynamic optuna = Py.Import("optuna");
-            if (Settings.StudyName == null || Settings.StudyName == "")
-            {
-                Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
-            }
-            string studyName = Settings.StudyName;
-            return optuna.create_study(
-                sampler: sampler,
-                directions: directions,
-                storage: storage,
-                study_name: studyName,
-                load_if_exists: Settings.Optimize.ContinueStudy
-            );
         }
 
         private static string[] SetDirectionValues(int nObjective)
@@ -198,29 +163,25 @@ namespace Tunny.Solver
             return directions;
         }
 
-        private bool CheckExistStudyParameter(int nObjective, dynamic optuna, dynamic storage)
+        private bool CheckExistStudyMatching(int nObjective)
         {
             TLog.MethodStart();
-            PyList studySummaries = optuna.get_all_study_summaries(storage);
-            var studySummaryDict = new Dictionary<string, int>();
+            var storage = new StorageHandler();
+            StudySummary[] studySummaries = storage.GetStudySummaries(Settings.Storage.Path);
+            bool containStudyName = studySummaries.Select(s => s.StudyName).Contains(Settings.StudyName);
 
-            foreach (dynamic pyObj in studySummaries)
+            if (!containStudyName)
             {
-                studySummaryDict.Add((string)pyObj.study_name, (int)pyObj.directions.__len__());
+                return true;
             }
-
-            return !studySummaryDict.ContainsKey(Settings.StudyName) || CheckDirections(nObjective, studySummaryDict);
-        }
-
-        private bool CheckDirections(int nObjective, IReadOnlyDictionary<string, int> directions)
-        {
-            TLog.MethodStart();
-            if (!Settings.Optimize.ContinueStudy)
+            else if (!Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutContinue;
                 return false;
             }
-            else if (directions[Settings.StudyName] == nObjective)
+
+            bool isSameObjectiveNumber = studySummaries.FirstOrDefault(s => s.StudyName == Settings.StudyName)?.Directions.Length == nObjective;
+            if (isSameObjectiveNumber)
             {
                 return true;
             }
@@ -575,10 +536,10 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             study.set_user_attr("variable_names", variableName);
-            study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
+            study.set_user_attr("tunny_version", TEnvVariables.Version.ToString(3));
             if (setMetricNames)
             {
-                study.set_metric_names(Objective.GetPyListStyleNickname());
+                study.set_metric_names(PyConverter.EnumeratorToPyList(Objective.GetNickNames()));
             }
         }
 
@@ -587,11 +548,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             if (result.GeometryJson.Length != 0)
             {
-                var pyJson = new PyList();
-                foreach (string json in result.GeometryJson)
-                {
-                    pyJson.Append(new PyString(json));
-                }
+                PyList pyJson = PyConverter.EnumeratorToPyList(result.GeometryJson);
                 trial.set_user_attr("Geometry", pyJson);
             }
 
@@ -624,20 +581,15 @@ namespace Tunny.Solver
             TLog.MethodStart();
             foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
             {
-                var pyList = new PyList();
+                PyList pyList;
                 if (pair.Key == "Constraint")
                 {
-                    foreach (string str in pair.Value)
-                    {
-                        pyList.Append(new PyFloat(double.Parse(str, CultureInfo.InvariantCulture)));
-                    }
+                    IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
+                    pyList = PyConverter.EnumeratorToPyList(values);
                 }
                 else
                 {
-                    foreach (string str in pair.Value)
-                    {
-                        pyList.Append(new PyString(str));
-                    }
+                    pyList = PyConverter.EnumeratorToPyList(pair.Value);
                 }
                 trial.set_user_attr(pair.Key, pyList);
             }
