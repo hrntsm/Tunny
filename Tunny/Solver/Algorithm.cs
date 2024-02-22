@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -553,11 +552,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             if (result.GeometryJson.Length != 0)
             {
-                var pyJson = new PyList();
-                foreach (string json in result.GeometryJson)
-                {
-                    pyJson.Append(new PyString(json));
-                }
+                PyList pyJson = PyConverter.EnumeratorToPyList(result.GeometryJson);
                 trial.set_user_attr("Geometry", pyJson);
             }
 
