@@ -23,11 +23,11 @@ namespace Tunny.Solver.HumanInTheLoop
             _artifactPath = Path.Combine(_basePath, "artifacts");
         }
 
-        public PyModule ImportBaseLibrary()
+        public static PyModule ImportBaseLibrary()
         {
             TLog.MethodStart();
             PyModule library = Py.CreateScope();
-            SetStdOutErrDirection(_basePath, library);
+            SetStdOutErrDirection(library);
             library.Import("os");
             library.Import("textwrap");
             library.Import("threading");
@@ -37,10 +37,10 @@ namespace Tunny.Solver.HumanInTheLoop
             return library;
         }
 
-        public static void SetStdOutErrDirection(string path, PyModule importedLibrary)
+        public static void SetStdOutErrDirection(PyModule importedLibrary)
         {
             TLog.MethodStart();
-            string ioPath = Path.Combine(path, "tmp.out");
+            string ioPath = Path.Combine(TEnvVariables.TmpDirPath, "hitl.tmp");
             importedLibrary.Import("sys");
             importedLibrary.Exec("path = r'" + ioPath + "'");
             importedLibrary.Exec("sys.stdout = open(path, 'w', encoding='utf-8')");
@@ -56,32 +56,11 @@ namespace Tunny.Solver.HumanInTheLoop
                 return;
             }
 
-            CheckExistDashboardProcess();
-            string artifactArgument = $"--artifact-dir \"{_artifactPath}\"";
-            var dashboard = new Process();
-            dashboard.StartInfo.FileName = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
-            dashboard.StartInfo.Arguments = storage.GetOptunaStorageCommandLinePathByExtension() + " " + artifactArgument;
-            dashboard.StartInfo.UseShellExecute = false;
-            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            dashboard.Start();
-
-            var browser = new Process();
-            browser.StartInfo.FileName = @"http://127.0.0.1:8080/dashboard";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
-        }
-
-        public static void CheckExistDashboardProcess()
-        {
-            TLog.MethodStart();
-            Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
-            if (dashboardProcess.Length > 0)
-            {
-                foreach (Process p in dashboardProcess)
-                {
-                    p.Kill();
-                }
-            }
+            var dashboard = new Optuna.Dashboard.Handler(
+                Path.Combine(TEnvVariables.PythonPath, "Scripts", "optuna-dashboard.exe"),
+                storage.Path, _artifactPath
+            );
+            dashboard.Run();
         }
 
         public static void ResultFileNotExistErrorMessage()
@@ -117,7 +96,7 @@ namespace Tunny.Solver.HumanInTheLoop
         {
             TLog.MethodStart();
             string artifactPath = Path.Combine(_basePath, "artifacts");
-            string tmpPath = Path.Combine(_basePath, "tmp");
+            string tmpPath = TEnvVariables.TmpDirPath;
             if (!Directory.Exists(artifactPath))
             {
                 Directory.CreateDirectory(artifactPath);

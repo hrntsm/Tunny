@@ -27,7 +27,7 @@ using Tunny.UI;
 
 namespace Tunny.Solver
 {
-    public class Algorithm
+    public class Algorithm : PythonInit
     {
         public Parameter[] OptimalParameters { get; private set; }
         public EndState EndState { get; private set; }
@@ -101,19 +101,6 @@ namespace Tunny.Solver
             }
             PythonEngine.Shutdown();
             TLog.Debug("Shutdown PythonEngine.");
-        }
-
-        private static void InitializePythonEngine()
-        {
-            TLog.MethodStart();
-            TLog.Debug("Check PythonEngine status.");
-            if (PythonEngine.IsInitialized)
-            {
-                PythonEngine.Shutdown();
-                TLog.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
-            }
-            PythonEngine.Initialize();
-            TLog.Debug("Initialize PythonEngine.");
         }
 
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)

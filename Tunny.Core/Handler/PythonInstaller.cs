@@ -69,11 +69,5 @@ namespace Tunny.Core.Handler
             }
             TLog.Info("Finish to install Python");
         }
-
-        internal static string GetEmbeddedPythonPath()
-        {
-            TLog.MethodStart();
-            return TEnvVariables.TunnyEnvPath + "/python";
-        }
     }
 }
