@@ -34,7 +34,7 @@ namespace Tunny.Solver.HumanInTheLoop
         {
             TLog.MethodStart();
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
-            PyList pyNameList = PyConverter.EnumeratorToPyList(objectiveNames.Select(s => s.Replace("Human-in-the-Loop", "HITL"));
+            PyList pyNameList = PyConverter.EnumeratorToPyList(objectiveNames.Select(s => s.Replace("Human-in-the-Loop", "HITL")));
             setObjectiveNames(study, pyNameList);
         }
 
