@@ -170,7 +170,11 @@ namespace Tunny.Solver
             StudySummary[] studySummaries = storage.GetStudySummaries(Settings.Storage.Path);
             bool containStudyName = studySummaries.Select(s => s.StudyName).Contains(Settings.StudyName);
 
-            if (containStudyName && !Settings.Optimize.ContinueStudy)
+            if (!containStudyName)
+            {
+                return true;
+            }
+            else if (!Settings.Optimize.ContinueStudy)
             {
                 EndState = EndState.UseExitStudyWithoutContinue;
                 return false;
