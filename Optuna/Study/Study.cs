@@ -135,5 +135,16 @@ namespace Optuna.Study
             }
             return studySummaries;
         }
+
+        public static dynamic CreateStudy(dynamic optuna, string studyName, dynamic sampler, string[] directions, dynamic storage, bool loadIfExists = true)
+        {
+            return optuna.create_study(
+                sampler: sampler,
+                directions: directions,
+                storage: storage,
+                study_name: studyName,
+                load_if_exists: loadIfExists
+            );
+        }
     }
 }

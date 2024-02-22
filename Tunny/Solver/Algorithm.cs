@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 using Python.Runtime;
 
+using Optuna.Study;
+
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
@@ -60,6 +62,10 @@ namespace Tunny.Solver
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = SetDirectionValues(Objective.Length);
+            if (string.IsNullOrEmpty(Settings.StudyName))
+            {
+                Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+            }
             TLog.Info($"Optimization \"{Settings.StudyName}\" started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             InitializePythonEngine();
@@ -135,7 +141,8 @@ namespace Tunny.Solver
         private void NormalOptimization(int nTrials, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            study = CreateStudy(directions, sampler, storage);
+            PyObject optuna = Py.Import("optuna");
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
@@ -145,7 +152,8 @@ namespace Tunny.Solver
         private void HumanSliderInputOptimization(int nBatch, double timeout, string[] directions, dynamic sampler, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            study = CreateStudy(directions, sampler, storage);
+            PyObject optuna = Py.Import("optuna");
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, NicknameToPyList(Variables.Select(v => v.NickName)));
@@ -166,24 +174,6 @@ namespace Tunny.Solver
                 name.Append(new PyString(nickname));
             }
             return name;
-        }
-
-        private dynamic CreateStudy(string[] directions, dynamic sampler, dynamic storage)
-        {
-            TLog.MethodStart();
-            dynamic optuna = Py.Import("optuna");
-            if (Settings.StudyName == null || Settings.StudyName == "")
-            {
-                Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
-            }
-            string studyName = Settings.StudyName;
-            return optuna.create_study(
-                sampler: sampler,
-                directions: directions,
-                storage: storage,
-                study_name: studyName,
-                load_if_exists: Settings.Optimize.ContinueStudy
-            );
         }
 
         private static string[] SetDirectionValues(int nObjective)
