@@ -114,16 +114,5 @@ namespace Tunny.Input
             }
             return nickNames.ToArray();
         }
-
-        public PyList GetPyListStyleNickname()
-        {
-            TLog.MethodStart();
-            var name = new PyList();
-            foreach (string objName in GetNickNames())
-            {
-                name.Append(new PyString(objName));
-            }
-            return name;
-        }
     }
 }

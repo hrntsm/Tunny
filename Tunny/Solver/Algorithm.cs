@@ -541,10 +541,10 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             study.set_user_attr("variable_names", variableName);
-            study.set_user_attr("tunny_version", Assembly.GetExecutingAssembly().GetName().Version.ToString(3));
+            study.set_user_attr("tunny_version", TEnvVariables.Version.ToString(3));
             if (setMetricNames)
             {
-                study.set_metric_names(Objective.GetPyListStyleNickname());
+                study.set_metric_names(PyConverter.EnumeratorToPyList(Objective.GetNickNames()));
             }
         }
 
@@ -590,20 +590,15 @@ namespace Tunny.Solver
             TLog.MethodStart();
             foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
             {
-                var pyList = new PyList();
+                PyList pyList;
                 if (pair.Key == "Constraint")
                 {
-                    foreach (string str in pair.Value)
-                    {
-                        pyList.Append(new PyFloat(double.Parse(str, CultureInfo.InvariantCulture)));
-                    }
+                    IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
+                    pyList = PyConverter.EnumeratorToPyList(values);
                 }
                 else
                 {
-                    foreach (string str in pair.Value)
-                    {
-                        pyList.Append(new PyString(str));
-                    }
+                    pyList = PyConverter.EnumeratorToPyList(pair.Value);
                 }
                 trial.set_user_attr(pair.Key, pyList);
             }
