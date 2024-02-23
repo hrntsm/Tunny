@@ -85,7 +85,7 @@ namespace Tunny.Solver
                     visualize.ParallelCoordinate(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName);
                     break;
                 case "param importances":
-                     visualize.ParamImportances(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
+                    visualize.ParamImportances(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
                     break;
                 case "pareto front":
                     visualize.ParetoFront(pSettings.TargetObjectiveName, pSettings.TargetObjectiveIndex, _hasConstraint, pSettings.IncludeDominatedTrials);
@@ -96,6 +96,16 @@ namespace Tunny.Solver
                     break;
                 case "hypervolume":
                     visualize.Hypervolume();
+                    break;
+                case "clustering":
+                    if (pSettings.TargetObjectiveIndex.Length > 0)
+                    {
+                        visualize.Clustering(pSettings.ClusterCount, "objective", pSettings.TargetObjectiveIndex[0]);
+                    }
+                    else
+                    {
+                        visualize.Clustering(pSettings.ClusterCount, "variable", pSettings.TargetVariableIndex[0]);
+                    }
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");

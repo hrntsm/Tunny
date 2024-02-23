@@ -171,6 +171,121 @@ namespace Optuna.Visualization
             _fig = visualize(_study);
         }
 
+        public void Clustering(int nClusters, string targetType, int targetIndex)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(
+            "def visualize(study, n_clusters, target_type, target_index):\n" +
+            "    import numpy as np\n" +
+            "    import optuna\n" +
+            "    from sklearn.cluster import KMeans\n" +
+            "    import plotly.graph_objects as go\n" +
+            "    from optuna.visualization._utils import _make_hovertext\n" +
+
+            "    trials = study.get_trials(deepcopy=False, states=[optuna.trial.TrialState.COMPLETE])\n" +
+            "    feasible_trials = []\n" +
+            "    infeasible_trials = []\n" +
+            "    for trial in trials:\n" +
+            "        constraints = trial.system_attrs.get('constraints')\n" +
+            "        if constraints is None or all([x <= 0.0 for x in constraints]):\n" +
+            "            feasible_trials.append(trial)\n" +
+            "        else:\n" +
+            "            infeasible_trials.append(trial)\n" +
+
+            "    target = []\n" +
+            "    if target_type == 'objective':\n" +
+            "        target = [trial.values[target_index] for trial in feasible_trials]\n" +
+            "    else:\n" +
+            "        target = [\n" +
+            "            list(trial.params.values())[target_index] for trial in feasible_trials\n" +
+            "        ]\n" +
+            "    np_array = np.array(target).reshape(-1, 1)\n" +
+            "    kmeans = KMeans(n_clusters=n_clusters).fit(np_array)\n" +
+
+            "    feasible_marker = dict(\n" +
+            "        color=kmeans.labels_,\n" +
+            "        showscale=True,\n" +
+            "        colorscale='RdYlBu_r',\n" +
+            "        colorbar=dict(title='Cluster'),\n" +
+            "        size=12,\n" +
+            "    )\n" +
+            "    infeasible_marker = dict(\n" +
+            "        color='#cccccc',\n" +
+            "        showscale=False,\n" +
+            "        size=12,\n" +
+            "    )\n" +
+            "    fig = go.Figure()\n" +
+            "    if len(study.directions) == 2:\n" +
+            "        fig.add_trace(\n" +
+            "            go.Scatter(\n" +
+            "                x=[trial.values[0] for trial in feasible_trials],\n" +
+            "                y=[trial.values[1] for trial in feasible_trials],\n" +
+            "                mode='markers',\n" +
+            "                marker=feasible_marker,\n" +
+            "                showlegend=False,\n" +
+            "                text=[_make_hovertext(trial) for trial in feasible_trials],\n" +
+            "                hovertemplate='%{text}<extra>Trial</extra>',\n" +
+            "            )\n" +
+            "        )\n" +
+            "        fig.add_trace(\n" +
+            "            go.Scatter(\n" +
+            "                x=[trial.values[0] for trial in infeasible_trials],\n" +
+            "                y=[trial.values[1] for trial in infeasible_trials],\n" +
+            "                mode='markers',\n" +
+            "                marker=infeasible_marker,\n" +
+            "                showlegend=False,\n" +
+            "                text=[_make_hovertext(trial) for trial in feasible_trials],\n" +
+            "                hovertemplate='%{text}<extra>Infeasible Trial</extra>',\n" +
+            "            )\n" +
+            "        )\n" +
+            "    else:\n" +
+            "        fig.add_trace(\n" +
+            "            go.Scatter3d(\n" +
+            "                x=[trial.values[0] for trial in feasible_trials],\n" +
+            "                y=[trial.values[1] for trial in feasible_trials],\n" +
+            "                z=[trial.values[2] for trial in feasible_trials],\n" +
+            "                mode='markers',\n" +
+            "                marker=feasible_marker,\n" +
+            "                showlegend=False,\n" +
+            "                text=[_make_hovertext(trial) for trial in feasible_trials],\n" +
+            "                hovertemplate='%{text}<extra>Trial</extra>',\n" +
+            "            )\n" +
+            "        )\n" +
+            "        fig.add_trace(\n" +
+            "            go.Scatter3d(\n" +
+            "                x=[trial.values[0] for trial in infeasible_trials],\n" +
+            "                y=[trial.values[1] for trial in infeasible_trials],\n" +
+            "                z=[trial.values[2] for trial in infeasible_trials],\n" +
+            "                mode='markers',\n" +
+            "                marker=infeasible_marker,\n" +
+            "                showlegend=False,\n" +
+            "                text=[_make_hovertext(trial) for trial in feasible_trials],\n" +
+            "                hovertemplate='%{text}<extra>Infeasible Trial</extra>',\n" +
+            "            )\n" +
+            "        )\n" +
+            "    metric_names = study.metric_names\n" +
+            "    if metric_names is not None:\n" +
+            "        if len(metric_names) == 3:\n" +
+            "            fig.update_layout(\n" +
+            "                title=f'Clustering of Trials',\n" +
+            "                scene=dict(\n" +
+            "                    xaxis_title=metric_names[0],\n" +
+            "                    yaxis_title=metric_names[1],\n" +
+            "                    zaxis_title=metric_names[2],\n" +
+            "                ),\n" +
+            "            )\n" +
+            "        else:\n" +
+            "            fig.update_layout(\n" +
+            "                title=f'Clustering of Trials',\n" +
+            "                xaxis=dict(title=metric_names[0]),\n" +
+            "                yaxis=dict(title=metric_names[1]),\n" +
+            "            )\n" +
+            "    return go.Figure(fig)\n"
+            );
+            dynamic visualize = ps.Get("visualize");
+            _fig = visualize(_study, nClusters, targetType, targetIndex);
+        }
+
         public void TruncateParetoFrontPlotHover()
         {
             CheckPlotCreated();
