@@ -106,14 +106,7 @@ namespace Tunny.UI
 
             if (!CheckTargetValues(pSettings)) { return; }
 
-            if (visualizeTypeComboBox.Text == @"clustering")
-            {
-                optunaVis.ClusteringPlot(pSettings);
-            }
-            else
-            {
-                optunaVis.Plot(pSettings);
-            }
+            optunaVis.Plot(pSettings);
         }
 
         private static bool CheckTargetValues(Plot pSettings)
