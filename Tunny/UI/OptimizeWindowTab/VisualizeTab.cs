@@ -121,8 +121,6 @@ namespace Tunny.UI
                 case "pareto front":
                 case "clustering":
                     return CheckParetoFrontTargets(pSettings);
-                case "hypervolume":
-                    return CheckHypervolumeTargets(pSettings);
                 default:
                     return CheckOneObjectives(pSettings);
             }
@@ -137,17 +135,6 @@ namespace Tunny.UI
                 result = HandleOnly1ObjectiveMessage();
             }
 
-            return result;
-        }
-
-        private static bool CheckHypervolumeTargets(Plot pSettings)
-        {
-            TLog.MethodStart();
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length != 2)
-            {
-                result = HandleOnly2ObjectivesMessage();
-            }
             return result;
         }
 
