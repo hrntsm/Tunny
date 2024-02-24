@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-using Python.Runtime;
+using Optuna.Storage;
+using Optuna.Study;
+using Optuna.Trial;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
@@ -23,7 +24,7 @@ using Tunny.UI;
 
 namespace Tunny.Solver
 {
-    public class Solver : PythonInit
+    public class Solver
     {
         public Parameter[] OptimalParameters { get; private set; }
         private readonly bool _hasConstraint;
@@ -169,31 +170,32 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             var modelResult = new List<ModelResult>();
-            PythonEngine.Initialize();
-            using (Py.GIL())
+
+            string ext = Path.GetExtension(_settings.Storage.Path);
+            IOptunaStorage storage;
+            if (ext == ".db" || ext == ".sqlite")
             {
-                dynamic optuna = Py.Import("optuna");
-                dynamic study;
-
-                try
-                {
-                    dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
-                    study = optuna.load_study(storage: storage, study_name: studyName);
-                }
-                catch (Exception e)
-                {
-                    TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return modelResult.ToArray();
-                }
-
-                SetTrialsToModelResult(resultNum, modelResult, study, worker);
+                storage = new Optuna.Storage.RDB.SqliteStorage(_settings.Storage.Path, true);
             }
-            PythonEngine.Shutdown();
-
+            else if (ext == ".log")
+            {
+                storage = new Optuna.Storage.Journal.JournalStorage(_settings.Storage.Path, true);
+            }
+            else
+            {
+                throw new ArgumentException("Storage type not supported");
+            }
+            Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
+            if (targetStudy == null)
+            {
+                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return modelResult.ToArray();
+            }
+            SetTrialsToModelResult(resultNum, modelResult, targetStudy, worker);
             return modelResult.ToArray();
         }
 
-        private void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private static void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, Study study, BackgroundWorker worker)
         {
             TLog.MethodStart();
             if (resultNum[0] == -1)
@@ -210,136 +212,51 @@ namespace Tunny.Solver
             }
         }
 
-        private static void UseModelNumber(IReadOnlyList<int> resultNum, ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private static void UseModelNumber(IReadOnlyList<int> resultNum, List<ModelResult> modelResult, Study study, BackgroundWorker worker)
         {
             TLog.MethodStart();
+            var trials = new List<Trial>();
             for (int i = 0; i < resultNum.Count; i++)
             {
                 int res = resultNum[i];
-                if (OutputLoop.IsForcedStopOutput)
-                {
-                    break;
-                }
-
                 try
                 {
-                    dynamic trial = study.trials[res];
-                    ParseTrial(modelResult, trial);
+                    trials.Add(study.Trials.FirstOrDefault(t => t.Number == res));
                 }
                 catch (Exception e)
                 {
                     TunnyMessageBox.Show("Error\n\n" + e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                worker.ReportProgress(i * 100 / resultNum.Count);
             }
+            SetAndReportModelResult(modelResult, worker, trials);
         }
 
-        private static void AllTrials(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
+        private static void AllTrials(List<ModelResult> modelResult, Study study, BackgroundWorker worker)
         {
             TLog.MethodStart();
-            var trials = (dynamic[])study.trials;
-            for (int i = 0; i < trials.Length; i++)
+            List<Trial> trials = study.Trials;
+            SetAndReportModelResult(modelResult, worker, trials);
+        }
+
+        private static void ParatoSolutions(List<ModelResult> modelResult, Study study, BackgroundWorker worker)
+        {
+            TLog.MethodStart();
+            Trial[] bestTrials = study.BestTrials;
+            SetAndReportModelResult(modelResult, worker, bestTrials.ToList());
+        }
+
+        private static void SetAndReportModelResult(List<ModelResult> modelResult, BackgroundWorker worker, List<Trial> trials)
+        {
+            for (int i = 0; i < trials.Count; i++)
             {
-                dynamic trial = trials[i];
+                Trial trial = trials[i];
                 if (OutputLoop.IsForcedStopOutput)
                 {
                     break;
                 }
-                ParseTrial(modelResult, trial);
-                worker?.ReportProgress(i * 100 / trials.Length);
+                modelResult.Add(new ModelResult(trial));
+                worker?.ReportProgress(i * 100 / trials.Count);
             }
-        }
-
-        private void ParatoSolutions(ICollection<ModelResult> modelResult, dynamic study, BackgroundWorker worker)
-        {
-            TLog.MethodStart();
-            var bestTrials = (dynamic[])study.best_trials;
-            for (int i = 0; i < bestTrials.Length; i++)
-            {
-                dynamic trial = bestTrials[i];
-                if (OutputLoop.IsForcedStopOutput)
-                {
-                    break;
-                }
-                ParseTrial(modelResult, trial);
-                worker?.ReportProgress(i * 100 / bestTrials.Length);
-            }
-        }
-
-        private static void ParseTrial(ICollection<ModelResult> modelResult, dynamic trial)
-        {
-            TLog.MethodStart();
-            var trialResult = new ModelResult
-            {
-                Number = (int)trial.number,
-                Variables = ParseVariables(trial),
-                Objectives = (double[])trial.values,
-                Attributes = ParseAttributes(trial),
-            };
-            if (trialResult.Objectives != null)
-            {
-                modelResult.Add(trialResult);
-            }
-        }
-
-        private static Dictionary<string, object> ParseVariables(dynamic trial)
-        {
-            TLog.MethodStart();
-            var variables = new Dictionary<string, object>();
-            object[] pyValues = (object[])trial.@params.values();
-            object[] values = new object[pyValues.Length];
-            for (int i = 0; i < pyValues.Length; i++)
-            {
-                object v = pyValues[i];
-                switch (v)
-                {
-                    case PyInt pyInt:
-                        values[i] = Convert.ToDouble(pyInt, CultureInfo.InvariantCulture);
-                        break;
-                    case PyFloat pyFloat:
-                        values[i] = Convert.ToDouble(pyFloat, CultureInfo.InvariantCulture);
-                        break;
-                    case PyString pyString:
-                        values[i] = pyString.ToString(CultureInfo.InvariantCulture);
-                        break;
-                    case double num:
-                        values[i] = num;
-                        break;
-                    case string str:
-                        values[i] = str;
-                        break;
-                }
-            }
-            string[] keys = (string[])trial.@params.keys();
-            for (int i = 0; i < keys.Length; i++)
-            {
-                variables.Add(keys[i], values[i]);
-            }
-
-            return variables;
-        }
-
-        private static Dictionary<string, List<string>> ParseAttributes(dynamic trial)
-        {
-            TLog.MethodStart();
-            var attributes = new Dictionary<string, List<string>>();
-            string[] keys = (string[])trial.user_attrs.keys();
-            foreach (string key in keys)
-            {
-                List<string> values;
-                if (key == "Constraint")
-                {
-                    double[] constraint = (double[])trial.user_attrs[key];
-                    values = constraint.Select(v => v.ToString(CultureInfo.InvariantCulture)).ToList();
-                }
-                else
-                {
-                    string[] valueArray = (string[])trial.user_attrs[key];
-                    values = valueArray.ToList();
-                }
-                attributes.Add(key, values);
-            }
-            return attributes;
         }
     }
 }

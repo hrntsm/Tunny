@@ -28,6 +28,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - DeconstructFish component output
   - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
 - Use optuna.csproj sqlite handler instead of tunny.storage
+- Improve result fish output to use new storage handler
+  - The handler is independent from python process.
 
 ### Deprecated
 
