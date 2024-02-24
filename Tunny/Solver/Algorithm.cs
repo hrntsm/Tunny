@@ -456,34 +456,34 @@ namespace Tunny.Solver
         private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime)
         {
             TLog.MethodStart();
-            ComputeBestValues(optSet.Study, trialNum, out double[][] bestValues, out double hypervolumeRatio);
+            double[][] bestValues = ComputeBestValues(optSet.Study);
             return new ProgressState
             {
                 TrialNumber = trialNum,
                 ObjectiveNum = Objective.Length,
                 BestValues = bestValues,
                 Parameter = parameter,
-                HypervolumeRatio = hypervolumeRatio,
+                HypervolumeRatio = 0,
                 EstimatedTimeRemaining = optSet.Timeout <= 0
                     ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (optSet.NTrials - trialNum) / (trialNum + 1))
                     : TimeSpan.FromSeconds(optSet.Timeout - (DateTime.Now - startTime).TotalSeconds)
             };
         }
 
-        private void ComputeBestValues(dynamic study, int trialNum, out double[][] bestValues, out double hypervolumeRatio)
+        private double[][] ComputeBestValues(dynamic study)
         {
             TLog.MethodStart();
+            double[][] bestValues = Array.Empty<double[]>();
             if (Settings.Optimize.ShowRealtimeResult)
             {
                 dynamic[] bestTrials = study.best_trials;
                 bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
-                hypervolumeRatio = trialNum == 0 ? 0 : trialNum == 1 || Objective.Length == 1 ? 1 : Hypervolume.Compute2dHypervolumeRatio(study);
             }
             else
             {
                 bestValues = null;
-                hypervolumeRatio = 0;
             }
+            return bestValues;
         }
 
         private void SaveInMemoryStudy(dynamic storage)

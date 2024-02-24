@@ -35,7 +35,7 @@ for soon-to-be removed features.
 
 ### Removed
 
-for now removed features.
+- Show hypervolume ratio while optimization running
 
 ### Fixed
 
