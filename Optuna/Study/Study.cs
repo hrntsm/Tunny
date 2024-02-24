@@ -146,5 +146,10 @@ namespace Optuna.Study
                 load_if_exists: loadIfExists
             );
         }
+
+        public static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
+        {
+            return optuna.load_study(storage: storage, study_name: studyName);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 
+using Optuna.Study;
 using Optuna.Visualization;
 
 using Python.Runtime;
@@ -24,20 +25,6 @@ namespace Tunny.Solver
             _hasConstraint = hasConstraint;
         }
 
-        private static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
-        {
-            TLog.MethodStart();
-            try
-            {
-                return optuna.load_study(storage: storage, study_name: studyName);
-            }
-            catch (Exception e)
-            {
-                TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-        }
-
         public void Plot(Plot pSettings)
         {
             TLog.MethodStart();
@@ -46,7 +33,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
-                dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
+                dynamic study = Study.LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
                     return;
