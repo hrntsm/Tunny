@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Forms;
 
+using Optuna.Study;
 using Optuna.Visualization;
 
 using Python.Runtime;
@@ -24,20 +25,6 @@ namespace Tunny.Solver
             _hasConstraint = hasConstraint;
         }
 
-        private static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
-        {
-            TLog.MethodStart();
-            try
-            {
-                return optuna.load_study(storage: storage, study_name: studyName);
-            }
-            catch (Exception e)
-            {
-                TunnyMessageBox.Show(e.Message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
-        }
-
         public void Plot(Plot pSettings)
         {
             TLog.MethodStart();
@@ -46,7 +33,7 @@ namespace Tunny.Solver
             {
                 dynamic optuna = Py.Import("optuna");
                 dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
-                dynamic study = LoadStudy(optuna, storage, pSettings.TargetStudyName);
+                dynamic study = Study.LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
                     return;
@@ -85,7 +72,7 @@ namespace Tunny.Solver
                     visualize.ParallelCoordinate(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName);
                     break;
                 case "param importances":
-                     visualize.ParamImportances(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
+                    visualize.ParamImportances(pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
                     break;
                 case "pareto front":
                     visualize.ParetoFront(pSettings.TargetObjectiveName, pSettings.TargetObjectiveIndex, _hasConstraint, pSettings.IncludeDominatedTrials);
@@ -96,6 +83,16 @@ namespace Tunny.Solver
                     break;
                 case "hypervolume":
                     visualize.Hypervolume();
+                    break;
+                case "clustering":
+                    if (pSettings.TargetObjectiveIndex.Length > 0)
+                    {
+                        visualize.Clustering(pSettings.ClusterCount, "objective", pSettings.TargetObjectiveIndex[0]);
+                    }
+                    else
+                    {
+                        visualize.Clustering(pSettings.ClusterCount, "variable", pSettings.TargetVariableIndex[0]);
+                    }
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
