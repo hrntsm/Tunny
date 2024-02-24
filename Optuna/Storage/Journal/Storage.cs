@@ -97,11 +97,49 @@ namespace Optuna.Storage.Journal
                     case JournalOperation.CreateTrial:
                         {
                             int studyId = (int)logObject["study_id"];
-                            var trial = new Trial.Trial
+                            Trial.Trial trial;
+                            if (logObject["datetime_complete"] == null)
                             {
-                                DatetimeStart = (DateTime)logObject["datetime_start"]
-                            };
-                            CreateNewTrial(studyId, trial);
+                                trial = new Trial.Trial
+                                {
+                                    DatetimeStart = (DateTime)logObject["datetime_start"],
+                                };
+                                CreateNewTrial(studyId, trial);
+                            }
+                            else
+                            {
+                                Dictionary<string, object> trialParams = logObject["params"].ToObject<Dictionary<string, object>>();
+                                var trialParamsWithType = new Dictionary<string, object>();
+                                foreach (KeyValuePair<string, object> item in trialParams)
+                                {
+                                    switch (item.Value)
+                                    {
+                                        case double d:
+                                            trialParamsWithType[item.Key] = d;
+                                            break;
+                                        case string s:
+                                            trialParamsWithType[item.Key] = s;
+                                            break;
+                                        case int i:
+                                            trialParamsWithType[item.Key] = i;
+                                            break;
+                                        default:
+                                            trialParamsWithType[item.Key] = item.Value;
+                                            break;
+                                    }
+                                }
+                                trial = new Trial.Trial
+                                {
+                                    Values = logObject["values"].Select(v => v.ToObject<double>()).ToArray(),
+                                    Params = trialParamsWithType,
+                                    State = (TrialState)Enum.ToObject(typeof(TrialState), (int)logObject["state"]),
+                                    DatetimeStart = (DateTime)logObject["datetime_start"],
+                                    DatetimeComplete = (DateTime)logObject["datetime_complete"],
+                                };
+                                CreateNewTrial(studyId, trial);
+                                SetTrialSystemAttrFromJObject(trial.TrialId, (JObject)logObject["system_attrs"]);
+                                SetTrialUserAttrFromJObject(trial.TrialId, (JObject)logObject["user_attrs"]);
+                            }
                         }
                         break;
                     case JournalOperation.SetTrialParam:
@@ -126,33 +164,43 @@ namespace Optuna.Storage.Journal
                         {
                             int trialId = (int)logObject["trial_id"];
                             var userAttr = (JObject)logObject["user_attr"];
-                            foreach (KeyValuePair<string, JToken> item in userAttr)
-                            {
-                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
-                                if (values == null || values.Length == 0)
-                                {
-                                    values = new string[] { item.Value.ToString() };
-                                }
-                                SetTrialUserAttr(trialId, item.Key, values);
-                            }
+                            SetTrialUserAttrFromJObject(trialId, userAttr);
                         }
                         break;
                     case JournalOperation.SetTrialSystemAttr:
                         {
                             int trialId = (int)logObject["trial_id"];
                             var systemAttr = (JObject)logObject["system_attr"];
-                            foreach (KeyValuePair<string, JToken> item in systemAttr)
-                            {
-                                string[] values = item.Value.Select(v => v.ToString()).ToArray();
-                                if (values == null || values.Length == 0)
-                                {
-                                    values = new string[] { item.Value.ToString() };
-                                }
-                                SetTrialSystemAttr(trialId, item.Key, values);
-                            }
+                            SetTrialSystemAttrFromJObject(trialId, systemAttr);
                         }
                         break;
                 }
+            }
+        }
+
+        private void SetTrialSystemAttrFromJObject(int trialId, JObject systemAttr)
+        {
+            foreach (KeyValuePair<string, JToken> item in systemAttr)
+            {
+                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                if (values == null || values.Length == 0)
+                {
+                    values = new string[] { item.Value.ToString() };
+                }
+                SetTrialSystemAttr(trialId, item.Key, values);
+            }
+        }
+
+        private void SetTrialUserAttrFromJObject(int trialId, JObject userAttr)
+        {
+            foreach (KeyValuePair<string, JToken> item in userAttr)
+            {
+                string[] values = item.Value.Select(v => v.ToString()).ToArray();
+                if (values == null || values.Length == 0)
+                {
+                    values = new string[] { item.Value.ToString() };
+                }
+                SetTrialUserAttr(trialId, item.Key, values);
             }
         }
 
