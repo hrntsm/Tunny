@@ -473,17 +473,15 @@ namespace Tunny.Solver
         private double[][] ComputeBestValues(dynamic study)
         {
             TLog.MethodStart();
-            double[][] bestValues = Array.Empty<double[]>();
             if (Settings.Optimize.ShowRealtimeResult)
             {
                 dynamic[] bestTrials = study.best_trials;
-                bestValues = bestTrials.Select(t => (double[])t.values).ToArray();
+                return bestTrials.Select(t => (double[])t.values).ToArray();
             }
             else
             {
-                bestValues = null;
+                return null;
             }
-            return bestValues;
         }
 
         private void SaveInMemoryStudy(dynamic storage)
