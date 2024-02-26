@@ -18,6 +18,20 @@ namespace Optuna.Storage.Journal.Tests
         }
 
         [Fact()]
+        public void LoadJournalWithInitTrialParamsTest()
+        {
+            string path = @"TestFile/journal2.log";
+            var storage = new JournalStorage(path, false);
+            Study.Study[] studies = storage.GetAllStudies();
+            Assert.Equal("wInitValues", studies[3].StudyName);
+
+            //Check wInitValues study
+            List<Trial.Trial> trials = studies[3].Trials;
+            Assert.Equal(0.834, trials[0].Params["x0"]);
+            Assert.Equal(3.985, trials[0].Params["x1"]);
+        }
+
+        [Fact()]
         public void LoadNewJournalTest()
         {
             string path = @"TestFile/journal2.log";
@@ -47,11 +61,6 @@ namespace Optuna.Storage.Journal.Tests
             Trial.Trial bestTrial = studies[1].BestTrial;
             Assert.Equal(19, bestTrial.TrialId);
             Assert.Equal(5.7, bestTrial.Values[0], 2);
-
-            //Check wInitValues study
-            List<Trial.Trial> trials = studies[3].Trials;
-            Assert.Equal(0.834, trials[0].Params["x0"]);
-            Assert.Equal(3.985, trials[0].Params["x1"]);
         }
     }
 }
