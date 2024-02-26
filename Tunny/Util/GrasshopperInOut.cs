@@ -104,7 +104,7 @@ namespace Tunny.Util
                         _valueLists.Add(valueList);
                         break;
                     case Param_FishEgg fishEgg:
-                        if (fishEgg.SourceCount != 0)
+                        if (fishEgg.VolatileDataCount != 0)
                         {
                             EnqueueItems = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
                         }

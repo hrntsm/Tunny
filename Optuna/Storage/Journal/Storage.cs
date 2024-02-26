@@ -100,10 +100,12 @@ namespace Optuna.Storage.Journal
                             Trial.Trial trial;
                             if (logObject["datetime_complete"] == null)
                             {
-                                trial = new Trial.Trial
+                                trial = new Trial.Trial();
+                                JToken start = logObject["datetime_start"];
+                                if (start != null && start.HasValues)
                                 {
-                                    DatetimeStart = (DateTime)logObject["datetime_start"],
-                                };
+                                    trial.DatetimeStart = (DateTime)start;
+                                }
                                 CreateNewTrial(studyId, trial);
                             }
                             else
