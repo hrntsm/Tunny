@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 using Xunit;
 
@@ -22,21 +24,34 @@ namespace Optuna.Storage.Journal.Tests
             var storage = new JournalStorage(path, false);
             Study.Study[] studies = storage.GetAllStudies();
 
-            Assert.Equal(3, studies.Length);
+            Assert.Equal(4, studies.Length);
             Assert.Equal("MOwC", studies[0].StudyName);
             Assert.Equal("SO", studies[1].StudyName);
             Assert.Equal("cat", studies[2].StudyName);
+            Assert.Equal("wInitValues", studies[3].StudyName);
 
-            Trial.Trial[] bestTrial = studies[0].BestTrials;
-            Assert.Equal(6, bestTrial[0].TrialId);
-            Assert.Equal(52, bestTrial[0].Values[0]);
-            Assert.Equal(13, bestTrial[0].Values[1]);
-            Assert.Equal(2.0, bestTrial[0].Params["x"]);
-            Assert.Equal(3.0, bestTrial[0].Params["y"]);
-            string[] trialSystemAttr = bestTrial[0].SystemAttrs["constraints"] as string[];
+            // Check MOwC study
+            Trial.Trial[] bestTrials = studies[0].BestTrials;
+            Assert.Equal(6, bestTrials[0].TrialId);
+            Assert.Equal(52, bestTrials[0].Values[0]);
+            Assert.Equal(13, bestTrials[0].Values[1]);
+            Assert.Equal(2.0, bestTrials[0].Params["x"]);
+            Assert.Equal(3.0, bestTrials[0].Params["y"]);
+            string[] trialSystemAttr = bestTrials[0].SystemAttrs["constraints"] as string[];
             Assert.Equal(948d, double.Parse(trialSystemAttr[0]));
-            string[] trialUserAttr = bestTrial[0].UserAttrs["Constraint"] as string[];
+            string[] trialUserAttr = bestTrials[0].UserAttrs["Constraint"] as string[];
             Assert.Equal(487d, double.Parse(trialUserAttr[1]));
+
+            // Check SO study
+            Assert.Throws<ArgumentException>(() => studies[1].BestTrials);
+            Trial.Trial bestTrial = studies[1].BestTrial;
+            Assert.Equal(19, bestTrial.TrialId);
+            Assert.Equal(5.7, bestTrial.Values[0], 2);
+
+            //Check wInitValues study
+            List<Trial.Trial> trials = studies[3].Trials;
+            Assert.Equal(0.834, trials[0].Params["x0"]);
+            Assert.Equal(3.985, trials[0].Params["x1"]);
         }
     }
 }

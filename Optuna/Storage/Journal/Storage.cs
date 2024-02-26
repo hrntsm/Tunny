@@ -130,9 +130,18 @@ namespace Optuna.Storage.Journal
                                             break;
                                     }
                                 }
+                                var values = new List<double>();
+                                foreach (JToken value in logObject["values"])
+                                {
+                                    values.Add(value.ToObject<double>());
+                                }
+                                if (logObject["value"].Type != JTokenType.Null)
+                                {
+                                    values.Add((double)logObject["value"]);
+                                }
                                 trial = new Trial.Trial
                                 {
-                                    Values = logObject["values"].Select(v => v.ToObject<double>()).ToArray(),
+                                    Values = values.ToArray(),
                                     Params = trialParamsWithType,
                                     State = (TrialState)Enum.ToObject(typeof(TrialState), (int)logObject["state"]),
                                     DatetimeStart = (DateTime)logObject["datetime_start"],
