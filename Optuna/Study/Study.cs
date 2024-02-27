@@ -105,7 +105,7 @@ namespace Optuna.Study
                 IEnumerable<Trial.Trial> completeTrials = allTrials.Where(trial => trial.State == TrialState.COMPLETE);
 
                 StudyDirection direction = StudyDirection.NotSet;
-                StudyDirection[] directions = Array.Empty<StudyDirection>();
+                StudyDirection[] directions = null;
                 Trial.Trial bestTrial = null;
                 if (studies[i].Directions.Length == 1)
                 {

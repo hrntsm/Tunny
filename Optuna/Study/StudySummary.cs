@@ -66,10 +66,6 @@ namespace Optuna.Study
         {
             get
             {
-                if (_directions.Length == 1)
-                {
-                    throw new InvalidOperationException("The study has only one direction.");
-                }
                 return _directions;
             }
         }
