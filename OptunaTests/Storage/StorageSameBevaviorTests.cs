@@ -7,7 +7,7 @@ namespace Optuna.Storage.Tests
 {
     public class StorageSameBehaviorTests
     {
-        [Theory()]
+        [Theory]
         [InlineData(@"TestFile/sqlite.db", "sqlite")]
         [InlineData(@"TestFile/journal.log", "log")]
         public void StorageLoadTest(string path, string type)

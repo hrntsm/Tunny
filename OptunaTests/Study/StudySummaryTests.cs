@@ -10,7 +10,7 @@ namespace Optuna.Study.Tests
 {
     public class StudySummaryTests
     {
-        [Theory()]
+        [Theory]
         [InlineData(@"TestFile/sqlite.db", "sqlite")]
         [InlineData(@"TestFile/journal.log", "log")]
         public void StorageLoadStudySummaryTest(string path, string type)
