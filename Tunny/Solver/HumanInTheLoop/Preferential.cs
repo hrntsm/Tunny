@@ -13,7 +13,7 @@ namespace Tunny.Solver.HumanInTheLoop
         private readonly dynamic _artifactBackend;
         private string _userAttrKey;
 
-        public Preferential(string path) : base(path)
+        public Preferential(string tmpPath, string storagePath) : base(tmpPath, storagePath)
         {
             TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
@@ -52,7 +52,7 @@ namespace Tunny.Solver.HumanInTheLoop
             TLog.MethodStart();
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             CheckDirectoryIsExist();
-            string path = $"{_basePath}/tmp/image_{trial.number}.png";
+            string path = $"{_tmpPath}/image_{trial.number}.png";
             image.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
             trial.set_user_attr(_userAttrKey, artifactId);

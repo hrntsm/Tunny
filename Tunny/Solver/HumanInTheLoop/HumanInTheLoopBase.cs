@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -13,17 +12,17 @@ namespace Tunny.Solver.HumanInTheLoop
 {
     public class HumanInTheLoopBase
     {
-        private protected readonly string _basePath;
+        private protected readonly string _tmpPath;
         private protected readonly dynamic _artifactPath;
 
-        public HumanInTheLoopBase(string path)
+        public HumanInTheLoopBase(string tmpPath, string storagePath)
         {
             TLog.MethodStart();
-            _basePath = path;
-            _artifactPath = Path.Combine(_basePath, "artifacts");
+            _tmpPath = tmpPath;
+            _artifactPath = Path.Combine(Path.GetDirectoryName(storagePath), "artifact");
         }
 
-        public static PyModule ImportBaseLibrary()
+        public PyModule ImportBaseLibrary()
         {
             TLog.MethodStart();
             PyModule library = Py.CreateScope();
@@ -37,17 +36,17 @@ namespace Tunny.Solver.HumanInTheLoop
             return library;
         }
 
-        public static void SetStdOutErrDirection(PyModule importedLibrary)
+        public void SetStdOutErrDirection(PyModule importedLibrary)
         {
             TLog.MethodStart();
-            string ioPath = Path.Combine(TEnvVariables.TmpDirPath, "hitl.tmp");
+            string ioPath = Path.Combine(_tmpPath, "hitl.tmp");
             importedLibrary.Import("sys");
             importedLibrary.Exec("path = r'" + ioPath + "'");
             importedLibrary.Exec("sys.stdout = open(path, 'w', encoding='utf-8')");
             importedLibrary.Exec("sys.stderr = open(path, 'w', encoding='utf-8')");
         }
 
-        public void WakeOptunaDashboard(Storage storage)
+        public static void WakeOptunaDashboard(Storage storage)
         {
             TLog.MethodStart();
             if (File.Exists(storage.Path) == false)
@@ -58,7 +57,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
             var dashboard = new Optuna.Dashboard.Handler(
                 Path.Combine(TEnvVariables.PythonPath, "Scripts", "optuna-dashboard.exe"),
-                storage.Path, _artifactPath
+                storage.Path
             );
             dashboard.Run();
         }
@@ -95,15 +94,13 @@ namespace Tunny.Solver.HumanInTheLoop
         public void CheckDirectoryIsExist()
         {
             TLog.MethodStart();
-            string artifactPath = Path.Combine(_basePath, "artifacts");
-            string tmpPath = TEnvVariables.TmpDirPath;
-            if (!Directory.Exists(artifactPath))
+            if (!Directory.Exists(_artifactPath))
             {
-                Directory.CreateDirectory(artifactPath);
+                Directory.CreateDirectory(_artifactPath);
             }
-            if (!Directory.Exists(tmpPath))
+            if (!Directory.Exists(_tmpPath))
             {
-                Directory.CreateDirectory(tmpPath);
+                Directory.CreateDirectory(_tmpPath);
             }
         }
     }

@@ -110,7 +110,7 @@ namespace Tunny.Solver
                 TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports SQlite storage. ", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new ArgumentException("Human-in-the-Loop Preferential only supports SQlite storage. ");
             }
-            var preferentialOpt = new HumanInTheLoop.Preferential(Path.GetDirectoryName(Settings.Storage.Path));
+            var preferentialOpt = new HumanInTheLoop.Preferential(TEnvVariables.TmpDirPath, Settings.Storage.Path);
             if (Objective.Length > 1)
             {
                 TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
@@ -119,7 +119,7 @@ namespace Tunny.Solver
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)), false);
-            preferentialOpt.WakeOptunaDashboard(Settings.Storage);
+            HumanInTheLoop.HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage);
             optInfo.Preferential = preferentialOpt;
             RunPreferentialOptimize(optInfo, nBatch, out parameter, out result);
         }
@@ -143,8 +143,8 @@ namespace Tunny.Solver
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
-            var humanSliderInput = new HumanInTheLoop.HumanSliderInput(Path.GetDirectoryName(Settings.Storage.Path));
-            humanSliderInput.WakeOptunaDashboard(Settings.Storage);
+            var humanSliderInput = new HumanInTheLoop.HumanSliderInput(TEnvVariables.TmpDirPath, Settings.Storage.Path);
+            HumanInTheLoop.HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage);
             humanSliderInput.SetObjective(study, objNickName);
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;

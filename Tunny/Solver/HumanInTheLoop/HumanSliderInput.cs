@@ -13,7 +13,7 @@ namespace Tunny.Solver.HumanInTheLoop
         private readonly PyModule _importedLibrary;
         private readonly dynamic _artifactBackend;
 
-        public HumanSliderInput(string path) : base(path)
+        public HumanSliderInput(string tmpPath, string storagePath) : base(tmpPath, storagePath)
         {
             TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
@@ -74,7 +74,7 @@ namespace Tunny.Solver.HumanInTheLoop
             for (int i = 0; i < bitmaps.Length; i++)
             {
                 Bitmap bitmap = bitmaps[i];
-                string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";
+                string path = $"{_tmpPath}/image_{study._study_id}_{trial._trial_id}.png";
                 bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
                 dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
                 noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})");
