@@ -13,6 +13,7 @@ namespace Optuna.Storage.RDB.Tests
     {
         private readonly string _createFilePath = @"TestFile/created.db";
         private readonly string _existFilePath = @"TestFile/sqlite.db";
+        private readonly string _hitlFilePath = @"TestFile/hitl.db";
         private readonly List<string> _tempDBPaths = new List<string>();
 
         [Fact()]
@@ -84,6 +85,15 @@ namespace Optuna.Storage.RDB.Tests
             var storage = new SqliteStorage(_existFilePath);
             Study.Study[] studies = storage.GetAllStudies();
             Assert.Equal(3, studies.Length);
+        }
+
+        [Fact()]
+        public void LoadHitlDBTest()
+        {
+            var storage = new SqliteStorage(_hitlFilePath);
+            Study.Study[] study = storage.GetAllStudies();
+            Assert.Single(study);
+            Assert.Equal(DateTime.MinValue, study[0].Trials[0].DatetimeComplete);
         }
 
         public void Dispose()

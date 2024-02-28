@@ -441,13 +441,14 @@ namespace Optuna.Storage.RDB
                     {
                         while (reader.Read())
                         {
+                            DateTime completeTime = reader.GetValue(3) is DBNull ? DateTime.MaxValue : reader.GetDateTime(3);
                             trial = new Trial.Trial
                             {
                                 TrialId = trialId,
                                 Number = reader.GetInt32(0),
                                 State = (TrialState)Enum.Parse(typeof(TrialState), reader.GetString(1), true),
                                 DatetimeStart = reader.GetDateTime(2),
-                                DatetimeComplete = reader.GetDateTime(3)
+                                DatetimeComplete = completeTime
                             };
                         }
                     }
