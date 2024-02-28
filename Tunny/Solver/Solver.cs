@@ -57,11 +57,11 @@ namespace Tunny.Solver
 
             try
             {
+                InitializeTmpDir();
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
                 EndMessage(optimize);
-                CleanTmpFiles();
 
                 return true;
             }
@@ -72,9 +72,14 @@ namespace Tunny.Solver
             }
         }
 
-        private static void CleanTmpFiles()
+        private static void InitializeTmpDir()
         {
             TLog.MethodStart();
+            if (!Directory.Exists(TEnvVariables.TmpDirPath))
+            {
+                TLog.Info("Create tmp folder");
+                Directory.CreateDirectory(TEnvVariables.TmpDirPath);
+            }
             TLog.Info("Clean tmp files");
             var tmpDir = new DirectoryInfo(TEnvVariables.TmpDirPath);
             foreach (FileInfo file in tmpDir.GetFiles())
