@@ -608,21 +608,31 @@ namespace Optuna.Storage.RDB
 
         private static void GetAttrs(Dictionary<string, object> attrs, SQLiteDataReader reader)
         {
-            string value = (string)reader.GetValue(1);
+            string key = reader.GetString(0);
+            string value = reader.GetString(1);
             if (!string.IsNullOrEmpty(value) && value.Contains("[") && value.Contains("]"))
             {
-                try
+                //FIXME: This is a hack to handle the case where the value is a list of strings.
+                if (key.Contains("preference"))
                 {
-                    string[] values = JsonConvert.DeserializeObject<string[]>(value);
-                    attrs.Add(reader.GetString(0), values);
+                    attrs.Add(key, value);
                 }
-                catch (JsonReaderException)
+                else
                 {
-                    if (value.Contains("\""))
+                    try
                     {
-                        value = value.Replace("\"", "");
+                        string[] values = JsonConvert.DeserializeObject<string[]>(value);
+                        attrs.Add(reader.GetString(0), values);
                     }
-                    attrs.Add(reader.GetString(0), new[] { value });
+                    catch (JsonReaderException)
+                    {
+                        if (value.Contains("\""))
+                        {
+                            value = value.Replace("\"", "");
+                        }
+                        attrs.Add(reader.GetString(0), new[] { value });
+                    }
+
                 }
             }
             else

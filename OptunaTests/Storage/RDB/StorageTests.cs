@@ -93,7 +93,7 @@ namespace Optuna.Storage.RDB.Tests
             var storage = new SqliteStorage(_hitlFilePath);
             Study.Study[] study = storage.GetAllStudies();
             Assert.Single(study);
-            Assert.Equal(DateTime.MinValue, study[0].Trials[0].DatetimeComplete);
+            Assert.Equal(DateTime.MaxValue, study[0].Trials[10].DatetimeComplete);
         }
 
         public void Dispose()
