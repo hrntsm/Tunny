@@ -19,7 +19,7 @@ namespace Tunny.Solver.HumanInTheLoop
         {
             TLog.MethodStart();
             _tmpPath = tmpPath;
-            _artifactPath = Path.Combine(Path.GetDirectoryName(storagePath), "artifact");
+            _artifactPath = Path.Combine(Path.GetDirectoryName(storagePath), "artifacts");
         }
 
         public PyModule ImportBaseLibrary()
