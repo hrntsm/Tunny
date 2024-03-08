@@ -80,11 +80,22 @@ namespace Tunny.Solver
                 TLog.Info("Create tmp folder");
                 Directory.CreateDirectory(TEnvVariables.TmpDirPath);
             }
-            TLog.Info("Clean tmp files");
-            var tmpDir = new DirectoryInfo(TEnvVariables.TmpDirPath);
-            foreach (FileInfo file in tmpDir.GetFiles())
+            else
             {
-                file.Delete();
+                TLog.Info("Start clean tmp files");
+                var tmpDir = new DirectoryInfo(TEnvVariables.TmpDirPath);
+                foreach (FileInfo file in tmpDir.GetFiles())
+                {
+                    try
+                    {
+                        file.Delete();
+                    }
+                    catch (Exception e)
+                    {
+                        TLog.Error(e.Message);
+                    }
+                }
+                TLog.Info("Finish clean tmp files");
             }
         }
 
