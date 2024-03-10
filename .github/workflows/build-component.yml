@@ -44,7 +44,7 @@ jobs:
         if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
         shell: powershell
         run: |
-          cp ./Samples ./Release/Samples -recurse
+          cp ./Examples ./Release/Examples -recurse
           cp ./LICENSE ./Release/LICENSE.txt
           cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
           cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
@@ -56,3 +56,4 @@ jobs:
           name: Tunny
           path: |
             ./Release
+          retention-days: 7
