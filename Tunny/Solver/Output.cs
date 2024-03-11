@@ -29,7 +29,19 @@ namespace Tunny.Core.Solver
         {
             TLog.MethodStart();
             var modelResult = new List<ModelResult>();
+            IOptunaStorage storage = GetStorage();
+            Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
+            if (targetStudy == null)
+            {
+                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return modelResult.ToArray();
+            }
+            SetTrialsToModelResult(resultNum, modelResult, targetStudy, worker);
+            return modelResult.ToArray();
+        }
 
+        private IOptunaStorage GetStorage()
+        {
             string ext = Path.GetExtension(_storagePath);
             IOptunaStorage storage;
             if (ext == ".db" || ext == ".sqlite")
@@ -45,14 +57,7 @@ namespace Tunny.Core.Solver
                 throw new ArgumentException("Storage type not supported");
             }
 
-            Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
-            if (targetStudy == null)
-            {
-                TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return modelResult.ToArray();
-            }
-            SetTrialsToModelResult(resultNum, modelResult, targetStudy, worker);
-            return modelResult.ToArray();
+            return storage;
         }
 
         private static void SetTrialsToModelResult(int[] resultNum, List<ModelResult> modelResult, Study study, BackgroundWorker worker)
