@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Tunny.Core\Tunny.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestFile\journal.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
