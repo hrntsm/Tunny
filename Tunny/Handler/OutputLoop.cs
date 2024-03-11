@@ -9,6 +9,7 @@ using Rhino.Runtime;
 using Tunny.Component.Optimizer;
 using Tunny.Core.PostProcess;
 using Tunny.Core.Settings;
+using Tunny.Core.Solver;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
@@ -37,8 +38,8 @@ namespace Tunny.Handler
 
             if (Component != null)
             {
-                var optunaSolver = new Solver.Solver(Settings, Component.GhInOut.HasConstraint);
-                ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
+                var output = new Output(Settings.Storage.Path);
+                ModelResult[] modelResult = output.GetModelResult(Indices, StudyName, s_worker);
                 if (modelResult.Length == 0)
                 {
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
