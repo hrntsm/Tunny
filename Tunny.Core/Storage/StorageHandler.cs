@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 
+using Optuna.Storage;
 using Optuna.Study;
 
 using Tunny.Core.Util;
@@ -75,5 +76,26 @@ namespace Tunny.Core.Storage
 
             return storage.GetStudySummaries(storagePath);
         }
+
+        public static IOptunaStorage GetStorage(string path)
+        {
+            string ext = Path.GetExtension(path);
+            IOptunaStorage storage;
+            if (ext == ".db" || ext == ".sqlite")
+            {
+                storage = new Optuna.Storage.RDB.SqliteStorage(path, true);
+            }
+            else if (ext == ".log")
+            {
+                storage = new Optuna.Storage.Journal.JournalStorage(path, true);
+            }
+            else
+            {
+                throw new ArgumentException("Storage type not supported");
+            }
+
+            return storage;
+        }
+
     }
 }
