@@ -92,6 +92,7 @@ namespace Tunny.Component.Optimizer
 
             public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
             {
+                ((FishingComponent)Owner).MakeFishPrintByCaptureToTopOrder();
                 ((FishingComponent)Owner).ShowOptimizationWindow();
                 return GH_ObjectResponse.Handled;
             }

@@ -54,7 +54,7 @@ namespace Tunny.Component.Optimizer
         {
             pManager.AddTextParameter("Info", "Info", "Information about the optimization.", GH_ParamAccess.item);
             pManager.AddParameter(new Param_Fish(), "All Fishes", "All", "All optimization results", GH_ParamAccess.list);
-            pManager.AddParameter(new Param_Fish(), "BestFishes", "Best", "Best optimization results", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_Fish(), "Best Fishes", "Best", "Best optimization results", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -100,6 +100,7 @@ namespace Tunny.Component.Optimizer
             {
                 _running = true;
                 _count = 0;
+                MakeFishPrintByCaptureToTopOrder();
                 GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
                 ghCanvas?.DisableUI();
                 Params.Output[1].ClearData();

@@ -10,6 +10,7 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
+using Tunny.Component.Util;
 using Tunny.Core.Input;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -29,6 +30,28 @@ namespace Tunny.Component.Optimizer
         public OptimizeComponentBase(string name, string nickname, string description)
           : base(name, nickname, description, "Tunny", "Optimizer")
         {
+        }
+
+        /// <summary>
+        /// Change calculation order to FishPrintByCapture after all components have been calculated.
+        /// </summary>
+        protected void MakeFishPrintByCaptureToTopOrder()
+        {
+            TLog.MethodStart();
+            IList<IGH_DocumentObject> objs = OnPingDocument().Objects;
+            var fishPrints = new List<FishPrintByCapture>();
+            foreach (IGH_DocumentObject obj in objs)
+            {
+                if (obj is FishPrintByCapture fp)
+                {
+                    fishPrints.Add(fp);
+                }
+            }
+
+            if (fishPrints.Count > 0)
+            {
+                OnPingDocument().ArrangeObjects(fishPrints, GH_Arrange.MoveToFront);
+            }
         }
 
         public void GhInOutInstantiate()
