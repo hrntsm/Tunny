@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [v0.11.0] -yyyy-mm-dd
+## [UNRELEASED] -yyyy-mm-dd
 
 ### Added
 
@@ -21,7 +21,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - There are three levels: "Verbose," "Debug," and "Information.
 - Sample python code to create a gif animation.
 - Tunny.Core csproj for improve develop environment.
-- Class for handling SQLite in optuna.csproj.
+- CI build with python.
 
 ### Changed
 
@@ -30,6 +30,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Use optuna.csproj sqlite handler instead of tunny.storage
 - Improve result fish output to use new storage handler
   - The handler is independent from python process.
+- Human in the loop mode support log storage format.
+- Bump Python library
+  - optuna-dashboard 0.14 to 0.15
+    - csv can be downloaded from the trial table.
+    - The Pareto Front and History plots can jump to the corresponding trial page when click dot plot.
+    - Settings have been added to change the appearance of the plots.
+    - When uploading surfaces with no thickness to Artifacts, both sides are rendered.
+    - Human-in-the-loop works with journal storage
 
 ### Deprecated
 
@@ -44,6 +52,8 @@ for soon-to-be removed features.
 - When launching a window, if all the objectives are null, the window will not launch.
 - Empty 3dm is always saved even if you want to save only images in artifact.
 - FishEgg feature does not work.
+- Fish Print by capture timing
+  - Viewport capture at the end of all Grasshopper processing.
 
 ### Security
 
