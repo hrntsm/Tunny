@@ -4,7 +4,8 @@ echo off
 set PYVER=3.10.11
 set ARCH=amd64
 
-if exist "python-embed\" rmdir /S /Q "python-embed\"
+if exist python.zip del python.zip
+if exist whl.zip del whl.zip
 
 :: Download the Python embeddable
 curl.exe https://www.python.org/ftp/python/%PYVER%/python-%PYVER%-embed-%ARCH%.zip > python-embed.zip
@@ -21,15 +22,17 @@ curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python-embed\python.exe get-pip.py
 
 :: Get python wheels
-python-embed\python.exe -m pip download numpy -d whl
+python-embed\python.exe -m pip download -r requirements.txt -d whl
 
 :: Create the final embeddable dir and moves Python distribution into it
 if exist "embeddable\" rmdir /S /Q "embeddable\"
 move /Y python-embed embeddable
 
 powershell Compress-Archive -Path embeddable/* -DestinationPath python.zip
+powershell Compress-Archive -Path whl/* -DestinationPath whl.zip
 del get-pip.py
 rmdir /S /Q "embeddable\"
+rmdir /S /Q "whl\"
 
 goto:eof
 
