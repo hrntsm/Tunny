@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,10 +32,10 @@ jobs:
           cd ../..
 
       - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
+        uses: NuGet/setup-nuget@v2
 
       - name: Restore the application
         run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
@@ -56,7 +56,7 @@ jobs:
           cp ./Tunny/bin/Debug/net48 ./Release/Tunny -recurse
 
       - name: Upload release build of plugin as artefact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Tunny
           path: |
