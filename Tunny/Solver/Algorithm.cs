@@ -104,15 +104,10 @@ namespace Tunny.Solver
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            if (Settings.Storage.Type != StorageType.Sqlite)
-            {
-                TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports SQlite storage. ", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new ArgumentException("Human-in-the-Loop Preferential only supports SQlite storage. ");
-            }
             var preferentialOpt = new HumanInTheLoop.Preferential(TEnvVariables.TmpDirPath, Settings.Storage.Path);
             if (Objective.Length > 1)
             {
-                TunnyMessageBox.Show("Human-in-the-Loop Preferential only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
+                TunnyMessageBox.Show("Human-in-the-Loop(Preferential GP optimization) only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
             }
             string[] objNickName = Objective.GetNickNames();
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
