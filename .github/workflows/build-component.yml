@@ -53,7 +53,7 @@ jobs:
           cp ./Examples ./Release/Examples -recurse
           cp ./LICENSE ./Release/LICENSE.txt
           cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
-          cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
+          cp ./Tunny/bin/Debug/net48 ./Release/Tunny -recurse
 
       - name: Upload release build of plugin as artefact
         uses: actions/upload-artifact@v2
