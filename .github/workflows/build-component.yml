@@ -62,3 +62,4 @@ jobs:
           path: |
             ./Release
           retention-days: 7
+          compression-level: 9
