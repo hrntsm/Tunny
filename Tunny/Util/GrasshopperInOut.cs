@@ -399,7 +399,7 @@ namespace Tunny.Util
         {
             TLog.MethodStart();
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
-            _document.NewSolution(true);
+            _document.NewSolution(false);
             while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
         }
 
