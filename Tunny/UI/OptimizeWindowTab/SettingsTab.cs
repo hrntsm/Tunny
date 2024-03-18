@@ -18,6 +18,12 @@ namespace Tunny.UI
             SetTpeSettings(new TpeSampler());
         }
 
+        private void GpDefaultButton_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            SetGpSettings(new GPSampler());
+        }
+
         private void Nsga2MutationProbCheckedChanged(object sender, EventArgs e)
         {
             TLog.MethodStart();
@@ -110,6 +116,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             Sampler sampler = _settings.Optimize.Sampler;
             SetTpeSettings(sampler.Tpe);
+            SetGpSettings(sampler.GP);
             SetBoTorchSettings(sampler.BoTorch);
             SetNsga2Settings(sampler.NsgaII);
             SetNsga3Settings(sampler.NsgaIII);
@@ -131,6 +138,13 @@ namespace Tunny.UI
             tpeConsiderMagicClipCheckBox.Checked = tpe.ConsiderMagicClip;
             tpeConstantLiarCheckBox.Checked = tpe.ConstantLiar;
             tpeWarnIndependentSamplingCheckBox.Checked = tpe.WarnIndependentSampling;
+        }
+
+        private void SetGpSettings(GPSampler gp)
+        {
+            TLog.MethodStart();
+            gpStartupNumUpDown.Value = gp.NStartupTrials;
+            gpDeterministicObjectiveCheckBox.Checked = gp.DeterministicObjective;
         }
 
         private void SetBoTorchSettings(BoTorchSampler boTorch)
@@ -226,6 +240,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             sampler.Tpe = GetTpeSettings(sampler.Tpe);
+            sampler.GP = GetGPSettings(sampler.GP);
             sampler.BoTorch = GetBoTorchSettings(sampler.BoTorch);
             sampler.NsgaII = GetNsga2Settings(sampler.NsgaII);
             sampler.NsgaIII = GetNsga3Settings(sampler.NsgaIII);
@@ -248,6 +263,14 @@ namespace Tunny.UI
             tpe.ConstantLiar = tpeConstantLiarCheckBox.Checked;
             tpe.WarnIndependentSampling = tpeWarnIndependentSamplingCheckBox.Checked;
             return tpe;
+        }
+
+        private GPSampler GetGPSettings(GPSampler gp)
+        {
+            TLog.MethodStart();
+            gp.NStartupTrials = (int)gpStartupNumUpDown.Value;
+            gp.DeterministicObjective = gpDeterministicObjectiveCheckBox.Checked;
+            return gp;
         }
 
         private BoTorchSampler GetBoTorchSettings(BoTorchSampler boTorch)

@@ -16,6 +16,7 @@ namespace Tunny.Settings.Sampler
         public NSGAIIISampler NsgaIII { get; set; } = new NSGAIIISampler();
         public QMCSampler QMC { get; set; } = new QMCSampler();
         public BoTorchSampler BoTorch { get; set; } = new BoTorchSampler();
+        public GPSampler GP { get; set; } = new GPSampler();
 
         public dynamic ToPython(dynamic optuna, SamplerType type, string storagePath, bool hasConstraints)
         {
@@ -25,6 +26,9 @@ namespace Tunny.Settings.Sampler
             {
                 case SamplerType.TPE:
                     optunaSampler = Tpe.ToPython(optuna, hasConstraints);
+                    break;
+                case SamplerType.GP:
+                    optunaSampler = GP.ToPython(optuna);
                     break;
                 case SamplerType.BoTorch:
                     optunaSampler = BoTorch.ToPython(optuna, hasConstraints);

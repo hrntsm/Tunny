@@ -19,6 +19,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Log level selector.
   - It is located in the Misc tab of the Settings tab.
   - There are three levels: "Verbose," "Debug," and "Information.
+- New GP sampler support
+  - This is related optuna 3.6
 - Sample python code to create a gif animation.
 - Tunny.Core csproj for improve develop environment.
 - CI build with python.
@@ -40,6 +42,11 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
     - Settings have been added to change the appearance of the plots.
     - When uploading surfaces with no thickness to Artifacts, both sides are rendered.
     - Human-in-the-loop works with journal storage
+    - [see more detail](https://github.com/optuna/optuna-dashboard/releases/tag/v0.15.0)
+  - optuna 3.5 to 3.6
+    - New GP sampler support
+    - Fixed bug in parallelization in log files
+    - [see more detail](https://github.com/optuna/optuna/releases/tag/v3.6.0)
 
 ### Deprecated
 

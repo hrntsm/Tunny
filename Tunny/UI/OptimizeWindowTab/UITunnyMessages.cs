@@ -9,11 +9,11 @@ namespace Tunny.UI
     public partial class OptimizationWindow
     {
         // OptimizationTab ==========================
-        private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
+        private bool SupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
         {
             TLog.MethodStart();
             TunnyMessageBox.Show(
-                "CMA-ES samplers only support single objective optimization.",
+                "CMA-ES & GP samplers only support single objective optimization.",
                 "Tunny",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
