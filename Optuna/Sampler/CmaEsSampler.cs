@@ -16,6 +16,7 @@ namespace Optuna.Sampler
         public bool UseWarmStart { get; set; }
         public string WarmStartStudyName { get; set; } = string.Empty;
         public bool WithMargin { get; set; } = true;
+        public bool LrAdapt { get; set; }
 
         public dynamic ToPython(dynamic optuna, string storagePath)
         {
@@ -29,7 +30,8 @@ namespace Optuna.Sampler
                     inc_popsize: IncPopsize,
                     popsize: PopulationSize,
                     source_trials: optuna.load_study(study_name: WarmStartStudyName, storage: storagePath).get_trials(),
-                    with_margin: WithMargin
+                    with_margin: WithMargin,
+                    lr_adapt: LrAdapt
                 )
                 : optuna.samplers.CmaEsSampler(
                     sigma0: Sigma0,
@@ -41,7 +43,8 @@ namespace Optuna.Sampler
                     inc_popsize: IncPopsize,
                     popsize: PopulationSize,
                     use_separable_cma: UseSeparableCma,
-                    with_margin: WithMargin
+                    with_margin: WithMargin,
+                    lr_adapt: LrAdapt
                 );
         }
     }

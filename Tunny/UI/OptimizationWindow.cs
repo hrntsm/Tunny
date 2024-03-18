@@ -131,7 +131,7 @@ namespace Tunny.UI
             {
                 TLog.Info("Set Tunny Human-in-the-loop mode");
                 Text = "Tunny (Human in the Loop mode)";
-                samplerComboBox.SelectedIndex = 1; // GP
+                samplerComboBox.SelectedIndex = (int)SamplerType.GP; // GP
                 samplerComboBox.Enabled = false;
                 nTrialText.Text = "Number of batches";
                 nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;

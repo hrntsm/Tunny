@@ -136,9 +136,11 @@ namespace Tunny.UI
                 optimizeRunButton.Enabled = true;
                 return false;
             }
-            else if (length > 1 && (samplerComboBox.Text == @"EvolutionStrategy (CMA-ES)"))
+            else if (length > 1 &&
+                ((samplerComboBox.SelectedIndex == (int)SamplerType.CmaEs) || samplerComboBox.SelectedIndex == (int)SamplerType.GP)
+            )
             {
-                return CmaEsSupportOneObjectiveMessage(ghCanvas);
+                return SupportOneObjectiveMessage(ghCanvas);
             }
 
             return true;
