@@ -27,13 +27,6 @@ body:
     validations:
       required: true
   - type: textarea
-    id: logs
-    attributes:
-      label: Error messages, stack traces, or logs
-      description: Please upload log output or screenshot. The log files are located in the folder [UserProfile]/.tunny_env/logs. Please send us the file for the date of the error.
-    validations:
-      required: false
-  - type: textarea
     id: steps-to-reproduce
     attributes:
       label: Steps to reproduce
@@ -45,6 +38,13 @@ body:
         4. See error
     validations:
       required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error messages, stack traces, or logs
+      description: Please upload log output or screenshot. The log files are located in the folder [UserProfile]/.tunny_env/logs. Please send us the file for the date of the error.
+    validations:
+      required: false
   - type: textarea
     id: additional-context
     attributes:
