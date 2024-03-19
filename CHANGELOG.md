@@ -42,6 +42,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
     - Settings have been added to change the appearance of the plots.
     - When uploading surfaces with no thickness to Artifacts, both sides are rendered.
     - Human-in-the-loop works with journal storage
+    - Fix overflow when preferential optimization
     - [see more detail](https://github.com/optuna/optuna-dashboard/releases/tag/v0.15.0)
   - optuna 3.5 to 3.6
     - New GP sampler support
