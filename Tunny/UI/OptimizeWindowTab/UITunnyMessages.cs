@@ -13,7 +13,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             TunnyMessageBox.Show(
-                "CMA-ES & GP samplers only support single objective optimization.",
+                "CMA-ES & GP:Optuna samplers only support single objective optimization.",
                 "Tunny",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
