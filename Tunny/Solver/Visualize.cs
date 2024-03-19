@@ -85,14 +85,7 @@ namespace Tunny.Solver
                     visualize.Hypervolume();
                     break;
                 case "clustering":
-                    if (pSettings.TargetObjectiveIndex.Length > 0)
-                    {
-                        visualize.Clustering(pSettings.ClusterCount, "objective", pSettings.TargetObjectiveIndex[0]);
-                    }
-                    else
-                    {
-                        visualize.Clustering(pSettings.ClusterCount, "variable", pSettings.TargetVariableIndex[0]);
-                    }
+                    visualize.Clustering(pSettings.ClusterCount, pSettings.TargetObjectiveIndex, pSettings.TargetVariableIndex);
                     break;
                 default:
                     TunnyMessageBox.Show("This visualization type is not supported in this study case.", "Tunny");
