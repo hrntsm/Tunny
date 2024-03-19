@@ -592,9 +592,12 @@ namespace Tunny.Solver
             TLog.MethodStart();
             string storagePath = Settings.Storage.GetOptunaStoragePath();
             dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(optuna, samplerType, storagePath, hasConstraints);
-            if ((int)samplerType > 4 && hasConstraints)
+            if (
+                (samplerType == SamplerType.GP || samplerType == SamplerType.CmaEs || samplerType == SamplerType.QMC || samplerType == SamplerType.Random)
+                && hasConstraints
+            )
             {
-                TunnyMessageBox.Show("Only TPE, GP and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
+                TunnyMessageBox.Show("Only TPE, GP:BoTorch and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return optunaSampler;
         }
