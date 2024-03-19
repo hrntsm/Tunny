@@ -33,7 +33,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Improve result fish output to use new storage handler
   - The handler is independent from python process.
 - Human in the loop mode support log storage format.
-- Do not recalculate irrelevant components.
+- Allows clustering with any combination of variables and objective function.
+- Speedup optimization.
+  - Do not recalculate irrelevant components.
   - Previously, all components were recalculated for each trial, but this has been changed so that components not involved in optimization are not recalculated
 - Bump Python library
   - optuna-dashboard 0.14 to 0.15

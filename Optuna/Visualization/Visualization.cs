@@ -171,11 +171,11 @@ namespace Optuna.Visualization
             _fig = visualize(_study);
         }
 
-        public void Clustering(int nClusters, string targetType, int targetIndex)
+        public void Clustering(int nClusters, int[] objectiveIndex, int[] variableIndex)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(
-            "def visualize(study, n_clusters, target_type, target_index):\n" +
+            "def visualize(study, n_clusters, objectives_index, variables_index):\n" +
             "    import numpy as np\n" +
             "    import optuna\n" +
             "    from sklearn.cluster import KMeans\n" +
@@ -193,13 +193,14 @@ namespace Optuna.Visualization
             "            infeasible_trials.append(trial)\n" +
 
             "    target = []\n" +
-            "    if target_type == 'objective':\n" +
-            "        target = [trial.values[target_index] for trial in feasible_trials]\n" +
-            "    else:\n" +
-            "        target = [\n" +
-            "            list(trial.params.values())[target_index] for trial in feasible_trials\n" +
-            "        ]\n" +
-            "    np_array = np.array(target).reshape(-1, 1)\n" +
+            "    for trial in feasible_trials:\n" +
+            "        values = []\n" +
+            "        for i in objectives_index:\n" +
+            "            values.append(trial.values[i])\n" +
+            "        for i in variables_index:\n" +
+            "            values.append(list(trial.params.values())[i])\n" +
+            "        target.append(values)\n" +
+            "    np_array = np.array(target)\n" +
             "    kmeans = KMeans(n_clusters=n_clusters).fit(np_array)\n" +
 
             "    feasible_marker = dict(\n" +
@@ -283,7 +284,7 @@ namespace Optuna.Visualization
             "    return go.Figure(fig)\n"
             );
             dynamic visualize = ps.Get("visualize");
-            _fig = visualize(_study, nClusters, targetType, targetIndex);
+            _fig = visualize(_study, nClusters, objectiveIndex, variableIndex);
         }
 
         public void TruncateParetoFrontPlotHover()
