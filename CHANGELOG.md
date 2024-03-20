@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-## [UNRELEASED] -yyyy-mm-dd
+## [v0.11.0] -2024-03-20
 
 ### Added
 
@@ -30,6 +30,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - DeconstructFish component output
   - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
 - Move FishPrint component to Print subcategory
+- Move Construct & Deconstruct component ot Operation subcategory
 - Use optuna.csproj sqlite handler instead of tunny.storage
 - Improve result fish output to use new storage handler
   - The handler is independent from python process.
@@ -52,14 +53,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
     - Fixed bug in parallelization in log files
     - [see more detail](https://github.com/optuna/optuna/releases/tag/v3.6.0)
 
-### Deprecated
-
-for soon-to-be removed features.
-
-### Removed
-
-- Show hypervolume ratio while optimization running
-
 ### Fixed
 
 - When launching a window, if all the objectives are null, the window will not launch.
@@ -67,10 +60,6 @@ for soon-to-be removed features.
 - FishEgg feature does not work.
 - Fish Print by capture timing
   - Viewport capture at the end of all Grasshopper processing.
-
-### Security
-
-in case of vulnerabilities.
 
 ## [v0.10.0] -2024-01-27
 

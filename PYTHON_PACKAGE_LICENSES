@@ -32,8 +32,8 @@ summary
 | networkx          | 3.2.1     | BSD License                                       |
 | numpy             | 1.26.0    | BSD License                                       |
 | opt-einsum        | 3.3.0     | MIT                                               |
-| optuna            | 3.5.0     | MIT License                                       |
-| optuna-dashboard  | 0.14.0    | MIT License                                       |
+| optuna            | 3.6.0     | MIT License                                       |
+| optuna-dashboard  | 0.15.0    | MIT License                                       |
 | packaging         | 23.1      | Apache Software License; BSD License              |
 | pip               | 23.2.1    | MIT License                                       |
 | plotly            | 5.16.1    | MIT License                                       |
