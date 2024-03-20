@@ -131,10 +131,6 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             bool result = true;
-            if (pSettings.TargetObjectiveIndex.Length > 0 && pSettings.TargetVariableIndex.Length > 0)
-            {
-                TunnyMessageBox.Show("Both variables and objects are selected, but the objects are clustered in the target.\nIf you want to target variables, deselect the objectivesThis visualization type is not supported in this study case.", "Tunny");
-            }
             if (pSettings.TargetObjectiveName.Length == 0 && pSettings.TargetVariableName.Length == 0)
             {
                 TunnyMessageBox.Show("Please select one or more.", "Tunny");
