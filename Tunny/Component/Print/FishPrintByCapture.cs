@@ -9,14 +9,14 @@ using Rhino.Display;
 using Tunny.Component.Params;
 using Tunny.Resources;
 
-namespace Tunny.Component.Util
+namespace Tunny.Component.Print
 {
     public class FishPrintByCapture : GH_Component
     {
         public FishPrintByCapture()
           : base("Fish Print by Capture", "FPCap",
               "Creates a capture of the currently active viewport.",
-              "Tunny", "Util")
+              "Tunny", "Print")
         {
         }
 
