@@ -15,7 +15,7 @@ using Tunny.Resources;
 using Tunny.Type;
 using Tunny.Util;
 
-namespace Tunny.Component.Util
+namespace Tunny.Component.Operation
 {
     public class DeconstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
@@ -26,7 +26,7 @@ namespace Tunny.Component.Util
         public DeconstructFishAttribute()
           : base("Deconstruct Fish Attribute", "DeconFA",
               "Deconstruct Fish Attribute.",
-              "Tunny", "Util")
+              "Tunny", "Operation")
         {
         }
 
