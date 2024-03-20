@@ -404,19 +404,28 @@ namespace Tunny.Util
             string[] categoryParameters = parameters.Where(p => p.HasCategory).Select(p => p.Category).ToArray();
             SetSliderValues(decimalParameters);
             SetCategoryValues(categoryParameters);
-            ExpireObjectives();
+            ExpireInput(_component.Params.Input[1]); // objectives
+            ExpireInput(_component.Params.Input[3]); // artifacts
             Recalculate();
             SetObjectives();
             SetAttributes();
             SetArtifacts();
         }
 
-        private void ExpireObjectives()
+        private void ExpireInput(IGH_Param input)
         {
             TLog.MethodStart();
-            foreach (IGH_Param param in _component.Params.Input[1].Sources)
+            // TopLevel is acquired
+            // because it is necessary to Expire the component itself, not the value of the output.
+            foreach (Guid guid in input.Sources.Select(p => p.InstanceGuid))
             {
-                param.ExpireSolution(false);
+                IGH_DocumentObject obj = _document.FindObject(guid, false);
+                if(!obj.Attributes.IsTopLevel)
+                {
+                    Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
+                    obj = _document.FindObject(topLevelGuid, true);
+                }
+                obj.ExpireSolution(false);
             }
         }
 
