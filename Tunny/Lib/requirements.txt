@@ -19,8 +19,9 @@ multipledispatch==0.6.0
 networkx==3.2.1
 numpy==1.26.0
 opt-einsum==3.3.0
-optuna==3.5.0
-optuna-dashboard==0.14
+optuna==3.6.0
+optuna-integration==3.6.0
+optuna-dashboard==0.15.0
 packaging==23.1
 plotly==5.16.1
 pyro-api==0.1.2

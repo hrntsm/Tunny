@@ -8,9 +8,9 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Resources;
-using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
@@ -23,6 +23,7 @@ namespace Tunny.UI
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
+            TLog.InitializeLogger();
             return GH_LoadingInstruction.Proceed;
         }
 
@@ -36,6 +37,7 @@ namespace Tunny.UI
                 SetupTunnyMenu(docEditor);
             }
         }
+
         private void SetupTunnyMenu(GH_DocumentEditor docEditor)
         {
             ToolStripMenuItem tunnyToolStripMenuItem;
@@ -84,7 +86,7 @@ namespace Tunny.UI
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pythonDirectory = Path.Combine(TunnyVariables.TunnyEnvPath, "python");
+            string pythonDirectory = Path.Combine(TEnvVariables.TunnyEnvPath, "python");
             string dashboardPath = Path.Combine(pythonDirectory, "Scripts", "optuna-dashboard.exe");
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))
@@ -102,11 +104,11 @@ namespace Tunny.UI
 
         private static void RunOptunaDashboard(string dashboardPath)
         {
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
+            string settingsPath = TEnvVariables.OptimizeSettingsPath;
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
-                var settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+                var settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
                 storagePath = settings.Storage.Path;
             }
             var ofd = new OpenFileDialog

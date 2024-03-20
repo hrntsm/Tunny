@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 using Tunny.Component.Optimizer;
-using Tunny.Enum;
+using Tunny.Core.Handler;
+using Tunny.Core.Input;
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.Settings;
-using Tunny.Solver;
 using Tunny.Type;
 
 namespace Tunny.Handler
@@ -16,70 +17,72 @@ namespace Tunny.Handler
     internal static class OptimizeLoop
     {
         private static BackgroundWorker s_worker;
-        private static FishingComponent s_component;
-        public static TunnySettings Settings;
+        public static OptimizeComponentBase Component;
+        public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
         internal static void RunMultiple(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as FishingComponent;
-            s_component?.GhInOutInstantiate();
+            Component = e.Argument as OptimizeComponentBase;
+            Component?.GhInOutInstantiate();
 
-            double[] result = RunOptimizationLoop(s_worker);
-            if (result == null || double.IsNaN(result[0]))
+            Parameter[] optimalParams = RunOptimizationLoop(s_worker);
+            if (optimalParams == null || optimalParams.Length == 0)
             {
                 return;
             }
-            var decimalResults = result.Select(Convert.ToDecimal).ToList();
             var pState = new ProgressState
             {
-                Values = decimalResults
+                Parameter = optimalParams
             };
 
-            if (s_component != null)
+            if (Component != null)
             {
-                s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
-                s_worker?.ReportProgress(100, pState);
-                while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
+                Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+                s_worker.ReportProgress(100, pState);
+                while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
                 { /* just wait until the cows come home */ }
             }
 
             s_worker?.CancelAsync();
         }
 
-        private static double[] RunOptimizationLoop(BackgroundWorker worker)
+        private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
         {
-            List<Variable> variables = s_component.GhInOut.Variables;
-            Objective objectives = s_component.GhInOut.Objectives;
-            Dictionary<string, FishEgg> enqueueItems = s_component.GhInOut.EnqueueItems;
-            bool hasConstraint = s_component.GhInOut.HasConstraint;
+            TLog.MethodStart();
+            List<VariableBase> variables = Component.GhInOut.Variables;
+            Objective objectives = Component.GhInOut.Objectives;
+            Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
+            bool hasConstraint = Component.GhInOut.HasConstraint;
 
             if (worker.CancellationPending)
             {
-                return new[] { double.NaN };
+                return Array.Empty<Parameter>();
             }
 
-            var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, hasConstraint);
+            var optunaSolver = new Solver.Solver(Settings, hasConstraint);
             bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
-            return solverStarted ? optunaSolver.XOpt : new[] { double.NaN };
+            return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();
         }
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
-            s_component.OptimizationWindow.GrasshopperStatus = GrasshopperStates.RequestSent;
+            TLog.MethodStart();
+            Component.GrasshopperStatus = GrasshopperStates.RequestSent;
 
             s_worker.ReportProgress(progress, pState);
-            while (s_component.OptimizationWindow.GrasshopperStatus != GrasshopperStates.RequestProcessed)
+            while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 
             return new TrialGrasshopperItems
             {
-                Objectives = s_component.GhInOut.Objectives,
-                GeometryJson = s_component.GhInOut.GetGeometryJson(),
-                Attribute = s_component.GhInOut.GetAttributes(),
-                Artifacts = s_component.GhInOut.Artifacts,
+                Objectives = Component.GhInOut.Objectives,
+                GeometryJson = Component.GhInOut.GetGeometryJson(),
+                Attribute = Component.GhInOut.GetAttributes(),
+                Artifacts = Component.GhInOut.Artifacts,
             };
         }
     }

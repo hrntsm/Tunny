@@ -4,9 +4,9 @@ using System.Linq;
 
 using Optuna.Study;
 
-using Tunny.Enum;
-using Tunny.Handler;
-using Tunny.PostProcess;
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Solver;
 
 namespace Tunny.UI
@@ -15,12 +15,13 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (File.Exists(_settings.Storage.Path) == false)
             {
                 ResultFileNotExistErrorMessage();
                 return;
             }
-            string dashboardPath = Path.Combine(PythonInstaller.GetEmbeddedPythonPath(), "Scripts", "optuna-dashboard.exe");
+            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
             string storagePath = _settings.Storage.Path;
 
             var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
@@ -29,27 +30,23 @@ namespace Tunny.UI
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             UpdateVisualizeListBox();
         }
 
         private void UpdateVisualizeListBox()
         {
+            TLog.MethodStart();
             StudySummary visualizeStudySummary = _summaries.FirstOrDefault(s => s.StudyName == visualizeTargetStudyComboBox.Text);
             if (visualizeStudySummary != null)
             {
                 visualizeVariableListBox.Items.Clear();
-                var oldFormatVersion = new Version("0.9.1");
                 string versionString = (visualizeStudySummary.UserAttrs["tunny_version"] as string[])[0];
                 var version = new Version(versionString);
                 string[] metricNames = Array.Empty<string>();
-                if (version <= oldFormatVersion)
-                {
-                    metricNames = visualizeStudySummary.UserAttrs["objective_names"] as string[];
-                }
-                else
-                {
-                    metricNames = visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
-                }
+                metricNames = version <= TEnvVariables.OldStorageVersion
+                    ? visualizeStudySummary.UserAttrs["objective_names"] as string[]
+                    : visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
                 visualizeVariableListBox.Items.AddRange(metricNames);
 
                 visualizeObjectiveListBox.Items.Clear();
@@ -60,6 +57,7 @@ namespace Tunny.UI
 
         private void VisualizeType_Changed(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             if (visualizeTypeComboBox.SelectedItem.ToString() == "clustering")
             {
                 visualizeClusterNumUpDown.Enabled = true;
@@ -79,18 +77,21 @@ namespace Tunny.UI
 
         private void VisualizeShowPlotButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Plot(PlotActionType.Show);
         }
 
         private void VisualizeSavePlotButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             Plot(PlotActionType.Save);
         }
 
         private void Plot(PlotActionType pActionType)
         {
+            TLog.MethodStart();
             var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            var pSettings = new PlotSettings
+            var pSettings = new Plot
             {
                 TargetStudyName = visualizeTargetStudyComboBox.Text,
                 PlotActionType = pActionType,
@@ -105,18 +106,12 @@ namespace Tunny.UI
 
             if (!CheckTargetValues(pSettings)) { return; }
 
-            if (visualizeTypeComboBox.Text == @"clustering")
-            {
-                optunaVis.ClusteringPlot(pSettings);
-            }
-            else
-            {
-                optunaVis.Plot(pSettings);
-            }
+            optunaVis.Plot(pSettings);
         }
 
-        private static bool CheckTargetValues(PlotSettings pSettings)
+        private static bool CheckTargetValues(Plot pSettings)
         {
+            TLog.MethodStart();
             switch (pSettings.PlotTypeName)
             {
                 case "contour":
@@ -124,17 +119,30 @@ namespace Tunny.UI
                 case "slice":
                     return CheckOneObjSomeVarTargets(pSettings);
                 case "pareto front":
-                case "clustering":
                     return CheckParetoFrontTargets(pSettings);
-                case "hypervolume":
-                    return CheckHypervolumeTargets(pSettings);
+                case "clustering":
+                    return CheckClusteringTargets(pSettings);
                 default:
                     return CheckOneObjectives(pSettings);
             }
         }
 
-        private static bool CheckOneObjectives(PlotSettings pSettings)
+        private static bool CheckClusteringTargets(Plot pSettings)
         {
+            TLog.MethodStart();
+            bool result = true;
+            if (pSettings.TargetObjectiveName.Length == 0 && pSettings.TargetVariableName.Length == 0)
+            {
+                TunnyMessageBox.Show("Please select one or more.", "Tunny");
+                result = false;
+            }
+
+            return result;
+        }
+
+        private static bool CheckOneObjectives(Plot pSettings)
+        {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {
@@ -144,18 +152,9 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckHypervolumeTargets(PlotSettings pSettings)
+        private static bool CheckParetoFrontTargets(Plot pSettings)
         {
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length != 2)
-            {
-                result = HandleOnly2ObjectivesMessage();
-            }
-            return result;
-        }
-
-        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
-        {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
             {
@@ -165,8 +164,9 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
+        private static bool CheckOneObjSomeVarTargets(Plot pSettings)
         {
+            TLog.MethodStart();
             bool result = true;
             if (pSettings.TargetObjectiveName.Length > 1)
             {

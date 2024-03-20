@@ -2,15 +2,18 @@ using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
+using Tunny.Core.Util;
+
 namespace Tunny.UI
 {
     public partial class OptimizationWindow
     {
         // OptimizationTab ==========================
-        private bool CmaEsSupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
+        private bool SupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
-                "CMA-ES samplers only support single objective optimization.",
+                "CMA-ES & GP:Optuna samplers only support single objective optimization.",
                 "Tunny",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error
@@ -22,6 +25,7 @@ namespace Tunny.UI
 
         private bool SameStudyNameMassage(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "Please choose any study name.",
                 "Tunny",
@@ -35,6 +39,7 @@ namespace Tunny.UI
 
         private bool NameAlreadyExistMessage(GH_DocumentEditor ghCanvas)
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
                 "Tunny",
@@ -49,6 +54,7 @@ namespace Tunny.UI
         // OutputTab ==========================
         private static bool IncorrectParseModeNumberInputMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "The model number format of the input is incorrect. \nPlease use a comma separator as follows.\n\"1,2,3\"",
                 "Tunny");
@@ -57,6 +63,7 @@ namespace Tunny.UI
 
         private static void UseFirstModelNumberToReflectMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "You input multi model numbers, but this function only reflect variables to slider or gene pool to first one.",
                 "Tunny"
@@ -66,6 +73,7 @@ namespace Tunny.UI
         // VisualizeTab ==========================
         private static void ResultFileNotExistErrorMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "Please set exist result file path.",
                 "Error",
@@ -76,6 +84,7 @@ namespace Tunny.UI
 
         private static bool HandleOnly1ObjectiveMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "This plot can only handle one objective function.",
                 "Tunny"
@@ -85,6 +94,7 @@ namespace Tunny.UI
 
         private static bool HandleOnly2ObjectivesMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "This plot can only handle 2 objective functions.",
                 "Tunny"
@@ -94,6 +104,7 @@ namespace Tunny.UI
 
         private static bool HandleOnly2or3ObjectiveMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "This plot can only handle 2 or 3 objective function.",
                 "Tunny"
@@ -103,6 +114,7 @@ namespace Tunny.UI
 
         private static bool RequireLeast1VariableMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "This plot requires at least one variable.",
                 "Tunny"
@@ -112,6 +124,7 @@ namespace Tunny.UI
 
         private static bool RequireLeast2VariableMessage()
         {
+            TLog.MethodStart();
             TunnyMessageBox.Show(
                 "This plot requires at least two variables.",
                 "Tunny"

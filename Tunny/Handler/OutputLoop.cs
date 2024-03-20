@@ -3,13 +3,16 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
+using Optuna.Trial;
+
 using Rhino.Geometry;
 using Rhino.Runtime;
 
 using Tunny.Component.Optimizer;
-using Tunny.Enum;
-using Tunny.PostProcess;
-using Tunny.Settings;
+using Tunny.Core.Settings;
+using Tunny.Core.Solver;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -18,8 +21,8 @@ namespace Tunny.Handler
     internal static class OutputLoop
     {
         private static BackgroundWorker s_worker;
-        private static FishingComponent s_component;
-        public static TunnySettings Settings;
+        public static OptimizeComponentBase Component;
+        public static TSettings Settings;
         public static string StudyName;
         public static string[] NickNames;
         public static int[] Indices;
@@ -28,30 +31,31 @@ namespace Tunny.Handler
 
         internal static void Run(object sender, DoWorkEventArgs e)
         {
+            TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
-            s_component = e.Argument as FishingComponent;
+            Component = e.Argument as FishingComponent;
 
             var fishes = new List<Fish>();
 
-            if (s_component != null)
+            if (Component != null)
             {
-                var optunaSolver = new Solver.Optuna(s_component.GhInOut.ComponentFolder, Settings, s_component.GhInOut.HasConstraint);
-                ModelResult[] modelResult = optunaSolver.GetModelResult(Indices, StudyName, s_worker);
-                if (modelResult.Length == 0)
+                var output = new Output(Settings.Storage.Path);
+                Trial[] targetTrials = output.GetTargetTrial(Indices, StudyName);
+                if (targetTrials.Length == 0)
                 {
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (s_component.GhInOut.HasConstraint && Indices[0] == -1)
+                if (Component.GhInOut.HasConstraint && Indices[0] == -1)
                 {
                     TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                foreach (ModelResult result in modelResult)
+                foreach (Trial trial in targetTrials)
                 {
-                    SetResultToFish(fishes, result, NickNames);
+                    SetResultToFish(fishes, trial, NickNames);
                 }
-                s_component.Fishes = fishes.ToArray();
+                Component.Fishes = fishes.ToArray();
             }
 
             s_worker?.ReportProgress(100);
@@ -59,49 +63,53 @@ namespace Tunny.Handler
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
-        private static void SetResultToFish(List<Fish> fishes, ModelResult model, IEnumerable<string> nickname)
+        public static void SetResultToFish(List<Fish> fishes, Trial trial, IEnumerable<string> nickname)
         {
+            TLog.MethodStart();
             fishes.Add(new Fish
             {
-                ModelNumber = model.Number,
-                Variables = SetVariables(model, nickname),
-                Objectives = SetObjectives(model),
-                Attributes = SetAttributes(model),
+                ModelNumber = trial.Number,
+                Variables = SetVariables(trial.Params, nickname),
+                Objectives = SetObjectives(trial.Values),
+                Attributes = SetAttributes(ParseAttrs(trial.UserAttrs)),
             });
         }
 
-        private static Dictionary<string, double> SetVariables(ModelResult model, IEnumerable<string> nickNames)
+        private static Dictionary<string, object> SetVariables(Dictionary<string, object> variables, IEnumerable<string> nickNames)
         {
-            return nickNames.SelectMany(name => model.Variables.Where(obj => obj.Key == name))
+            TLog.MethodStart();
+            return nickNames.SelectMany(name => variables.Where(obj => obj.Key == name))
                 .ToDictionary(variable => variable.Key, variable => variable.Value);
         }
 
-        private static Dictionary<string, double> SetObjectives(ModelResult model)
+        private static Dictionary<string, double> SetObjectives(double[] values)
         {
-            string[] nickNames = s_component.GhInOut.Objectives.GetNickNames();
+            TLog.MethodStart();
+            string[] nickNames = Component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
-            if (model.Objectives == null)
+            if (values == null)
             {
                 return null;
             }
-            for (int i = 0; i < model.Objectives.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
                 if (objectives.ContainsKey(nickNames[i]))
                 {
-                    objectives.Add(nickNames[i] + i, model.Objectives[i]);
+                    objectives.Add(nickNames[i] + i, values[i]);
                 }
                 else
                 {
-                    objectives.Add(nickNames[i], model.Objectives[i]);
+                    objectives.Add(nickNames[i], values[i]);
                 }
             }
             return objectives;
         }
 
-        private static Dictionary<string, object> SetAttributes(ModelResult model)
+        private static Dictionary<string, object> SetAttributes(Dictionary<string, List<string>> trialAttr)
         {
+            TLog.MethodStart();
             var attribute = new Dictionary<string, object>();
-            foreach (KeyValuePair<string, List<string>> attr in model.Attributes)
+            foreach (KeyValuePair<string, List<string>> attr in trialAttr)
             {
                 if (attr.Key == "Geometry")
                 {
@@ -116,6 +124,18 @@ namespace Tunny.Handler
                 }
             }
             return attribute;
+        }
+
+        private static Dictionary<string, List<string>> ParseAttrs(Dictionary<string, object> userAttrs)
+        {
+            TLog.MethodStart();
+            var attributes = new Dictionary<string, List<string>>();
+            foreach (string key in userAttrs.Keys)
+            {
+                string[] values = userAttrs[key] as string[];
+                attributes.Add(key, values.ToList());
+            }
+            return attributes;
         }
     }
 }

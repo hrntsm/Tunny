@@ -4,7 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-using Tunny.Enum;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Handler;
 
 namespace Tunny.UI
@@ -13,26 +14,31 @@ namespace Tunny.UI
     {
         private void OutputParatoSolutionButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             RunOutputLoop(OutputMode.ParatoSolutions);
         }
 
         private void OutputAllTrialsButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             RunOutputLoop(OutputMode.AllTrials);
         }
 
         private void OutputModelNumberButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             RunOutputLoop(OutputMode.ModelNumber);
         }
 
         private void ReflectToSliderButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             RunOutputLoop(OutputMode.ReflectToSliders);
         }
 
         private void RunOutputLoop(OutputMode mode)
         {
+            TLog.MethodStart();
             outputStopButton.Enabled = true;
             OutputLoop.Mode = mode;
             OutputLoop.Settings = _settings;
@@ -52,6 +58,7 @@ namespace Tunny.UI
 
         private bool SetOutputIndices(OutputMode mode)
         {
+            TLog.MethodStart();
             bool result = true;
             var indices = new List<int>();
             switch (mode)
@@ -85,6 +92,7 @@ namespace Tunny.UI
 
         private bool ParseModelNumberInput(ref List<int> indices)
         {
+            TLog.MethodStart();
             bool result = true;
             try
             {
@@ -99,6 +107,7 @@ namespace Tunny.UI
 
         private static void CheckIndicesLength(int[] indices)
         {
+            TLog.MethodStart();
             if (indices.Length > 1)
             {
                 UseFirstModelNumberToReflectMessage();
@@ -107,6 +116,7 @@ namespace Tunny.UI
 
         private void OutputStopButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             outputResultBackgroundWorker?.Dispose();
             OutputLoop.IsForcedStopOutput = true;
             switch (OutputLoop.Mode)
@@ -117,9 +127,7 @@ namespace Tunny.UI
                     _component.ExpireSolution(true);
                     break;
                 case OutputMode.ReflectToSliders:
-                    var decimalVar = _component.Fishes[0].Variables
-                            .Select(x => (decimal)x.Value).ToList();
-                    _component.GhInOut.NewSolution(decimalVar);
+                    _component.GhInOut.NewSolution(_component.Fishes[0].GetParameterClassFormatVariables());
                     break;
                 default:
                     throw new ArgumentException("Unsupported output mode.");
@@ -131,6 +139,7 @@ namespace Tunny.UI
 
         private void OutputProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
+            TLog.MethodStart();
             outputProgressBar.Value = e.ProgressPercentage;
             outputProgressBar.Update();
         }

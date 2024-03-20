@@ -3,9 +3,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
+using Python.Runtime;
+
 using Rhino;
 using Rhino.DocObjects;
 using Rhino.Geometry;
+
+using Tunny.Core.Util;
 
 namespace Tunny.Input
 {
@@ -17,6 +21,7 @@ namespace Tunny.Input
 
         public void AddFilePathToArtifact(string path)
         {
+            TLog.MethodStart();
             if (File.Exists(path))
             {
                 ArtifactPaths.Add(path);
@@ -25,17 +30,40 @@ namespace Tunny.Input
 
         public int Count()
         {
+            TLog.MethodStart();
             return Geometries.Count + Images.Count;
         }
 
-        public void SaveAllArtifacts(string basePath)
+        public void UploadArtifacts(dynamic artifactBackend, dynamic trial)
         {
-            SaveRhino3dm(basePath);
-            SaveImage(basePath);
+            TLog.MethodStart();
+            string fileName = $"artifact_trial_{trial.number}";
+            string basePath = Path.Combine(TEnvVariables.TmpDirPath, fileName);
+            SaveAllArtifacts(basePath);
+
+            dynamic optuna = Py.Import("optuna");
+            foreach (string path in ArtifactPaths)
+            {
+                optuna.artifacts.upload_artifact(trial, path, artifactBackend);
+            }
         }
 
-        public void SaveRhino3dm(string basePath)
+        private void SaveAllArtifacts(string basePath)
         {
+            TLog.MethodStart();
+            if (Geometries.Count > 0)
+            {
+                SaveRhino3dm(basePath);
+            }
+            if (Images.Count > 0)
+            {
+                SaveImage(basePath);
+            }
+        }
+
+        private void SaveRhino3dm(string basePath)
+        {
+            TLog.MethodStart();
             string path = basePath + "_model.3dm";
             var rhinoDoc = RhinoDoc.CreateHeadless("");
             foreach (GeometryBase geom in Geometries)
@@ -60,8 +88,9 @@ namespace Tunny.Input
             ArtifactPaths.Add(path);
         }
 
-        public void SaveImage(string basePath)
+        private void SaveImage(string basePath)
         {
+            TLog.MethodStart();
             for (int i = 0; i < Images.Count; i++)
             {
                 Bitmap bitmap = Images[i];

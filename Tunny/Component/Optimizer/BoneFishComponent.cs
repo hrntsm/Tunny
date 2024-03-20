@@ -1,0 +1,182 @@
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+
+using Grasshopper;
+using Grasshopper.GUI;
+using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+
+using Optuna.Study;
+
+using Tunny.Component.Params;
+using Tunny.Core.Handler;
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
+using Tunny.Handler;
+using Tunny.Type;
+namespace Tunny.Component.Optimizer
+{
+    public class BoneFishComponent : OptimizeComponentBase
+    {
+        private int _count;
+        private bool _running;
+        private string _info;
+        private Fish[] _allFishes;
+        private string _state;
+
+        public BoneFishComponent()
+          : base("Bone Fish", "Born",
+            "Bone Fish is an optimization component wrapped in optuna without UI."
+            )
+        {
+        }
+
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
+        {
+            pManager.AddGenericParameter("Variables", "Vars", "Connect variable number slider here.", GH_ParamAccess.tree);
+            pManager.AddGenericParameter("Objectives", "Objs", "Connect objective number component here.", GH_ParamAccess.tree);
+            pManager.AddParameter(new Param_FishAttribute(), "Attributes", "Attrs", "Connect model attribute like some geometry or values here. Not required.", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Artifacts", "Artfs", "Connect artifacts here. Not required.", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Start", "Start", "Start optimization.", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Stop", "Stop", "Stop optimization.", GH_ParamAccess.item, false);
+            Params.Input[0].Optional = true;
+            Params.Input[1].Optional = true;
+            Params.Input[2].Optional = true;
+            Params.Input[3].Optional = true;
+            Params.Input[5].Optional = true;
+        }
+
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
+        {
+            pManager.AddTextParameter("Info", "Info", "Information about the optimization.", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_Fish(), "All Fishes", "All", "All optimization results", GH_ParamAccess.list);
+            pManager.AddParameter(new Param_Fish(), "Best Fishes", "Best", "Best optimization results", GH_ParamAccess.list);
+        }
+
+        protected override void SolveInstance(IGH_DataAccess DA)
+        {
+            CheckVariablesInput(Params.Input[0].Sources.Select(ghParam => ghParam.InstanceGuid));
+            CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
+            CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
+
+            var settings = TSettings.LoadFromJson();
+            Version tunnyAssembleVersion = TEnvVariables.Version;
+            if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "The optimization environment has not been built; launch the UI of the Tunny component once and install Python.");
+                return;
+            }
+
+            bool start = false;
+            bool stop = false;
+            if (!DA.GetData(4, ref start)) { return; }
+            if (!DA.GetData(5, ref stop)) { return; }
+
+            if (!start)
+            {
+                Message = "No Opt";
+                _info = "No optimization has been performed yet.";
+            }
+
+            if (start && _state == "Finish")
+            {
+                _state = "Start";
+                DA.SetData(0, _info);
+                DA.SetDataList(1, _allFishes);
+                DA.SetDataList(2, Fishes);
+                return;
+            }
+
+            if (start && stop)
+            {
+                OptimizeLoop.IsForcedStopOptimize = true;
+            }
+
+            if (start && !_running)
+            {
+                _running = true;
+                _count = 0;
+                MakeFishPrintByCaptureToTopOrder();
+                GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
+                ghCanvas?.DisableUI();
+                Params.Output[1].ClearData();
+                Params.Output[2].ClearData();
+
+                OptimizeLoop.Settings = settings;
+                var worker = new BackgroundWorker
+                {
+                    WorkerReportsProgress = true,
+                    WorkerSupportsCancellation = true,
+                };
+                worker.DoWork += OptimizeLoop.RunMultiple;
+                worker.ProgressChanged += OptimizeProgressChangedHandler;
+                worker.RunWorkerCompleted += StopOptimize;
+
+                worker.RunWorkerAsync(this);
+            }
+
+            DA.SetData(0, _info);
+        }
+
+        private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
+        {
+            _count++;
+            var pState = (ProgressState)e.UserState;
+            UpdateGrasshopper(pState.Parameter);
+            Message = $"Trial {_count}";
+        }
+
+        private void StopOptimize(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _running = false;
+            OptimizeLoop.IsForcedStopOptimize = true;
+
+            Message = "Outputting";
+            Study[] studies = OptimizeLoop.Settings.Storage.GetAllStudies();
+            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeLoop.Settings.StudyName);
+
+            string versionString = (study.UserAttrs["tunny_version"] as string[])[0];
+            var version = new Version(versionString);
+            string[] metricNames = version <= TEnvVariables.OldStorageVersion
+                ? study.UserAttrs["objective_names"] as string[]
+                : study.SystemAttrs["study:metric_names"] as string[];
+            _allFishes = study.Trials.Select(trial => new Fish(trial, metricNames)).ToArray();
+            Params.Output[1].AddVolatileDataList(new GH_Path(0), _allFishes.Select(x => new GH_Fish(x)));
+            Fishes = study.BestTrials.Select(trial => new Fish(trial, metricNames)).ToArray();
+            Params.Output[2].AddVolatileDataList(new GH_Path(0), Fishes.Select(x => new GH_Fish(x)));
+
+            _state = "Finish";
+            ExpireSolution(true);
+
+            GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
+            Message = "Finish";
+            ghCanvas?.EnableUI();
+        }
+
+        public void SetInfo(string info)
+        {
+            _info = info;
+        }
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalMenuItems(menu);
+            Menu_AppendItem(menu, "Open settings.json", Menu_OpenSettingsClicked);
+        }
+
+        private void Menu_OpenSettingsClicked(object sender, EventArgs e)
+        {
+            var process = new Process();
+            process.StartInfo.FileName = "notepad.exe";
+            process.StartInfo.Arguments = $"\"{TEnvVariables.OptimizeSettingsPath}\"";
+            process.Start();
+        }
+
+        protected override Bitmap Icon => Resources.Resource.BoneFish;
+        public override Guid ComponentGuid => new Guid("c6b7612e-ee01-47ad-bc7d-713d76b274ab");
+    }
+}

@@ -1,155 +1,647 @@
+using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using Newtonsoft.Json;
 
 using Optuna.Study;
 using Optuna.Trial;
 
-namespace Optuna.Storage
+namespace Optuna.Storage.RDB
 {
-    public class RDBStorage : BaseStorage
+    public class SqliteStorage : IOptunaStorage
     {
-        public RDBStorage(string url)
+        private readonly Dictionary<int, Study.Study> _studies = new Dictionary<int, Study.Study>();
+        private readonly SQLiteConnectionStringBuilder _sqliteConnection;
+        private int _nextStudyId;
+
+        public SqliteStorage(string filePath, bool createIfNotExist = false)
         {
-            throw new System.NotImplementedException();
+            _sqliteConnection = new SQLiteConnectionStringBuilder
+            {
+                DataSource = filePath,
+                Version = 3,
+            };
+            if (!File.Exists(filePath))
+            {
+                if (!createIfNotExist)
+                {
+                    throw new ArgumentException("The specified database does not exist.");
+                }
+                else
+                {
+                    SQLiteConnection.CreateFile(filePath);
+                    CreateBaseTables();
+                }
+            }
+
+            GetAllStudies();
         }
 
-        public override void CheckTrialIsUpdatable(int trialId, TrialState trialState)
+        public void CheckTrialIsUpdatable(int trialId, TrialState trialState)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
+        public int CreateNewStudy(StudyDirection[] studyDirections, string studyName)
         {
-            throw new System.NotImplementedException();
+            long maxLength;
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand("SELECT COUNT(*) FROM studies", connection))
+                {
+                    maxLength = (long)command.ExecuteScalar();
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT COUNT(*) FROM studies WHERE study_name = @SearchName;";
+                    command.Parameters.AddWithValue("@SearchName", studyName);
+                    bool hasTargetStudyName = (long)command.ExecuteScalar() > 0;
+                    if (hasTargetStudyName)
+                    {
+                        throw new InvalidOperationException($"The study name '{studyName}' already exists.");
+                    }
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "INSERT INTO studies (study_name) VALUES (@studyName);";
+                    command.Parameters.AddWithValue("@studyName", studyName);
+                    command.ExecuteNonQuery();
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    for (int i = 0; i < studyDirections.Length; i++)
+                    {
+                        StudyDirection direction = studyDirections[i];
+                        command.CommandText = "INSERT INTO study_directions (direction, study_id, objective) VALUES (@direction, @studyId, @objective);";
+                        command.Parameters.AddWithValue("@direction", direction.ToString().ToUpperInvariant());
+                        command.Parameters.AddWithValue("@studyId", maxLength + 1);
+                        command.Parameters.AddWithValue("@objective", i);
+                        command.ExecuteNonQuery();
+                    }
+                }
+                connection.Close();
+            }
+            _nextStudyId = (int)maxLength + 1;
+            _studies[_nextStudyId] = new Study.Study(this, _nextStudyId, studyName, studyDirections);
+            return _nextStudyId++;
         }
 
-        public override int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
+        private void CreateBaseTables()
         {
-            throw new System.NotImplementedException();
+            var commands = new StringBuilder();
+            commands.Append("CREATE TABLE IF NOT EXISTS alembic_version(");
+            commands.Append("   version_num VARCHAR(32) PRIMARY KEY NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS studies(");
+            commands.Append("   study_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   study_name VARCHAR(512) NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS study_directions(");
+            commands.Append("   study_direction_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   direction VARCHAR(8) NOT NULL,");
+            commands.Append("   study_id INTEGER NOT NULL,");
+            commands.Append("   objective INTEGER NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS study_system_attributes(");
+            commands.Append("   study_system_attribute_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   study_id INTEGER,");
+            commands.Append("   key VARCHAR(512),");
+            commands.Append("   value_json TEXT");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS study_user_attributes(");
+            commands.Append("   study_user_attribute_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   study_id INTEGER,");
+            commands.Append("   key VARCHAR(512),");
+            commands.Append("   value_json TEXT");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_heartbeats(");
+            commands.Append("   trial_heartbeat_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER NOT NULL,");
+            commands.Append("   heartbeat DATETIME NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_intermediate_values(");
+            commands.Append("   trial_intermediate_value_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER NOT NULL,");
+            commands.Append("   step INTEGER NOT NULL,");
+            commands.Append("   intermediate_value FLOAT,");
+            commands.Append("   intermediate_value_type VARCHAR(7) NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_params(");
+            commands.Append("   param_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER,");
+            commands.Append("   param_name VARCHAR(512),");
+            commands.Append("   param_value FLOAT,");
+            commands.Append("   distribution_json TEXT");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_system_attributes(");
+            commands.Append("   trial_system_attribute_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER,");
+            commands.Append("   key VARCHAR(512),");
+            commands.Append("   value_json TEXT");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_user_attributes(");
+            commands.Append("   trial_user_attribute_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER,");
+            commands.Append("   key VARCHAR(512),");
+            commands.Append("   value_json TEXT");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trial_values(");
+            commands.Append("   trial_value_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   trial_id INTEGER NOT NULL,");
+            commands.Append("   objective INTEGER NOT NULL,");
+            commands.Append("   value FLOAT");
+            commands.Append("   value_type VARCHAR(7) NOT NULL");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS trials(");
+            commands.Append("   trial_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   number INTEGER,");
+            commands.Append("   study_id INTEGER,");
+            commands.Append("   state VARCHAR(8) NOT NULL,");
+            commands.Append("   datetime_start DATETIME,");
+            commands.Append("   datetime_complete DATETIME");
+            commands.Append(");");
+            commands.Append("CREATE TABLE IF NOT EXISTS version_info(");
+            commands.Append("   version_info_id INTEGER PRIMARY KEY NOT NULL,");
+            commands.Append("   schema_version INTEGER,");
+            commands.Append("   library_version VARCHAR(256)");
+            commands.Append(");");
+
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(commands.ToString(), connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+                SetAlembicVersion(connection);
+                SetVersionInfo(connection);
+                connection.Close();
+            }
         }
 
-        public override void DeleteStudy(int studyId)
+        private static void SetVersionInfo(SQLiteConnection connection)
         {
-            throw new System.NotImplementedException();
+            long columnLength;
+            using (var command = new SQLiteCommand("SELECT COUNT(*) FROM version_info", connection))
+            {
+                columnLength = (long)command.ExecuteScalar();
+            }
+            if (columnLength > 0)
+            {
+                return;
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "INSERT INTO version_info (schema_version, library_version) VALUES (@schema, @library);";
+                command.Parameters.AddWithValue("@schema", 12);
+                command.Parameters.AddWithValue("@library", "3.4.0");
+                command.ExecuteNonQuery();
+            }
         }
 
-        public override Study.Study[] GetAllStudies()
+        private static void SetAlembicVersion(SQLiteConnection connection)
         {
-            throw new System.NotImplementedException();
+            long columnLength;
+            using (var command = new SQLiteCommand("SELECT COUNT(*) FROM alembic_version", connection))
+            {
+                columnLength = (long)command.ExecuteScalar();
+            }
+            if (columnLength > 0)
+            {
+                return;
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "INSERT INTO alembic_version (version_num) VALUES (@versionNum);";
+                command.Parameters.AddWithValue("@versionNum", "v3.2.0.a");
+                command.ExecuteNonQuery();
+            }
         }
 
-        public override Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
+        public int CreateNewTrial(int studyId, Trial.Trial templateTrial = null)
         {
-            throw new System.NotImplementedException();
+            if (templateTrial != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "INSERT INTO trials (number, study_id, datetime_start) VALUES (@number, @studyId, @datetimeStart);";
+                    command.Parameters.AddWithValue("@number", 0);
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            return 2;
         }
 
-        public override Trial.Trial GetBestTrial(int studyId)
+        public void DeleteStudy(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override int GetNTrials(int studyId)
+        public Study.Study[] GetAllStudies()
         {
-            throw new System.NotImplementedException();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand("SELECT study_id, study_name FROM studies", connection))
+                {
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int studyId = reader.GetInt32(0);
+                            string studyName = reader.GetString(1);
+                            var study = new Study.Study(this, studyId, studyName, GetStudyDirections(studyId));
+                            foreach (KeyValuePair<string, object> attr in GetStudySystemAttrs(studyId))
+                            {
+                                study.SystemAttrs.Add(attr.Key, attr.Value);
+                            }
+                            foreach (KeyValuePair<string, object> attr in GetStudyUserAttrs(studyId))
+                            {
+                                study.UserAttrs.Add(attr.Key, attr.Value);
+                            }
+                            _studies[studyId] = study;
+                        }
+                    }
+                }
+                connection.Close();
+            }
+
+            foreach (KeyValuePair<int, Study.Study> study in _studies)
+            {
+                study.Value.Trials.AddRange(GetAllTrials(study.Key));
+            }
+
+            return _studies.Values.ToArray();
         }
 
-        public override StudyDirection[] GetStudyDirections(int studyId)
+        public void RemoveSession()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override int GetStudyIdFromName(string studyName)
+        public void SetStudySystemAttr(int studyId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override string GetStudyNameFromId(int studyId)
+        public void SetStudyUserAttr(int studyId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetStudySystemAttrs(int studyId)
+        public void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetStudyUserAttrs(int studyId)
+        public void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Trial.Trial GetTrial(int trialId)
+        public bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
+        public void SetTrialSystemAttr(int trialId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override int GetTrialNumberFromId(int trialId)
+        public void SetTrialUserAttr(int trialId, string key, object value)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override double GetTrialParam(int trialId, string paramName)
+        public int GetStudyIdFromName(string studyName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetTrialParams(int trialId)
+        public string GetStudyNameFromId(int studyId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override Dictionary<string, object> GetTrialSystemAttrs(int trialId)
+        public StudyDirection[] GetStudyDirections(int studyId)
         {
-            throw new System.NotImplementedException();
+            if (_studies.TryGetValue(studyId, out Study.Study value))
+            {
+                return value.Directions;
+            }
+            else
+            {
+                var directions = new List<StudyDirection>();
+                using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+                {
+                    connection.Open();
+                    using (var command = new SQLiteCommand(connection))
+                    {
+                        command.CommandText = "SELECT direction FROM study_directions WHERE study_id = @studyId;";
+                        command.Parameters.AddWithValue("@studyId", studyId);
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                directions.Add((StudyDirection)Enum.Parse(typeof(StudyDirection), reader.GetString(0), true));
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return directions.ToArray();
+            }
         }
 
-        public override Dictionary<string, object> GetTrialUserAttrs(int trialId)
+        public Dictionary<string, object> GetStudyUserAttrs(int studyId)
         {
-            throw new System.NotImplementedException();
+            var studyUserAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM study_user_attributes WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            GetAttrs(studyUserAttrs, reader);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return studyUserAttrs;
         }
 
-        public override void RemoveSession()
+        public Dictionary<string, object> GetStudySystemAttrs(int studyId)
         {
-            throw new System.NotImplementedException();
+            var studySystemAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM study_system_attributes WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            GetAttrs(studySystemAttrs, reader);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return studySystemAttrs;
         }
 
-        public override void SetStudySystemAttr(int studyId, string key, object value)
+        public int GetTrialIdFromStudyIdTrialNumber(int studyId, int trialNumber)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void SetStudyUserAttr(int studyId, string key, object value)
+        public int GetTrialNumberFromId(int trialId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void SetTrailParam(int trialId, string paramName, double paramValueInternal, object distribution)
+        public double GetTrialParam(int trialId, string paramName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override void SetTrialIntermediateValue(int trialId, int step, double intermediateValue)
+        public Trial.Trial GetTrial(int trialId)
         {
-            throw new System.NotImplementedException();
+            var trial = new Trial.Trial();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT number, state, datetime_start, datetime_complete FROM trials WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DateTime completeTime = reader.GetValue(3) is DBNull ? DateTime.MaxValue : reader.GetDateTime(3);
+                            trial = new Trial.Trial
+                            {
+                                TrialId = trialId,
+                                Number = reader.GetInt32(0),
+                                State = (TrialState)Enum.Parse(typeof(TrialState), reader.GetString(1), true),
+                                DatetimeStart = reader.GetDateTime(2),
+                                DatetimeComplete = completeTime
+                            };
+                        }
+                    }
+                }
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT value FROM trial_values WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        var objective = new List<double>();
+                        while (reader.Read())
+                        {
+                            objective.Add(reader.GetDouble(0));
+                        }
+                        trial.Values = objective.ToArray();
+                    }
+                }
+                trial.Params = GetTrialParams(trialId);
+                trial.SystemAttrs = GetTrialSystemAttrs(trialId);
+                trial.UserAttrs = GetTrialUserAttrs(trialId);
+                connection.Close();
+            }
+            return trial;
         }
 
-        public override bool SetTrialStateValue(int trialId, TrialState state, double[] values = null)
+        public Trial.Trial[] GetAllTrials(int studyId, bool deepcopy = true)
         {
-            throw new System.NotImplementedException();
+            var trials = new List<Trial.Trial>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT trial_id FROM trials WHERE study_id = @studyId;";
+                    command.Parameters.AddWithValue("@studyId", studyId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trials.Add(GetTrial(reader.GetInt32(0)));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trials.ToArray();
         }
 
-        public override void SetTrialSystemAttr(int trialId, string key, object value)
+        public int GetNTrials(int studyId)
         {
-            throw new System.NotImplementedException();
+            if (!_studies.ContainsKey(studyId))
+            {
+                GetAllStudies();
+            }
+            return _studies[studyId].Trials.Count;
         }
 
-        public override void SetTrialUserAttr(int trialId, string key, object value)
+        public Trial.Trial GetBestTrial(int studyId)
         {
-            throw new System.NotImplementedException();
+            if (!_studies.ContainsKey(studyId))
+            {
+                GetAllStudies();
+            }
+
+            List<Trial.Trial> allTrials = _studies[studyId].Trials.FindAll(trial => trial.State == TrialState.COMPLETE);
+
+            if (allTrials.Count == 0)
+            {
+                return null;
+            }
+
+            StudyDirection[] directions = GetStudyDirections(studyId);
+            if (directions.Length != 1)
+            {
+                throw new InvalidOperationException("Study is multi-objective.");
+            }
+
+            if (directions[0] == StudyDirection.Maximize)
+            {
+                return allTrials.OrderByDescending(trial => trial.Values[0]).First();
+            }
+            else
+            {
+                return allTrials.OrderBy(trial => trial.Values[0]).First();
+            }
+        }
+
+        public Dictionary<string, object> GetTrialParams(int trialId)
+        {
+            var trialParams = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT param_name, param_value FROM trial_params WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            trialParams.Add(reader.GetString(0), reader.GetValue(1));
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialParams;
+        }
+
+        public Dictionary<string, object> GetTrialUserAttrs(int trialId)
+        {
+            var trialUserAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM trial_user_attributes WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            GetAttrs(trialUserAttrs, reader);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialUserAttrs;
+        }
+
+        public Dictionary<string, object> GetTrialSystemAttrs(int trialId)
+        {
+            var trialSystemAttrs = new Dictionary<string, object>();
+            using (var connection = new SQLiteConnection(_sqliteConnection.ToString()))
+            {
+                connection.Open();
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = "SELECT key, value_json FROM trial_system_attributes WHERE trial_id = @trialId;";
+                    command.Parameters.AddWithValue("@trialId", trialId);
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            GetAttrs(trialSystemAttrs, reader);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return trialSystemAttrs;
+        }
+
+        private static void GetAttrs(Dictionary<string, object> attrs, SQLiteDataReader reader)
+        {
+            string key = reader.GetString(0);
+            string value = reader.GetString(1);
+            if (!string.IsNullOrEmpty(value) && value.Contains("[") && value.Contains("]"))
+            {
+                //FIXME: This is a hack to handle the case where the value is a list of strings.
+                if (key.Contains("preference"))
+                {
+                    attrs.Add(key, value);
+                }
+                else
+                {
+                    try
+                    {
+                        string[] values = JsonConvert.DeserializeObject<string[]>(value);
+                        attrs.Add(reader.GetString(0), values);
+                    }
+                    catch (JsonReaderException)
+                    {
+                        if (value.Contains("\""))
+                        {
+                            value = value.Replace("\"", "");
+                        }
+                        attrs.Add(reader.GetString(0), new[] { value });
+                    }
+                }
+            }
+            else
+            {
+                if (value.Contains("\""))
+                {
+                    value = value.Replace("\"", "");
+                }
+                attrs.Add(reader.GetString(0), new[] { value });
+            }
         }
     }
 }
