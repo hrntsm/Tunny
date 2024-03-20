@@ -5,7 +5,7 @@ using System.Linq;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
-namespace Tunny.Component.Util
+namespace Tunny.Component.Operation
 {
     public partial class ConstructFishEgg
     {

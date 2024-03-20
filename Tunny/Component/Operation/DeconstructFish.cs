@@ -10,7 +10,7 @@ using Tunny.Component.Params;
 using Tunny.Resources;
 using Tunny.Type;
 
-namespace Tunny.Component.Util
+namespace Tunny.Component.Operation
 {
     public class DeconstructFish : GH_Component
     {
@@ -19,7 +19,7 @@ namespace Tunny.Component.Util
         public DeconstructFish()
           : base("Deconstruct Fish", "DeconF",
               "Deconstruct Fish.",
-              "Tunny", "Util")
+              "Tunny", "Operation")
         {
         }
 
