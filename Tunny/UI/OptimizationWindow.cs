@@ -89,7 +89,6 @@ namespace Tunny.UI
             outputResultBackgroundWorker.Dispose();
         }
 
-
         private void UpdateGrasshopper(IList<Parameter> parameters)
         {
             TLog.MethodStart();

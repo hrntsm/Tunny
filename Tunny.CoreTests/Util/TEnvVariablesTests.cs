@@ -6,7 +6,7 @@ namespace Tunny.Core.Util.Tests
 {
     public class GooConverterTests
     {
-        [Fact()]
+        [Fact]
         public void GetTmpDirPathTest()
         {
             string path = TEnvVariables.TmpDirPath;

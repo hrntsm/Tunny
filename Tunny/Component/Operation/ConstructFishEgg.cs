@@ -93,6 +93,8 @@ namespace Tunny.Component.Operation
                             sameValueCount++;
                         }
                         continue;
+                    default:
+                        throw new ArgumentException(nameof(variable));
                 }
             }
             bool isContainVariableSets = sameValueCount == _fishEggs.Count;

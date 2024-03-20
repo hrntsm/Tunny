@@ -632,7 +632,6 @@ namespace Optuna.Storage.RDB
                         }
                         attrs.Add(reader.GetString(0), new[] { value });
                     }
-
                 }
             }
             else

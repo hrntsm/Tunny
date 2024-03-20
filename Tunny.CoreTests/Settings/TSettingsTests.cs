@@ -6,7 +6,7 @@ namespace Tunny.Core.Settings.Tests
 {
     public class TSettingsTests
     {
-        [Fact()]
+        [Fact]
         public void CreateNewSettingsFileTest()
         {
             var settings = new TSettings();

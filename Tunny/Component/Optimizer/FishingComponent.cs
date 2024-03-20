@@ -14,7 +14,7 @@ using Tunny.UI;
 
 namespace Tunny.Component.Optimizer
 {
-    public partial class FishingComponent : OptimizeComponentBase, IDisposable
+    public class FishingComponent : OptimizeComponentBase, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
 

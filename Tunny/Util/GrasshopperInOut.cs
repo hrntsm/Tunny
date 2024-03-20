@@ -342,17 +342,13 @@ namespace Tunny.Util
             }
         }
 
-        private bool SetSliderValues(decimal[] parameters)
+        private void SetSliderValues(decimal[] parameters)
         {
             TLog.MethodStart();
             int i = 0;
 
             foreach (GH_NumberSlider slider in _sliders)
             {
-                if (slider == null)
-                {
-                    return false;
-                }
                 decimal val;
 
                 switch (slider.Slider.Type)
@@ -385,8 +381,6 @@ namespace Tunny.Util
                     genePool.ExpireSolution(false);
                 }
             }
-
-            return true;
         }
 
         private static decimal GetNormalisedGenePoolValue(decimal unnormalized, GalapagosGeneListObject genePool)
