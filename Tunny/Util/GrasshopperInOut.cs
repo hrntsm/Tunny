@@ -410,10 +410,20 @@ namespace Tunny.Util
             string[] categoryParameters = parameters.Where(p => p.HasCategory).Select(p => p.Category).ToArray();
             SetSliderValues(decimalParameters);
             SetCategoryValues(categoryParameters);
+            ExpireObjectives();
             Recalculate();
             SetObjectives();
             SetAttributes();
             SetArtifacts();
+        }
+
+        private void ExpireObjectives()
+        {
+            TLog.MethodStart();
+            foreach (IGH_Param param in _component.Params.Input[1].Sources)
+            {
+                param.ExpireSolution(false);
+            }
         }
 
         public string[] GetGeometryJson()

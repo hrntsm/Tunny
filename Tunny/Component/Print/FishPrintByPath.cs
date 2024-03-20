@@ -6,14 +6,14 @@ using Grasshopper.Kernel;
 using Tunny.Component.Params;
 using Tunny.Resources;
 
-namespace Tunny.Component.Util
+namespace Tunny.Component.Print
 {
     public class FishPrintByPath : GH_Component
     {
         public FishPrintByPath()
           : base("Fish Print by Path", "FPPath",
               "Create Fish Print by file path.",
-              "Tunny", "Util")
+              "Tunny", "Print")
         {
         }
 

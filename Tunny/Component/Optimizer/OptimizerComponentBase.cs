@@ -10,7 +10,7 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
-using Tunny.Component.Util;
+using Tunny.Component.Print;
 using Tunny.Core.Input;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
