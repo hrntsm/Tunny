@@ -420,7 +420,7 @@ namespace Tunny.Util
             foreach (Guid guid in input.Sources.Select(p => p.InstanceGuid))
             {
                 IGH_DocumentObject obj = _document.FindObject(guid, false);
-                if(!obj.Attributes.IsTopLevel)
+                if (!obj.Attributes.IsTopLevel)
                 {
                     Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
                     obj = _document.FindObject(topLevelGuid, true);
