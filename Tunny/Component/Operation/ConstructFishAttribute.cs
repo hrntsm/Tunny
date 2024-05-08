@@ -120,7 +120,7 @@ namespace Tunny.Component.Operation
                     }
                     else
                     {
-                        return SetGenericParameterInput(index);
+                        return SetGenericParameterInput(index - 1);
                     }
                 }
             }
