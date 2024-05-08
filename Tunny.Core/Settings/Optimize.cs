@@ -13,5 +13,6 @@ namespace Tunny.Core.Settings
         public double Timeout { get; set; }
         public GcAfterTrial GcAfterTrial { get; set; } = GcAfterTrial.HasGeometry;
         public bool ShowRealtimeResult { get; set; }
+        public bool IgnoreDuplicateSampling { get; set; }
     }
 }

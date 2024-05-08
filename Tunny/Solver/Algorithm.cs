@@ -308,7 +308,7 @@ namespace Tunny.Solver
                 trial = optInfo.Study.ask();
                 SetOptimizationParameter(parameter, trial);
                 ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime);
-                if (CheckDuplicateSample(trial, out result))
+                if (Settings.Optimize.IgnoreDuplicateSampling && IsSampleDuplicate(trial, out result))
                 {
                     TLog.Info($"Trial {trialNum} is duplicate sample.");
                     pState.IsReportOnly = true;
@@ -376,7 +376,7 @@ namespace Tunny.Solver
             return result;
         }
 
-        private static bool CheckDuplicateSample(dynamic trial, out TrialGrasshopperItems result)
+        private static bool IsSampleDuplicate(dynamic trial, out TrialGrasshopperItems result)
         {
             PyModule ps = Py.CreateScope();
             double[] values;

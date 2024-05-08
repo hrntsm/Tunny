@@ -165,7 +165,9 @@ namespace Tunny.UI
 
             runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
             miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
+            ignoreDuplicateSamplingCheckBox.Checked = _settings.Optimize.IgnoreDuplicateSampling;
         }
+
         private void GetUIValues()
         {
             TLog.MethodStart();
@@ -181,6 +183,7 @@ namespace Tunny.UI
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
+            _settings.Optimize.IgnoreDuplicateSampling = ignoreDuplicateSamplingCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
             _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
