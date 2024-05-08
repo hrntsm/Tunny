@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.11.1] -YYYY-MM-DD
+
+### Fixed
+
+- SolutionExpire timing was off when using ValueList.
+- FishAttribute component "Attr" input index off by one error.
+
 ## [v0.11.0] -2024-03-20
 
 ### Added
