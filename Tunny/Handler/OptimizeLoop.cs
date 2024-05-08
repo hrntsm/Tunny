@@ -71,9 +71,13 @@ namespace Tunny.Handler
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
             TLog.MethodStart();
-            Component.GrasshopperStatus = GrasshopperStates.RequestSent;
-
             s_worker.ReportProgress(progress, pState);
+            if (pState.IsReportOnly)
+            {
+                return null;
+            }
+
+            Component.GrasshopperStatus = GrasshopperStates.RequestSent;
             while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             { /*just wait*/ }
 

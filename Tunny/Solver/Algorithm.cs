@@ -296,6 +296,7 @@ namespace Tunny.Solver
             var result = new TrialGrasshopperItems();
 
             int nullCount = 0;
+
             while (true)
             {
                 if (optInfo.Preferential != null && !optInfo.Study.should_generate() && !OptimizeLoop.IsForcedStopOptimize)
@@ -306,9 +307,19 @@ namespace Tunny.Solver
 
                 trial = optInfo.Study.ask();
                 SetOptimizationParameter(parameter, trial);
-
                 ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime);
-                result = EvalFunc(pState, progress);
+                if (CheckDuplicateSample(trial, out result))
+                {
+                    TLog.Info($"Trial {trialNum} is duplicate sample.");
+                    pState.IsReportOnly = true;
+                    EvalFunc(pState, progress);
+                    break;
+                }
+                else
+                {
+                    result = EvalFunc(pState, progress);
+                }
+
                 if (optInfo.HumanSliderInput != null)
                 {
                     optInfo.HumanSliderInput.SaveNote(optInfo.Study, trial, result.Objectives.Images);
@@ -339,6 +350,7 @@ namespace Tunny.Solver
                 {
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
+
                 if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
                 {
                     dynamic optuna = Py.Import("optuna");
@@ -362,6 +374,28 @@ namespace Tunny.Solver
             }
 
             return result;
+        }
+
+        private static bool CheckDuplicateSample(dynamic trial, out TrialGrasshopperItems result)
+        {
+            PyModule ps = Py.CreateScope();
+            double[] values;
+            ps.Exec(
+                "def check_duplicate(trial):\n" +
+                "    import optuna\n" +
+                "    from optuna.trial import TrialState\n" +
+                "    states_to_consider = (TrialState.COMPLETE,)\n" +
+                "    trials_to_consider = trial.study.get_trials(deepcopy=False, states=states_to_consider)\n" +
+                "    for t in reversed(trials_to_consider):\n" +
+                "        if trial.params == t.params:\n" +
+                "            trial.set_user_attr('NOTE', f'trial {t.number} and trial {trial.number} were duplicate parameters.')\n" +
+                "            return t.values\n" +
+                "    return None\n"
+            );
+            dynamic checkDuplicate = ps.Get("check_duplicate");
+            values = checkDuplicate(trial);
+            result = new TrialGrasshopperItems(values);
+            return values != null;
         }
 
         private void SetOptimizationParameter(Parameter[] parameter, dynamic trial)
