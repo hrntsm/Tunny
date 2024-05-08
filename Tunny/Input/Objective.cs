@@ -28,7 +28,6 @@ namespace Tunny.Input
         public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
         public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
 
-
         public Objective(double[] values)
         {
             TLog.MethodStart();
