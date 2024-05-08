@@ -349,5 +349,11 @@ namespace Tunny.UI
             TLog.SetLoggingLevel(level);
             _settings.LogLevel = level;
         }
+
+        private void IgnoreDuplicateSamplingCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            _settings.Optimize.IgnoreDuplicateSampling = ignoreDuplicateSamplingCheckBox.Checked;
+        }
     }
 }

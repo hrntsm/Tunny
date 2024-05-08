@@ -8,6 +8,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ## [v0.11.1] -YYYY-MM-DD
 
+### Added
+
+- Ignore duplicate sampling setting
+
 ### Changed
 
 - Bump optuna library

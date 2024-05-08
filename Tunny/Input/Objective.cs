@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,8 +7,6 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
-
-using Python.Runtime;
 
 using Rhino.Geometry;
 
@@ -28,6 +27,15 @@ namespace Tunny.Input
 
         public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
         public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
+
+        public Objective(double[] values)
+        {
+            TLog.MethodStart();
+            Numbers = values;
+            Images = Array.Empty<Bitmap>();
+            Geometries = Array.Empty<GeometryBase>();
+            HumanInTheLoopType = HumanInTheLoopType.None;
+        }
 
         public Objective(List<IGH_Param> sources)
         {

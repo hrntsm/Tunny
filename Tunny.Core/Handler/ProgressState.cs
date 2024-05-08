@@ -13,5 +13,6 @@ namespace Tunny.Core.Handler
         public double[][] BestValues { get; set; }
         public double HypervolumeRatio { get; set; }
         public TimeSpan EstimatedTimeRemaining { get; set; }
+        public bool IsReportOnly { get; set; }
     }
 }
