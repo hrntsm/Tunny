@@ -8,6 +8,12 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ## [v0.11.1] -YYYY-MM-DD
 
+### Changed
+
+- Bump optuna library
+  - optuna 3.6.0 => 3.6.1
+  - optuna-dashboard 0.15.0 => 0.15.1
+
 ### Fixed
 
 - SolutionExpire timing was off when using ValueList.
