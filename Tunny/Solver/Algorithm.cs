@@ -378,8 +378,8 @@ namespace Tunny.Solver
 
         private static bool IsSampleDuplicate(dynamic trial, out TrialGrasshopperItems result)
         {
-            PyModule ps = Py.CreateScope();
             double[] values;
+            PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def check_duplicate(trial):\n" +
                 "    import optuna\n" +
@@ -389,6 +389,8 @@ namespace Tunny.Solver
                 "    for t in reversed(trials_to_consider):\n" +
                 "        if trial.params == t.params:\n" +
                 "            trial.set_user_attr('NOTE', f'trial {t.number} and trial {trial.number} were duplicate parameters.')\n" +
+                "            if 'Constraint' in t.user_attrs:\n" +
+                "               trial.set_user_attr('Constraint', t.user_attrs['Constraint'])\n" +
                 "            return t.values\n" +
                 "    return None\n"
             );
