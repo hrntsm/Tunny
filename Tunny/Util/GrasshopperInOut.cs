@@ -16,6 +16,7 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
+using Tunny.Component.Util;
 using Tunny.Core.Input;
 using Tunny.Core.Util;
 using Tunny.Input;
@@ -32,7 +33,7 @@ namespace Tunny.Util
         private List<GalapagosGeneListObject> _genePool;
         private GH_FishAttribute _attributes;
         private List<GH_NumberSlider> _sliders;
-        private List<GH_ValueList> _valueLists;
+        private List<TunnyValueList> _valueLists;
 
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
@@ -57,7 +58,7 @@ namespace Tunny.Util
         {
             TLog.MethodStart();
             _sliders = new List<GH_NumberSlider>();
-            _valueLists = new List<GH_ValueList>();
+            _valueLists = new List<TunnyValueList>();
             _genePool = new List<GalapagosGeneListObject>();
 
             _inputGuids.AddRange(_component.Params.Input[0].Sources.Select(source => source.InstanceGuid));
@@ -100,7 +101,7 @@ namespace Tunny.Util
                     case GalapagosGeneListObject genePool:
                         _genePool.Add(genePool);
                         break;
-                    case GH_ValueList valueList:
+                    case TunnyValueList valueList:
                         _valueLists.Add(valueList);
                         break;
                     case Param_FishEgg fishEgg:
@@ -325,7 +326,7 @@ namespace Tunny.Util
         {
             TLog.MethodStart();
             int i = 0;
-            foreach (GH_ValueList valueList in _valueLists)
+            foreach (TunnyValueList valueList in _valueLists)
             {
                 if (valueList == null)
                 {
@@ -337,8 +338,7 @@ namespace Tunny.Util
                 {
                     return;
                 }
-                valueList.SelectItem(index);
-                valueList.ExpireSolution(false);
+                valueList.SelectItemUnsafe(index);
             }
         }
 
@@ -420,7 +420,7 @@ namespace Tunny.Util
             foreach (Guid guid in input.Sources.Select(p => p.InstanceGuid))
             {
                 IGH_DocumentObject obj = _document.FindObject(guid, false);
-                if(!obj.Attributes.IsTopLevel)
+                if (!obj.Attributes.IsTopLevel)
                 {
                     Guid topLevelGuid = obj.Attributes.GetTopLevel.InstanceGuid;
                     obj = _document.FindObject(topLevelGuid, true);

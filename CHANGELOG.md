@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.11.1] -2024-05-10
+
+### Added
+
+- Ignore duplicate sampling setting
+
+### Changed
+
+- Bump optuna library
+  - optuna 3.6.0 => 3.6.1
+  - optuna-dashboard 0.15.0 => 0.15.1
+
+### Fixed
+
+- SolutionExpire timing was wrong when using ValueList.
+- FishAttribute component "Attr" input index off by one error.
+
 ## [v0.11.0] -2024-03-20
 
 ### Added

@@ -106,16 +106,28 @@ namespace Tunny.Component.Operation
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
-            return side == GH_ParameterSide.Input
-                ? index == 0
-                    ? SetGeometryParameterInput()
-                    : index == 1
-                        ? SetNumberParameterInput()
-                        : SetGenericParameterInput(index)
-                : null;
+            if (side == GH_ParameterSide.Input)
+            {
+                if (index == 0)
+                {
+                    return SetGeometryParameterInput();
+                }
+                else
+                {
+                    if (index == 1)
+                    {
+                        return SetNumberParameterInput();
+                    }
+                    else
+                    {
+                        return SetGenericParameterInput(index - 1);
+                    }
+                }
+            }
+            return null;
         }
 
-        private static IGH_Param SetGenericParameterInput(int index)
+        private static Param_GenericObject SetGenericParameterInput(int index)
         {
             var p = new Param_GenericObject();
             p.Name = p.NickName = $"Attr{index}";
@@ -125,7 +137,7 @@ namespace Tunny.Component.Operation
             return p;
         }
 
-        private static IGH_Param SetNumberParameterInput()
+        private static Param_Number SetNumberParameterInput()
         {
             var p = new Param_Number();
             p.Name = p.NickName = "Constraint";
@@ -136,7 +148,7 @@ namespace Tunny.Component.Operation
             return p;
         }
 
-        private static IGH_Param SetGeometryParameterInput()
+        private static Param_Geometry SetGeometryParameterInput()
         {
             var p = new Param_Geometry();
             p.Name = p.NickName = "Geometry";
