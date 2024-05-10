@@ -8,7 +8,7 @@ namespace Tunny.Component.Util
 {
     public class TunnyValueList : GH_ValueList
     {
-        public TunnyValueList() : base()
+        public TunnyValueList()
         {
             Category = "Tunny";
             SubCategory = "Input";
@@ -78,26 +78,26 @@ namespace Tunny.Component.Util
 
         protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
         {
-            switch (channel)
+            if (channel == GH_CanvasChannel.Objects)
             {
-                case GH_CanvasChannel.Objects:
-                    DrawObjects(canvas, graphics, channel);
-                    break;
-                default:
-                    base.Render(canvas, graphics, channel);
-                    break;
+                DrawObjects(canvas, graphics, channel);
+            }
+            else
+            {
+                base.Render(canvas, graphics, channel);
             }
         }
 
         private void DrawObjects(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
         {
-            var style = new GH_PaletteStyle(Color.CornflowerBlue, Color.DarkBlue, Color.Black);
+            var tunnyStyle = new GH_PaletteStyle(Color.CornflowerBlue, Color.DarkBlue, Color.Black);
+
             GH_PaletteStyle normalStyle = GH_Skin.palette_normal_standard;
             GH_PaletteStyle warningStyle = GH_Skin.palette_warning_standard;
             GH_PaletteStyle hiddenStyle = GH_Skin.palette_hidden_standard;
-            GH_Skin.palette_normal_standard = style;
-            GH_Skin.palette_warning_standard = style;
-            GH_Skin.palette_hidden_standard = style;
+            GH_Skin.palette_normal_standard = tunnyStyle;
+            GH_Skin.palette_warning_standard = tunnyStyle;
+            GH_Skin.palette_hidden_standard = tunnyStyle;
             base.Render(canvas, graphics, channel);
             GH_Skin.palette_normal_standard = normalStyle;
             GH_Skin.palette_warning_standard = warningStyle;
