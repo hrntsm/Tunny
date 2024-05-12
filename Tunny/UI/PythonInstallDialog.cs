@@ -32,9 +32,19 @@ namespace Tunny.UI
 
         private void InstallerProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
+            string txt = e.UserState.ToString();
             installProgressBar.Value = e.ProgressPercentage;
-            installItemLabel.Text = e.UserState.ToString();
+            installItemLabel.Text = txt;
             installProgressBar.Update();
+
+            if (txt == "Finish!!")
+            {
+                Close();
+            }
+            else if (txt == "Killed process: optuna-dashboard")
+            {
+                TunnyMessageBox.Show("stopped the Optuna Dashboard process to prevent the installation of Python libraries.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

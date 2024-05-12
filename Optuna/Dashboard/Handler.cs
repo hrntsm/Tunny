@@ -54,7 +54,7 @@ namespace Optuna.Dashboard
 
         public void Run()
         {
-            CheckExistDashboardProcess();
+            KillExistDashboardProcess();
             string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir {_artifactDir}";
 
             var dashboard = new Process();
@@ -70,16 +70,19 @@ namespace Optuna.Dashboard
             browser.Start();
         }
 
-        private static void CheckExistDashboardProcess()
+        public static bool KillExistDashboardProcess()
         {
+            int killCount = 0;
             Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
             if (dashboardProcess.Length > 0)
             {
                 foreach (Process p in dashboardProcess)
                 {
                     p.Kill();
+                    killCount++;
                 }
             }
+            return killCount > 0;
         }
     }
 }
