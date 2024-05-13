@@ -6,16 +6,18 @@ namespace Tunny.UI
 {
     sealed class TunnyMessageBox
     {
-        public static void Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
+        public static DialogResult Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
         {
+            DialogResult dialogResult = DialogResult.None;
             WriteLog(message, icon);
             using (var f = new Form())
             {
                 f.Owner = Grasshopper.Instances.DocumentEditor;
                 f.TopMost = true;
-                MessageBox.Show(message, caption, buttons, icon);
+                dialogResult = MessageBox.Show(message, caption, buttons, icon);
                 f.TopMost = false;
             }
+            return dialogResult;
         }
 
         private static void WriteLog(string message, MessageBoxIcon icon)

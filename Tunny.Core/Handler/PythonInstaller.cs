@@ -13,17 +13,31 @@ namespace Tunny.Core.Handler
         {
             TLog.MethodStart();
             var worker = sender as BackgroundWorker;
-            worker?.ReportProgress(0, "Unzip library...");
-            TLog.Info("Unzip library...");
-            string[] packageList = UnzipLibraries();
+            CheckProcess(worker);
+            string[] packageList = UnzipLibraries(worker);
             InstallPackages(worker, packageList);
 
             worker?.ReportProgress(100, "Finish!!");
         }
 
-        private static string[] UnzipLibraries()
+        private static void CheckProcess(BackgroundWorker worker)
         {
             TLog.MethodStart();
+            worker.ReportProgress(0, "Check process...");
+            TLog.Info("Check optuna-dashboard process...");
+            if (Optuna.Dashboard.Handler.KillExistDashboardProcess())
+            {
+                string txt = "Killed process: optuna-dashboard";
+                TLog.Info(txt);
+                worker.ReportProgress(0, txt);
+            }
+        }
+
+        private static string[] UnzipLibraries(BackgroundWorker worker)
+        {
+            TLog.MethodStart();
+            worker.ReportProgress(0, "Unzip library...");
+            TLog.Info("Unzip library...");
             string envPath = TEnvVariables.TunnyEnvPath;
             string componentFolderPath = TEnvVariables.ComponentFolder;
             TLog.Info("Unzip Python libraries: " + envPath);

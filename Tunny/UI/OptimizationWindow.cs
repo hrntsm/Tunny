@@ -43,7 +43,7 @@ namespace Tunny.UI
         private void RunPythonInstaller()
         {
             TLog.MethodStart();
-            Version tunnyAssembleVersion = TEnvVariables.Version;
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString();
             if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
                 TLog.Info("Run Python installer");
