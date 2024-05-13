@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ namespace Tunny.UI
 {
     public class LoadingInstruction : GH_AssemblyPriority, IDisposable
     {
+        private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
@@ -71,17 +73,33 @@ namespace Tunny.UI
             {
                 var list = new List<ToolStripMenuItem>();
 
+                _tunnyHelpStripMenuItem = new ToolStripMenuItem
+                {
+                    Name = "TunnyHelpStripMenuItem",
+                    Size = new Size(265, 30),
+                    Text = "Help",
+                };
                 _optunaDashboardToolStripMenuItem = new ToolStripMenuItem
                 {
                     Name = "OptunaDashboardToolStripMenuItem",
                     Size = new Size(265, 30),
                     Text = "Run optuna-dashboard",
                 };
+                _tunnyHelpStripMenuItem.Click += TunnyHelpStripMenuItem_Click;
                 _optunaDashboardToolStripMenuItem.Click += OptunaDashboardToolStripMenuItem_Click;
 
+                list.Add(_tunnyHelpStripMenuItem);
                 list.Add(_optunaDashboardToolStripMenuItem);
                 return list;
             }
+        }
+
+        private void TunnyHelpStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var browser = new Process();
+            browser.StartInfo.FileName = $@"https://tunny-docs.deno.dev/";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
