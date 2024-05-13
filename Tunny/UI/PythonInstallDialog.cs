@@ -43,7 +43,7 @@ namespace Tunny.UI
             }
             else if (txt == "Killed process: optuna-dashboard")
             {
-                TunnyMessageBox.Show("stopped the Optuna Dashboard process to prevent the installation of Python libraries.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                TunnyMessageBox.Show("Stopped the Optuna Dashboard process to prevent the installation of Python libraries.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
