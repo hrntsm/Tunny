@@ -142,6 +142,9 @@
   <data name="FishPrintByPath" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>FishPrintByPath.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="optuna_dashboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>optuna-dashboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ParamFishAttribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>ParamFishAttribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

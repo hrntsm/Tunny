@@ -19,6 +19,7 @@ namespace Tunny.UI
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
         private ToolStripMenuItem _pythonInstallStripMenuItem;
+        private ToolStripMenuItem _aboutTunnyStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
         {
@@ -72,36 +73,30 @@ namespace Tunny.UI
         private void AddTunnyMenuItems(ToolStripItemCollection dropDownItems)
         {
             TLog.MethodStart();
-            var size = new Size(265, 30);
-            _tunnyHelpStripMenuItem = new ToolStripMenuItem
-            {
-                Name = "TunnyHelpStripMenuItem",
-                Size = size,
-                Text = "Help",
-            };
-            _optunaDashboardToolStripMenuItem = new ToolStripMenuItem
-            {
-                Name = "OptunaDashboardToolStripMenuItem",
-                Size = size,
-                Text = "Run optuna-dashboard...",
-            };
-            _pythonInstallStripMenuItem = new ToolStripMenuItem
-            {
-                Name = "PythonInstallStripMenuItem",
-                Size = size,
-                Text = "Install Python...",
-            };
-
-            _tunnyHelpStripMenuItem.Click += TunnyHelpStripMenuItem_Click;
-            _optunaDashboardToolStripMenuItem.Click += OptunaDashboardToolStripMenuItem_Click;
-            _pythonInstallStripMenuItem.Click += PythonInstallStripMenuItem_Click;
+            _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, TunnyHelpStripMenuItem_Click, "TunnyHelpStripMenuItem");
+            _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
+            _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
+            _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
 
             dropDownItems.AddRange(new ToolStripItem[] {
                 _tunnyHelpStripMenuItem,
                 _optunaDashboardToolStripMenuItem,
                 new ToolStripSeparator(),
-                _pythonInstallStripMenuItem
+                _pythonInstallStripMenuItem,
+                new ToolStripSeparator(),
+                _aboutTunnyStripMenuItem
             });
+        }
+
+        private void AboutTunnyStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            TLog.Debug("AboutTunnyStripMenuItem Clicked");
+            TunnyMessageBox.Show(
+                "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
+                "About Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         private void PythonInstallStripMenuItem_Click(object sender, EventArgs e)
