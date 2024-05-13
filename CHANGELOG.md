@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+
+## [UNRELEASED] -yyyy-mm-dd
+
+### Added
+
+- Help & Install Python menu strip items
+
+### Fixed
+
+- Python install error when there is optuna dashboard process
+  - Add check and kill the process method
+- Rhino7 and Rhino8 compatibility
+  - There was a difference in specifications between Rhino 7 (net48) and Rhino 8 (net7) when serializing its Version to JSON for saving settings.
+
 ## [v0.11.1] -2024-05-10
 
 ### Added
