@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -51,10 +50,10 @@ namespace Tunny.UI
                 tunnyToolStripMenuItem
             });
 
-            tunnyToolStripMenuItem.DropDownItems.AddRange(TunnyMenuItems.ToArray());
             tunnyToolStripMenuItem.Name = "TunnyToolStripMenuItem";
             tunnyToolStripMenuItem.Size = new Size(125, 29);
             tunnyToolStripMenuItem.Text = "Tunny";
+            AddTunnyMenuItems(tunnyToolStripMenuItem.DropDownItems);
 
             docEditor.MainMenuStrip.ResumeLayout(false);
             docEditor.MainMenuStrip.PerformLayout();
@@ -67,12 +66,8 @@ namespace Tunny.UI
             e.AppendItem(_optunaDashboardToolStripMenuItem);
         }
 
-        private List<ToolStripMenuItem> TunnyMenuItems
+        private void AddTunnyMenuItems(ToolStripItemCollection dropDownItems)
         {
-            get
-            {
-                var list = new List<ToolStripMenuItem>();
-
                 _tunnyHelpStripMenuItem = new ToolStripMenuItem
                 {
                     Name = "TunnyHelpStripMenuItem",
@@ -83,15 +78,17 @@ namespace Tunny.UI
                 {
                     Name = "OptunaDashboardToolStripMenuItem",
                     Size = new Size(265, 30),
-                    Text = "Run optuna-dashboard",
+                    Text = "Run optuna-dashboard...",
                 };
+
                 _tunnyHelpStripMenuItem.Click += TunnyHelpStripMenuItem_Click;
                 _optunaDashboardToolStripMenuItem.Click += OptunaDashboardToolStripMenuItem_Click;
 
-                list.Add(_tunnyHelpStripMenuItem);
-                list.Add(_optunaDashboardToolStripMenuItem);
-                return list;
-            }
+                dropDownItems.AddRange(new ToolStripItem[] {
+                    _tunnyHelpStripMenuItem,
+                    _optunaDashboardToolStripMenuItem,
+                    new ToolStripSeparator()
+                });
         }
 
         private void TunnyHelpStripMenuItem_Click(object sender, EventArgs e)
