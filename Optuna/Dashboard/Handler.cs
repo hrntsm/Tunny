@@ -55,7 +55,7 @@ namespace Optuna.Dashboard
         public void Run()
         {
             KillExistDashboardProcess();
-            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir {_artifactDir}";
+            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir \"{_artifactDir}\"";
 
             var dashboard = new Process();
             dashboard.StartInfo.FileName = _dashboardPath;
