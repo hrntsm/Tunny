@@ -132,6 +132,7 @@ namespace Tunny.UI
             this.nsga3CrossoverProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.nsga3MutationProbUpDown = new System.Windows.Forms.NumericUpDown();
             this.CMAES = new System.Windows.Forms.TabPage();
+            this.cmaEsUseFirstEggToX0CheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsWithMarginCheckBox = new System.Windows.Forms.CheckBox();
             this.cmaEsWarmStartComboBox = new System.Windows.Forms.ComboBox();
             this.cmaEsWarmStartCmaEsCheckBox = new System.Windows.Forms.CheckBox();
@@ -1609,6 +1610,7 @@ namespace Tunny.UI
             // 
             // CMAES
             // 
+            this.CMAES.Controls.Add(this.cmaEsUseFirstEggToX0CheckBox);
             this.CMAES.Controls.Add(this.cmaEsWithMarginCheckBox);
             this.CMAES.Controls.Add(this.cmaEsWarmStartComboBox);
             this.CMAES.Controls.Add(this.cmaEsWarmStartCmaEsCheckBox);
@@ -1633,6 +1635,18 @@ namespace Tunny.UI
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
             // 
+            // cmaEsUseFirstEggToX0CheckBox
+            // 
+            this.cmaEsUseFirstEggToX0CheckBox.AutoSize = true;
+            this.cmaEsUseFirstEggToX0CheckBox.Location = new System.Drawing.Point(7, 185);
+            this.cmaEsUseFirstEggToX0CheckBox.Name = "cmaEsUseFirstEggToX0CheckBox";
+            this.cmaEsUseFirstEggToX0CheckBox.Size = new System.Drawing.Size(158, 19);
+            this.cmaEsUseFirstEggToX0CheckBox.TabIndex = 39;
+            this.cmaEsUseFirstEggToX0CheckBox.Text = "Use first FishEgg to X0";
+            this.toolTip1.SetToolTip(this.cmaEsUseFirstEggToX0CheckBox, "If this is True, \r\nthe initial value of FishEgg be the mean value X0 assumed for " +
+        "the first normal distribution of CMA-ES.");
+            this.cmaEsUseFirstEggToX0CheckBox.UseVisualStyleBackColor = true;
+            // 
             // cmaEsWithMarginCheckBox
             // 
             this.cmaEsWithMarginCheckBox.AutoSize = true;
@@ -1650,7 +1664,7 @@ namespace Tunny.UI
             // 
             this.cmaEsWarmStartComboBox.Enabled = false;
             this.cmaEsWarmStartComboBox.FormattingEnabled = true;
-            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(145, 168);
+            this.cmaEsWarmStartComboBox.Location = new System.Drawing.Point(145, 158);
             this.cmaEsWarmStartComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.cmaEsWarmStartComboBox.Name = "cmaEsWarmStartComboBox";
             this.cmaEsWarmStartComboBox.Size = new System.Drawing.Size(121, 23);
@@ -1659,7 +1673,7 @@ namespace Tunny.UI
             // cmaEsWarmStartCmaEsCheckBox
             // 
             this.cmaEsWarmStartCmaEsCheckBox.AutoSize = true;
-            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(7, 148);
+            this.cmaEsWarmStartCmaEsCheckBox.Location = new System.Drawing.Point(8, 141);
             this.cmaEsWarmStartCmaEsCheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.cmaEsWarmStartCmaEsCheckBox.Name = "cmaEsWarmStartCmaEsCheckBox";
             this.cmaEsWarmStartCmaEsCheckBox.Size = new System.Drawing.Size(145, 19);
@@ -1788,7 +1802,7 @@ namespace Tunny.UI
             this.cmaEsWarnIndependentSamplingCheckBox.Checked = true;
             this.cmaEsWarnIndependentSamplingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cmaEsWarnIndependentSamplingCheckBox.Enabled = false;
-            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(7, 205);
+            this.cmaEsWarnIndependentSamplingCheckBox.Location = new System.Drawing.Point(7, 210);
             this.cmaEsWarnIndependentSamplingCheckBox.Name = "cmaEsWarnIndependentSamplingCheckBox";
             this.cmaEsWarnIndependentSamplingCheckBox.Size = new System.Drawing.Size(191, 19);
             this.cmaEsWarnIndependentSamplingCheckBox.TabIndex = 27;
@@ -2378,6 +2392,7 @@ namespace Tunny.UI
         private System.Windows.Forms.CheckBox gpDeterministicObjectiveCheckBox;
         private System.Windows.Forms.Button gpDefaultButton;
         private System.Windows.Forms.CheckBox ignoreDuplicateSamplingCheckBox;
+        private System.Windows.Forms.CheckBox cmaEsUseFirstEggToX0CheckBox;
     }
 }
 

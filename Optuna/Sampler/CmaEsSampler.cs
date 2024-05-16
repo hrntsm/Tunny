@@ -7,7 +7,7 @@ namespace Optuna.Sampler
     /// </summary>
     public class CmaEsSampler : SamplerBase
     {
-        public bool UseFirstEggToSetX0 { get; set; } = true;
+        public bool UseFirstEggToX0 { get; set; } = true;
         public double? Sigma0 { get; set; }
         public int NStartupTrials { get; set; } = 1;
         public bool WarnIndependentSampling { get; set; } = true;
@@ -23,7 +23,7 @@ namespace Optuna.Sampler
 
         public dynamic ToPython(dynamic optuna, string storagePath, Dictionary<string, double> firstVariables)
         {
-            Dictionary<string, double> x0 = UseFirstEggToSetX0 && firstVariables != null && firstVariables.Count > 0
+            Dictionary<string, double> x0 = UseFirstEggToX0 && firstVariables != null && firstVariables.Count > 0
                 ? firstVariables
                 : null;
 
