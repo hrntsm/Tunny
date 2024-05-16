@@ -214,6 +214,7 @@ namespace Tunny.UI
             cmaEsSigmaNumUpDown.Value = cmaEs.Sigma0 != null
                 ? (decimal)cmaEs.Sigma0 : 0;
             cmaEsSigmaNumUpDown.Enabled = cmaEsSigmaCheckBox.Checked;
+            cmaEsUseFirstEggToX0CheckBox.Checked = cmaEs.UseFirstEggToX0;
 
             cmaEsWarnIndependentSamplingCheckBox.Checked = cmaEs.WarnIndependentSampling;
             cmaEsConsiderPruneTrialsCheckBox.Checked = cmaEs.ConsiderPrunedTrials;
@@ -312,6 +313,7 @@ namespace Tunny.UI
             cmaEs.NStartupTrials = (int)cmaEsStartupNumUpDown.Value;
             cmaEs.Sigma0 = cmaEsSigmaCheckBox.Checked
                 ? (double?)cmaEsSigmaNumUpDown.Value : null;
+            cmaEs.UseFirstEggToX0 = cmaEsUseFirstEggToX0CheckBox.Checked;
             cmaEs.WarnIndependentSampling = cmaEsWarnIndependentSamplingCheckBox.Checked;
             cmaEs.ConsiderPrunedTrials = cmaEsConsiderPruneTrialsCheckBox.Checked;
             cmaEs.UseSeparableCma = cmaEsUseSaparableCmaCheckBox.Checked;

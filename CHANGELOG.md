@@ -12,6 +12,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Added
 
 - Help & Install Python menu strip items
+- The initial value of FishEgg be the mean value X0 assumed for the first normal distribution of CMA-ES.
 
 ### Fixed
 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -5,6 +7,7 @@ namespace Optuna.Sampler
     /// </summary>
     public class CmaEsSampler : SamplerBase
     {
+        public bool UseFirstEggToX0 { get; set; } = true;
         public double? Sigma0 { get; set; }
         public int NStartupTrials { get; set; } = 1;
         public bool WarnIndependentSampling { get; set; } = true;
@@ -18,10 +21,15 @@ namespace Optuna.Sampler
         public bool WithMargin { get; set; } = true;
         public bool LrAdapt { get; set; }
 
-        public dynamic ToPython(dynamic optuna, string storagePath)
+        public dynamic ToPython(dynamic optuna, string storagePath, Dictionary<string, double> firstVariables)
         {
+            Dictionary<string, double> x0 = UseFirstEggToX0 && firstVariables != null && firstVariables.Count > 0
+                ? firstVariables
+                : null;
+
             return UseWarmStart
                 ? optuna.samplers.CmaEsSampler(
+                    x0: x0,
                     n_startup_trials: NStartupTrials,
                     warn_independent_sampling: WarnIndependentSampling,
                     seed: Seed,
@@ -34,6 +42,7 @@ namespace Optuna.Sampler
                     lr_adapt: LrAdapt
                 )
                 : optuna.samplers.CmaEsSampler(
+                    x0: x0,
                     sigma0: Sigma0,
                     n_startup_trials: NStartupTrials,
                     warn_independent_sampling: WarnIndependentSampling,
