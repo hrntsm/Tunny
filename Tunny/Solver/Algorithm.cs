@@ -72,7 +72,7 @@ namespace Tunny.Solver
                 TLog.Debug("Wake Python GIL.");
 
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
+                dynamic sampler = SetSamplerSettings(samplerType, HasConstraints, FishEgg);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
                 dynamic artifactBackend = Settings.Storage.CreateNewOptunaArtifactBackend(false);
 
@@ -623,11 +623,13 @@ namespace Tunny.Solver
             }
         }
 
-        private dynamic SetSamplerSettings(SamplerType samplerType, dynamic optuna, bool hasConstraints)
+        private dynamic SetSamplerSettings(SamplerType samplerType, bool hasConstraints, Dictionary<string, FishEgg> fishEgg)
         {
             TLog.MethodStart();
             string storagePath = Settings.Storage.GetOptunaStoragePath();
-            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(optuna, samplerType, storagePath, hasConstraints);
+            Dictionary<string, double> firstVariables = GetFirstEgg(fishEgg);
+
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(samplerType, storagePath, hasConstraints, firstVariables);
             if (
                 (samplerType == SamplerType.GP || samplerType == SamplerType.CmaEs || samplerType == SamplerType.QMC || samplerType == SamplerType.Random)
                 && hasConstraints
@@ -636,6 +638,23 @@ namespace Tunny.Solver
                 TunnyMessageBox.Show("Only TPE, GP:BoTorch and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return optunaSampler;
+        }
+
+        private static Dictionary<string, double> GetFirstEgg(Dictionary<string, FishEgg> fishEgg)
+        {
+            TLog.MethodStart();
+            if (fishEgg == null || fishEgg.Count == 0)
+            {
+                return null;
+            }
+
+            var firstVariables = new Dictionary<string, double>();
+            foreach (KeyValuePair<string, FishEgg> pair in fishEgg)
+            {
+                firstVariables.Add(pair.Key, pair.Value.Values[0]);
+            }
+
+            return firstVariables;
         }
     }
 }
