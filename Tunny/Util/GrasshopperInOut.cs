@@ -309,10 +309,35 @@ namespace Tunny.Util
                 {
                     _attributes = fishAttr;
                     HasConstraint = fishAttr.Value.ContainsKey("Constraint");
+                    SetDirection(fishAttr);
                     break;
                 }
             }
             return true;
+        }
+
+        private void SetDirection(GH_FishAttribute fishAttr)
+        {
+            int[] directions = new[] { -1 };
+            if (fishAttr.Value.TryGetValue("Direction", out object fishDirection))
+            {
+                if (fishDirection is List<int> dirList)
+                {
+                    directions = dirList.ToArray();
+                }
+                else
+                {
+                    string message = "Direction must be either 1(maximize) or -1(minimize).";
+                    TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw new ArgumentException(message);
+                }
+            }
+            if (!Objectives.SetDirections(directions))
+            {
+                string message = "The number of the direction in FishAttr must be the same as the number of the objective.";
+                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new ArgumentException(message);
+            }
         }
 
         private static bool ShowIncorrectAttributeInputMessage()

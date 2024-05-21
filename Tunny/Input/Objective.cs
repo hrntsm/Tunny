@@ -24,6 +24,7 @@ namespace Tunny.Input
         public Bitmap[] Images { get; private set; }
         public GeometryBase[] Geometries { get; private set; }
         public HumanInTheLoopType HumanInTheLoopType { get; private set; }
+        public string[] Directions { get; private set; }
 
         public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
         public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
@@ -121,6 +122,31 @@ namespace Tunny.Input
                 }
             }
             return nickNames.ToArray();
+        }
+
+        public bool SetDirections(int[] directions)
+        {
+            TLog.MethodStart();
+            Directions = new string[Length];
+            if (directions.Length == 1)
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    Directions[i] = directions[0] == 1 ? "maximize" : "minimize";
+                }
+            }
+            else if (directions.Length != Length)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    Directions[i] = directions[i] == 1 ? "maximize" : "minimize";
+                }
+            }
+            return true;
         }
     }
 }
