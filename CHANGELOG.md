@@ -6,13 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
-
 ## [UNRELEASED] -yyyy-mm-dd
 
 ### Added
 
 - Help & Install Python menu strip items
 - The initial value of FishEgg be the mean value X0 assumed for the first normal distribution of CMA-ES.
+- FishAttr now allows you to specify the optimization direction for each objective function.
+  - A value of 1 indicates maximization, while -1 indicates minimization.
 
 ### Fixed
 
