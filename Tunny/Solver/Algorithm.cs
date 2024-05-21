@@ -59,7 +59,7 @@ namespace Tunny.Solver
             SamplerType samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
-            string[] directions = SetDirectionValues(Objective.Length);
+            string[] directions = Objective.Directions;
             if (string.IsNullOrEmpty(Settings.StudyName))
             {
                 Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
@@ -143,18 +143,6 @@ namespace Tunny.Solver
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;
             RunHumanSidlerInputOptimize(optInfo, nBatch, out parameter, out result);
-        }
-
-        private static string[] SetDirectionValues(int nObjective)
-        {
-            TLog.MethodStart();
-            string[] directions = new string[nObjective];
-            for (int i = 0; i < nObjective; i++)
-            {
-                directions[i] = "minimize";
-            }
-
-            return directions;
         }
 
         private bool CheckExistStudyMatching(int nObjective)
