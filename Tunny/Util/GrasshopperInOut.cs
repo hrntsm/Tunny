@@ -318,7 +318,7 @@ namespace Tunny.Util
 
         private void SetDirection(GH_FishAttribute fishAttr)
         {
-            int[] directions = new int[] { -1 };
+            int[] directions = new[] { -1 };
             if (fishAttr.Value.TryGetValue("Direction", out object fishDirection))
             {
                 if (fishDirection is List<int> dirList)
