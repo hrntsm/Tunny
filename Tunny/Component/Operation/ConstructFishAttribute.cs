@@ -71,33 +71,48 @@ namespace Tunny.Component.Operation
                 switch (i)
                 {
                     case 1:
-                        var direction = new List<int>();
-                        if (DA.GetDataList(i, direction))
-                        {
-                            if (direction.Any(x => x != 1 && x != -1))
-                            {
-                                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Direction must be either 1(maximize) or -1(minimize).");
-                                return;
-                            }
-                            dict.Add(key, direction);
-                        }
+                        SetDirectionDataList(DA, dict, i, key);
                         break;
                     case 2:
-                        var constraint = new List<double>();
-                        if (DA.GetDataList(i, constraint))
-                        {
-                            dict.Add(key, constraint);
-                        }
+                        SetConstraintDataList(DA, dict, i, key);
                         break;
                     default:
-                        var list = new List<object>();
-                        if (!DA.GetDataList(i, list))
-                        {
-                            continue;
-                        }
-                        dict.Add(key, list);
+                        SetGenericDataList(DA, dict, i, key);
                         break;
                 }
+            }
+        }
+
+        private static void SetGenericDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var list = new List<object>();
+            if (!DA.GetDataList(i, list))
+            {
+                return;
+            }
+            dict.Add(key, list);
+        }
+
+        private static void SetConstraintDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var constraint = new List<double>();
+            if (DA.GetDataList(i, constraint))
+            {
+                dict.Add(key, constraint);
+            }
+        }
+
+        private void SetDirectionDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var direction = new List<int>();
+            if (DA.GetDataList(i, direction))
+            {
+                if (direction.Any(x => x != 1 && x != -1))
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Direction must be either 1(maximize) or -1(minimize).");
+                    return;
+                }
+                dict.Add(key, direction);
             }
         }
 
