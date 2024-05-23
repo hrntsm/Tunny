@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
+
+using Python.Runtime;
 
 using Serilog.Events;
 
@@ -187,6 +191,83 @@ namespace Tunny.UI
             _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
             _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
+        }
+
+        private void TTDesignExplorerButton_Click(object sender, EventArgs e)
+        {
+            string envPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", @"python310.dll");
+            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
+            if (PythonEngine.IsInitialized)
+            {
+                PythonEngine.Shutdown();
+                TLog.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
+            }
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                PyModule ps = Py.CreateScope();
+                ps.Exec(
+"def export_t4de_csv(storage, target_study_name, output_path):\n" +
+"    import optuna\n" +
+"    import csv\n" +
+"    import json\n" +
+
+"    study = optuna.load_study(storage=storage, study_name=target_study_name)\n" +
+"    s_id = (str)(study._study_id)\n" +
+"    trial = study.get_trials(deepcopy=False, states=[optuna.trial.TrialState.COMPLETE])\n" +
+"    metric_names = study.metric_names\n" +
+"    param_keys = list(trial[0].params.keys())\n" +
+"    artifact_path = 'http://127.0.0.1:8080/artifacts/' + s_id + '/'\n" +
+
+"    label = []\n" +
+
+"    for key in param_keys:\n" +
+"        label.append('in:' + key)\n" +
+
+"    if metric_names is not None:\n" +
+"        for name in metric_names:\n" +
+"            label.append('out:' + name)\n" +
+"    for attr in trial[0].system_attrs:\n" +
+"        if attr.startswith('artifacts:'):\n" +
+"            artifact_value = trial[0].system_attrs[attr]\n" +
+"            j = json.loads(artifact_value)\n" +
+"            if j['mimetype'] == 'image/png':\n" +
+"                label.append('img')\n" +
+
+"    with open(output_path + '/tuuny_DesignExplorer_input.csv', 'w', newline='') as f:\n" +
+"        writer = csv.writer(f)\n" +
+"        writer.writerow(label)\n" +
+
+"        for t in trial:\n" +
+"            t_id = (str)(t.number)\n" +
+"            row = []\n" +
+"            for key in param_keys:\n" +
+"                row.append(t.params[key])\n" +
+
+"            for v in t.values:\n" +
+"                row.append(v)\n" +
+
+"            for attr in t.system_attrs:\n" +
+"                if attr.startswith('artifacts:'):\n" +
+"                    artifact_value = t.system_attrs[attr]\n" +
+"                    j = json.loads(artifact_value)\n" +
+"                    if j['mimetype'] == 'image/png':\n" +
+"                        row.append(artifact_path + t_id + '/' + j['artifact_id'])\n" +
+"                        break\n" +
+
+"            writer.writerow(row)\n"
+                );
+                dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
+                string target = visualizeTargetStudyComboBox.Text;
+                dynamic func = ps.Get("export_t4de_csv");
+                string csvPath = Path.GetDirectoryName(_settings.Storage.Path);
+                func(storage, target, csvPath);
+
+                var designExplorer = new Process();
+                string path = Path.Combine(TEnvVariables.DesignExplorerPath, "index.html");
+                designExplorer.StartInfo.FileName = path;
+                designExplorer.Start();
+            }
         }
     }
 }

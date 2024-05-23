@@ -9,6 +9,7 @@ namespace Tunny.Core.Util
         public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
         public static string TunnyEnvPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".tunny_env");
         public static string LogPath { get; } = Path.Combine(TunnyEnvPath, "logs");
+        public static string DesignExplorerPath { get; } = Path.Combine(TunnyEnvPath, "TT-DesignExplorer");
         public static string OptimizeSettingsPath { get; } = Path.Combine(TunnyEnvPath, "settings.json");
         public static string PythonPath { get; } = Path.Combine(TunnyEnvPath, "python");
         public static string ComponentFolder { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
