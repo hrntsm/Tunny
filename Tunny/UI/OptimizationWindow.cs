@@ -234,7 +234,7 @@ namespace Tunny.UI
 "            if j['mimetype'] == 'image/png':\n" +
 "                label.append('img')\n" +
 
-"    with open(output_path + '/tuuny_DesignExplorer_input.csv', 'w', newline='') as f:\n" +
+"    with open(output_path + '/fish2DesignExplorer.csv', 'w', newline='') as f:\n" +
 "        writer = csv.writer(f)\n" +
 "        writer.writerow(label)\n" +
 
@@ -266,6 +266,7 @@ namespace Tunny.UI
                 var designExplorer = new Process();
                 string path = Path.Combine(TEnvVariables.DesignExplorerPath, "index.html");
                 designExplorer.StartInfo.FileName = path;
+                designExplorer.StartInfo.UseShellExecute = true;
                 designExplorer.Start();
             }
         }
