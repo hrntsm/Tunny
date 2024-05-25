@@ -524,12 +524,12 @@ namespace Tunny.UI
             // 
             // ttDesignExplorerButton
             // 
-            this.ttDesignExplorerButton.Location = new System.Drawing.Point(81, 51);
+            this.ttDesignExplorerButton.Location = new System.Drawing.Point(209, 10);
             this.ttDesignExplorerButton.Margin = new System.Windows.Forms.Padding(4);
             this.ttDesignExplorerButton.Name = "ttDesignExplorerButton";
-            this.ttDesignExplorerButton.Size = new System.Drawing.Size(267, 33);
+            this.ttDesignExplorerButton.Size = new System.Drawing.Size(203, 60);
             this.ttDesignExplorerButton.TabIndex = 28;
-            this.ttDesignExplorerButton.Text = "Open TT DesignExplorer";
+            this.ttDesignExplorerButton.Text = "Open TT-DesignExplorer";
             this.ttDesignExplorerButton.UseVisualStyleBackColor = true;
             this.ttDesignExplorerButton.Click += new System.EventHandler(this.TTDesignExplorerButton_Click);
             // 
@@ -549,7 +549,7 @@ namespace Tunny.UI
             // visualizeTypeLabel
             // 
             this.visualizeTypeLabel.AutoSize = true;
-            this.visualizeTypeLabel.Location = new System.Drawing.Point(22, 144);
+            this.visualizeTypeLabel.Location = new System.Drawing.Point(22, 130);
             this.visualizeTypeLabel.Name = "visualizeTypeLabel";
             this.visualizeTypeLabel.Size = new System.Drawing.Size(132, 23);
             this.visualizeTypeLabel.TabIndex = 22;
@@ -558,7 +558,7 @@ namespace Tunny.UI
             // visualizeTargetStudyNameLabel
             // 
             this.visualizeTargetStudyNameLabel.AutoSize = true;
-            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(22, 105);
+            this.visualizeTargetStudyNameLabel.Location = new System.Drawing.Point(22, 94);
             this.visualizeTargetStudyNameLabel.Name = "visualizeTargetStudyNameLabel";
             this.visualizeTargetStudyNameLabel.Size = new System.Drawing.Size(120, 23);
             this.visualizeTargetStudyNameLabel.TabIndex = 21;
@@ -568,7 +568,7 @@ namespace Tunny.UI
             // 
             this.visualizeObjectiveListBox.FormattingEnabled = true;
             this.visualizeObjectiveListBox.ItemHeight = 23;
-            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(222, 222);
+            this.visualizeObjectiveListBox.Location = new System.Drawing.Point(222, 218);
             this.visualizeObjectiveListBox.Name = "visualizeObjectiveListBox";
             this.visualizeObjectiveListBox.ScrollAlwaysVisible = true;
             this.visualizeObjectiveListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
@@ -578,7 +578,7 @@ namespace Tunny.UI
             // visualizeTargetStudyComboBox
             // 
             this.visualizeTargetStudyComboBox.FormattingEnabled = true;
-            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(184, 101);
+            this.visualizeTargetStudyComboBox.Location = new System.Drawing.Point(184, 90);
             this.visualizeTargetStudyComboBox.Name = "visualizeTargetStudyComboBox";
             this.visualizeTargetStudyComboBox.Size = new System.Drawing.Size(216, 31);
             this.visualizeTargetStudyComboBox.TabIndex = 20;
@@ -597,7 +597,7 @@ namespace Tunny.UI
             "slice",
             "hypervolume",
             "clustering"});
-            this.visualizeTypeComboBox.Location = new System.Drawing.Point(184, 144);
+            this.visualizeTypeComboBox.Location = new System.Drawing.Point(184, 130);
             this.visualizeTypeComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.visualizeTypeComboBox.Name = "visualizeTypeComboBox";
             this.visualizeTypeComboBox.Size = new System.Drawing.Size(216, 31);
@@ -608,7 +608,7 @@ namespace Tunny.UI
             // 
             this.visualizeVariableListBox.FormattingEnabled = true;
             this.visualizeVariableListBox.ItemHeight = 23;
-            this.visualizeVariableListBox.Location = new System.Drawing.Point(26, 222);
+            this.visualizeVariableListBox.Location = new System.Drawing.Point(26, 218);
             this.visualizeVariableListBox.Name = "visualizeVariableListBox";
             this.visualizeVariableListBox.ScrollAlwaysVisible = true;
             this.visualizeVariableListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
@@ -618,7 +618,7 @@ namespace Tunny.UI
             // visualizeTargetVariableLabel
             // 
             this.visualizeTargetVariableLabel.AutoSize = true;
-            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(218, 184);
+            this.visualizeTargetVariableLabel.Location = new System.Drawing.Point(218, 180);
             this.visualizeTargetVariableLabel.Name = "visualizeTargetVariableLabel";
             this.visualizeTargetVariableLabel.Size = new System.Drawing.Size(139, 23);
             this.visualizeTargetVariableLabel.TabIndex = 24;
@@ -645,7 +645,7 @@ namespace Tunny.UI
             // visualizeTargetObjectiveLabel
             // 
             this.visualizeTargetObjectiveLabel.AutoSize = true;
-            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(22, 184);
+            this.visualizeTargetObjectiveLabel.Location = new System.Drawing.Point(22, 180);
             this.visualizeTargetObjectiveLabel.Name = "visualizeTargetObjectiveLabel";
             this.visualizeTargetObjectiveLabel.Size = new System.Drawing.Size(152, 23);
             this.visualizeTargetObjectiveLabel.TabIndex = 23;
@@ -653,10 +653,10 @@ namespace Tunny.UI
             // 
             // dashboardButton
             // 
-            this.dashboardButton.Location = new System.Drawing.Point(81, 10);
+            this.dashboardButton.Location = new System.Drawing.Point(11, 10);
             this.dashboardButton.Margin = new System.Windows.Forms.Padding(4);
             this.dashboardButton.Name = "dashboardButton";
-            this.dashboardButton.Size = new System.Drawing.Size(267, 33);
+            this.dashboardButton.Size = new System.Drawing.Size(190, 60);
             this.dashboardButton.TabIndex = 11;
             this.dashboardButton.Text = "Open Optuna-Dashboard";
             this.dashboardButton.UseVisualStyleBackColor = true;
