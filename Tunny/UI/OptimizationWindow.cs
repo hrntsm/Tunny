@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -195,6 +198,13 @@ namespace Tunny.UI
 
         private void TTDesignExplorerButton_Click(object sender, EventArgs e)
         {
+            TLog.MethodStart();
+            if (visualizeTargetStudyComboBox.Text == string.Empty)
+            {
+                MessageBox.Show("There is no study to visualize.\nPlease set 'Target Study'", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             string envPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", @"python310.dll");
             Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
             if (PythonEngine.IsInitialized)
@@ -207,7 +217,7 @@ namespace Tunny.UI
             {
                 PyModule ps = Py.CreateScope();
                 ps.Exec(
-"def export_t4de_csv(storage, target_study_name, output_path):\n" +
+"def export_fish_csv(storage, target_study_name, output_path):\n" +
 "    import optuna\n" +
 "    import csv\n" +
 "    import json\n" +
@@ -218,6 +228,7 @@ namespace Tunny.UI
 "    metric_names = study.metric_names\n" +
 "    param_keys = list(trial[0].params.keys())\n" +
 "    artifact_path = 'http://127.0.0.1:8080/artifacts/' + s_id + '/'\n" +
+"    has_img = False\n" +
 
 "    label = []\n" +
 
@@ -233,8 +244,9 @@ namespace Tunny.UI
 "            j = json.loads(artifact_value)\n" +
 "            if j['mimetype'] == 'image/png':\n" +
 "                label.append('img')\n" +
+"                has_img = True\n" +
 
-"    with open(output_path + '/fish2DesignExplorer.csv', 'w', newline='') as f:\n" +
+"    with open(output_path + '/fish.csv', 'w', newline='') as f:\n" +
 "        writer = csv.writer(f)\n" +
 "        writer.writerow(label)\n" +
 
@@ -255,20 +267,84 @@ namespace Tunny.UI
 "                        row.append(artifact_path + t_id + '/' + j['artifact_id'])\n" +
 "                        break\n" +
 
-"            writer.writerow(row)\n"
+"            writer.writerow(row)\n" +
+"    data = {\n" +
+"        'studyInfo': {\n" +
+"            'name': study.study_name,\n" +
+"            'date': 'Tunny result for DesignExplorer'\n" +
+"        },\n" +
+"        'dimScales': {},\n" +
+"        'dimTicks': {},\n" +
+"        'dimMark': {}\n" +
+"    }\n" +
+
+"    with open(output_path + '/settings.json', 'w') as file:\n" +
+"        json.dump(data, file, indent=4)\n" +
+
+"    return has_img\n"
                 );
                 dynamic storage = _settings.Storage.CreateNewOptunaStorage(false);
                 string target = visualizeTargetStudyComboBox.Text;
-                dynamic func = ps.Get("export_t4de_csv");
-                string csvPath = Path.GetDirectoryName(_settings.Storage.Path);
-                func(storage, target, csvPath);
+                dynamic func = ps.Get("export_fish_csv");
+                string outputPath = Path.Combine(TEnvVariables.DesignExplorerPath, "design_explorer_data");
+                bool hasImage = func(storage, target, outputPath);
 
-                var designExplorer = new Process();
-                string path = Path.Combine(TEnvVariables.DesignExplorerPath, "index.html");
-                designExplorer.StartInfo.FileName = path;
-                designExplorer.StartInfo.UseShellExecute = true;
-                designExplorer.Start();
+                KillExistTunnyServerProcess();
+                int port = FindAvailablePort(8081);
+                var server = new Process();
+                string path = Path.Combine(TEnvVariables.DesignExplorerPath, "TunnyDEServer.exe");
+                server.StartInfo.FileName = path;
+                server.StartInfo.Arguments = port.ToString(CultureInfo.InvariantCulture);
+                server.StartInfo.WorkingDirectory = TEnvVariables.DesignExplorerPath;
+                server.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                server.StartInfo.UseShellExecute = true;
+                server.Start();
+
+                var client = new Process();
+                client.StartInfo.FileName = $"http://127.0.0.1:{port}/index.html";
+                client.StartInfo.UseShellExecute = true;
+                client.Start();
             }
+        }
+
+        public static bool KillExistTunnyServerProcess()
+        {
+            int killCount = 0;
+            Process[] server = Process.GetProcessesByName("TunnyDEServer");
+            if (server.Length > 0)
+            {
+                foreach (Process p in server)
+                {
+                    p.Kill();
+                    killCount++;
+                }
+            }
+            return killCount > 0;
+        }
+        static int FindAvailablePort(int startPort)
+        {
+            int port = startPort;
+            while (IsPortInUse(port))
+            {
+                port++;
+            }
+            return port;
+        }
+
+        static bool IsPortInUse(int port)
+        {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpListeners();
+
+            foreach (IPEndPoint endpoint in tcpConnInfoArray)
+            {
+                if (endpoint.Port == port)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
