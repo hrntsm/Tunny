@@ -20,6 +20,7 @@ namespace Tunny.Settings.Sampler
         public QMCSampler QMC { get; set; } = new QMCSampler();
         public BoTorchSampler BoTorch { get; set; } = new BoTorchSampler();
         public GPSampler GP { get; set; } = new GPSampler();
+        public BruteForceSampler BruteForce { get; set; } = new BruteForceSampler();
 
         public dynamic ToPython(SamplerType type, string storagePath, bool hasConstraints, Dictionary<string, double> firstVariables)
         {
@@ -51,6 +52,9 @@ namespace Tunny.Settings.Sampler
                     break;
                 case SamplerType.Random:
                     optunaSampler = Random.ToPython(optuna);
+                    break;
+                case SamplerType.BruteForce:
+                    optunaSampler = BruteForce.ToPython(optuna);
                     break;
                 default:
                     throw new ArgumentException("Invalid sampler type.");
