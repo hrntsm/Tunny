@@ -14,6 +14,12 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - The initial value of FishEgg be the mean value X0 assumed for the first normal distribution of CMA-ES.
 - FishAttr now allows you to specify the optimization direction for each objective function.
   - A value of 1 indicates maximization, while -1 indicates minimization.
+- BruteForceSampler
+  - It is a sampler of the total number of hits.
+
+### Changed
+
+- When outputting results from TunnyUI, even if the number of objective functions in Grasshopper does not match the number of objective functions in the result file, the results can still be output.
 
 ### Fixed
 
@@ -22,6 +28,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Rhino7 and Rhino8 compatibility
   - There was a difference in specifications between Rhino 7 (net48) and Rhino 8 (net7) when serializing its Version to JSON for saving settings.
 - Optuna-Dashboard doesn't work when artifact-dir contains space.
+- Fixed an error when there is no file in the path specified in FishPrintByPath
 
 ## [v0.11.1] -2024-05-10
 
