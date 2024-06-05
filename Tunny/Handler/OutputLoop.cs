@@ -41,6 +41,7 @@ namespace Tunny.Handler
             {
                 var output = new Output(Settings.Storage.Path);
                 Trial[] targetTrials = output.GetTargetTrial(Indices, StudyName);
+                string[] metricNames = output.GetMetricNames(StudyName);
                 if (targetTrials.Length == 0)
                 {
                     TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -51,9 +52,19 @@ namespace Tunny.Handler
                     TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
+                if (metricNames == null || metricNames.Length == 0)
+                {
+                    metricNames = Component.GhInOut.Objectives.GetNickNames();
+                    if (metricNames.Length != targetTrials[0].Values.Length)
+                    {
+                        TunnyMessageBox.Show("The number of objective functions in the result file does not match the number of objective functions in the Grasshopper file.\nThe two should be the same number.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
                 foreach (Trial trial in targetTrials)
                 {
-                    SetResultToFish(fishes, trial, NickNames);
+                    SetResultToFish(fishes, trial, NickNames, metricNames);
                 }
                 Component.Fishes = fishes.ToArray();
             }
@@ -63,14 +74,14 @@ namespace Tunny.Handler
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
-        public static void SetResultToFish(List<Fish> fishes, Trial trial, IEnumerable<string> nickname)
+        public static void SetResultToFish(List<Fish> fishes, Trial trial, IEnumerable<string> varNickname, string[] objNickname)
         {
             TLog.MethodStart();
             fishes.Add(new Fish
             {
                 ModelNumber = trial.Number,
-                Variables = SetVariables(trial.Params, nickname),
-                Objectives = SetObjectives(trial.Values),
+                Variables = SetVariables(trial.Params, varNickname),
+                Objectives = SetObjectives(trial.Values, objNickname),
                 Attributes = SetAttributes(ParseAttrs(trial.UserAttrs)),
             });
         }
@@ -82,15 +93,15 @@ namespace Tunny.Handler
                 .ToDictionary(variable => variable.Key, variable => variable.Value);
         }
 
-        private static Dictionary<string, double> SetObjectives(double[] values)
+        private static Dictionary<string, double> SetObjectives(double[] values, string[] nickNames)
         {
             TLog.MethodStart();
-            string[] nickNames = Component.GhInOut.Objectives.GetNickNames();
             var objectives = new Dictionary<string, double>();
             if (values == null)
             {
                 return null;
             }
+
             for (int i = 0; i < values.Length; i++)
             {
                 if (objectives.ContainsKey(nickNames[i]))
