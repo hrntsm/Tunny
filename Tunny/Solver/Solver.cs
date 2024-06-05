@@ -115,6 +115,9 @@ namespace Tunny.Solver
                 case EndState.StoppedByUser:
                     message = "Solver completed successfully. The user stopped the solver.";
                     break;
+                case EndState.StoppedByOptuna:
+                    message = "Solver completed successfully. The Optuna stopped the solver.";
+                    break;
                 case EndState.DirectionNumNotMatch:
                     message = "Solver error. The number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".";
                     break;
@@ -142,6 +145,9 @@ namespace Tunny.Solver
                     break;
                 case EndState.StoppedByUser:
                     TunnyMessageBox.Show("Solver completed successfully.\n\nThe user stopped the solver.", "Tunny");
+                    break;
+                case EndState.StoppedByOptuna:
+                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe Optuna stopped the solver.", "Tunny");
                     break;
                 case EndState.DirectionNumNotMatch:
                     TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
