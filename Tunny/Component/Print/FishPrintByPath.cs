@@ -32,6 +32,16 @@ namespace Tunny.Component.Print
             string path = string.Empty;
             DA.GetData(0, ref path);
 
+            if (string.IsNullOrEmpty(path))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Path is empty.");
+                return;
+            }
+            if (!System.IO.File.Exists(path))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "File not found.");
+                return;
+            }
             var bitmap = Image.FromFile(path) as Bitmap;
             DA.SetData(0, bitmap);
         }
