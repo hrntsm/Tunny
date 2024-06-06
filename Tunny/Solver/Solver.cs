@@ -171,7 +171,9 @@ namespace Tunny.Solver
                 "Tunny runtime error:\n" +
                 "Please send below message (& gh file if possible) to Tunny support.\n" +
                 "If this error occurs, the Tunny solver will not work after this unless Rhino is restarted.\n\n" +
-                "\" " + e.Message + " \"", "Tunny",
+                "Source: " + e.Source + " \n" +
+                "Message: " + e.Message,
+                "Tunny",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
