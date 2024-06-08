@@ -17,10 +17,10 @@ namespace Tunny.Core.Handler
         private readonly string _targetStudyName;
         private readonly Settings.Storage _storage;
 
-        public DesignExplorer(string text, Settings.Storage storage)
+        public DesignExplorer(string targetStudyName, Settings.Storage storage)
         {
             TLog.MethodStart();
-            _targetStudyName = text;
+            _targetStudyName = targetStudyName;
             _storage = storage;
         }
 
