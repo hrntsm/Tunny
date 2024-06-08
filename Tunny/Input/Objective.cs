@@ -53,6 +53,7 @@ namespace Tunny.Input
             Geometries = geometries.ToArray();
 
             SetHumanInTheLoopType();
+            SetDirections(new[] { -1 });
         }
 
         private static void SetParamsValue(List<IGH_Param> sources, List<double> numbers, List<Bitmap> images, List<GeometryBase> geometries)

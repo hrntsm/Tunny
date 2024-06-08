@@ -7,6 +7,7 @@ namespace Tunny.Core.TEnum
         StoppedByUser,
         DirectionNumNotMatch,
         UseExitStudyWithoutContinue,
-        Error
+        Error,
+        StoppedByOptuna
     }
 }

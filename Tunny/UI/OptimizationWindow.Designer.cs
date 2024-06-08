@@ -301,9 +301,10 @@ namespace Tunny.UI
             "GeneticAlgorithm (NSGA-III)",
             "EvolutionStrategy (CMA-ES)",
             "Quasi-MonteCarlo",
-            "Random"});
-            this.samplerComboBox.Location = new System.Drawing.Point(104, 14);
-            this.samplerComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            "Random",
+            "BruteForce"});
+            this.samplerComboBox.Location = new System.Drawing.Point(69, 9);
+            this.samplerComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.samplerComboBox.Name = "samplerComboBox";
             this.samplerComboBox.Size = new System.Drawing.Size(306, 28);
             this.samplerComboBox.TabIndex = 7;
