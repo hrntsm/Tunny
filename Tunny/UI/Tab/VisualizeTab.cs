@@ -198,6 +198,5 @@ namespace Tunny.UI
             var designExplorer = new DesignExplorer(visualizeTargetStudyComboBox.Text, _settings.Storage);
             designExplorer.Run();
         }
-
     }
 }

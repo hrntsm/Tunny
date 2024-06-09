@@ -18,9 +18,7 @@ namespace Tunny.UI
     {
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
-        private ToolStripMenuItem _ttDesignExplorerToolStripMenuItem;
         private ToolStripMenuItem _pythonInstallStripMenuItem;
-        private ToolStripMenuItem _aboutTunnyStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
         {
@@ -76,18 +74,18 @@ namespace Tunny.UI
             TLog.MethodStart();
             _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, TunnyHelpStripMenuItem_Click, "TunnyHelpStripMenuItem");
             _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
-            _ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
             _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
-            _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
+            var ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
+            var aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
 
             dropDownItems.AddRange(new ToolStripItem[] {
                 _tunnyHelpStripMenuItem,
                 _optunaDashboardToolStripMenuItem,
-                _ttDesignExplorerToolStripMenuItem,
+                ttDesignExplorerToolStripMenuItem,
                 new ToolStripSeparator(),
                 _pythonInstallStripMenuItem,
                 new ToolStripSeparator(),
-                _aboutTunnyStripMenuItem
+                aboutTunnyStripMenuItem
             });
         }
 
