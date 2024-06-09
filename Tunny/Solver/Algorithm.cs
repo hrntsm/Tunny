@@ -614,6 +614,10 @@ namespace Tunny.Solver
                     IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
                     pyList = PyConverter.EnumeratorToPyList(values);
                 }
+                else if (pair.Key == "Direction")
+                {
+                    continue;
+                }
                 else
                 {
                     pyList = PyConverter.EnumeratorToPyList(pair.Value);

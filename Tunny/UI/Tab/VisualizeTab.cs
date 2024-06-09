@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 using Optuna.Study;
 
+using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -182,6 +184,19 @@ namespace Tunny.UI
             }
 
             return result;
+        }
+
+        private void TTDesignExplorerButton_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            if (visualizeTargetStudyComboBox.Text == string.Empty)
+            {
+                TunnyMessageBox.Show("There is no study to visualize.\nPlease set 'Target Study'", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var designExplorer = new DesignExplorer(visualizeTargetStudyComboBox.Text, _settings.Storage);
+            designExplorer.Run();
         }
     }
 }

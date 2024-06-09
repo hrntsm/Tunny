@@ -19,7 +19,6 @@ namespace Tunny.UI
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
         private ToolStripMenuItem _pythonInstallStripMenuItem;
-        private ToolStripMenuItem _aboutTunnyStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
         {
@@ -76,15 +75,17 @@ namespace Tunny.UI
             _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, TunnyHelpStripMenuItem_Click, "TunnyHelpStripMenuItem");
             _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
             _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
-            _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
+            var ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
+            var aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
 
             dropDownItems.AddRange(new ToolStripItem[] {
                 _tunnyHelpStripMenuItem,
                 _optunaDashboardToolStripMenuItem,
+                ttDesignExplorerToolStripMenuItem,
                 new ToolStripSeparator(),
                 _pythonInstallStripMenuItem,
                 new ToolStripSeparator(),
-                _aboutTunnyStripMenuItem
+                aboutTunnyStripMenuItem
             });
         }
 
@@ -171,6 +172,35 @@ namespace Tunny.UI
             {
                 var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
                 dashboard.Run();
+            }
+        }
+
+        private void TTDesignExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            string settingsPath = TEnvVariables.OptimizeSettingsPath;
+            string storagePath = string.Empty;
+            TSettings settings;
+            if (File.Exists(settingsPath))
+            {
+                settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                storagePath = settings.Storage.Path;
+            }
+            else
+            {
+                settings = new TSettings();
+            }
+            var ofd = new OpenFileDialog
+            {
+                FileName = Path.GetFileName(storagePath),
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Title = @"Set Tunny result file path",
+            };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                settings.Storage.Path = ofd.FileName;
+                var deStudyNameSelector = new DEStudyNameSelector(settings.Storage);
+                deStudyNameSelector.ShowDialog();
             }
         }
 

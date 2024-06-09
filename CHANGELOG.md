@@ -16,6 +16,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - A value of 1 indicates maximization, while -1 indicates minimization.
 - BruteForceSampler
   - It is a sampler of the total number of hits.
+- Output result for TT-Design Explorer
 
 ### Changed
 

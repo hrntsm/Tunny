@@ -61,13 +61,21 @@ namespace Optuna.Dashboard
             dashboard.StartInfo.FileName = _dashboardPath;
             dashboard.StartInfo.Arguments = argument;
             dashboard.StartInfo.UseShellExecute = false;
-            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             dashboard.Start();
+        }
 
-            var browser = new Process();
-            browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+        public void Run(bool openBrowser)
+        {
+            Run();
+
+            if (openBrowser)
+            {
+                var browser = new Process();
+                browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
+                browser.StartInfo.UseShellExecute = true;
+                browser.Start();
+            }
         }
 
         public static bool KillExistDashboardProcess()
