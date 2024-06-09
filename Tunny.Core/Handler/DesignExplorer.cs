@@ -31,6 +31,14 @@ namespace Tunny.Core.Handler
             KillExistTunnyServerProcess();
             int port = FindAvailablePort(8081);
 
+            if (_hasImage)
+            {
+                string pythonDirectory = Path.Combine(TEnvVariables.TunnyEnvPath, "python");
+                string dashboardPath = Path.Combine(pythonDirectory, "Scripts", "optuna-dashboard.exe");
+                var dashboard = new Optuna.Dashboard.Handler(dashboardPath, _storage.Path);
+                dashboard.Run(false);
+            }
+
             var server = new Process();
             string path = Path.Combine(TEnvVariables.DesignExplorerPath, "TunnyDEServer.exe");
             server.StartInfo.FileName = path;
