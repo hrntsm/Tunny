@@ -1,0 +1,3 @@
+[submodule "TT-DesignExplorer"]
+	path = TT-DesignExplorer
+	url = https://github.com/hrntsm/DesignExplorer.git
