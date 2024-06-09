@@ -39,16 +39,6 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
-      - name: Restore the design explorer application
-        run: msbuild $env:DE_Solution_Name /t:Restore /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
-
-      - name: Build the design explorer application
-        run: msbuild $env:DE_Solution_Name /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
-
       - name: Restore the Tunny application
         run: msbuild $env:Main_Solution_Name /t:Restore /p:Configuration=$env:Configuration
         env:
@@ -59,6 +49,16 @@ jobs:
         env:
           Configuration: ${{ matrix.configuration }}
 
+      - name: Restore the design explorer application
+        run: msbuild $env:DE_Solution_Name /t:Restore /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: Build the design explorer application
+        run: msbuild $env:DE_Solution_Name /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
       - name: Copy items to /Release dir
         shell: powershell
         run: |
@@ -66,6 +66,7 @@ jobs:
           cp ./LICENSE ./Release/LICENSE.txt
           cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
           cp ./Tunny/bin/Debug/net48 ./Release/Tunny -recurse
+          cp ./TT-DesignExplorer/server/bin/Debug/net48/TT-DesignExplorer.zip ./Release/Tunny/Lib/TT-DesignExplorer.zip
 
       - name: Upload release build of plugin as artefact
         uses: actions/upload-artifact@v4
