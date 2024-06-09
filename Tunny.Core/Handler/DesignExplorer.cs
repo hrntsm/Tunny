@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.NetworkInformation;
 
@@ -22,6 +23,12 @@ namespace Tunny.Core.Handler
             TLog.MethodStart();
             _targetStudyName = targetStudyName;
             _storage = storage;
+
+            string envPath = TEnvVariables.TunnyEnvPath;
+            if (!Directory.Exists(envPath + "/TT-DesignExplorer"))
+            {
+                SetupTTDesignExplorer();
+            }
         }
 
         public void Run()
@@ -184,6 +191,19 @@ namespace Tunny.Core.Handler
             }
 
             return false;
+        }
+
+        public static void SetupTTDesignExplorer()
+        {
+            TLog.MethodStart();
+            string envPath = TEnvVariables.TunnyEnvPath;
+            string componentFolderPath = TEnvVariables.ComponentFolder;
+            TLog.Info("Unzip TT-DesignExplorer libraries: " + envPath);
+            if (Directory.Exists(envPath + "/TT-DesignExplorer"))
+            {
+                Directory.Delete(envPath + "/TT-DesignExplorer", true);
+            }
+            ZipFile.ExtractToDirectory(componentFolderPath + "/Lib/TT-DesignExplorer.zip", envPath + "/TT-DesignExplorer");
         }
     }
 }
