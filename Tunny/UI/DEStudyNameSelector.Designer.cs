@@ -29,6 +29,7 @@ namespace Tunny.UI
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DEStudyNameSelector));
             this.okButton = new System.Windows.Forms.Button();
             this.studyNameComboBox = new System.Windows.Forms.ComboBox();
             this.selectTargetStudyNameLabel = new System.Windows.Forms.Label();
@@ -82,6 +83,7 @@ namespace Tunny.UI
             this.Controls.Add(this.studyNameComboBox);
             this.Controls.Add(this.okButton);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "DEStudyNameSelector";
             this.Text = "DE StudyName Selector";
