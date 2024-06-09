@@ -15,7 +15,8 @@ jobs:
     runs-on: windows-latest # For a list of available runner types, refer to
 
     env:
-      Solution_Name: Tunny.sln
+      Main_Solution_Name: Tunny.sln
+      DE_Solution_Name: TT-DesignExplorer/DesignExplorer.sln
       Plugin_File_Name: Tunny
 
     steps:
@@ -37,13 +38,23 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
-      - name: Restore the application
-        run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      - name: Restore the design explorer application
+        run: msbuild $env:DE_Solution_Name /t:Restore /p:Configuration=$env:Configuration
         env:
           Configuration: ${{ matrix.configuration }}
 
-      - name: Build the application
-        run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      - name: Build the design explorer application
+        run: msbuild $env:DE_Solution_Name /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: Restore the Tunny application
+        run: msbuild $env:Main_Solution_Name /t:Restore /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: Build the Tunny application
+        run: msbuild $env:Main_Solution_Name /p:Configuration=$env:Configuration
         env:
           Configuration: ${{ matrix.configuration }}
 
