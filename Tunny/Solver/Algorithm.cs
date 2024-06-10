@@ -473,7 +473,7 @@ namespace Tunny.Solver
                 OptimizeLoop.IsForcedStopOptimize = false;
                 isOptimizeCompleted = true;
             }
-            else if (study._stop_flag)
+            else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null && study._stop_flag)
             {
                 EndState = EndState.StoppedByOptuna;
                 isOptimizeCompleted = true;
