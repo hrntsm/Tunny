@@ -147,6 +147,7 @@ namespace Tunny.Core.Handler
                 string outputPath = Path.Combine(TEnvVariables.DesignExplorerPath, "design_explorer_data");
                 _hasImage = func(storage, _targetStudyName, outputPath);
             }
+            PythonEngine.Shutdown();
         }
 
         private static bool KillExistTunnyServerProcess()
