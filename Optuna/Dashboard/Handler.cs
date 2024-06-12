@@ -52,7 +52,7 @@ namespace Optuna.Dashboard
             }
         }
 
-        public void Run()
+        public void Run(bool openBrowser)
         {
             KillExistDashboardProcess();
             string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir \"{_artifactDir}\"";
@@ -63,19 +63,19 @@ namespace Optuna.Dashboard
             dashboard.StartInfo.UseShellExecute = false;
             dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             dashboard.Start();
-        }
-
-        public void Run(bool openBrowser)
-        {
-            Run();
 
             if (openBrowser)
             {
-                var browser = new Process();
-                browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
-                browser.StartInfo.UseShellExecute = true;
-                browser.Start();
+                OpenBrowser();
             }
+        }
+
+        private void OpenBrowser()
+        {
+            var browser = new Process();
+            browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
         }
 
         public static bool KillExistDashboardProcess()

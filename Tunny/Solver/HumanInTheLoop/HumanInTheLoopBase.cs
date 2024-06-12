@@ -59,7 +59,7 @@ namespace Tunny.Solver.HumanInTheLoop
                 Path.Combine(TEnvVariables.PythonPath, "Scripts", "optuna-dashboard.exe"),
                 storage.Path
             );
-            dashboard.Run();
+            dashboard.Run(true);
         }
 
         public static void ResultFileNotExistErrorMessage()

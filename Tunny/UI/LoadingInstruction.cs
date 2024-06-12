@@ -171,7 +171,7 @@ namespace Tunny.UI
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
-                dashboard.Run();
+                dashboard.Run(true);
             }
         }
 

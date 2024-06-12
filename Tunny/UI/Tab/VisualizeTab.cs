@@ -27,7 +27,7 @@ namespace Tunny.UI
             string storagePath = _settings.Storage.Path;
 
             var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
-            dashboard.Run();
+            dashboard.Run(true);
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
