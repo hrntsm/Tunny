@@ -303,7 +303,7 @@ namespace Tunny.UI
             "Quasi-MonteCarlo",
             "Random",
             "BruteForce"});
-            this.samplerComboBox.Location = new System.Drawing.Point(69, 9);
+            this.samplerComboBox.Location = new System.Drawing.Point(105, 16);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.samplerComboBox.Name = "samplerComboBox";
             this.samplerComboBox.Size = new System.Drawing.Size(306, 28);
