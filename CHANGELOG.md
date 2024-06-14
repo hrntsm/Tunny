@@ -29,7 +29,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Rhino7 and Rhino8 compatibility
   - There was a difference in specifications between Rhino 7 (net48) and Rhino 8 (net7) when serializing its Version to JSON for saving settings.
 - Optuna-Dashboard doesn't work when artifact-dir contains space.
-- Fixed an error when there is no file in the path specified in FishPrintByPath
+- Fixed an error when there is no file in the path specified in FishPrintByPath.
+- Rhino crashes when reinstating a value to a slider if the categorical value is a number.
 
 ## [v0.11.1] -2024-05-10
 
