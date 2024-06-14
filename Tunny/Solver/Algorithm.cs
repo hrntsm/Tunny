@@ -184,21 +184,34 @@ namespace Tunny.Solver
                 string[] keys = (string[])study.best_params.keys();
                 var opt = new Parameter[Variables.Count];
 
-                for (int i = 0; i < Variables.Count; i++)
-                {
-                    for (int j = 0; j < keys.Length; j++)
-                    {
-                        if (keys[j] == Variables[i].NickName)
-                        {
-                            opt[i] = double.TryParse(values[j], out double num) ? new Parameter(num) : new Parameter(values[j]);
-                        }
-                    }
-                }
+                SetParamsFromOptunaBestParams(values, keys, opt);
                 OptimalParameters = opt;
             }
             else
             {
                 OptimalParameters = parameter;
+            }
+        }
+
+        private void SetParamsFromOptunaBestParams(string[] values, string[] keys, Parameter[] opt)
+        {
+            for (int i = 0; i < Variables.Count; i++)
+            {
+                int index = Array.IndexOf(keys, Variables[i].NickName);
+                if (index == -1)
+                {
+                    continue;
+                }
+                switch (Variables[i])
+                {
+                    case NumberVariable _:
+                        double num = double.Parse(values[index], CultureInfo.InvariantCulture);
+                        opt[i] = new Parameter(num);
+                        break;
+                    case CategoricalVariable _:
+                        opt[i] = new Parameter(values[index]);
+                        break;
+                }
             }
         }
 
