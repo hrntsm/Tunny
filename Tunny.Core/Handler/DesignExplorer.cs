@@ -75,73 +75,7 @@ namespace Tunny.Core.Handler
             using (Py.GIL())
             {
                 PyModule ps = Py.CreateScope();
-                ps.Exec(
-"def export_fish_csv(storage, target_study_name, output_path):\n" +
-"    import optuna\n" +
-"    import csv\n" +
-"    import json\n" +
-
-"    study = optuna.load_study(storage=storage, study_name=target_study_name)\n" +
-"    s_id = (str)(study._study_id)\n" +
-"    trial = study.get_trials(deepcopy=False, states=[optuna.trial.TrialState.COMPLETE])\n" +
-"    metric_names = study.metric_names\n" +
-"    param_keys = list(trial[0].params.keys())\n" +
-"    artifact_path = 'http://127.0.0.1:8080/artifacts/' + s_id + '/'\n" +
-"    has_img = False\n" +
-
-"    label = []\n" +
-
-"    for key in param_keys:\n" +
-"        label.append('in:' + key)\n" +
-
-"    if metric_names is not None:\n" +
-"        for name in metric_names:\n" +
-"            label.append('out:' + name)\n" +
-"    for attr in trial[0].system_attrs:\n" +
-"        if attr.startswith('artifacts:'):\n" +
-"            artifact_value = trial[0].system_attrs[attr]\n" +
-"            j = json.loads(artifact_value)\n" +
-"            if j['mimetype'] == 'image/png':\n" +
-"                label.append('img')\n" +
-"                has_img = True\n" +
-
-"    with open(output_path + '/fish.csv', 'w', newline='') as f:\n" +
-"        writer = csv.writer(f)\n" +
-"        writer.writerow(label)\n" +
-
-"        for t in trial:\n" +
-"            t_id = (str)(t.number)\n" +
-"            row = []\n" +
-"            for key in param_keys:\n" +
-"                row.append(t.params[key])\n" +
-
-"            for v in t.values:\n" +
-"                row.append(v)\n" +
-
-"            for attr in t.system_attrs:\n" +
-"                if attr.startswith('artifacts:'):\n" +
-"                    artifact_value = t.system_attrs[attr]\n" +
-"                    j = json.loads(artifact_value)\n" +
-"                    if j['mimetype'] == 'image/png':\n" +
-"                        row.append(artifact_path + t_id + '/' + j['artifact_id'])\n" +
-"                        break\n" +
-
-"            writer.writerow(row)\n" +
-"    data = {\n" +
-"        'studyInfo': {\n" +
-"            'name': study.study_name,\n" +
-"            'date': 'Tunny result for DesignExplorer'\n" +
-"        },\n" +
-"        'dimScales': {},\n" +
-"        'dimTicks': {},\n" +
-"        'dimMark': {}\n" +
-"    }\n" +
-
-"    with open(output_path + '/settings.json', 'w') as file:\n" +
-"        json.dump(data, file, indent=4)\n" +
-
-"    return has_img\n"
-                );
+                ps.Exec(ReadFileFromResource.Text("Tunny.Core.Handler.export_fish_csv.py"));
                 dynamic storage = _storage.CreateNewOptunaStorage(false);
                 dynamic func = ps.Get("export_fish_csv");
                 string outputPath = Path.Combine(TEnvVariables.DesignExplorerPath, "design_explorer_data");
@@ -202,6 +136,7 @@ namespace Tunny.Core.Handler
             TLog.Info("Unzip TT-DesignExplorer libraries: " + envPath);
             if (Directory.Exists(envPath + "/TT-DesignExplorer"))
             {
+                KillExistTunnyServerProcess();
                 Directory.Delete(envPath + "/TT-DesignExplorer", true);
             }
             ZipFile.ExtractToDirectory(componentFolderPath + "/Lib/TT-DesignExplorer.zip", envPath + "/TT-DesignExplorer");
