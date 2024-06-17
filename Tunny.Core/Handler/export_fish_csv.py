@@ -64,6 +64,7 @@ def set_img_label(label: list[str], trial: list[FrozenTrial]) -> bool:
         if j["mimetype"] == "image/png":
             label.append("img")
             has_img = True
+            break
 
     return has_img
 
