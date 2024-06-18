@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 using GalapagosComponents;
 
@@ -24,12 +26,35 @@ namespace Tunny.Component.Optimizer
         internal GrasshopperInOut GhInOut;
         internal GrasshopperStates GrasshopperStatus;
         internal Fish[] Fishes;
+        internal string Info { get; private set; } = "No optimization has been performed yet.";
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
 
         public OptimizeComponentBase(string name, string nickname, string description)
           : base(name, nickname, description, "Tunny", "Optimizer")
         {
+        }
+
+        public void SetInfo(string info)
+        {
+            TLog.MethodStart();
+            Info = info;
+        }
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            TLog.MethodStart();
+            base.AppendAdditionalMenuItems(menu);
+            Menu_AppendItem(menu, "Open settings.json", Menu_OpenSettingsClicked);
+        }
+
+        private void Menu_OpenSettingsClicked(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            var process = new Process();
+            process.StartInfo.FileName = "notepad.exe";
+            process.StartInfo.Arguments = $"\"{TEnvVariables.OptimizeSettingsPath}\"";
+            process.Start();
         }
 
         /// <summary>
@@ -62,6 +87,7 @@ namespace Tunny.Component.Optimizer
 
         public void UpdateGrasshopper(IList<Parameter> parameters)
         {
+            TLog.MethodStart();
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
             GhInOut.NewSolution(parameters);
             GrasshopperStatus = GrasshopperStates.RequestProcessed;
@@ -69,11 +95,13 @@ namespace Tunny.Component.Optimizer
 
         public override void CreateAttributes()
         {
+            TLog.MethodStart();
             m_attributes = new OptimizerAttributeBase(this, Color.DimGray, Color.Black, Color.White);
         }
 
         protected void CheckVariablesInput(IEnumerable<Guid> inputGuids)
         {
+            TLog.MethodStart();
             foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
             {
                 switch (docObject)
@@ -92,6 +120,7 @@ namespace Tunny.Component.Optimizer
 
         protected void CheckObjectivesInput(IEnumerable<Guid> inputGuids)
         {
+            TLog.MethodStart();
             foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
             {
                 switch (docObject)
@@ -108,6 +137,7 @@ namespace Tunny.Component.Optimizer
 
         protected void CheckArtifactsInput(IEnumerable<Guid> inputGuids)
         {
+            TLog.MethodStart();
             foreach ((IGH_DocumentObject docObject, int _) in inputGuids.Select((guid, i) => (OnPingDocument().FindObject(guid, false), i)))
             {
                 switch (docObject)

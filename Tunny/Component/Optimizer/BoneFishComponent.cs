@@ -24,7 +24,6 @@ namespace Tunny.Component.Optimizer
     {
         private int _count;
         private bool _running;
-        private string _info;
         private Fish[] _allFishes;
         private string _state;
 
@@ -79,13 +78,13 @@ namespace Tunny.Component.Optimizer
             if (!start)
             {
                 Message = "No Opt";
-                _info = "No optimization has been performed yet.";
+                SetInfo("No optimization has been performed yet.");
             }
 
             if (start && _state == "Finish")
             {
                 _state = "Start";
-                DA.SetData(0, _info);
+                DA.SetData(0, Info);
                 DA.SetDataList(1, _allFishes);
                 DA.SetDataList(2, Fishes);
                 return;
@@ -119,7 +118,7 @@ namespace Tunny.Component.Optimizer
                 worker.RunWorkerAsync(this);
             }
 
-            DA.SetData(0, _info);
+            DA.SetData(0, Info);
         }
 
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
@@ -155,25 +154,6 @@ namespace Tunny.Component.Optimizer
             GH_DocumentEditor ghCanvas = Instances.DocumentEditor;
             Message = "Finish";
             ghCanvas?.EnableUI();
-        }
-
-        public void SetInfo(string info)
-        {
-            _info = info;
-        }
-
-        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
-        {
-            base.AppendAdditionalMenuItems(menu);
-            Menu_AppendItem(menu, "Open settings.json", Menu_OpenSettingsClicked);
-        }
-
-        private void Menu_OpenSettingsClicked(object sender, EventArgs e)
-        {
-            var process = new Process();
-            process.StartInfo.FileName = "notepad.exe";
-            process.StartInfo.Arguments = $"\"{TEnvVariables.OptimizeSettingsPath}\"";
-            process.Start();
         }
 
         protected override Bitmap Icon => Resources.Resource.BoneFish;

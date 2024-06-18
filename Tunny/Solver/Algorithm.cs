@@ -442,10 +442,7 @@ namespace Tunny.Solver
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
             string message = sb.ToString();
-            if (OptimizeLoop.Component is BoneFishComponent component)
-            {
-                component.SetInfo(message);
-            }
+            OptimizeLoop.Component.SetInfo(message);
             TLog.Info(sb.ToString());
         }
 

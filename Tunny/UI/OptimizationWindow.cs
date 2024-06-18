@@ -18,11 +18,11 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private readonly FishingComponent _component;
+        private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
         internal GrasshopperStates GrasshopperStatus;
 
-        public OptimizationWindow(FishingComponent component)
+        public OptimizationWindow(OptimizeComponentBase component)
         {
             TLog.MethodStart();
             TLog.Info("OptimizationWindow is open");
