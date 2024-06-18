@@ -11,7 +11,6 @@ namespace Tunny.Component.Optimizer
 {
     public class FishingComponent : UIOptimizeComponentBase
     {
-
         public FishingComponent()
           : base("Tunny", "Tunny",
             "Tunny is an optimization component wrapped in optuna."
