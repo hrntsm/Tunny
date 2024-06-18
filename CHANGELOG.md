@@ -19,7 +19,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Output result for TT-Design Explorer
 - Optimization state output to fishing component
 - Use OBSOLETE component feature
-  - Old components are now marked "OLD" to indicate that they are to be retained.
+  - Old components are now marked "OLD" to indicate that they are older version.
 
 ### Changed
 
