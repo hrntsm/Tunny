@@ -33,7 +33,7 @@ namespace Tunny.Handler
         {
             TLog.MethodStart();
             s_worker = sender as BackgroundWorker;
-            Component = e.Argument as FishingComponent;
+            Component = e.Argument as UIOptimizeComponentBase;
 
             var fishes = new List<Fish>();
 

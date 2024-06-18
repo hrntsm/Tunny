@@ -89,18 +89,14 @@ namespace Tunny.Solver
         private static void EndMessage(Algorithm optimize)
         {
             TLog.MethodStart();
-            switch (OptimizeLoop.Component)
+            ToComponentEndMessage(optimize);
+            if (OptimizeLoop.Component is UIOptimizeComponentBase)
             {
-                case BoneFishComponent zombie:
-                    ToComponentEndMessage(optimize, zombie);
-                    break;
-                default:
-                    ShowUIEndMessages(optimize.EndState);
-                    break;
+                ShowUIEndMessages(optimize.EndState);
             }
         }
 
-        private static void ToComponentEndMessage(Algorithm optimize, BoneFishComponent zombie)
+        private static void ToComponentEndMessage(Algorithm optimize)
         {
             TLog.MethodStart();
             string message;
@@ -128,8 +124,11 @@ namespace Tunny.Solver
                     message = "Solver error.";
                     break;
             }
-            TLog.Info(message);
-            zombie.SetInfo(message);
+            if (OptimizeLoop.Component is BoneFishComponent)
+            {
+                TLog.Info(message);
+            }
+            OptimizeLoop.Component.SetInfo(message);
         }
 
         private static void ShowUIEndMessages(EndState endState)

@@ -4,15 +4,18 @@ using System.Linq;
 
 using Grasshopper.Kernel;
 
+using Tunny.Component.Optimizer;
 using Tunny.Component.Params;
 using Tunny.Resources;
 
-namespace Tunny.Component.Optimizer
+namespace Tunny.Component.Obsolete
 {
-    public class FishingComponent : UIOptimizeComponentBase
+    [Obsolete("This component is obsolete. This component will be removed in the future version. Please use FishingComponent instead.")]
+    public class FishingComponent_v0_11_1 : UIOptimizeComponentBase
     {
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
 
-        public FishingComponent()
+        public FishingComponent_v0_11_1()
           : base("Tunny", "Tunny",
             "Tunny is an optimization component wrapped in optuna."
             )
@@ -33,7 +36,6 @@ namespace Tunny.Component.Optimizer
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Info", "Info", "Optimization information.", GH_ParamAccess.item);
             pManager.AddParameter(new Param_Fish(), "Fishes", "Fishes", "Fishes caught by the optimization nets.", GH_ParamAccess.list);
         }
 
@@ -43,11 +45,10 @@ namespace Tunny.Component.Optimizer
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
-            DA.SetData(0, Info);
-            DA.SetDataList(1, Fishes);
+            DA.SetDataList(0, Fishes);
         }
 
         protected override Bitmap Icon => Resource.TunnyIcon;
-        public override Guid ComponentGuid => new Guid("2c094af4-81c9-4830-b866-fbab735c122a");
+        public override Guid ComponentGuid => new Guid("701d2c47-1440-4d09-951c-386200e29b28");
     }
 }
