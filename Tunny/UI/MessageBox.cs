@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 
 using Tunny.Core.Util;
@@ -10,12 +11,23 @@ namespace Tunny.UI
         {
             DialogResult dialogResult = DialogResult.None;
             WriteLog(message, icon);
+
+            IntPtr ownerHWND = TEnvVariables.GrasshopperWindowHandle == IntPtr.Zero
+                ? Rhino.RhinoApp.MainWindowHandle()
+                : TEnvVariables.GrasshopperWindowHandle;
+            var ownerWindow = new NativeWindow();
+            ownerWindow.AssignHandle(ownerHWND);
+
             using (var f = new Form())
             {
                 f.Owner = Grasshopper.Instances.DocumentEditor;
                 f.TopMost = true;
-                dialogResult = MessageBox.Show(message, caption, buttons, icon);
+                dialogResult = MessageBox.Show(ownerWindow, message, caption, buttons, icon);
                 f.TopMost = false;
+            }
+            if (dialogResult != DialogResult.None && dialogResult != DialogResult.OK)
+            {
+                TLog.Info($"Dialog result: {dialogResult}");
             }
             return dialogResult;
         }

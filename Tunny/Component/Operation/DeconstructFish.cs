@@ -51,7 +51,7 @@ namespace Tunny.Component.Operation
             foreach (GH_Fish fish in fishes)
             {
                 Fish value = fish.Value;
-                var path = new GH_Path(0, value.ModelNumber);
+                var path = new GH_Path(0, value.TrialNumber);
                 SetVariables(numberVariables, textVariables, value, path);
                 SetObjectives(objectives, value, path);
                 SetAttributes(attributes, value, path);

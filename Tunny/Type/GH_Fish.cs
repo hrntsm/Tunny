@@ -52,7 +52,7 @@ namespace Tunny.Type
         public override string ToString()
         {
             var sb = new StringBuilder();
-            SetModelNumber(sb);
+            SetTrialNumber(sb);
             SetVariables(sb);
             SetObjectives(sb);
             SetAttributes(sb);
@@ -117,10 +117,10 @@ namespace Tunny.Type
             }
         }
 
-        private void SetModelNumber(StringBuilder sb)
+        private void SetTrialNumber(StringBuilder sb)
         {
             sb.AppendLine("====================================");
-            sb.AppendLine("Model Number: " + m_value.ModelNumber + "");
+            sb.AppendLine("Trial Number: " + m_value.TrialNumber + "");
             sb.AppendLine("====================================");
         }
 

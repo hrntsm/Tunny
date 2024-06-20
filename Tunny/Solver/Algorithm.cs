@@ -10,7 +10,6 @@ using Optuna.Study;
 
 using Python.Runtime;
 
-using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
 using Tunny.Core.Settings;

@@ -4,7 +4,7 @@ namespace Tunny.Core.TEnum
     {
         ParatoSolutions,
         AllTrials,
-        ModelNumber,
+        TrialNumber,
         ReflectToSliders
     }
 }

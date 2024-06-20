@@ -12,5 +12,12 @@ namespace Tunny.Core.Util.Tests
             string path = TEnvVariables.TmpDirPath;
             Assert.True(Directory.Exists(path));
         }
+
+        [Fact]
+        public void GrasshopperHWNDTest()
+        {
+            TEnvVariables.GrasshopperWindowHandle = new System.IntPtr(123);
+            Assert.Equal(123, TEnvVariables.GrasshopperWindowHandle.ToInt32());
+        }
     }
 }

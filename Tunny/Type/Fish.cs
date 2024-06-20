@@ -17,7 +17,7 @@ namespace Tunny.Type
     [Serializable]
     public class Fish
     {
-        public int ModelNumber { get; set; }
+        public int TrialNumber { get; set; }
         public Dictionary<string, object> Variables { get; set; }
         public Dictionary<string, double> Objectives { get; set; }
         public Dictionary<string, object> Attributes { get; set; }
@@ -30,7 +30,7 @@ namespace Tunny.Type
         public Fish(Trial trial, string[] objectiveNames)
         {
             TLog.MethodStart();
-            ModelNumber = trial.Number;
+            TrialNumber = trial.Number;
             Variables = trial.Params;
             Attributes = trial.UserAttrs;
             Objectives = new Dictionary<string, double>();

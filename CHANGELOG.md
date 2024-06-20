@@ -24,6 +24,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - When outputting results from TunnyUI, even if the number of objective functions in Grasshopper does not match the number of objective functions in the result file, the results can still be output.
+- After optimization is finished, a window allows the user to choose whether to reinstate the results or not.
+- The words "reflect" and "restore" are changed to "reinstate" to match the Galapagos expression.
+- ModelNumber in the output section is changed to TrialNumber.
 
 ### Fixed
 
@@ -34,6 +37,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Optuna-Dashboard doesn't work when artifact-dir contains space.
 - Fixed an error when there is no file in the path specified in FishPrintByPath.
 - Rhino crashes when reinstating a value to a slider if the categorical value is a number.
+- MessageBox is now not below the back of Grasshopper window.
 
 ## [v0.11.1] -2024-05-10
 

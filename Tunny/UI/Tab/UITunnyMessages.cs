@@ -61,11 +61,11 @@ namespace Tunny.UI
             return false;
         }
 
-        private static void UseFirstModelNumberToReflectMessage()
+        private static void UseFirstTrialNumberToReflectMessage()
         {
             TLog.MethodStart();
             TunnyMessageBox.Show(
-                "You input multi model numbers, but this function only reflect variables to slider or gene pool to first one.",
+                "You input multi trial numbers, but this function only reflect variables to slider or gene pool to first one.",
                 "Tunny"
             );
         }

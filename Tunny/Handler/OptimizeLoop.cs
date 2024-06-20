@@ -28,20 +28,16 @@ namespace Tunny.Handler
             Component = e.Argument as OptimizeComponentBase;
             Component?.GhInOutInstantiate();
 
-            Parameter[] optimalParams = RunOptimizationLoop(s_worker);
-            if (optimalParams == null || optimalParams.Length == 0)
+            ProgressState progressState = RunOptimizationLoop(s_worker);
+            if (progressState.Parameter == null || progressState.Parameter.Count == 0)
             {
                 return;
             }
-            var pState = new ProgressState
-            {
-                Parameter = optimalParams
-            };
 
             if (Component != null)
             {
                 Component.GrasshopperStatus = GrasshopperStates.RequestSent;
-                s_worker.ReportProgress(100, pState);
+                s_worker.ReportProgress(100, progressState);
                 while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
                 { /* just wait until the cows come home */ }
             }
@@ -49,23 +45,26 @@ namespace Tunny.Handler
             s_worker?.CancelAsync();
         }
 
-        private static Parameter[] RunOptimizationLoop(BackgroundWorker worker)
+        private static ProgressState RunOptimizationLoop(BackgroundWorker worker)
         {
             TLog.MethodStart();
             List<VariableBase> variables = Component.GhInOut.Variables;
             Objective objectives = Component.GhInOut.Objectives;
             Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
             bool hasConstraint = Component.GhInOut.HasConstraint;
+            var progressState = new ProgressState(Array.Empty<Parameter>());
 
             if (worker.CancellationPending)
             {
-                return Array.Empty<Parameter>();
+                return progressState;
             }
 
             var optunaSolver = new Solver.Solver(Settings, hasConstraint);
-            bool solverStarted = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
+            bool reinstateResult = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
 
-            return solverStarted ? optunaSolver.OptimalParameters : Array.Empty<Parameter>();
+            return reinstateResult
+                ? new ProgressState(optunaSolver.OptimalParameters)
+                : new ProgressState(optunaSolver.OptimalParameters, true);
         }
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
