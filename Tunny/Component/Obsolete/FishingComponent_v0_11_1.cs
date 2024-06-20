@@ -10,7 +10,7 @@ using Tunny.Resources;
 
 namespace Tunny.Component.Obsolete
 {
-    [Obsolete("This component is obsolete. This component will be removed in the future version. Please use FishingComponent instead.")]
+    [Obsolete("This component is obsolete in v0.11.1 and will be removed in v1.0. Please use ConstructFishAttribute instead.")]
     public class FishingComponent_v0_11_1 : UIOptimizeComponentBase
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

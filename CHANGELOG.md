@@ -18,7 +18,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - It is a sampler of the total number of hits.
 - Output result for TT-Design Explorer
 - Optimization state output to fishing component
-- Use OBSOLETE component feature
+- Use component OBSOLETE feature
   - Old components are now marked "OLD" to indicate that they are older version.
 - TPE gamma setting.
   - The smaller of the number input and 10% of the completed trials is the number of trials included in L(x).
