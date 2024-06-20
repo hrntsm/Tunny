@@ -7,6 +7,7 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Tunny.Core.Util;
 using Tunny.UI;
 
 namespace Tunny.Component.Optimizer
@@ -33,6 +34,7 @@ namespace Tunny.Component.Optimizer
         private void ShowOptimizationWindow()
         {
             GH_DocumentEditor owner = Instances.DocumentEditor;
+            TEnvVariables.GrasshopperWindowHandle = owner.Handle;
 
             if (OptimizationWindow == null || OptimizationWindow.IsDisposed)
             {

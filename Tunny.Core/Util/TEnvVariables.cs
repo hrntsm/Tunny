@@ -14,6 +14,8 @@ namespace Tunny.Core.Util
         public static string PythonPath { get; } = Path.Combine(TunnyEnvPath, "python");
         public static string ComponentFolder { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static Version OldStorageVersion { get; } = new Version("0.9.1");
+        public static IntPtr GrasshopperWindowHandle { get; set; }
+
         public static string TmpDirPath
         {
             get
