@@ -48,9 +48,9 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
-                EndMessage(optimize);
+                DialogResult dialogResult = EndMessage(optimize);
 
-                return true;
+                return dialogResult == DialogResult.Yes;
             }
             catch (Exception e)
             {
@@ -86,14 +86,16 @@ namespace Tunny.Solver
             }
         }
 
-        private static void EndMessage(Algorithm optimize)
+        private static DialogResult EndMessage(Algorithm optimize)
         {
             TLog.MethodStart();
+            DialogResult dialogResult = DialogResult.None;
             ToComponentEndMessage(optimize);
             if (OptimizeLoop.Component is UIOptimizeComponentBase)
             {
-                ShowUIEndMessages(optimize.EndState);
+                dialogResult = ShowUIEndMessages(optimize.EndState);
             }
+            return dialogResult;
         }
 
         private static void ToComponentEndMessage(Algorithm optimize)
@@ -131,36 +133,38 @@ namespace Tunny.Solver
             OptimizeLoop.Component.SetInfo(message);
         }
 
-        private static void ShowUIEndMessages(EndState endState)
+        private static DialogResult ShowUIEndMessages(EndState endState)
         {
             TLog.MethodStart();
+            DialogResult dialogResult;
             switch (endState)
             {
                 case EndState.Timeout:
-                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.\nReinstate the best trial to the slider?", "Tunny", MessageBoxButtons.YesNo);
                     break;
                 case EndState.AllTrialCompleted:
-                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified number of trials has been completed.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified number of trials has been completed.\nReinstate the best trial to the slider?", "Tunny", MessageBoxButtons.YesNo);
                     break;
                 case EndState.StoppedByUser:
-                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe user stopped the solver.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe user stopped the solver.", "Tunny", MessageBoxButtons.YesNo);
                     break;
                 case EndState.StoppedByOptuna:
-                    TunnyMessageBox.Show("Solver completed successfully.\n\nThe Optuna stopped the solver.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe Optuna stopped the solver.", "Tunny", MessageBoxButtons.YesNo);
                     break;
                 case EndState.DirectionNumNotMatch:
-                    TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dialogResult = TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.UseExitStudyWithoutContinue:
-                    TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dialogResult = TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.Error:
-                    TunnyMessageBox.Show("Solver error.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver error.", "Tunny");
                     break;
                 default:
-                    TunnyMessageBox.Show("Solver unexpected error.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show("Solver unexpected error.", "Tunny");
                     break;
             }
+            return dialogResult;
         }
 
         private static void ShowErrorMessages(Exception e)

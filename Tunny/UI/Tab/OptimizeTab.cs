@@ -241,19 +241,20 @@ namespace Tunny.UI
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
             TLog.MethodStart();
-            var pState = (ProgressState)e.UserState;
-            if (!pState.IsReportOnly)
+            var progressState = (ProgressState)e.UserState;
+            if (!progressState.IsReportOnly)
             {
-                _component.UpdateGrasshopper(pState.Parameter);
+                _component.UpdateGrasshopper(progressState.Parameter);
             }
+            _component.GrasshopperStatus = GrasshopperStates.RequestProcessed;
             const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"
-                : trialNumLabel + (pState.TrialNumber + 1);
-            SetBestValues(e, pState);
+                : trialNumLabel + (progressState.TrialNumber + 1);
+            SetBestValues(e, progressState);
 
-            EstimatedTimeRemainingLabel.Text = pState.EstimatedTimeRemaining.TotalSeconds > 0
-                ? "Estimated Time Remaining: " + new DateTime(0).Add(pState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
+            EstimatedTimeRemainingLabel.Text = progressState.EstimatedTimeRemaining.TotalSeconds > 0
+                ? "Estimated Time Remaining: " + new DateTime(0).Add(progressState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
                 : "Estimated Time Remaining: 00:00:00";
             optimizeProgressBar.Value = e.ProgressPercentage;
             optimizeProgressBar.Update();
