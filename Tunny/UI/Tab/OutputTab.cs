@@ -24,10 +24,10 @@ namespace Tunny.UI
             RunOutputLoop(OutputMode.AllTrials);
         }
 
-        private void OutputModelNumberButton_Click(object sender, EventArgs e)
+        private void OutputTrialNumberButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            RunOutputLoop(OutputMode.ModelNumber);
+            RunOutputLoop(OutputMode.TrialNumber);
         }
 
         private void ReflectToSliderButton_Click(object sender, EventArgs e)
@@ -69,15 +69,15 @@ namespace Tunny.UI
                 case OutputMode.AllTrials:
                     OutputLoop.Indices = new[] { -10 };
                     break;
-                case OutputMode.ModelNumber:
-                    result = ParseModelNumberInput(ref indices);
+                case OutputMode.TrialNumber:
+                    result = ParseTrialNumberInput(ref indices);
                     if (result)
                     {
                         OutputLoop.Indices = indices.ToArray();
                     }
                     break;
                 case OutputMode.ReflectToSliders:
-                    result = ParseModelNumberInput(ref indices);
+                    result = ParseTrialNumberInput(ref indices);
                     if (result)
                     {
                         CheckIndicesLength(indices.ToArray());
@@ -90,7 +90,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private bool ParseModelNumberInput(ref List<int> indices)
+        private bool ParseTrialNumberInput(ref List<int> indices)
         {
             TLog.MethodStart();
             bool result = true;
@@ -110,7 +110,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             if (indices.Length > 1)
             {
-                UseFirstModelNumberToReflectMessage();
+                UseFirstTrialNumberToReflectMessage();
             }
         }
 
@@ -123,7 +123,7 @@ namespace Tunny.UI
             {
                 case OutputMode.ParatoSolutions:
                 case OutputMode.AllTrials:
-                case OutputMode.ModelNumber:
+                case OutputMode.TrialNumber:
                     _component.ExpireSolution(true);
                     break;
                 case OutputMode.ReflectToSliders:

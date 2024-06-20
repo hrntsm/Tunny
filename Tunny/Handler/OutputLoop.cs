@@ -79,7 +79,7 @@ namespace Tunny.Handler
             TLog.MethodStart();
             fishes.Add(new Fish
             {
-                ModelNumber = trial.Number,
+                TrialNumber = trial.Number,
                 Variables = SetVariables(trial.Params, varNickname),
                 Objectives = SetObjectives(trial.Values, objNickname),
                 Attributes = SetAttributes(ParseAttrs(trial.UserAttrs)),
