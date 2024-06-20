@@ -217,7 +217,7 @@ namespace Tunny.Util
         private void SetInputValueItem(List<VariableBase> variables)
         {
             TLog.MethodStart();
-            foreach (GH_ValueList valueList in _valueLists)
+            foreach (TunnyValueList valueList in _valueLists)
             {
                 string nickName = valueList.NickName;
                 Guid id = valueList.InstanceGuid;

@@ -13,6 +13,7 @@ using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
 using Tunny.Component.Print;
+using Tunny.Component.Util;
 using Tunny.Core.Handler;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -91,11 +92,11 @@ namespace Tunny.Component.Optimizer
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
             if (progressState.IsReportOnly)
             {
-                GhInOut.NewSolution(progressState.Parameter);
+                ExpireSolution(true);
             }
             else
             {
-                ExpireSolution(true);
+                GhInOut.NewSolution(progressState.Parameter);
             }
             GrasshopperStatus = GrasshopperStates.RequestProcessed;
         }
@@ -113,7 +114,7 @@ namespace Tunny.Component.Optimizer
             {
                 switch (docObject)
                 {
-                    case GH_ValueList _:
+                    case TunnyValueList _:
                     case GH_NumberSlider _:
                     case GalapagosGeneListObject _:
                     case Param_FishEgg _:
