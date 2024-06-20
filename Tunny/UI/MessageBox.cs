@@ -25,6 +25,10 @@ namespace Tunny.UI
                 dialogResult = MessageBox.Show(ownerWindow, message, caption, buttons, icon);
                 f.TopMost = false;
             }
+            if (dialogResult != DialogResult.None && dialogResult != DialogResult.OK)
+            {
+                TLog.Info($"Dialog result: {dialogResult}");
+            }
             return dialogResult;
         }
 

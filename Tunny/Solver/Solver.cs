@@ -22,6 +22,8 @@ namespace Tunny.Solver
         public Parameter[] OptimalParameters { get; private set; }
         private readonly bool _hasConstraint;
         private readonly TSettings _settings;
+        private const string CompleteMessagePrefix = "Solver completed successfully.";
+        private const string ErrorMessagePrefix = "Solver error.";
 
         public Solver(TSettings settings, bool hasConstraint)
         {
@@ -48,7 +50,7 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
-                DialogResult dialogResult = EndMessage(optimize);
+                DialogResult dialogResult = EndMessage(optimize, objectives.Length > 1);
 
                 return dialogResult == DialogResult.Yes;
             }
@@ -86,14 +88,14 @@ namespace Tunny.Solver
             }
         }
 
-        private static DialogResult EndMessage(Algorithm optimize)
+        private static DialogResult EndMessage(Algorithm optimize, bool isMultiObjective)
         {
             TLog.MethodStart();
             DialogResult dialogResult = DialogResult.None;
             ToComponentEndMessage(optimize);
             if (OptimizeLoop.Component is UIOptimizeComponentBase)
             {
-                dialogResult = ShowUIEndMessages(optimize.EndState);
+                dialogResult = ShowUIEndMessages(optimize.EndState, isMultiObjective);
             }
             return dialogResult;
         }
@@ -105,25 +107,25 @@ namespace Tunny.Solver
             switch (optimize.EndState)
             {
                 case EndState.Timeout:
-                    message = "Solver completed successfully. The specified time has elapsed.";
+                    message = CompleteMessagePrefix + " The specified time has elapsed.";
                     break;
                 case EndState.AllTrialCompleted:
-                    message = "Solver completed successfully. The specified number of trials has been completed.";
+                    message = CompleteMessagePrefix + " The specified number of trials has been completed.";
                     break;
                 case EndState.StoppedByUser:
-                    message = "Solver completed successfully. The user stopped the solver.";
+                    message = CompleteMessagePrefix + " The user stopped the solver.";
                     break;
                 case EndState.StoppedByOptuna:
-                    message = "Solver completed successfully. The Optuna stopped the solver.";
+                    message = CompleteMessagePrefix + " The Optuna stopped the solver.";
                     break;
                 case EndState.DirectionNumNotMatch:
-                    message = "Solver error. The number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".";
+                    message = ErrorMessagePrefix + " The number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".";
                     break;
                 case EndState.UseExitStudyWithoutContinue:
-                    message = "Solver error. \"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.";
+                    message = ErrorMessagePrefix + " \"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.";
                     break;
                 default:
-                    message = "Solver error.";
+                    message = ErrorMessagePrefix;
                     break;
             }
             if (OptimizeLoop.Component is BoneFishComponent)
@@ -133,35 +135,37 @@ namespace Tunny.Solver
             OptimizeLoop.Component.SetInfo(message);
         }
 
-        private static DialogResult ShowUIEndMessages(EndState endState)
+        private static DialogResult ShowUIEndMessages(EndState endState, bool isMultiObjective)
         {
             TLog.MethodStart();
             DialogResult dialogResult;
+            MessageBoxButtons button = isMultiObjective ? MessageBoxButtons.OK : MessageBoxButtons.YesNo;
+            string reinstateMessage = isMultiObjective ? string.Empty : "\nReinstate the best trial to the slider?";
             switch (endState)
             {
                 case EndState.Timeout:
-                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified time has elapsed.\nReinstate the best trial to the slider?", "Tunny", MessageBoxButtons.YesNo);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified time has elapsed."+ reinstateMessage, "Tunny", button);
                     break;
                 case EndState.AllTrialCompleted:
-                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe specified number of trials has been completed.\nReinstate the best trial to the slider?", "Tunny", MessageBoxButtons.YesNo);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified number of trials has been completed." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByUser:
-                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe user stopped the solver.", "Tunny", MessageBoxButtons.YesNo);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe user stopped the solver."+ reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByOptuna:
-                    dialogResult = TunnyMessageBox.Show("Solver completed successfully.\n\nThe Optuna stopped the solver.", "Tunny", MessageBoxButtons.YesNo);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe Optuna stopped the solver." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.DirectionNumNotMatch:
-                    dialogResult = TunnyMessageBox.Show("Solver error.\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.UseExitStudyWithoutContinue:
-                    dialogResult = TunnyMessageBox.Show("Solver error.\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case EndState.Error:
-                    dialogResult = TunnyMessageBox.Show("Solver error.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix, "Tunny");
                     break;
                 default:
-                    dialogResult = TunnyMessageBox.Show("Solver unexpected error.", "Tunny");
+                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n Unexpected exception.", "Tunny");
                     break;
             }
             return dialogResult;

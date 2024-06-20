@@ -242,11 +242,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             var progressState = (ProgressState)e.UserState;
-            if (!progressState.IsReportOnly)
-            {
-                _component.UpdateGrasshopper(progressState.Parameter);
-            }
-            _component.GrasshopperStatus = GrasshopperStates.RequestProcessed;
+            _component.UpdateGrasshopper(progressState);
             const string trialNumLabel = "Trial: ";
             optimizeTrialNumLabel.Text = e.ProgressPercentage == 100
                 ? trialNumLabel + "#"

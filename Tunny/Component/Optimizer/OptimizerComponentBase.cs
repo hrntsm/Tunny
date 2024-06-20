@@ -13,7 +13,7 @@ using Grasshopper.Kernel.Special;
 
 using Tunny.Component.Params;
 using Tunny.Component.Print;
-using Tunny.Core.Input;
+using Tunny.Core.Handler;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
@@ -85,11 +85,18 @@ namespace Tunny.Component.Optimizer
             GhInOut = new GrasshopperInOut(this);
         }
 
-        public void UpdateGrasshopper(IList<Parameter> parameters)
+        public void UpdateGrasshopper(ProgressState progressState)
         {
             TLog.MethodStart();
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
-            GhInOut.NewSolution(parameters);
+            if (progressState.IsReportOnly)
+            {
+                GhInOut.NewSolution(progressState.Parameter);
+            }
+            else
+            {
+                ExpireSolution(true);
+            }
             GrasshopperStatus = GrasshopperStates.RequestProcessed;
         }
 

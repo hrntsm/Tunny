@@ -124,8 +124,8 @@ namespace Tunny.Component.Optimizer
         private void OptimizeProgressChangedHandler(object sender, ProgressChangedEventArgs e)
         {
             _count++;
-            var pState = (ProgressState)e.UserState;
-            UpdateGrasshopper(pState.Parameter);
+            var progressState = (ProgressState)e.UserState;
+            UpdateGrasshopper(progressState);
             Message = $"Trial {_count}";
         }
 
