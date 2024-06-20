@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 using Xunit;
 
@@ -36,6 +37,20 @@ namespace Tunny.Core.Handler.Tests
             Assert.Equal(0, progressState.HypervolumeRatio);
             Assert.Equal(new System.TimeSpan(), progressState.EstimatedTimeRemaining);
             Assert.False(progressState.IsReportOnly);
+        }
+
+        [Fact]
+        public void ProgressStateConstructorTest()
+        {
+            var param = new List<Input.Parameter>();
+            var noArg = new ProgressState();
+            var oneArg = new ProgressState(param);
+            var twoArg = new ProgressState(param, true);
+
+            Assert.Equal(param, oneArg.Parameter);
+            Assert.Equal(0, noArg.TrialNumber);
+            Assert.Equal(0, noArg.ObjectiveNum);
+            Assert.True(twoArg.IsReportOnly);
         }
     }
 }
