@@ -144,13 +144,13 @@ namespace Tunny.Solver
             switch (endState)
             {
                 case EndState.Timeout:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified time has elapsed."+ reinstateMessage, "Tunny", button);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified time has elapsed." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.AllTrialCompleted:
                     dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified number of trials has been completed." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByUser:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe user stopped the solver."+ reinstateMessage, "Tunny", button);
+                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe user stopped the solver." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByOptuna:
                     dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe Optuna stopped the solver." + reinstateMessage, "Tunny", button);
