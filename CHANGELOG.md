@@ -20,6 +20,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Optimization state output to fishing component
 - Use OBSOLETE component feature
   - Old components are now marked "OLD" to indicate that they are older version.
+- TPE gamma setting.
+  - The smaller of the number input and 10% of the completed trials is the number of trials included in L(x).
+  - The higher this number, the higher the exploitation of the completed trials.
 
 ### Changed
 

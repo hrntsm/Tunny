@@ -129,6 +129,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             tpeStartupNumUpDown.Value = tpe.NStartupTrials;
             tpeEINumUpDown.Value = tpe.NEICandidates;
+            tpeGammaNumUpDown.Value = tpe.Gamma;
             tpePriorNumUpDown.Value = (decimal)tpe.PriorWeight;
 
             tpeConsiderPriorCheckBox.Checked = tpe.ConsiderPrior;
@@ -255,6 +256,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             tpe.NStartupTrials = (int)tpeStartupNumUpDown.Value;
             tpe.NEICandidates = (int)tpeEINumUpDown.Value;
+            tpe.Gamma = (int)tpeGammaNumUpDown.Value;
             tpe.PriorWeight = (double)tpePriorNumUpDown.Value;
             tpe.ConsiderPrior = tpeConsiderPriorCheckBox.Checked;
             tpe.Multivariate = tpeMultivariateCheckBox.Checked;
