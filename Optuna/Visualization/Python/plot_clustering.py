@@ -17,37 +17,35 @@ def plot_clustering(
     kmeans = compute_kmeans(
         n_clusters, objectives_index, variables_index, feasible_trials
     )
-    feasible_marker, infeasible_marker = generate_markers(kmeans)
+    marker = generate_markers(kmeans)
     fig = go.Figure()
-    if len(study.directions) == 2:
-        plot_cluster_2d(
-            feasible_trials, infeasible_trials, feasible_marker, infeasible_marker, fig
-        )
-    else:
-        plot_cluster_3d(
-            feasible_trials, infeasible_trials, feasible_marker, infeasible_marker, fig
-        )
+    plot_cluster_nd(study, feasible_trials, infeasible_trials, marker, fig)
 
     metric_names = study.metric_names
     if metric_names is not None:
-        if len(metric_names) == 3:
-            update_layout_cluster_2d(fig, metric_names)
-        else:
-            update_layout_cluster_3d(fig, metric_names)
+        update_layout_cluster_nd(fig, metric_names)
+
     return go.Figure(fig)
 
 
-def update_layout_cluster_3d(fig, metric_names):
+def update_layout_cluster_nd(fig: go.Figure, metric_names: list[str]) -> None:
+    if len(metric_names) == 3:
+        update_layout_cluster_3d(fig, metric_names)
+    else:
+        update_layout_cluster_2d(fig, metric_names)
+
+
+def update_layout_cluster_2d(fig: go.Figure, metric_names: list[str]):
     fig.update_layout(
-        title=f"Clustering of Trials",
+        title="Clustering of Trials",
         xaxis=dict(title=metric_names[0]),
         yaxis=dict(title=metric_names[1]),
     )
 
 
-def update_layout_cluster_2d(fig, metric_names):
+def update_layout_cluster_3d(fig: go.Figure, metric_names: list[str]) -> None:
     fig.update_layout(
-        title=f"Clustering of Trials",
+        title="Clustering of Trials",
         scene=dict(
             xaxis_title=metric_names[0],
             yaxis_title=metric_names[1],
@@ -56,16 +54,27 @@ def update_layout_cluster_2d(fig, metric_names):
     )
 
 
-def plot_cluster_3d(
-    feasible_trials, infeasible_trials, feasible_marker, infeasible_marker, fig
-):
+def plot_cluster_nd(
+    study: Study,
+    feasible_trials: list[FrozenTrial],
+    infeasible_trials: list[FrozenTrial],
+    marker: tuple[dict, dict],
+    fig: go.Figure,
+) -> None:
+    if len(study.directions) == 2:
+        plot_cluster_2d(feasible_trials, infeasible_trials, marker, fig)
+    else:
+        plot_cluster_3d(feasible_trials, infeasible_trials, marker, fig)
+
+
+def plot_cluster_3d(feasible_trials, infeasible_trials, marker, fig):
     fig.add_trace(
         go.Scatter3d(
             x=[trial.values[0] for trial in feasible_trials],
             y=[trial.values[1] for trial in feasible_trials],
             z=[trial.values[2] for trial in feasible_trials],
             mode="markers",
-            marker=feasible_marker,
+            marker=marker[0],
             showlegend=False,
             text=[_make_hovertext(trial) for trial in feasible_trials],
             hovertemplate="%{text}<extra>Trial</extra>",
@@ -77,7 +86,7 @@ def plot_cluster_3d(
             y=[trial.values[1] for trial in infeasible_trials],
             z=[trial.values[2] for trial in infeasible_trials],
             mode="markers",
-            marker=infeasible_marker,
+            marker=marker[1],
             showlegend=False,
             text=[_make_hovertext(trial) for trial in feasible_trials],
             hovertemplate="%{text}<extra>Infeasible Trial</extra>",
@@ -86,14 +95,17 @@ def plot_cluster_3d(
 
 
 def plot_cluster_2d(
-    feasible_trials, infeasible_trials, feasible_marker, infeasible_marker, fig
-):
+    feasible_trials: list[FrozenTrial],
+    infeasible_trials: list[FrozenTrial],
+    marker: tuple[dict, dict],
+    fig: go.Figure,
+) -> None:
     fig.add_trace(
         go.Scatter(
             x=[trial.values[0] for trial in feasible_trials],
             y=[trial.values[1] for trial in feasible_trials],
             mode="markers",
-            marker=feasible_marker,
+            marker=marker[0],
             showlegend=False,
             text=[_make_hovertext(trial) for trial in feasible_trials],
             hovertemplate="%{text}<extra>Trial</extra>",
@@ -104,7 +116,7 @@ def plot_cluster_2d(
             x=[trial.values[0] for trial in infeasible_trials],
             y=[trial.values[1] for trial in infeasible_trials],
             mode="markers",
-            marker=infeasible_marker,
+            marker=marker[1],
             showlegend=False,
             text=[_make_hovertext(trial) for trial in feasible_trials],
             hovertemplate="%{text}<extra>Infeasible Trial</extra>",
@@ -112,7 +124,7 @@ def plot_cluster_2d(
     )
 
 
-def generate_markers(kmeans):
+def generate_markers(kmeans: KMeans) -> tuple[dict, dict]:
     feasible_marker = dict(
         color=kmeans.labels_,
         showscale=True,
@@ -126,10 +138,15 @@ def generate_markers(kmeans):
         size=12,
     )
 
-    return feasible_marker, infeasible_marker
+    return (feasible_marker, infeasible_marker)
 
 
-def compute_kmeans(n_clusters, objectives_index, variables_index, feasible_trials):
+def compute_kmeans(
+    n_clusters: int,
+    objectives_index: list[int],
+    variables_index: list[int],
+    feasible_trials: list[FrozenTrial],
+) -> KMeans:
     target = []
     for trial in feasible_trials:
         values = []
@@ -157,13 +174,13 @@ def filter_constraint(study: Study) -> tuple[list[FrozenTrial], list[FrozenTrial
 
 
 if __name__ == "__main__":
-    study = optuna.create_study(directions=["minimize", "minimize"])
-    # study = optuna.create_study(directions=["minimize", "maximize", "minimize"])
+    # study = optuna.create_study(directions=["minimize", "minimize"])
+    study = optuna.create_study(directions=["minimize", "maximize", "minimize"])
     study.optimize(
         lambda t: [
             t.suggest_float("x", 0, 1),
             t.suggest_float("y", 0, 1),
-            # t.suggest_float("z", 0, 1),
+            t.suggest_float("z", 0, 1),
         ],
         n_trials=100,
     )

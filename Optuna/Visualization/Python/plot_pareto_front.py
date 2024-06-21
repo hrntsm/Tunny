@@ -40,9 +40,9 @@ def truncate(fig, study: Study) -> go.Figure:
     if has_geometry == False:
         return fig
 
-    for scatter_id in range(len(fig.data)):
+    for scatter_id, _ in enumerate(fig.data):
         new_texts = []
-        for i, original_label in enumerate(fig.data[scatter_id]["text"]):
+        for _, original_label in enumerate(fig.data[scatter_id]["text"]):
             json_label = json.loads(original_label.replace("<br>", "\\n"))
             json_label["user_attrs"].pop("Geometry")
             param_len = len(json_label["params"])
