@@ -42,6 +42,10 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Rhino crashes when reinstating a value to a slider if the categorical value is a number.
 - MessageBox is now not below the back of Grasshopper window.
 
+### Security
+
+- Bump scikit-learn 1.3.1 => 1.5.0
+
 ## [v0.11.1] -2024-05-10
 
 ### Added
