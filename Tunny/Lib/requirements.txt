@@ -27,7 +27,7 @@ plotly==5.16.1
 pyro-api==0.1.2
 pyro-ppl==1.8.4
 PyYAML==6.0.1
-scikit-learn==1.3.1
+scikit-learn==1.5.0
 scipy==1.11.3
 six==1.16.0
 SQLAlchemy==2.0.21

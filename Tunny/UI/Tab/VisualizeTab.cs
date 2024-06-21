@@ -119,6 +119,7 @@ namespace Tunny.UI
                 case "contour":
                 case "parallel coordinate":
                 case "slice":
+                case "param importances":
                     return CheckOneObjSomeVarTargets(pSettings);
                 case "pareto front":
                     return CheckParetoFrontTargets(pSettings);
@@ -170,7 +171,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1)
+            if (pSettings.TargetObjectiveName.Length > 1 || pSettings.TargetObjectiveName.Length == 0)
             {
                 result = HandleOnly1ObjectiveMessage();
             }

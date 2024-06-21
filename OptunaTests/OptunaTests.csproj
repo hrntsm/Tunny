@@ -18,6 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="TestFile\ReadFileFromResourceTest.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestFile\ReadFileFromResourceTest.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="TestFile\journal.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

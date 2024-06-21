@@ -1,7 +1,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Tunny.Core.Util
+namespace Optuna.Util
 {
     public static class ReadFileFromResource
     {

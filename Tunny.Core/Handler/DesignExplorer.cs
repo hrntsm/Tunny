@@ -6,6 +6,8 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.NetworkInformation;
 
+using Optuna.Util;
+
 using Python.Runtime;
 
 using Tunny.Core.Util;

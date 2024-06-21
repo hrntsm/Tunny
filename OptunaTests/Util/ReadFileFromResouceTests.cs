@@ -3,14 +3,14 @@ using System.Reflection;
 
 using Xunit;
 
-namespace Tunny.Core.Util.Tests
+namespace Optuna.Util.Tests
 {
     public class ReadFileFromResourceTests
     {
         [Fact]
         public void TextInAssemblyTest()
         {
-            string resourceName = "Tunny.CoreTests.TestFile.ReadFileFromResourceTest.txt";
+            string resourceName = "OptunaTests.TestFile.ReadFileFromResourceTest.txt";
             var assembly = Assembly.GetExecutingAssembly();
             string text = ReadFileFromResource.Text(assembly, resourceName);
             Assert.Equal("Hello, World!", text);
