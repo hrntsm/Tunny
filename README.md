@@ -30,7 +30,6 @@ Optuna official site
 
 - https://optuna.org/
 
-
 ## :tropical_fish: Install
 
 First, Tunny runs on Windows only.
@@ -48,8 +47,6 @@ This software is being updated with your support.
 If you like this software, please donation.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
-
-Or [pixivFANBOX](https://hiron.fanbox.cc/)
 
 ## :blowfish: License
 
