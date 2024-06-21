@@ -92,16 +92,6 @@ namespace Tunny.UI
             return false;
         }
 
-        private static bool HandleOnly2ObjectivesMessage()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "This plot can only handle 2 objective functions.",
-                "Tunny"
-            );
-            return false;
-        }
-
         private static bool HandleOnly2or3ObjectiveMessage()
         {
             TLog.MethodStart();
