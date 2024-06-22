@@ -120,6 +120,9 @@ namespace Tunny.UI
             TLog.Info("From menu item Python installation started.");
             var pythonInstallDialog = new PythonInstallDialog();
             pythonInstallDialog.ShowDialog();
+            var settings = TSettings.LoadFromJson();
+            settings.CheckPythonLibraries = false;
+            settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
         private void TunnyHelpStripMenuItem_Click(object sender, EventArgs e)

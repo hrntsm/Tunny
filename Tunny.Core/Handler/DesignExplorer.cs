@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 
 using Optuna.Util;
 
@@ -77,7 +78,8 @@ namespace Tunny.Core.Handler
             using (Py.GIL())
             {
                 PyModule ps = Py.CreateScope();
-                ps.Exec(ReadFileFromResource.Text("Tunny.Core.Handler.export_fish_csv.py"));
+                var assembly = Assembly.GetExecutingAssembly();
+                ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Core.Handler.export_fish_csv.py"));
                 dynamic storage = _storage.CreateNewOptunaStorage(false);
                 dynamic func = ps.Get("export_fish_csv");
                 string outputPath = Path.Combine(TEnvVariables.DesignExplorerPath, "design_explorer_data");
