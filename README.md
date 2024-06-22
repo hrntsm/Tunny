@@ -53,7 +53,7 @@ If you like this software, please donation.
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
 Copyright© 2022, hrntsm
 
-Tunny use Python runtime & some python packages.
+Tunny use TT-DesignExplorer & Python runtime & some python packages.
 These depend on their own licenses.
 Please see PYTHON_PACKAGE_LICENSE for more license information.
 
