@@ -210,6 +210,8 @@ namespace Tunny.Solver
                     case CategoricalVariable _:
                         opt[i] = new Parameter(values[index]);
                         break;
+                    default:
+                        throw new ArgumentException("Variable type is not supported.");
                 }
             }
         }
@@ -359,7 +361,6 @@ namespace Tunny.Solver
                 }
                 else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
                 {
-                    dynamic aa = optInfo.Study._stop_flag;
                     optInfo.Study.tell(trial, result.Objectives.Numbers);
                     SetTrialResultLog(trialNum, result, optInfo, parameter);
                 }

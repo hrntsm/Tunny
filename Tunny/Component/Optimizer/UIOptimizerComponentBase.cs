@@ -61,7 +61,7 @@ namespace Tunny.Component.Optimizer
             {
             }
 
-            public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
+            public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas _, GH_CanvasMouseEvent e)
             {
                 ((UIOptimizeComponentBase)Owner).MakeFishPrintByCaptureToTopOrder();
                 ((UIOptimizeComponentBase)Owner).ShowOptimizationWindow();

@@ -88,7 +88,7 @@ namespace Tunny.Core.Handler
             PythonEngine.Shutdown();
         }
 
-        private static bool KillExistTunnyServerProcess()
+        private static void KillExistTunnyServerProcess()
         {
             TLog.MethodStart();
             int killCount = 0;
@@ -101,7 +101,6 @@ namespace Tunny.Core.Handler
                     killCount++;
                 }
             }
-            return killCount > 0;
         }
 
         private static int FindAvailablePort(int startPort)

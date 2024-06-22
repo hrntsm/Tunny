@@ -9,7 +9,7 @@ namespace Tunny.UI
     {
         public static DialogResult Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
         {
-            DialogResult dialogResult = DialogResult.None;
+            DialogResult dialogResult;
             WriteLog(message, icon);
 
             IntPtr ownerHWND = TEnvVariables.GrasshopperWindowHandle == IntPtr.Zero
