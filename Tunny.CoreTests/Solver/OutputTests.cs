@@ -28,13 +28,19 @@ namespace Tunny.Core.Solver.Tests
         }
 
         [Fact]
-        public void GetSpecificTargetTrialTest()
+        public void GetMetricNamesTest()
         {
-            Trial[] trials = _output.GetTargetTrial(new[] { 3, 2, 9 }, "output_test");
-            Assert.Equal(3, trials.Length);
-            Assert.Equal(3, trials[0].Number);
-            Assert.Equal(2, trials[1].Number);
-            Assert.Equal(9, trials[2].Number);
+            string[] metricNames = _output.GetMetricNames("output_test");
+            Assert.Equal(2, metricNames.Length);
+            Assert.Equal("v0", metricNames[0]);
+            Assert.Equal("v1", metricNames[1]);
+        }
+
+        [Fact]
+        public void NullMetricNamesTest()
+        {
+            string[] metricNames = _output.GetMetricNames("null_test");
+            Assert.Empty(metricNames);
         }
 
         [Fact]

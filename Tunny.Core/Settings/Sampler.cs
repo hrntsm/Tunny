@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 
 using Optuna.Sampler;
+
+using Python.Runtime;
 
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -17,11 +20,13 @@ namespace Tunny.Settings.Sampler
         public QMCSampler QMC { get; set; } = new QMCSampler();
         public BoTorchSampler BoTorch { get; set; } = new BoTorchSampler();
         public GPSampler GP { get; set; } = new GPSampler();
+        public BruteForceSampler BruteForce { get; set; } = new BruteForceSampler();
 
-        public dynamic ToPython(dynamic optuna, SamplerType type, string storagePath, bool hasConstraints)
+        public dynamic ToPython(SamplerType type, string storagePath, bool hasConstraints, Dictionary<string, double> firstVariables)
         {
             TLog.MethodStart();
             dynamic optunaSampler;
+            dynamic optuna = Py.Import("optuna");
             switch (type)
             {
                 case SamplerType.TPE:
@@ -40,13 +45,16 @@ namespace Tunny.Settings.Sampler
                     optunaSampler = NsgaIII.ToPython(optuna, hasConstraints);
                     break;
                 case SamplerType.CmaEs:
-                    optunaSampler = CmaEs.ToPython(optuna, storagePath);
+                    optunaSampler = CmaEs.ToPython(optuna, storagePath, firstVariables);
                     break;
                 case SamplerType.QMC:
                     optunaSampler = QMC.ToPython(optuna);
                     break;
                 case SamplerType.Random:
                     optunaSampler = Random.ToPython(optuna);
+                    break;
+                case SamplerType.BruteForce:
+                    optunaSampler = BruteForce.ToPython(optuna);
                     break;
                 default:
                     throw new ArgumentException("Invalid sampler type.");

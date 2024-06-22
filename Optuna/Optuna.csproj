@@ -2,10 +2,34 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>0.11.1</Version>
+    <Version>0.12.0</Version>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Visualization\Python\plot_clustering.py" />
+    <None Remove="Visualization\Python\plot_contour.py" />
+    <None Remove="Visualization\Python\plot_edf.py" />
+    <None Remove="Visualization\Python\plot_hypervolume.py" />
+    <None Remove="Visualization\Python\plot_importances.py" />
+    <None Remove="Visualization\Python\plot_optimization_history.py" />
+    <None Remove="Visualization\Python\plot_parallel_coordinate.py" />
+    <None Remove="Visualization\Python\plot_pareto_front.py" />
+    <None Remove="Visualization\Python\plot_slice.py" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Visualization\Python\plot_clustering.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_contour.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_edf.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_hypervolume.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_importances.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_optimization_history.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_parallel_coordinate.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_pareto_front.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_slice.py" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="pythonnet" Version="3.0.1" />

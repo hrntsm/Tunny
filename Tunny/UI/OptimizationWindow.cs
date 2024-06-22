@@ -7,6 +7,7 @@ using Grasshopper.GUI;
 using Serilog.Events;
 
 using Tunny.Component.Optimizer;
+using Tunny.Core.Handler;
 using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
@@ -17,11 +18,11 @@ namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private readonly FishingComponent _component;
+        private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
         internal GrasshopperStates GrasshopperStatus;
 
-        public OptimizationWindow(FishingComponent component)
+        public OptimizationWindow(OptimizeComponentBase component)
         {
             TLog.MethodStart();
             TLog.Info("OptimizationWindow is open");
@@ -36,14 +37,21 @@ namespace Tunny.UI
             _settings = TSettings.LoadFromJson();
             SetUIValues();
             RunPythonInstaller();
+            SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
+        }
+
+        private static void SetupTTDesignExplorer()
+        {
+            TLog.MethodStart();
+            DesignExplorer.SetupTTDesignExplorer();
         }
 
         private void RunPythonInstaller()
         {
             TLog.MethodStart();
-            Version tunnyAssembleVersion = TEnvVariables.Version;
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString();
             if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
                 TLog.Info("Run Python installer");

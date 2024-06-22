@@ -10,7 +10,6 @@ using Optuna.Study;
 
 using Python.Runtime;
 
-using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
 using Tunny.Core.Settings;
@@ -59,7 +58,7 @@ namespace Tunny.Solver
             SamplerType samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
-            string[] directions = SetDirectionValues(Objective.Length);
+            string[] directions = Objective.Directions;
             if (string.IsNullOrEmpty(Settings.StudyName))
             {
                 Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
@@ -72,7 +71,7 @@ namespace Tunny.Solver
                 TLog.Debug("Wake Python GIL.");
 
                 dynamic optuna = Py.Import("optuna");
-                dynamic sampler = SetSamplerSettings(samplerType, optuna, HasConstraints);
+                dynamic sampler = SetSamplerSettings(samplerType, HasConstraints, FishEgg);
                 dynamic storage = Settings.Storage.CreateNewOptunaStorage(false);
                 dynamic artifactBackend = Settings.Storage.CreateNewOptunaArtifactBackend(false);
 
@@ -145,18 +144,6 @@ namespace Tunny.Solver
             RunHumanSidlerInputOptimize(optInfo, nBatch, out parameter, out result);
         }
 
-        private static string[] SetDirectionValues(int nObjective)
-        {
-            TLog.MethodStart();
-            string[] directions = new string[nObjective];
-            for (int i = 0; i < nObjective; i++)
-            {
-                directions[i] = "minimize";
-            }
-
-            return directions;
-        }
-
         private bool CheckExistStudyMatching(int nObjective)
         {
             TLog.MethodStart();
@@ -196,21 +183,36 @@ namespace Tunny.Solver
                 string[] keys = (string[])study.best_params.keys();
                 var opt = new Parameter[Variables.Count];
 
-                for (int i = 0; i < Variables.Count; i++)
-                {
-                    for (int j = 0; j < keys.Length; j++)
-                    {
-                        if (keys[j] == Variables[i].NickName)
-                        {
-                            opt[i] = double.TryParse(values[j], out double num) ? new Parameter(num) : new Parameter(values[j]);
-                        }
-                    }
-                }
+                SetParamsFromOptunaBestParams(values, keys, opt);
                 OptimalParameters = opt;
             }
             else
             {
                 OptimalParameters = parameter;
+            }
+        }
+
+        private void SetParamsFromOptunaBestParams(string[] values, string[] keys, Parameter[] opt)
+        {
+            for (int i = 0; i < Variables.Count; i++)
+            {
+                int index = Array.IndexOf(keys, Variables[i].NickName);
+                if (index == -1)
+                {
+                    continue;
+                }
+                switch (Variables[i])
+                {
+                    case NumberVariable _:
+                        double num = double.Parse(values[index], CultureInfo.InvariantCulture);
+                        opt[i] = new Parameter(num);
+                        break;
+                    case CategoricalVariable _:
+                        opt[i] = new Parameter(values[index]);
+                        break;
+                    default:
+                        throw new ArgumentException("Variable type is not supported.");
+                }
             }
         }
 
@@ -225,7 +227,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optInfo, trialNum, startTime))
                 {
                     break;
                 }
@@ -247,7 +249,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optInfo, trialNum, startTime))
                 {
                     break;
                 }
@@ -273,7 +275,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (result == null || CheckOptimizeComplete(optInfo.NTrials, optInfo.Timeout, trialNum, startTime))
+                if (result == null || CheckOptimizeComplete(optInfo, trialNum, startTime))
                 {
                     break;
                 }
@@ -440,10 +442,7 @@ namespace Tunny.Solver
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
             string message = sb.ToString();
-            if (OptimizeLoop.Component is BoneFishComponent component)
-            {
-                component.SetInfo(message);
-            }
+            OptimizeLoop.Component.SetInfo(message);
             TLog.Info(sb.ToString());
         }
 
@@ -459,9 +458,15 @@ namespace Tunny.Solver
             return null;
         }
 
-        private bool CheckOptimizeComplete(int nTrials, double timeout, int trialNum, DateTime startTime)
+        private bool CheckOptimizeComplete(OptimizationHandlingInfo optInfo, int trialNum, DateTime startTime)
         {
             TLog.MethodStart();
+
+            int nTrials = optInfo.NTrials;
+            double timeout = optInfo.Timeout;
+            dynamic study = optInfo.Study;
+            bool studyStopFlag = study._stop_flag;
+
             bool isOptimizeCompleted = false;
             if (trialNum >= nTrials)
             {
@@ -477,6 +482,11 @@ namespace Tunny.Solver
             {
                 EndState = EndState.StoppedByUser;
                 OptimizeLoop.IsForcedStopOptimize = false;
+                isOptimizeCompleted = true;
+            }
+            else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null && studyStopFlag)
+            {
+                EndState = EndState.StoppedByOptuna;
                 isOptimizeCompleted = true;
             }
 
@@ -615,6 +625,10 @@ namespace Tunny.Solver
                     IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
                     pyList = PyConverter.EnumeratorToPyList(values);
                 }
+                else if (pair.Key == "Direction")
+                {
+                    continue;
+                }
                 else
                 {
                     pyList = PyConverter.EnumeratorToPyList(pair.Value);
@@ -623,11 +637,13 @@ namespace Tunny.Solver
             }
         }
 
-        private dynamic SetSamplerSettings(SamplerType samplerType, dynamic optuna, bool hasConstraints)
+        private dynamic SetSamplerSettings(SamplerType samplerType, bool hasConstraints, Dictionary<string, FishEgg> fishEgg)
         {
             TLog.MethodStart();
             string storagePath = Settings.Storage.GetOptunaStoragePath();
-            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(optuna, samplerType, storagePath, hasConstraints);
+            Dictionary<string, double> firstVariables = GetFirstEgg(fishEgg);
+
+            dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(samplerType, storagePath, hasConstraints, firstVariables);
             if (
                 (samplerType == SamplerType.GP || samplerType == SamplerType.CmaEs || samplerType == SamplerType.QMC || samplerType == SamplerType.Random)
                 && hasConstraints
@@ -636,6 +652,23 @@ namespace Tunny.Solver
                 TunnyMessageBox.Show("Only TPE, GP:BoTorch and NSGA support constraints. Optimization is run without considering constraints.", "Tunny");
             }
             return optunaSampler;
+        }
+
+        private static Dictionary<string, double> GetFirstEgg(Dictionary<string, FishEgg> fishEgg)
+        {
+            TLog.MethodStart();
+            if (fishEgg == null || fishEgg.Count == 0)
+            {
+                return null;
+            }
+
+            var firstVariables = new Dictionary<string, double>();
+            foreach (KeyValuePair<string, FishEgg> pair in fishEgg)
+            {
+                firstVariables.Add(pair.Key, pair.Value.Values[0]);
+            }
+
+            return firstVariables;
         }
     }
 }

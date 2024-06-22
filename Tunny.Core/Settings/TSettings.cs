@@ -12,7 +12,7 @@ namespace Tunny.Core.Settings
 {
     public class TSettings
     {
-        public Version Version { get; set; } = TEnvVariables.Version;
+        public string Version { get; set; } = TEnvVariables.Version.ToString();
         public Optimize Optimize { get; set; } = new Optimize();
         public Result Result { get; set; } = new Result();
         public string StudyName { get; set; } = string.Empty;

@@ -143,6 +143,16 @@ namespace Tunny.Resources {
         /// <summary>
         ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
         /// </summary>
+        internal static System.Drawing.Bitmap optuna_dashboard {
+            get {
+                object obj = ResourceManager.GetObject("optuna_dashboard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
         internal static System.Drawing.Bitmap ParamFishAttribute {
             get {
                 object obj = ResourceManager.GetObject("ParamFishAttribute", resourceCulture);
@@ -176,6 +186,16 @@ namespace Tunny.Resources {
         internal static System.Drawing.Bitmap ParamFishPrintIcon {
             get {
                 object obj = ResourceManager.GetObject("ParamFishPrintIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static System.Drawing.Bitmap TTDesignExplorer {
+            get {
+                object obj = ResourceManager.GetObject("TTDesignExplorer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

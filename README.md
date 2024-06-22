@@ -30,7 +30,6 @@ Optuna official site
 
 - https://optuna.org/
 
-
 ## :tropical_fish: Install
 
 First, Tunny runs on Windows only.
@@ -49,14 +48,12 @@ If you like this software, please donation.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
-Or [pixivFANBOX](https://hiron.fanbox.cc/)
-
 ## :blowfish: License
 
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
 Copyright© 2022, hrntsm
 
-Tunny use Python runtime & some python packages.
+Tunny use TT-DesignExplorer & Python runtime & some python packages.
 These depend on their own licenses.
 Please see PYTHON_PACKAGE_LICENSE for more license information.
 

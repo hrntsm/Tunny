@@ -16,6 +16,8 @@ namespace Tunny.Component.Operation
             = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
         private const string ConstraintDescription
             = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
+        private const string DirectionDescription
+            = "Direction of each objective. 1 for maximization, -1 for minimization.";
         private const string AttrDescription
             = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -30,6 +32,7 @@ namespace Tunny.Component.Operation
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "Geometry", GeomDescription, GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Direction", "Direction", DirectionDescription, GH_ParamAccess.list);
             pManager.AddNumberParameter("Constraint", "Constraint", ConstraintDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr1", "Attr1", AttrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", AttrDescription, GH_ParamAccess.list);
@@ -37,6 +40,7 @@ namespace Tunny.Component.Operation
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
             Params.Input[3].Optional = true;
+            Params.Input[4].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -64,23 +68,51 @@ namespace Tunny.Component.Operation
             for (int i = 0; i < paramCount; i++)
             {
                 string key = Params.Input[i].NickName;
-                if (i == 1)
+                switch (i)
                 {
-                    var constraint = new List<double>();
-                    if (DA.GetDataList(i, constraint))
-                    {
-                        dict.Add(key, constraint);
-                    }
+                    case 1:
+                        SetDirectionDataList(DA, dict, i, key);
+                        break;
+                    case 2:
+                        SetConstraintDataList(DA, dict, i, key);
+                        break;
+                    default:
+                        SetGenericDataList(DA, dict, i, key);
+                        break;
                 }
-                else
+            }
+        }
+
+        private static void SetGenericDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var list = new List<object>();
+            if (!DA.GetDataList(i, list))
+            {
+                return;
+            }
+            dict.Add(key, list);
+        }
+
+        private static void SetConstraintDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var constraint = new List<double>();
+            if (DA.GetDataList(i, constraint))
+            {
+                dict.Add(key, constraint);
+            }
+        }
+
+        private void SetDirectionDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
+        {
+            var direction = new List<int>();
+            if (DA.GetDataList(i, direction))
+            {
+                if (direction.Any(x => x != 1 && x != -1))
                 {
-                    var list = new List<object>();
-                    if (!DA.GetDataList(i, list))
-                    {
-                        continue;
-                    }
-                    dict.Add(key, list);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Direction must be either 1(maximize) or -1(minimize).");
+                    return;
                 }
+                dict.Add(key, direction);
             }
         }
 
@@ -100,9 +132,9 @@ namespace Tunny.Component.Operation
             return false;
         }
 
-        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 2);
+        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 3);
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 2;
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 3;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
@@ -120,17 +152,25 @@ namespace Tunny.Component.Operation
                     }
                     else
                     {
-                        return SetGenericParameterInput(index - 1);
+                        return SetGenericParameterInput();
                     }
                 }
             }
             return null;
         }
 
-        private static Param_GenericObject SetGenericParameterInput(int index)
+        private Param_GenericObject SetGenericParameterInput()
         {
+            int count = 1;
+            IEnumerable<string> attrInput = Params.Input.Select(x => x.NickName).Where(x => x.Contains("Attr"));
+            string nickname = $"Attr{count}";
+            while (attrInput.Contains(nickname))
+            {
+                count++;
+                nickname = $"Attr{count}";
+            }
             var p = new Param_GenericObject();
-            p.Name = p.NickName = $"Attr{index}";
+            p.Name = p.NickName = nickname;
             p.Description = AttrDescription;
             p.Access = GH_ParamAccess.list;
             p.Optional = true;
@@ -189,6 +229,6 @@ namespace Tunny.Component.Operation
         }
 
         protected override System.Drawing.Bitmap Icon => Resource.ConstructFishAttribute;
-        public override Guid ComponentGuid => new Guid("0E66E2E8-6A97-45E0-93DF-2251C3949B7D");
+        public override Guid ComponentGuid => new Guid("4baf9edc-fc50-4ed2-8c59-33194ec446b5");
     }
 }

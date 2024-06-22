@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 using Optuna.Study;
 
+using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -25,7 +27,7 @@ namespace Tunny.UI
             string storagePath = _settings.Storage.Path;
 
             var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
-            dashboard.Run();
+            dashboard.Run(true);
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
@@ -117,6 +119,7 @@ namespace Tunny.UI
                 case "contour":
                 case "parallel coordinate":
                 case "slice":
+                case "param importances":
                     return CheckOneObjSomeVarTargets(pSettings);
                 case "pareto front":
                     return CheckParetoFrontTargets(pSettings);
@@ -168,7 +171,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1)
+            if (pSettings.TargetObjectiveName.Length > 1 || pSettings.TargetObjectiveName.Length == 0)
             {
                 result = HandleOnly1ObjectiveMessage();
             }
@@ -182,6 +185,19 @@ namespace Tunny.UI
             }
 
             return result;
+        }
+
+        private void TTDesignExplorerButton_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            if (visualizeTargetStudyComboBox.Text == string.Empty)
+            {
+                TunnyMessageBox.Show("There is no study to visualize.\nPlease set 'Target Study'", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var designExplorer = new DesignExplorer(visualizeTargetStudyComboBox.Text, _settings.Storage);
+            designExplorer.Run();
         }
     }
 }

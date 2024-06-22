@@ -52,34 +52,45 @@ namespace Optuna.Dashboard
             }
         }
 
-        public void Run()
+        public void Run(bool openBrowser)
         {
-            CheckExistDashboardProcess();
-            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir {_artifactDir}";
+            KillExistDashboardProcess();
+            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir \"{_artifactDir}\"";
 
             var dashboard = new Process();
             dashboard.StartInfo.FileName = _dashboardPath;
             dashboard.StartInfo.Arguments = argument;
             dashboard.StartInfo.UseShellExecute = false;
-            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             dashboard.Start();
 
+            if (openBrowser)
+            {
+                OpenBrowser();
+            }
+        }
+
+        private void OpenBrowser()
+        {
             var browser = new Process();
             browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
         }
 
-        private static void CheckExistDashboardProcess()
+        public static bool KillExistDashboardProcess()
         {
+            int killCount = 0;
             Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
             if (dashboardProcess.Length > 0)
             {
                 foreach (Process p in dashboardProcess)
                 {
                     p.Kill();
+                    killCount++;
                 }
             }
+            return killCount > 0;
         }
     }
 }

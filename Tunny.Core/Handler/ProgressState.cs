@@ -14,5 +14,20 @@ namespace Tunny.Core.Handler
         public double HypervolumeRatio { get; set; }
         public TimeSpan EstimatedTimeRemaining { get; set; }
         public bool IsReportOnly { get; set; }
+
+        public ProgressState()
+        {
+        }
+
+        public ProgressState(IList<Parameter> parameters)
+        {
+            Parameter = parameters;
+        }
+
+        public ProgressState(IList<Parameter> parameters, bool isReportOnly)
+        {
+            Parameter = parameters;
+            IsReportOnly = isReportOnly;
+        }
     }
 }
