@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [UNRELEASED] -YYYY-MM-DD
+
+### Added
+
+for new features.
+
+### Changed
+
+for changes in existing functionality.
+
+### Deprecated
+
+for soon-to-be removed features.
+
+### Removed
+
+for now removed features.
+
+### Fixed
+
+- Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize
+
+### Security
+
+in case of vulnerabilities.
+
 ## [v0.12.0] -2024-06-22
 
 ### Added
