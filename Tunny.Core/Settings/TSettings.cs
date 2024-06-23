@@ -20,6 +20,24 @@ namespace Tunny.Core.Settings
         public bool CheckPythonLibraries { get; set; } = true;
         public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
+        public TSettings()
+        {
+        }
+
+        public TSettings(string settingsPath, string storagePath, StorageType storageType, bool createNewFile)
+        {
+            Storage = new Storage
+            {
+                Path = storagePath,
+                Type = storageType
+            };
+
+            if (createNewFile)
+            {
+                CreateNewSettingsFile(settingsPath);
+            }
+        }
+
         public void Serialize(string path)
         {
             TLog.MethodStart();
@@ -32,10 +50,20 @@ namespace Tunny.Core.Settings
             File.WriteAllText(path, json);
         }
 
-        public static TSettings Deserialize(string json)
+        public static TSettings Deserialize(string settingsPath)
         {
             TLog.MethodStart();
-            return JsonConvert.DeserializeObject<TSettings>(json);
+            try
+            {
+                return JsonConvert.DeserializeObject<TSettings>(File.ReadAllText(settingsPath));
+            }
+            catch (Exception e)
+            {
+                TLog.Error(e.Message);
+                TLog.Warning("Create new settings.json");
+                File.Delete(settingsPath);
+                return new TSettings(settingsPath, TEnvVariables.DefaultStoragePath, StorageType.Journal, true);
+            }
         }
 
         public void CreateNewSettingsFile(string path)
@@ -51,19 +79,11 @@ namespace Tunny.Core.Settings
             if (File.Exists(settingsPath))
             {
                 TLog.Info("Load existing setting.json");
-                settings = Deserialize(File.ReadAllText(settingsPath));
+                settings = Deserialize(settingsPath);
             }
             else
             {
-                settings = new TSettings
-                {
-                    Storage = new Storage
-                    {
-                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
-                        Type = StorageType.Journal
-                    }
-                };
-                settings.CreateNewSettingsFile(settingsPath);
+                settings = new TSettings(TEnvVariables.OptimizeSettingsPath, TEnvVariables.DefaultStoragePath, StorageType.Journal, true);
             }
             return settings;
         }
