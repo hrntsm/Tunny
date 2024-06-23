@@ -14,7 +14,7 @@ for new features.
 
 ### Changed
 
-for changes in existing functionality.
+- Default log file is set to "Verbose" with a retention period of 1 day.
 
 ### Deprecated
 
