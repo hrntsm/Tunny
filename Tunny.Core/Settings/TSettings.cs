@@ -18,7 +18,7 @@ namespace Tunny.Core.Settings
         public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
-        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
+        public LogEventLevel LogLevel { get; set; } = LogEventLevel.Verbose;
 
         public TSettings()
         {

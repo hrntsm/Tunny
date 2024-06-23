@@ -41,7 +41,7 @@ namespace Tunny.Core.Util
             string logDirectory = TEnvVariables.LogPath;
             string logFilePattern = "*.txt";
 
-            DateTime threshold = DateTime.Now.AddDays(-7);
+            DateTime threshold = DateTime.Now.AddDays(-1);
 
             var directory = new DirectoryInfo(logDirectory);
             FileInfo[] logFiles = directory.GetFiles(logFilePattern);
