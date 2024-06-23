@@ -50,10 +50,20 @@ namespace Tunny.Core.Settings
             File.WriteAllText(path, json);
         }
 
-        public static TSettings Deserialize(string json)
+        public static TSettings Deserialize(string settingsPath)
         {
             TLog.MethodStart();
-            return JsonConvert.DeserializeObject<TSettings>(json);
+            try
+            {
+                return JsonConvert.DeserializeObject<TSettings>(File.ReadAllText(settingsPath));
+            }
+            catch (Exception e)
+            {
+                TLog.Error(e.Message);
+                TLog.Warning("Create new settings.json");
+                File.Delete(settingsPath);
+                return new TSettings(settingsPath, TEnvVariables.DefaultStoragePath, StorageType.Journal, true);
+            }
         }
 
         public void CreateNewSettingsFile(string path)
@@ -69,15 +79,7 @@ namespace Tunny.Core.Settings
             if (File.Exists(settingsPath))
             {
                 TLog.Info("Load existing setting.json");
-                try
-                {
-                    settings = Deserialize(File.ReadAllText(settingsPath));
-                }
-                catch (Exception e)
-                {
-                    TLog.Error(e.Message);
-                    settings = new TSettings(TEnvVariables.OptimizeSettingsPath, TEnvVariables.DefaultStoragePath, StorageType.Journal, true);
-                }
+                settings = Deserialize(settingsPath);
             }
             else
             {
@@ -85,6 +87,5 @@ namespace Tunny.Core.Settings
             }
             return settings;
         }
-
     }
 }
