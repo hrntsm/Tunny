@@ -62,7 +62,7 @@ jobs:
       - name: Copy items to /Release dir
         shell: powershell
         run: |
-          cp ./Examples ./Release/Tunny/Examples -recurse
+          cp ./Examples ./Release/Examples -recurse
           cp ./LICENSE ./Release/LICENSE.txt
           cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
           cp ./Tunny/bin/Debug/net48 ./Release/Tunny -recurse
