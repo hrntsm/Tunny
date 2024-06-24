@@ -16,9 +16,12 @@ namespace Tunny.UI
 {
     public class LoadingInstruction : GH_AssemblyPriority, IDisposable
     {
+        private ToolStripMenuItem _tutorialStripMenuItem;
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
         private ToolStripMenuItem _pythonInstallStripMenuItem;
+        private ToolStripMenuItem _ttDesignExplorerToolStripMenuItem;
+        private ToolStripMenuItem _aboutTunnyStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
         {
@@ -72,20 +75,28 @@ namespace Tunny.UI
         private void AddTunnyMenuItems(ToolStripItemCollection dropDownItems)
         {
             TLog.MethodStart();
-            _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, TunnyHelpStripMenuItem_Click, "TunnyHelpStripMenuItem");
+            _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, null, "TunnyHelpStripMenuItem");
+            _tutorialStripMenuItem = new ToolStripMenuItem("Tutorial", null, null, "TutorialStripMenuItem");
             _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
             _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
-            var ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
-            var aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
+            _ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
+            _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
+
+            _tunnyHelpStripMenuItem.DropDownItems.AddRange(new[]{
+                new ToolStripMenuItem("Tunny document", null, TunnyDocumentPageStripMenuItem_Click, "TunnyDocumentStripMenuItem"),
+                new ToolStripMenuItem("Optuna sampler document", null, OptunaSamplerPageStripMenuItem_Click, "OptunaTutorialStripMenuItem")
+            });
 
             dropDownItems.AddRange(new ToolStripItem[] {
                 _tunnyHelpStripMenuItem,
+                _tutorialStripMenuItem,
+                new ToolStripSeparator(),
                 _optunaDashboardToolStripMenuItem,
-                ttDesignExplorerToolStripMenuItem,
+                _ttDesignExplorerToolStripMenuItem,
                 new ToolStripSeparator(),
                 _pythonInstallStripMenuItem,
                 new ToolStripSeparator(),
-                aboutTunnyStripMenuItem
+                _aboutTunnyStripMenuItem
             });
         }
 
@@ -125,12 +136,22 @@ namespace Tunny.UI
             settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
-        private void TunnyHelpStripMenuItem_Click(object sender, EventArgs e)
+        private void TunnyDocumentPageStripMenuItem_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            TLog.Debug("TunnyHelpStripMenuItem Clicked");
+            TLog.Debug("TunnyDocumentPageStripMenuItem Clicked");
             var browser = new Process();
             browser.StartInfo.FileName = $@"https://tunny-docs.deno.dev/";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
+        }
+
+        private void OptunaSamplerPageStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            TLog.Debug("OptunaSamplerPageStripMenuItem Clicked");
+            var browser = new Process();
+            browser.StartInfo.FileName = $@"https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
         }
@@ -211,8 +232,11 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             _tunnyHelpStripMenuItem.Dispose();
+            _tutorialStripMenuItem.Dispose();
             _optunaDashboardToolStripMenuItem.Dispose();
             _pythonInstallStripMenuItem.Dispose();
+            _ttDesignExplorerToolStripMenuItem.Dispose();
+            _aboutTunnyStripMenuItem.Dispose();
             GC.SuppressFinalize(this);
         }
     }
