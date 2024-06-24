@@ -119,7 +119,7 @@ namespace Tunny.UI
             {
                 string file = filePaths[i];
                 string fileName = Path.GetFileNameWithoutExtension(file);
-                var optItem = new ToolStripMenuItem("0" + i + " " + fileName, null, (_, e) =>
+                var optItem = new ToolStripMenuItem("0" + i + " " + fileName, null, (sender, e) =>
                 {
                     Grasshopper.Instances.DocumentServer.AddDocument(file, makeActive: true);
                 }, fileName);

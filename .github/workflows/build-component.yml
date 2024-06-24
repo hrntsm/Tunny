@@ -62,11 +62,10 @@ jobs:
       - name: Copy items to /Release dir
         shell: powershell
         run: |
-          mkdir ./Release
+          cp ./Examples ./Release/Tunny/Examples -recurse
           cp ./LICENSE ./Release/LICENSE.txt
           cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
           cp ./Tunny/bin/Debug/net48 ./Release/Tunny -recurse
-          cp ./Examples ./Release/Tunny/Examples -recurse
           cp ./TT-DesignExplorer/server/bin/Debug/net48/TT-DesignExplorer.zip ./Release/Tunny/Lib/TT-DesignExplorer.zip
 
       - name: Upload release build of plugin as artefact
