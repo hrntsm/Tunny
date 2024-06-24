@@ -76,16 +76,14 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, null, "TunnyHelpStripMenuItem");
-            _tutorialStripMenuItem = new ToolStripMenuItem("Tutorial", null, null, "TutorialStripMenuItem");
-            _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
+            _tutorialStripMenuItem = new ToolStripMenuItem("Tutorial Files", null, null, "TutorialStripMenuItem");
+            _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run Optuna Dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
             _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
             _ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
             _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
 
-            _tunnyHelpStripMenuItem.DropDownItems.AddRange(new[]{
-                new ToolStripMenuItem("Tunny document", null, TunnyDocumentPageStripMenuItem_Click, "TunnyDocumentStripMenuItem"),
-                new ToolStripMenuItem("Optuna sampler document", null, OptunaSamplerPageStripMenuItem_Click, "OptunaTutorialStripMenuItem")
-            });
+            SetHelpDropDownItems();
+            SetTutorialDropDownItems();
 
             dropDownItems.AddRange(new ToolStripItem[] {
                 _tunnyHelpStripMenuItem,
@@ -97,6 +95,44 @@ namespace Tunny.UI
                 _pythonInstallStripMenuItem,
                 new ToolStripSeparator(),
                 _aboutTunnyStripMenuItem
+            });
+        }
+
+        private void SetTutorialDropDownItems()
+        {
+            TLog.MethodStart();
+            var optExample = new ToolStripMenuItem("Optimization", null, null, "TutorialOptimizationStripMenuItem");
+            var hitlExample = new ToolStripMenuItem("Human-in-the-loop", null, null, "TutorialHITLStripMenuItem");
+            string[] optFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Optimization"), "*.gh");
+            string[] hitlFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Human-in-the-loop"), "*.gh");
+
+            SetMenuItemsFromFilePath(optExample, optFiles);
+            SetMenuItemsFromFilePath(hitlExample, hitlFiles);
+
+            _tutorialStripMenuItem.DropDownItems.AddRange(new[] { optExample, hitlExample });
+        }
+
+        private static void SetMenuItemsFromFilePath(ToolStripMenuItem menuItem, string[] filePaths)
+        {
+            TLog.MethodStart();
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                string file = filePaths[i];
+                string fileName = Path.GetFileNameWithoutExtension(file);
+                var optItem = new ToolStripMenuItem("0" + i + " " + fileName, null, (sender, e) =>
+                {
+                    Grasshopper.Instances.DocumentServer.AddDocument(file, makeActive: true);
+                }, fileName);
+                menuItem.DropDownItems.Add(optItem);
+            }
+        }
+
+        private void SetHelpDropDownItems()
+        {
+            TLog.MethodStart();
+            _tunnyHelpStripMenuItem.DropDownItems.AddRange(new[]{
+                new ToolStripMenuItem("Tunny Document", null, TunnyDocumentPageStripMenuItem_Click, "TunnyDocumentStripMenuItem"),
+                new ToolStripMenuItem("Optuna Sampler Document", null, OptunaSamplerPageStripMenuItem_Click, "OptunaTutorialStripMenuItem")
             });
         }
 
