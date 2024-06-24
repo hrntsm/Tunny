@@ -10,7 +10,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
-for new features.
+- Feature to open tutorial files in the menu.
 
 ### Changed
 
