@@ -174,6 +174,7 @@ namespace Tunny.UI
             runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
             miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
             ignoreDuplicateSamplingCheckBox.Checked = _settings.Optimize.IgnoreDuplicateSampling;
+            disableRhinoViewportCheckBox.Checked = _settings.Optimize.DisableViewportDrawing;
         }
 
         private void GetUIValues()
@@ -194,6 +195,7 @@ namespace Tunny.UI
             _settings.Optimize.IgnoreDuplicateSampling = ignoreDuplicateSamplingCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
+            _settings.Optimize.DisableViewportDrawing = disableRhinoViewportCheckBox.Checked;
             _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
         }
     }

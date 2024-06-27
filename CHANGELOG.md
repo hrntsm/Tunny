@@ -10,7 +10,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 ### Added
 
-- Feature to open tutorial files in the menu.
+- Disable Rhino viewport updates during optimization checkbox in Settings/Misc tab.
+  - The drawing to viewport stops, allowing faster optimization to be performed.
 
 ### Changed
 

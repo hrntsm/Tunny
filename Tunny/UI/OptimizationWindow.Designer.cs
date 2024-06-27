@@ -85,6 +85,8 @@ namespace Tunny.UI
             this.settingsTabPage = new System.Windows.Forms.TabPage();
             this.settingsTabControl = new System.Windows.Forms.TabControl();
             this.TPE = new System.Windows.Forms.TabPage();
+            this.tpeGammaNumUpDown = new System.Windows.Forms.NumericUpDown();
+            this.tpeGammaLabel = new System.Windows.Forms.Label();
             this.tpeDefaultButton = new System.Windows.Forms.Button();
             this.tpeNEICandidatesLabel = new System.Windows.Forms.Label();
             this.tpeNStartupTrialsLabel = new System.Windows.Forms.Label();
@@ -158,6 +160,7 @@ namespace Tunny.UI
             this.qmcScrambleCheckBox = new System.Windows.Forms.CheckBox();
             this.qmcWarnIndependentSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.Misc = new System.Windows.Forms.TabPage();
+            this.disableRhinoViewportCheckBox = new System.Windows.Forms.CheckBox();
             this.ignoreDuplicateSamplingCheckBox = new System.Windows.Forms.CheckBox();
             this.miscLogComboBox = new System.Windows.Forms.ComboBox();
             this.miscLogLevelLabel = new System.Windows.Forms.Label();
@@ -176,8 +179,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tpeGammaLabel = new System.Windows.Forms.Label();
-            this.tpeGammaNumUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
@@ -190,6 +191,7 @@ namespace Tunny.UI
             this.settingsTabPage.SuspendLayout();
             this.settingsTabControl.SuspendLayout();
             this.TPE.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tpeGammaNumUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpeEINumUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpeStartupNumUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpePriorNumUpDown)).BeginInit();
@@ -217,7 +219,6 @@ namespace Tunny.UI
             this.fileTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.licenseGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tpeGammaNumUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // optimizeRunButton
@@ -881,6 +882,37 @@ namespace Tunny.UI
             this.TPE.TabIndex = 0;
             this.TPE.Text = "TPE";
             this.TPE.UseVisualStyleBackColor = true;
+            // 
+            // tpeGammaNumUpDown
+            // 
+            this.tpeGammaNumUpDown.Location = new System.Drawing.Point(204, 52);
+            this.tpeGammaNumUpDown.Margin = new System.Windows.Forms.Padding(2);
+            this.tpeGammaNumUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.tpeGammaNumUpDown.Name = "tpeGammaNumUpDown";
+            this.tpeGammaNumUpDown.Size = new System.Drawing.Size(63, 23);
+            this.tpeGammaNumUpDown.TabIndex = 15;
+            this.tpeGammaNumUpDown.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            0});
+            // 
+            // tpeGammaLabel
+            // 
+            this.tpeGammaLabel.AutoSize = true;
+            this.tpeGammaLabel.Location = new System.Drawing.Point(3, 54);
+            this.tpeGammaLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.tpeGammaLabel.Name = "tpeGammaLabel";
+            this.tpeGammaLabel.Size = new System.Drawing.Size(54, 15);
+            this.tpeGammaLabel.TabIndex = 14;
+            this.tpeGammaLabel.Text = "Gamma";
+            this.toolTip1.SetToolTip(this.tpeGammaLabel, "The smaller of the number input and 10% of the completed trials is the number of " +
+        "trials included in L(x).\r\nThe higher this number, the higher the exploitation of" +
+        " the completed trials.");
             // 
             // tpeDefaultButton
             // 
@@ -1987,6 +2019,7 @@ namespace Tunny.UI
             // 
             // Misc
             // 
+            this.Misc.Controls.Add(this.disableRhinoViewportCheckBox);
             this.Misc.Controls.Add(this.ignoreDuplicateSamplingCheckBox);
             this.Misc.Controls.Add(this.miscLogComboBox);
             this.Misc.Controls.Add(this.miscLogLevelLabel);
@@ -2002,6 +2035,19 @@ namespace Tunny.UI
             this.Misc.TabIndex = 5;
             this.Misc.Text = "Misc";
             this.Misc.UseVisualStyleBackColor = true;
+            // 
+            // disableRhinoViewportCheckBox
+            // 
+            this.disableRhinoViewportCheckBox.AutoSize = true;
+            this.disableRhinoViewportCheckBox.Location = new System.Drawing.Point(7, 117);
+            this.disableRhinoViewportCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.disableRhinoViewportCheckBox.Name = "disableRhinoViewportCheckBox";
+            this.disableRhinoViewportCheckBox.Size = new System.Drawing.Size(209, 34);
+            this.disableRhinoViewportCheckBox.TabIndex = 41;
+            this.disableRhinoViewportCheckBox.Text = "Disable Rhino viewport updates\r\nduring optimization";
+            this.toolTip1.SetToolTip(this.disableRhinoViewportCheckBox, "If you use FishPrintByCapture to save the image,\r\nthe viewport will no longer be " +
+        "updated,\r\nso you will not be able to capture the updated geometry.");
+            this.disableRhinoViewportCheckBox.UseVisualStyleBackColor = true;
             // 
             // ignoreDuplicateSamplingCheckBox
             // 
@@ -2027,7 +2073,7 @@ namespace Tunny.UI
             this.miscLogComboBox.Name = "miscLogComboBox";
             this.miscLogComboBox.Size = new System.Drawing.Size(114, 23);
             this.miscLogComboBox.TabIndex = 39;
-            this.miscLogComboBox.Text = "Info";
+            this.miscLogComboBox.Text = "Verbose";
             this.miscLogComboBox.SelectedIndexChanged += new System.EventHandler(this.MiscLogComboBox_SelectedIndexChanged);
             // 
             // miscLogLevelLabel
@@ -2196,37 +2242,6 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
-            // tpeGammaLabel
-            // 
-            this.tpeGammaLabel.AutoSize = true;
-            this.tpeGammaLabel.Location = new System.Drawing.Point(3, 54);
-            this.tpeGammaLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.tpeGammaLabel.Name = "tpeGammaLabel";
-            this.tpeGammaLabel.Size = new System.Drawing.Size(54, 15);
-            this.tpeGammaLabel.TabIndex = 14;
-            this.tpeGammaLabel.Text = "Gamma";
-            this.toolTip1.SetToolTip(this.tpeGammaLabel, "The smaller of the number input and 10% of the completed trials is the number of " +
-        "trials included in L(x).\r\nThe higher this number, the higher the exploitation of" +
-        " the completed trials.");
-            // 
-            // tpeGammaNumUpDown
-            // 
-            this.tpeGammaNumUpDown.Location = new System.Drawing.Point(204, 52);
-            this.tpeGammaNumUpDown.Margin = new System.Windows.Forms.Padding(2);
-            this.tpeGammaNumUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.tpeGammaNumUpDown.Name = "tpeGammaNumUpDown";
-            this.tpeGammaNumUpDown.Size = new System.Drawing.Size(63, 23);
-            this.tpeGammaNumUpDown.TabIndex = 15;
-            this.tpeGammaNumUpDown.Value = new decimal(new int[] {
-            25,
-            0,
-            0,
-            0});
-            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2258,6 +2273,7 @@ namespace Tunny.UI
             this.settingsTabControl.ResumeLayout(false);
             this.TPE.ResumeLayout(false);
             this.TPE.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tpeGammaNumUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpeEINumUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpeStartupNumUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tpePriorNumUpDown)).EndInit();
@@ -2292,7 +2308,6 @@ namespace Tunny.UI
             this.fileTabPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.licenseGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tpeGammaNumUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2446,6 +2461,7 @@ namespace Tunny.UI
         private System.Windows.Forms.Button ttDesignExplorerButton;
         private System.Windows.Forms.NumericUpDown tpeGammaNumUpDown;
         private System.Windows.Forms.Label tpeGammaLabel;
+        private System.Windows.Forms.CheckBox disableRhinoViewportCheckBox;
     }
 }
 
