@@ -2042,9 +2042,9 @@ namespace Tunny.UI
             this.disableRhinoViewportCheckBox.Location = new System.Drawing.Point(7, 117);
             this.disableRhinoViewportCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.disableRhinoViewportCheckBox.Name = "disableRhinoViewportCheckBox";
-            this.disableRhinoViewportCheckBox.Size = new System.Drawing.Size(219, 34);
+            this.disableRhinoViewportCheckBox.Size = new System.Drawing.Size(209, 34);
             this.disableRhinoViewportCheckBox.TabIndex = 41;
-            this.disableRhinoViewportCheckBox.Text = "Disabling Rhino viewport updates\r\nduring optimization";
+            this.disableRhinoViewportCheckBox.Text = "Disable Rhino viewport updates\r\nduring optimization";
             this.toolTip1.SetToolTip(this.disableRhinoViewportCheckBox, "If you use FishPrintByCapture to save the image,\r\nthe viewport will no longer be " +
         "updated,\r\nso you will not be able to capture the updated geometry.");
             this.disableRhinoViewportCheckBox.UseVisualStyleBackColor = true;
