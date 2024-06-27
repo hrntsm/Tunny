@@ -8,6 +8,8 @@ using Grasshopper.GUI;
 
 using Optuna.Study;
 
+using Rhino.Display;
+
 using Tunny.Core.Handler;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
@@ -72,6 +74,7 @@ namespace Tunny.UI
 
             optimizeRunButton.Enabled = false;
             GetUIValues();
+            RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
             ShowRealtimeResultCheckBox.Enabled = false;
             OptimizeLoop.Settings = _settings;
 
@@ -160,6 +163,10 @@ namespace Tunny.UI
             //Enable GUI
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
+            if (RhinoView.EnableDrawing == false)
+            {
+                RhinoView.EnableDrawing = true;
+            }
         }
 
         private void UpdateStudyComboBox()

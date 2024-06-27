@@ -14,5 +14,6 @@ namespace Tunny.Core.Settings
         public GcAfterTrial GcAfterTrial { get; set; } = GcAfterTrial.HasGeometry;
         public bool ShowRealtimeResult { get; set; }
         public bool IgnoreDuplicateSampling { get; set; }
+        public bool DisableViewportDrawing { get; set; }
     }
 }
