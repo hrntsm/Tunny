@@ -1,10 +1,12 @@
 {
     "dotnet.defaultSolution": "Tunny.sln",
     "cSpell.words": [
+        "Botorch",
         "HITL",
         "hovertemplate",
         "showlegend",
         "yaxis",
         "zaxis"
-    ]
+    ],
+    "dotnet.preferCSharpExtension": true
 }
