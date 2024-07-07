@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace TunnyUI.ViewModels
+namespace Tunny.WPF.ViewModels
 {
     public class OptimizeViewModel : INotifyPropertyChanged
     {

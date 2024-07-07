@@ -1,12 +1,11 @@
 ﻿<Page
-    x:Class="TunnyUI.Pages.OptimizePage"
+    x:Class="Tunny.WPF.Pages.OptimizePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:TunnyUI.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:TunnyUI.ViewModels"
-    Title="Page1"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
+    Title="OptimizePage"
     d:DesignHeight="350"
     d:DesignWidth="350"
     mc:Ignorable="d">

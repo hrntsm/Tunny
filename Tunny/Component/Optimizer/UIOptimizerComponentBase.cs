@@ -9,12 +9,14 @@ using Grasshopper.Kernel;
 
 using Tunny.Core.Util;
 using Tunny.UI;
+using Tunny.WPF;
 
 namespace Tunny.Component.Optimizer
 {
     public class UIOptimizeComponentBase : OptimizeComponentBase, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
+        internal MainWindow MainWindow;
 
         public UIOptimizeComponentBase(string name, string nickname, string description)
           : base(name, nickname, description)
@@ -47,6 +49,9 @@ namespace Tunny.Component.Optimizer
                 owner.FormShepard.RegisterForm(OptimizationWindow);
             }
             OptimizationWindow.Show(owner);
+
+            MainWindow = new MainWindow();
+            MainWindow.Show();
         }
 
         public override void CreateAttributes()

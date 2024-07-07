@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TunnyUI
+namespace Tunny.WPF
 {
     public partial class MainWindow : Window
     {

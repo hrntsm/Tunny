@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace TunnyUI.Pages
+namespace Tunny.WPF.Pages
 {
     public partial class OptimizePage : Page
     {
