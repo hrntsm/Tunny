@@ -27,15 +27,15 @@
             <MenuItem Header="Help">
                 <MenuItem Header="Help" />
                 <MenuItem Header="License">
-                    <MenuItem Header="Tunny" />
+                    <MenuItem Click="TunnyLicenseMenuItem_Click" Header="Tunny" />
                     <MenuItem Header="Python Library" />
                     <MenuItem Header="TT DesignExplorer" />
                 </MenuItem>
             </MenuItem>
         </Menu>
         <TabControl x:Name="tabControl" Grid.Row="1">
-            <TabItem Header="Optimization">
-                <!-- <Frame Source="/Pages/OptimizePage.xaml" /> -->
+            <TabItem Header="Optimize">
+                <Frame Source="pack://application:,,,/Tunny;component/WPF/Pages/OptimizePage.xaml" />
             </TabItem>
             <TabItem Header="Visualize">
                 <Grid Background="#FFE5E5E5" />
