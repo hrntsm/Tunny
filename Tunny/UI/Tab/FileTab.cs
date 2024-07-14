@@ -25,13 +25,11 @@ namespace Tunny.UI
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            Process.Start("https://github.com/hrntsm/Tunny/blob/main/LICENSE");
+            OpenBrowser.TunnyLicense();
         }
         private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
+            OpenBrowser.PythonPackagesLicense();
         }
 
         private void SetResultFilePathButton_Click(object sender, EventArgs e)

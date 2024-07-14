@@ -16,6 +16,17 @@ namespace Tunny.WPF.ViewModels
             }
         }
 
+        private string _selectedSampler;
+        public string SelectedSampler
+        {
+            get { return _selectedSampler; }
+            set
+            {
+                _selectedSampler = value;
+                OnPropertyChanged(nameof(SelectedSampler));
+            }
+        }
+
         public OptimizeViewModel()
         {
             Samplers = new ObservableCollection<string>
@@ -30,6 +41,8 @@ namespace Tunny.WPF.ViewModels
                 "Random",
                 "BruteForce"
             };
+
+            SelectedSampler = Samplers[0];
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

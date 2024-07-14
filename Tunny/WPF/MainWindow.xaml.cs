@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-using Tunny.UI;
+using Tunny.Core.Util;
 
 namespace Tunny.WPF
 {
@@ -13,7 +13,27 @@ namespace Tunny.WPF
 
         private void TunnyLicenseMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            TunnyMessageBox.Show("Tunny licensed under the MIT License.", "Tunny License");
+            OpenBrowser.TunnyLicense();
+        }
+
+        private void PythonPackagesLicenseMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser.PythonPackagesLicense();
+        }
+
+        private void TTDesignExplorerLicenseMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser.TTDesignExplorerLicense();
+        }
+
+        private void TunnyDocumentMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser.TunnyDocumentPage();
+        }
+
+        private void OptunaSamplerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser.OptunaSamplerPage();
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)

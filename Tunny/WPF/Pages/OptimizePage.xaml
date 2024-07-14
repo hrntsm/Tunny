@@ -38,7 +38,8 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="10,10,10,10"
-            ItemsSource="{Binding Samplers}" />
+            ItemsSource="{Binding Samplers}"
+            SelectedItem="{Binding SelectedSampler}" />
 
         <Label
             Grid.Row="1"

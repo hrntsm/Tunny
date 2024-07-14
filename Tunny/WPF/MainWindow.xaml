@@ -25,11 +25,14 @@
                 <MenuItem Click="ExitMenuItem_Click" Header="Exit" />
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="Help" />
+                <MenuItem Header="Document">
+                    <MenuItem Click="TunnyDocumentMenuItem_Click" Header="Tunny" />
+                    <MenuItem Click="OptunaSamplerMenuItem_Click" Header="Optuna Sampler" />
+                </MenuItem>
                 <MenuItem Header="License">
                     <MenuItem Click="TunnyLicenseMenuItem_Click" Header="Tunny" />
-                    <MenuItem Header="Python Library" />
-                    <MenuItem Header="TT DesignExplorer" />
+                    <MenuItem Click="PythonPackagesLicenseMenuItem_Click" Header="Python Library" />
+                    <MenuItem Click="TTDesignExplorerLicenseMenuItem_Click" Header="TT DesignExplorer" />
                 </MenuItem>
             </MenuItem>
         </Menu>

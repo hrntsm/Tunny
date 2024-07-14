@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -174,22 +173,12 @@ namespace Tunny.UI
 
         private void TunnyDocumentPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            TLog.Debug("TunnyDocumentPageStripMenuItem Clicked");
-            var browser = new Process();
-            browser.StartInfo.FileName = $@"https://tunny-docs.deno.dev/";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+            OpenBrowser.TunnyDocumentPage();
         }
 
         private void OptunaSamplerPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            TLog.Debug("OptunaSamplerPageStripMenuItem Clicked");
-            var browser = new Process();
-            browser.StartInfo.FileName = $@"https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+            OpenBrowser.OptunaSamplerPage();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
