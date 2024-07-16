@@ -27,7 +27,8 @@ for now removed features.
 
 ### Fixed
 
-- Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize
+- Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize.
+- FishPrintByPath locks the image.
 
 ### Security
 
