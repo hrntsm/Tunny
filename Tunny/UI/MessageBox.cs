@@ -1,6 +1,4 @@
-using System;
 using System.Windows;
-using System.Windows.Forms;
 
 using Tunny.Core.Util;
 
@@ -8,25 +6,11 @@ namespace Tunny.UI
 {
     sealed class TunnyMessageBox
     {
-        public static MessageBoxResult Show(string message, string caption, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
+        public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
-            MessageBoxResult msgResult;
-            WriteLog(message, icon);
+            WriteLog(messageBoxText, icon);
 
-            IntPtr ownerHWND = TEnvVariables.GrasshopperWindowHandle == IntPtr.Zero
-                ? Rhino.RhinoApp.MainWindowHandle()
-                : TEnvVariables.GrasshopperWindowHandle;
-            var ownerWindow = new NativeWindow();
-            ownerWindow.AssignHandle(ownerHWND);
-
-            using (var f = new Form())
-            {
-                f.Owner = Grasshopper.Instances.DocumentEditor;
-                f.TopMost = true;
-                // dialogResult = System.Windows.MessageBox.Show(ownerWindow, message, caption, buttons, icon);
-                msgResult = System.Windows.MessageBox.Show(message, caption, buttons, icon);
-                f.TopMost = false;
-            }
+            MessageBoxResult msgResult = MessageBox.Show(messageBoxText, caption, button, icon);
             if (msgResult != MessageBoxResult.None && msgResult != MessageBoxResult.OK)
             {
                 TLog.Info($"Dialog result: {msgResult}");

@@ -1,6 +1,5 @@
 using System;
 using System.Windows;
-using System.Windows.Forms;
 
 using Optuna.Study;
 using Optuna.Visualization;
@@ -111,13 +110,13 @@ namespace Tunny.Solver
         private static void SaveFigure(Visualization visualize, string name)
         {
             TLog.MethodStart();
-            var sfd = new SaveFileDialog
+            var sfd = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = name + ".html",
                 Filter = @"HTML file(*.html)|*.html",
                 Title = @"Save"
             };
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (sfd.ShowDialog() == true)
             {
                 visualize.SaveHtml(sfd.FileName);
             }

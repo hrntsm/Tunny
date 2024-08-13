@@ -208,16 +208,16 @@ namespace Tunny.UI
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
-                var settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                var settings = TSettings.Deserialize(settingsPath);
                 storagePath = settings.Storage.Path;
             }
-            var ofd = new OpenFileDialog
+            var ofd = new Microsoft.Win32.OpenFileDialog
             {
                 FileName = Path.GetFileName(storagePath),
                 Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = @"Set Tunny result file path",
             };
-            if (ofd.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog() == true)
             {
                 var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
                 dashboard.Run(true);

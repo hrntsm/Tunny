@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
@@ -35,13 +34,13 @@ namespace Tunny.UI
         private void SetResultFilePathButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            var sfd = new SaveFileDialog
+            var sfd = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
                 Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = @"Set Tunny result file path",
             };
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (sfd.ShowDialog() == true)
             {
                 _settings.Storage.Path = sfd.FileName;
                 _settings.Storage.Type = Path.GetExtension(sfd.FileName) == ".log"
