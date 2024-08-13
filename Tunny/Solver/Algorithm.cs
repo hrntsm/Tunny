@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
+using System.Windows;
 
 using Optuna.Study;
 
@@ -452,8 +452,8 @@ namespace Tunny.Solver
             TunnyMessageBox.Show(
                 "The objective function returned NaN 10 times in a row. Tunny terminates the optimization. Please check the objective function.",
                 "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
             );
             return null;
         }

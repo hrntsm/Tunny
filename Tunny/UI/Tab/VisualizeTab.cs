@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 using Optuna.Study;
 
@@ -192,7 +192,11 @@ namespace Tunny.UI
             TLog.MethodStart();
             if (visualizeTargetStudyComboBox.Text == string.Empty)
             {
-                TunnyMessageBox.Show("There is no study to visualize.\nPlease set 'Target Study'", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                TunnyMessageBox.Show(
+                    "There is no study to visualize.\nPlease set 'Target Study'",
+                    "Tunny",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 

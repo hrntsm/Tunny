@@ -1,6 +1,6 @@
 using System;
-using System.Drawing;
 using System.IO;
+using System.Windows;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -56,7 +56,7 @@ namespace Tunny.UI
             });
 
             tunnyToolStripMenuItem.Name = "TunnyToolStripMenuItem";
-            tunnyToolStripMenuItem.Size = new Size(125, 29);
+            tunnyToolStripMenuItem.Size = new System.Drawing.Size(125, 29);
             tunnyToolStripMenuItem.Text = "Tunny";
             AddTunnyMenuItems(tunnyToolStripMenuItem.DropDownItems);
 
@@ -142,8 +142,8 @@ namespace Tunny.UI
             TunnyMessageBox.Show(
                 "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
                 "About Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
 
         private void PythonInstallStripMenuItem_Click(object sender, EventArgs e)
@@ -152,12 +152,12 @@ namespace Tunny.UI
             TLog.Debug("PythonInstallStripMenuItem Clicked");
             if (Directory.Exists(TEnvVariables.PythonPath))
             {
-                DialogResult result = TunnyMessageBox.Show(
+                MessageBoxResult result = TunnyMessageBox.Show(
                     "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
                     "Python is already installed",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Information);
-                if (result == DialogResult.Cancel)
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Information);
+                if (result == MessageBoxResult.Cancel)
                 {
                     TLog.Info("From menu item Python installation canceled by user.");
                     return;
@@ -192,8 +192,8 @@ namespace Tunny.UI
             {
                 TunnyMessageBox.Show("optuna-dashboard is not installed.\nFirst install optuna-dashboard from the Tunny component.",
                                      "optuna-dashboard is not installed",
-                                     MessageBoxButtons.OK,
-                                     MessageBoxIcon.Error);
+                                     MessageBoxButton.OK,
+                                     MessageBoxImage.Error);
             }
             else
             {

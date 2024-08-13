@@ -1,6 +1,6 @@
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
+using System.Windows;
 
 using Python.Runtime;
 
@@ -68,8 +68,8 @@ namespace Tunny.Solver.HumanInTheLoop
             TunnyMessageBox.Show(
                 "Please set exist result file path.",
                 "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
             );
         }
 

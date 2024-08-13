@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Forms;
 
 using Optuna.Study;
@@ -47,7 +48,7 @@ namespace Tunny.Solver
                 catch (Exception)
                 {
                     string message = "This visualization type is not supported in this study case.";
-                    TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TunnyMessageBox.Show(message, "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             PythonEngine.Shutdown();

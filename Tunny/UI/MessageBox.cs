@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Forms;
 
 using Tunny.Core.Util;
@@ -7,9 +8,9 @@ namespace Tunny.UI
 {
     sealed class TunnyMessageBox
     {
-        public static DialogResult Show(string message, string caption, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Information)
+        public static MessageBoxResult Show(string message, string caption, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
-            DialogResult dialogResult;
+            MessageBoxResult msgResult;
             WriteLog(message, icon);
 
             IntPtr ownerHWND = TEnvVariables.GrasshopperWindowHandle == IntPtr.Zero
@@ -22,28 +23,29 @@ namespace Tunny.UI
             {
                 f.Owner = Grasshopper.Instances.DocumentEditor;
                 f.TopMost = true;
-                dialogResult = MessageBox.Show(ownerWindow, message, caption, buttons, icon);
+                // dialogResult = System.Windows.MessageBox.Show(ownerWindow, message, caption, buttons, icon);
+                msgResult = System.Windows.MessageBox.Show(message, caption, buttons, icon);
                 f.TopMost = false;
             }
-            if (dialogResult != DialogResult.None && dialogResult != DialogResult.OK)
+            if (msgResult != MessageBoxResult.None && msgResult != MessageBoxResult.OK)
             {
-                TLog.Info($"Dialog result: {dialogResult}");
+                TLog.Info($"Dialog result: {msgResult}");
             }
-            return dialogResult;
+            return msgResult;
         }
 
-        private static void WriteLog(string message, MessageBoxIcon icon)
+        private static void WriteLog(string message, MessageBoxImage icon)
         {
             string noLineBreakMessage = message.Replace("\n", " ");
             switch (icon)
             {
-                case MessageBoxIcon.Error:
+                case MessageBoxImage.Error:
                     TLog.Error(noLineBreakMessage);
                     break;
-                case MessageBoxIcon.Warning:
+                case MessageBoxImage.Warning:
                     TLog.Warning(noLineBreakMessage);
                     break;
-                case MessageBoxIcon.Information:
+                case MessageBoxImage.Information:
                     TLog.Info(noLineBreakMessage);
                     break;
                 default:
