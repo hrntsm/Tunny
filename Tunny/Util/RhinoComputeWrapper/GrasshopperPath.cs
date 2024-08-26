@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Tunny.Util.RhinoComputeWrapper
@@ -18,7 +17,6 @@ namespace Tunny.Util.RhinoComputeWrapper
         {
             Path = new int[] { path };
         }
-
 
         public GrasshopperPath(int[] path)
         {
