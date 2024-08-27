@@ -7,26 +7,32 @@ using Grasshopper.Kernel;
 
 using Tunny.Util.RhinoComputeWrapper;
 
-namespace Tunny.Component
+namespace Tunny.Component.Pruner
 {
-    public class TestCompute : GH_Component
+    public class Threshold : GH_Component
     {
-        public TestCompute()
-          : base("Tunny", "Nickname",
-              "Description",
-              "Tunny", "test")
+        public Threshold()
+          : base("Threshold Pruner", "Threshold",
+              "Pruner",
+              "Tunny", "Pruner")
         {
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Path", "P", "Path", GH_ParamAccess.item);
-            pManager.AddTextParameter("Values", "V", "Values", GH_ParamAccess.list);
+            pManager.AddTextParameter("Path", "Path", "Path", GH_ParamAccess.item);
+            pManager.AddTextParameter("Values", "Val", "Values", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Lower Threshold", "Low", "Lower Threshold", GH_ParamAccess.item, -1e10);
+            pManager.AddNumberParameter("Upper Threshold", "Up", "Upper Threshold", GH_ParamAccess.item, 1e10);
+            pManager.AddIntegerParameter("WarmupSteps", "Warm", "WarmupSteps", GH_ParamAccess.item, 0);
+            pManager.AddIntegerParameter("IntervalSteps", "Itv", "IntervalSteps", GH_ParamAccess.item, 1);
+            pManager.AddTextParameter("NotifierPath", "NotP", "Notifier Path", GH_ParamAccess.item);
+            pManager.AddNumberParameter("NotifierValue", "NotV", "Notifier Value", GH_ParamAccess.item, 0.0);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Path", "P", "Path", GH_ParamAccess.item);
+            pManager.AddTextParameter("Pruner", "Pr", "Pruner", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
