@@ -77,8 +77,15 @@ namespace Tunny.Handler
             }
 
             Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+
+            int j = 0;
             while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
-            { /*just wait*/ }
+            {
+                if (DateTime.Now.Second % 10 == 0 && DateTime.Now.Millisecond < 10)
+                {
+                    ReportPruner(pState.OptunaTrial, 0, j++);
+                }
+            }
 
             return new TrialGrasshopperItems
             {
@@ -87,6 +94,19 @@ namespace Tunny.Handler
                 Attribute = Component.GhInOut.GetAttributes(),
                 Artifacts = Component.GhInOut.Artifacts,
             };
+        }
+
+        private static void ReportPruner(dynamic optunaTrial, double value, int step)
+        {
+            var rnd = new Random();      // Randomオブジェクトを作成
+            value = rnd.Next(0, 50);
+            optunaTrial.report(value, step);
+
+            if (optunaTrial.should_prune())
+            {
+                // insert kill process
+                int aa = 1;
+            }
         }
     }
 }

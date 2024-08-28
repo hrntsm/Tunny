@@ -143,7 +143,8 @@ namespace Optuna.Study
                 directions: directions,
                 storage: storage,
                 study_name: studyName,
-                load_if_exists: loadIfExists
+                load_if_exists: loadIfExists,
+                pruner: optuna.pruners.ThresholdPruner(upper: 25, n_warmup_steps: 3)
             );
             // for escape exception in Brute Force sampler
             // Study.stop() method throws exception when in_optimize_loop is false
