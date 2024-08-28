@@ -30,6 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Solver\check_duplicate.py" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Solver\check_duplicate.py" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="pythonnet" Version="3.0.1" />

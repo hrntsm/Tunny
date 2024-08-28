@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 using Optuna.Study;
+using Optuna.Util;
 
 using Python.Runtime;
 
@@ -354,7 +356,7 @@ namespace Tunny.Solver
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
 
-                if (trial.should_prune())
+                if (!optInfo.Study._is_multi_objective() && trial.should_prune())
                 {
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
                     TLog.Warning($"Trial {trialNum} pruned.");
@@ -387,20 +389,8 @@ namespace Tunny.Solver
         {
             double[] values;
             PyModule ps = Py.CreateScope();
-            ps.Exec(
-                "def check_duplicate(trial):\n" +
-                "    import optuna\n" +
-                "    from optuna.trial import TrialState\n" +
-                "    states_to_consider = (TrialState.COMPLETE,)\n" +
-                "    trials_to_consider = trial.study.get_trials(deepcopy=False, states=states_to_consider)\n" +
-                "    for t in reversed(trials_to_consider):\n" +
-                "        if trial.params == t.params:\n" +
-                "            trial.set_user_attr('NOTE', f'trial {t.number} and trial {trial.number} were duplicate parameters.')\n" +
-                "            if 'Constraint' in t.user_attrs:\n" +
-                "               trial.set_user_attr('Constraint', t.user_attrs['Constraint'])\n" +
-                "            return t.values\n" +
-                "    return None\n"
-            );
+            var assembly = Assembly.GetExecutingAssembly();
+            ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Solver.check_duplicate.py"));
             dynamic checkDuplicate = ps.Get("check_duplicate");
             values = checkDuplicate(trial);
             result = new TrialGrasshopperItems(values);
