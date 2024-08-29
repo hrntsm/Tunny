@@ -4,9 +4,9 @@ using Optuna.Sampler;
 
 using Serilog.Events;
 
+using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Settings.Sampler;
 
 namespace Tunny.UI
 {

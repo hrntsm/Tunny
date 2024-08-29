@@ -8,7 +8,7 @@ using Python.Runtime;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 
-namespace Tunny.Settings.Sampler
+namespace Tunny.Core.Settings
 {
     public class Sampler
     {

@@ -14,6 +14,7 @@ namespace Tunny.Core.Settings
     {
         public string Version { get; set; } = TEnvVariables.Version.ToString();
         public Optimize Optimize { get; set; } = new Optimize();
+        public Pruner Pruner { get; set; } = new Pruner();
         public Result Result { get; set; } = new Result();
         public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
