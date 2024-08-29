@@ -11,6 +11,10 @@ namespace Tunny.Core.Settings
     public class Pruner
     {
         public PrunerType Type { get; set; } = PrunerType.None;
+        public string ReporterPath { get; set; } = string.Empty;
+        public string StopperPath { get; set; } = string.Empty;
+        public string ReporterInputAttrKey { get; set; } = "PRN:Reporter";
+        public string StopperInputAttrKey { get; set; } = "PRN:Stopper";
         public HyperbandPruner Hyperband { get; set; } = new HyperbandPruner();
         public MedianPruner Median { get; set; } = new MedianPruner();
         public NopPruner Nop { get; set; } = new NopPruner();
