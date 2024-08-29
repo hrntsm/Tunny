@@ -136,7 +136,7 @@ namespace Optuna.Study
             return studySummaries;
         }
 
-        public static dynamic CreateStudy(dynamic optuna, string studyName, dynamic sampler, string[] directions, dynamic storage, bool loadIfExists = true)
+        public static dynamic CreateStudy(dynamic optuna, string studyName, dynamic sampler, string[] directions, dynamic storage, dynamic pruner, bool loadIfExists = true)
         {
             dynamic study = optuna.create_study(
                 sampler: sampler,
@@ -144,7 +144,7 @@ namespace Optuna.Study
                 storage: storage,
                 study_name: studyName,
                 load_if_exists: loadIfExists,
-                pruner: optuna.pruners.ThresholdPruner(upper: 25, n_warmup_steps: 3)
+                pruner: pruner
             );
             // for escape exception in Brute Force sampler
             // Study.stop() method throws exception when in_optimize_loop is false

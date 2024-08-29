@@ -123,7 +123,8 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
+            dynamic pruner = Settings.Pruner.ToPython();
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, pruner, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -134,7 +135,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, null, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -356,7 +357,7 @@ namespace Tunny.Solver
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
 
-                if (!optInfo.Study._is_multi_objective() && trial.should_prune())
+                if (!(bool)optInfo.Study._is_multi_objective() && (bool)trial.should_prune())
                 {
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
                     TLog.Warning($"Trial {trialNum} pruned.");

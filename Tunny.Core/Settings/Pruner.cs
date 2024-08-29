@@ -10,7 +10,7 @@ namespace Tunny.Core.Settings
 {
     public class Pruner
     {
-        public PrunerType Type { get; set; } = PrunerType.Threshold;
+        public PrunerType Type { get; set; } = PrunerType.None;
         public HyperbandPruner Hyperband { get; set; } = new HyperbandPruner();
         public MedianPruner Median { get; set; } = new MedianPruner();
         public NopPruner Nop { get; set; } = new NopPruner();
