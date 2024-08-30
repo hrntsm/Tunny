@@ -83,7 +83,7 @@ namespace Tunny.Handler
             {
                 if (DateTime.Now.Second % 10 == 0 && DateTime.Now.Millisecond < 10)
                 {
-                    ReportPruner(pState.OptunaTrial, 0, j++);
+                    ReportPruner(pState.OptunaTrial, 0, j++, pState.Pruner);
                 }
             }
 
@@ -96,7 +96,7 @@ namespace Tunny.Handler
             };
         }
 
-        private static void ReportPruner(dynamic optunaTrial, double value, int step)
+        private static void ReportPruner(dynamic optunaTrial, double value, int step, Pruner pruner)
         {
             var rnd = new Random();      // Randomオブジェクトを作成
             value = rnd.Next(0, 50);
@@ -104,8 +104,7 @@ namespace Tunny.Handler
 
             if (optunaTrial.should_prune())
             {
-                // insert kill process
-                int aa = 1;
+                pruner.Stop();
             }
         }
     }

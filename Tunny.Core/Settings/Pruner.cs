@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 using Optuna.Pruner;
 
@@ -13,8 +14,8 @@ namespace Tunny.Core.Settings
         public PrunerType Type { get; set; } = PrunerType.None;
         public string ReporterPath { get; set; } = string.Empty;
         public string StopperPath { get; set; } = string.Empty;
-        public string ReporterInputAttrKey { get; set; } = "PRN:Reporter";
-        public string StopperInputAttrKey { get; set; } = "PRN:Stopper";
+        public string[] ReporterInput { get; set; } = Array.Empty<string>();
+        public string[] StopperInput { get; set; } = Array.Empty<string>();
         public HyperbandPruner Hyperband { get; set; } = new HyperbandPruner();
         public MedianPruner Median { get; set; } = new MedianPruner();
         public NopPruner Nop { get; set; } = new NopPruner();
@@ -23,6 +24,22 @@ namespace Tunny.Core.Settings
         public SuccessiveHalvingPruner SuccessiveHalving { get; set; } = new SuccessiveHalvingPruner();
         public ThresholdPruner Threshold { get; set; } = new ThresholdPruner();
         public WilcoxonPruner Wilcoxon { get; set; } = new WilcoxonPruner();
+
+        public void Report()
+        {
+            var reporter = new Process();
+            reporter.StartInfo.FileName = ReporterPath;
+            reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
+            reporter.Start();
+        }
+
+        public void Stop()
+        {
+            var stopper = new Process();
+            stopper.StartInfo.FileName = StopperPath;
+            stopper.StartInfo.Arguments = string.Join(" ", StopperInput);
+            stopper.Start();
+        }
 
         public dynamic ToPython()
         {

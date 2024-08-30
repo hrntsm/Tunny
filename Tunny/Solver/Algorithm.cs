@@ -313,7 +313,7 @@ namespace Tunny.Solver
 
                 trial = optInfo.Study.ask();
                 SetOptimizationParameter(parameter, trial);
-                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial);
+                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial, Settings.Pruner);
                 if (Settings.Optimize.IgnoreDuplicateSampling && IsSampleDuplicate(trial, out result))
                 {
                     TLog.Info($"Trial {trialNum} is duplicate sample.");
@@ -489,7 +489,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial, Pruner pruner)
         {
             TLog.MethodStart();
             double[][] bestValues = ComputeBestValues(optSet.Study);
@@ -501,6 +501,7 @@ namespace Tunny.Solver
                 Parameter = parameter,
                 HypervolumeRatio = 0,
                 OptunaTrial = trial,
+                Pruner = pruner,
                 EstimatedTimeRemaining = optSet.Timeout <= 0
                     ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (optSet.NTrials - trialNum) / (trialNum + 1))
                     : TimeSpan.FromSeconds(optSet.Timeout - (DateTime.Now - startTime).TotalSeconds)
