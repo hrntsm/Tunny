@@ -38,17 +38,24 @@ namespace Tunny.Core.Settings
             reporter.WaitForExit();
 
             double value = double.NaN;
-            using (var reader = new StreamReader(ReportFilePath))
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (var reader = new StreamReader(ReportFilePath))
                 {
-                    double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+                    }
+                }
+                if (double.IsNaN(value))
+                {
+                    throw new FileLoadException("Failed to load the report file.");
                 }
             }
-            if (double.IsNaN(value))
+            catch (Exception e)
             {
-                throw new FileLoadException("Failed to load the report file.");
+                TLog.Error(e.Message);
             }
             return value;
         }
