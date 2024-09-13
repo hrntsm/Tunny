@@ -29,6 +29,7 @@ for now removed features.
 
 - Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize.
 - FishPrintByPath locks the image.
+- Mesh could not be put directly into Artifact.
 
 ### Security
 
