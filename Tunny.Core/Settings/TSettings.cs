@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace Tunny.Core.Settings
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
         public LogEventLevel LogLevel { get; set; } = LogEventLevel.Verbose;
+        public OptunaHub OptunaHub { get; set; } = new OptunaHub();
 
         public TSettings()
         {
@@ -87,5 +89,49 @@ namespace Tunny.Core.Settings
             }
             return settings;
         }
+    }
+
+    public class OptunaHub
+    {
+        public Dictionary<string, string> Sampler { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Pruner { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> Visualization { get; set; } = new Dictionary<string, string>();
+
+        public OptunaHub()
+        {
+            Sampler.Clear();
+            Sampler.Add(
+        "MOEA/D",
+        "def sampler():\n" +
+                "    mod = optunahub.load_module(\"samplers/moead\")\n" +
+                "    return mod.MOEADSampler(\n" +
+                "        population_size=50,\n" +
+                "        scalar_aggregation_func=\"tchebycheff\",\n" +
+                "        n_neighbors=5,\n" +
+                "    )");
+        }
+
+        public void CheckInput(HubType type, string key)
+        {
+            TLog.MethodStart();
+            switch (type)
+            {
+                case HubType.Sampler:
+                    break;
+                case HubType.Pruner:
+                    break;
+                case HubType.Visualization:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+    }
+
+    public enum HubType
+    {
+        Sampler,
+        Pruner,
+        Visualization
     }
 }
