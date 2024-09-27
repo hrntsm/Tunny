@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Handler\export_fish_csv.py" />
+    <None Remove="Handler\Python\export_fish_csv.py" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Handler\export_fish_csv.py" />
+    <EmbeddedResource Include="Handler\Python\export_fish_csv.py" />
   </ItemGroup>
 
   <ItemGroup>

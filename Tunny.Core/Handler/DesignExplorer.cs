@@ -79,7 +79,7 @@ namespace Tunny.Core.Handler
             {
                 PyModule ps = Py.CreateScope();
                 var assembly = Assembly.GetExecutingAssembly();
-                ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Core.Handler.export_fish_csv.py"));
+                ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Core.Handler.Python.export_fish_csv.py"));
                 dynamic storage = _storage.CreateNewOptunaStorage(false);
                 dynamic func = ps.Get("export_fish_csv");
                 string outputPath = Path.Combine(TEnvVariables.DesignExplorerPath, "design_explorer_data");
