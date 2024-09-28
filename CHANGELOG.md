@@ -16,6 +16,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - Default log file is set to "Verbose" with a retention period of 1 day.
+- Stop to output log to console.
 
 ### Deprecated
 
