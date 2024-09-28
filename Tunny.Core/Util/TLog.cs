@@ -18,7 +18,6 @@ namespace Tunny.Core.Util
             SetInitialLogLevels();
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(LevelSwitch)
-                .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
                 .WriteTo.File(path: TEnvVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
                 .CreateLogger();
             Log.Information("Tunny is loaded.");
