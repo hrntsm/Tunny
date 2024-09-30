@@ -21,6 +21,7 @@ namespace Tunny.UI
     public partial class OptimizationWindow
     {
         private StudySummary[] _summaries;
+        private readonly DateTime _lastTime = DateTime.Now;
 
         private void InMemoryCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -87,6 +88,8 @@ namespace Tunny.UI
             {
                 optimizeBackgroundWorker.Dispose();
             }
+            liveChart.Series[0].Points.Clear();
+            liveChart.Series[1].Points.Clear();
             optimizeBackgroundWorker.RunWorkerAsync(_component);
             optimizeStopButton.Enabled = true;
         }
@@ -260,7 +263,21 @@ namespace Tunny.UI
                 ? "Estimated Time Remaining: " + new DateTime(0).Add(progressState.EstimatedTimeRemaining).ToString("HH:mm:ss", CultureInfo.InvariantCulture)
                 : "Estimated Time Remaining: 00:00:00";
             optimizeProgressBar.Value = e.ProgressPercentage;
-            optimizeProgressBar.Update();
+            //optimizeProgressBar.Update();
+
+            if (progressState.TrialNumber != 0 && progressState.Values != null)
+            {
+                liveChart.SuspendLayout();
+                liveChart.Series[0].Points.AddXY(progressState.TrialNumber, progressState.Values[0]);
+                liveChart.Series[1].Points.AddXY(progressState.TrialNumber, progressState.BestValues[0][0]);
+                //liveChart.ResumeLayout(false);
+
+                // if (_lastTime.AddSeconds(10) < DateTime.Now)
+                // {
+                //     _lastTime = DateTime.Now;
+                //     liveChart.Update();
+                // }
+            }
         }
 
         private void SetBestValues(ProgressChangedEventArgs e, ProgressState pState)

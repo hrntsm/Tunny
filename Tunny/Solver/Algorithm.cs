@@ -496,11 +496,13 @@ namespace Tunny.Solver
         private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime)
         {
             TLog.MethodStart();
-            double[][] bestValues = ComputeBestValues(optSet.Study);
+            double[][] bestValues = GetBestValues(optSet.Study);
+            double[] values = GetValues(optSet.Study);
             return new ProgressState
             {
                 TrialNumber = trialNum,
                 ObjectiveNum = Objective.Length,
+                Values = values,
                 BestValues = bestValues,
                 Parameter = parameter,
                 HypervolumeRatio = 0,
@@ -510,17 +512,25 @@ namespace Tunny.Solver
             };
         }
 
-        private double[][] ComputeBestValues(dynamic study)
+        private static double[][] GetBestValues(dynamic study)
         {
             TLog.MethodStart();
-            if (Settings.Optimize.ShowRealtimeResult)
+            dynamic[] bestTrials = study.best_trials;
+            return bestTrials.Select(t => (double[])t.values).ToArray();
+        }
+
+        private static double[] GetValues(dynamic study)
+        {
+            TLog.MethodStart();
+            dynamic[] trials = study.trials;
+            double[][] values = trials.Select(t => (double[])t.values).ToArray();
+            if (values.Length <= 1)
             {
-                dynamic[] bestTrials = study.best_trials;
-                return bestTrials.Select(t => (double[])t.values).ToArray();
+                return null;
             }
             else
             {
-                return null;
+                return values[values.Length - 2];
             }
         }
 

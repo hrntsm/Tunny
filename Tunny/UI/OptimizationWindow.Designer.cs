@@ -30,6 +30,9 @@ namespace Tunny.UI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizationWindow));
             this.optimizeRunButton = new System.Windows.Forms.Button();
             this.optimizeBackgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -44,6 +47,9 @@ namespace Tunny.UI
             this.studyNameTextBox = new System.Windows.Forms.TextBox();
             this.optimizeTabControl = new System.Windows.Forms.TabControl();
             this.optimizeTabPage = new System.Windows.Forms.TabPage();
+            this.LiveChartTatgetCheckBox = new System.Windows.Forms.CheckBox();
+            this.liveChartTargetY_ComboBox = new System.Windows.Forms.ComboBox();
+            this.liveChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.ShowRealtimeResultCheckBox = new System.Windows.Forms.CheckBox();
             this.EstimatedTimeRemainingLabel = new System.Windows.Forms.Label();
             this.optimizeBestValueLabel = new System.Windows.Forms.Label();
@@ -56,6 +62,7 @@ namespace Tunny.UI
             this.timeoutNumUpDown = new System.Windows.Forms.NumericUpDown();
             this.Timeout = new System.Windows.Forms.Label();
             this.visualizeTabPage = new System.Windows.Forms.TabPage();
+            this.optunaPlotBrowser = new System.Windows.Forms.WebBrowser();
             this.ttDesignExplorerButton = new System.Windows.Forms.Button();
             this.visualizeIncludeDominatedCheckBox = new System.Windows.Forms.CheckBox();
             this.visualizeTypeLabel = new System.Windows.Forms.Label();
@@ -179,9 +186,11 @@ namespace Tunny.UI
             this.showTunnyLicenseButton = new System.Windows.Forms.Button();
             this.outputResultBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.liveChartTargetX_ComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.nTrialNumUpDown)).BeginInit();
             this.optimizeTabControl.SuspendLayout();
             this.optimizeTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.liveChart)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).BeginInit();
             this.visualizeTabPage.SuspendLayout();
@@ -306,7 +315,7 @@ namespace Tunny.UI
             "Quasi-MonteCarlo",
             "Random",
             "BruteForce"});
-            this.samplerComboBox.Location = new System.Drawing.Point(70, 11);
+            this.samplerComboBox.Location = new System.Drawing.Point(71, 8);
             this.samplerComboBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.samplerComboBox.Name = "samplerComboBox";
             this.samplerComboBox.Size = new System.Drawing.Size(205, 22);
@@ -346,15 +355,20 @@ namespace Tunny.UI
             this.optimizeTabControl.Controls.Add(this.outputTabPage);
             this.optimizeTabControl.Controls.Add(this.settingsTabPage);
             this.optimizeTabControl.Controls.Add(this.fileTabPage);
-            this.optimizeTabControl.Location = new System.Drawing.Point(0, -1);
+            this.optimizeTabControl.Location = new System.Drawing.Point(6, 7);
             this.optimizeTabControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optimizeTabControl.Name = "optimizeTabControl";
             this.optimizeTabControl.SelectedIndex = 0;
-            this.optimizeTabControl.Size = new System.Drawing.Size(291, 319);
+            this.optimizeTabControl.Size = new System.Drawing.Size(648, 319);
             this.optimizeTabControl.TabIndex = 11;
             // 
             // optimizeTabPage
             // 
+            this.optimizeTabPage.BackColor = System.Drawing.Color.White;
+            this.optimizeTabPage.Controls.Add(this.liveChartTargetX_ComboBox);
+            this.optimizeTabPage.Controls.Add(this.LiveChartTatgetCheckBox);
+            this.optimizeTabPage.Controls.Add(this.liveChartTargetY_ComboBox);
+            this.optimizeTabPage.Controls.Add(this.liveChart);
             this.optimizeTabPage.Controls.Add(this.ShowRealtimeResultCheckBox);
             this.optimizeTabPage.Controls.Add(this.EstimatedTimeRemainingLabel);
             this.optimizeTabPage.Controls.Add(this.optimizeBestValueLabel);
@@ -373,10 +387,52 @@ namespace Tunny.UI
             this.optimizeTabPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.optimizeTabPage.Name = "optimizeTabPage";
             this.optimizeTabPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.optimizeTabPage.Size = new System.Drawing.Size(283, 291);
+            this.optimizeTabPage.Size = new System.Drawing.Size(640, 291);
             this.optimizeTabPage.TabIndex = 0;
             this.optimizeTabPage.Text = "Optimize";
-            this.optimizeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // LiveChartTatgetCheckBox
+            // 
+            this.LiveChartTatgetCheckBox.AutoSize = true;
+            this.LiveChartTatgetCheckBox.Checked = true;
+            this.LiveChartTatgetCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.LiveChartTatgetCheckBox.Location = new System.Drawing.Point(289, 10);
+            this.LiveChartTatgetCheckBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.LiveChartTatgetCheckBox.Name = "LiveChartTatgetCheckBox";
+            this.LiveChartTatgetCheckBox.Size = new System.Drawing.Size(86, 19);
+            this.LiveChartTatgetCheckBox.TabIndex = 21;
+            this.LiveChartTatgetCheckBox.Text = "Live Chart";
+            this.LiveChartTatgetCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // liveChartTargetY_ComboBox
+            // 
+            this.liveChartTargetY_ComboBox.Font = new System.Drawing.Font("Meiryo UI", 8F);
+            this.liveChartTargetY_ComboBox.FormattingEnabled = true;
+            this.liveChartTargetY_ComboBox.Items.AddRange(new object[] {
+            "Trial Number"});
+            this.liveChartTargetY_ComboBox.Location = new System.Drawing.Point(509, 8);
+            this.liveChartTargetY_ComboBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.liveChartTargetY_ComboBox.Name = "liveChartTargetY_ComboBox";
+            this.liveChartTargetY_ComboBox.Size = new System.Drawing.Size(125, 22);
+            this.liveChartTargetY_ComboBox.TabIndex = 20;
+            // 
+            // liveChart
+            // 
+            this.liveChart.BackColor = System.Drawing.Color.Transparent;
+            chartArea3.Name = "ChartArea1";
+            this.liveChart.ChartAreas.Add(chartArea3);
+            this.liveChart.IsSoftShadows = false;
+            legend3.Name = "Legend1";
+            this.liveChart.Legends.Add(legend3);
+            this.liveChart.Location = new System.Drawing.Point(292, 35);
+            this.liveChart.Name = "liveChart";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.liveChart.Series.Add(series3);
+            this.liveChart.Size = new System.Drawing.Size(342, 249);
+            this.liveChart.TabIndex = 18;
+            this.liveChart.Text = "liveChart";
             // 
             // ShowRealtimeResultCheckBox
             // 
@@ -508,6 +564,7 @@ namespace Tunny.UI
             // 
             // visualizeTabPage
             // 
+            this.visualizeTabPage.Controls.Add(this.optunaPlotBrowser);
             this.visualizeTabPage.Controls.Add(this.ttDesignExplorerButton);
             this.visualizeTabPage.Controls.Add(this.visualizeIncludeDominatedCheckBox);
             this.visualizeTabPage.Controls.Add(this.visualizeTypeLabel);
@@ -527,10 +584,18 @@ namespace Tunny.UI
             this.visualizeTabPage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.visualizeTabPage.Name = "visualizeTabPage";
             this.visualizeTabPage.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.visualizeTabPage.Size = new System.Drawing.Size(283, 291);
+            this.visualizeTabPage.Size = new System.Drawing.Size(640, 291);
             this.visualizeTabPage.TabIndex = 1;
             this.visualizeTabPage.Text = "Visualize";
             this.visualizeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // optunaPlotBrowser
+            // 
+            this.optunaPlotBrowser.Location = new System.Drawing.Point(281, 7);
+            this.optunaPlotBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.optunaPlotBrowser.Name = "optunaPlotBrowser";
+            this.optunaPlotBrowser.Size = new System.Drawing.Size(353, 277);
+            this.optunaPlotBrowser.TabIndex = 29;
             // 
             // ttDesignExplorerButton
             // 
@@ -724,7 +789,7 @@ namespace Tunny.UI
             this.outputTabPage.Margin = new System.Windows.Forms.Padding(2);
             this.outputTabPage.Name = "outputTabPage";
             this.outputTabPage.Padding = new System.Windows.Forms.Padding(2);
-            this.outputTabPage.Size = new System.Drawing.Size(283, 291);
+            this.outputTabPage.Size = new System.Drawing.Size(640, 291);
             this.outputTabPage.TabIndex = 3;
             this.outputTabPage.Text = "Output";
             this.outputTabPage.UseVisualStyleBackColor = true;
@@ -834,7 +899,7 @@ namespace Tunny.UI
             this.settingsTabPage.Controls.Add(this.settingsTabControl);
             this.settingsTabPage.Location = new System.Drawing.Point(4, 24);
             this.settingsTabPage.Name = "settingsTabPage";
-            this.settingsTabPage.Size = new System.Drawing.Size(283, 291);
+            this.settingsTabPage.Size = new System.Drawing.Size(640, 291);
             this.settingsTabPage.TabIndex = 2;
             this.settingsTabPage.Text = "Settings";
             this.settingsTabPage.UseVisualStyleBackColor = true;
@@ -853,7 +918,7 @@ namespace Tunny.UI
             this.settingsTabControl.Margin = new System.Windows.Forms.Padding(2);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(280, 286);
+            this.settingsTabControl.Size = new System.Drawing.Size(635, 286);
             this.settingsTabControl.TabIndex = 0;
             // 
             // TPE
@@ -878,7 +943,7 @@ namespace Tunny.UI
             this.TPE.Margin = new System.Windows.Forms.Padding(2);
             this.TPE.Name = "TPE";
             this.TPE.Padding = new System.Windows.Forms.Padding(2);
-            this.TPE.Size = new System.Drawing.Size(272, 258);
+            this.TPE.Size = new System.Drawing.Size(627, 258);
             this.TPE.TabIndex = 0;
             this.TPE.Text = "TPE";
             this.TPE.UseVisualStyleBackColor = true;
@@ -1129,7 +1194,7 @@ namespace Tunny.UI
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage1.Size = new System.Drawing.Size(272, 258);
+            this.tabPage1.Size = new System.Drawing.Size(627, 258);
             this.tabPage1.TabIndex = 7;
             this.tabPage1.Text = "GP(Optuna)";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1202,7 +1267,7 @@ namespace Tunny.UI
             this.GP.Margin = new System.Windows.Forms.Padding(2);
             this.GP.Name = "GP";
             this.GP.Padding = new System.Windows.Forms.Padding(2);
-            this.GP.Size = new System.Drawing.Size(272, 258);
+            this.GP.Size = new System.Drawing.Size(627, 258);
             this.GP.TabIndex = 1;
             this.GP.Text = "GP(BoTorch)";
             this.GP.UseVisualStyleBackColor = true;
@@ -1270,7 +1335,7 @@ namespace Tunny.UI
             this.NSGAII.Location = new System.Drawing.Point(4, 24);
             this.NSGAII.Margin = new System.Windows.Forms.Padding(2);
             this.NSGAII.Name = "NSGAII";
-            this.NSGAII.Size = new System.Drawing.Size(272, 258);
+            this.NSGAII.Size = new System.Drawing.Size(627, 258);
             this.NSGAII.TabIndex = 3;
             this.NSGAII.Text = "NSGAII";
             this.NSGAII.UseVisualStyleBackColor = true;
@@ -1472,7 +1537,7 @@ namespace Tunny.UI
             this.NSGAIII.Location = new System.Drawing.Point(4, 24);
             this.NSGAIII.Name = "NSGAIII";
             this.NSGAIII.Padding = new System.Windows.Forms.Padding(3);
-            this.NSGAIII.Size = new System.Drawing.Size(272, 258);
+            this.NSGAIII.Size = new System.Drawing.Size(627, 258);
             this.NSGAIII.TabIndex = 6;
             this.NSGAIII.Text = "NSGAIII";
             this.NSGAIII.UseVisualStyleBackColor = true;
@@ -1680,7 +1745,7 @@ namespace Tunny.UI
             this.CMAES.Location = new System.Drawing.Point(4, 24);
             this.CMAES.Margin = new System.Windows.Forms.Padding(2);
             this.CMAES.Name = "CMAES";
-            this.CMAES.Size = new System.Drawing.Size(272, 258);
+            this.CMAES.Size = new System.Drawing.Size(627, 258);
             this.CMAES.TabIndex = 2;
             this.CMAES.Text = "CMA-ES";
             this.CMAES.UseVisualStyleBackColor = true;
@@ -1930,7 +1995,7 @@ namespace Tunny.UI
             this.QMC.Location = new System.Drawing.Point(4, 24);
             this.QMC.Margin = new System.Windows.Forms.Padding(2);
             this.QMC.Name = "QMC";
-            this.QMC.Size = new System.Drawing.Size(272, 258);
+            this.QMC.Size = new System.Drawing.Size(627, 258);
             this.QMC.TabIndex = 4;
             this.QMC.Text = "QMC";
             this.QMC.UseVisualStyleBackColor = true;
@@ -2031,7 +2096,7 @@ namespace Tunny.UI
             this.Misc.Margin = new System.Windows.Forms.Padding(2);
             this.Misc.Name = "Misc";
             this.Misc.Padding = new System.Windows.Forms.Padding(2);
-            this.Misc.Size = new System.Drawing.Size(272, 258);
+            this.Misc.Size = new System.Drawing.Size(627, 258);
             this.Misc.TabIndex = 5;
             this.Misc.Text = "Misc";
             this.Misc.UseVisualStyleBackColor = true;
@@ -2144,19 +2209,19 @@ namespace Tunny.UI
             this.fileTabPage.Margin = new System.Windows.Forms.Padding(2);
             this.fileTabPage.Name = "fileTabPage";
             this.fileTabPage.Padding = new System.Windows.Forms.Padding(2);
-            this.fileTabPage.Size = new System.Drawing.Size(283, 291);
+            this.fileTabPage.Size = new System.Drawing.Size(640, 291);
             this.fileTabPage.TabIndex = 4;
             this.fileTabPage.Text = "File";
             this.fileTabPage.UseVisualStyleBackColor = true;
             // 
             // outputDebugLogButton
             // 
-            this.outputDebugLogButton.Location = new System.Drawing.Point(53, 259);
+            this.outputDebugLogButton.Location = new System.Drawing.Point(470, 262);
             this.outputDebugLogButton.Margin = new System.Windows.Forms.Padding(2);
             this.outputDebugLogButton.Name = "outputDebugLogButton";
-            this.outputDebugLogButton.Size = new System.Drawing.Size(176, 25);
+            this.outputDebugLogButton.Size = new System.Drawing.Size(166, 25);
             this.outputDebugLogButton.TabIndex = 10;
-            this.outputDebugLogButton.Text = "Output Debug Log";
+            this.outputDebugLogButton.Text = "Output Folder Structure";
             this.outputDebugLogButton.UseVisualStyleBackColor = true;
             this.outputDebugLogButton.Click += new System.EventHandler(this.OutputDebugLogButton_Click);
             // 
@@ -2211,11 +2276,11 @@ namespace Tunny.UI
             // 
             this.licenseGroupBox.Controls.Add(this.showThirdPartyLicenseButton);
             this.licenseGroupBox.Controls.Add(this.showTunnyLicenseButton);
-            this.licenseGroupBox.Location = new System.Drawing.Point(15, 141);
+            this.licenseGroupBox.Location = new System.Drawing.Point(293, 4);
             this.licenseGroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.licenseGroupBox.Name = "licenseGroupBox";
             this.licenseGroupBox.Padding = new System.Windows.Forms.Padding(2);
-            this.licenseGroupBox.Size = new System.Drawing.Size(252, 105);
+            this.licenseGroupBox.Size = new System.Drawing.Size(252, 133);
             this.licenseGroupBox.TabIndex = 8;
             this.licenseGroupBox.TabStop = false;
             this.licenseGroupBox.Text = "License";
@@ -2242,11 +2307,24 @@ namespace Tunny.UI
             this.showTunnyLicenseButton.UseVisualStyleBackColor = true;
             this.showTunnyLicenseButton.Click += new System.EventHandler(this.ShowTunnyLicenseButton_Click);
             // 
+            // liveChartTargetX_ComboBox
+            // 
+            this.liveChartTargetX_ComboBox.Font = new System.Drawing.Font("Meiryo UI", 8F);
+            this.liveChartTargetX_ComboBox.FormattingEnabled = true;
+            this.liveChartTargetX_ComboBox.Items.AddRange(new object[] {
+            "Trial Number"});
+            this.liveChartTargetX_ComboBox.Location = new System.Drawing.Point(380, 8);
+            this.liveChartTargetX_ComboBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.liveChartTargetX_ComboBox.Name = "liveChartTargetX_ComboBox";
+            this.liveChartTargetX_ComboBox.Size = new System.Drawing.Size(125, 22);
+            this.liveChartTargetX_ComboBox.TabIndex = 22;
+            // 
             // OptimizationWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(289, 323);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(196)))), ((int)(((byte)(248)))));
+            this.ClientSize = new System.Drawing.Size(660, 335);
             this.Controls.Add(this.optimizeTabControl);
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2260,6 +2338,7 @@ namespace Tunny.UI
             this.optimizeTabControl.ResumeLayout(false);
             this.optimizeTabPage.ResumeLayout(false);
             this.optimizeTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.liveChart)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timeoutNumUpDown)).EndInit();
@@ -2463,6 +2542,11 @@ namespace Tunny.UI
         private System.Windows.Forms.NumericUpDown tpeGammaNumUpDown;
         private System.Windows.Forms.Label tpeGammaLabel;
         private System.Windows.Forms.CheckBox disableRhinoViewportCheckBox;
+        private System.Windows.Forms.DataVisualization.Charting.Chart liveChart;
+        private System.Windows.Forms.WebBrowser optunaPlotBrowser;
+        private System.Windows.Forms.CheckBox LiveChartTatgetCheckBox;
+        private System.Windows.Forms.ComboBox liveChartTargetY_ComboBox;
+        private System.Windows.Forms.ComboBox liveChartTargetX_ComboBox;
     }
 }
 

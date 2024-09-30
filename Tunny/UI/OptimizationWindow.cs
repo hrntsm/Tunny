@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 using Grasshopper.GUI;
 
@@ -8,7 +9,6 @@ using Serilog.Events;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
-using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -20,13 +20,13 @@ namespace Tunny.UI
     {
         private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
-        internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(OptimizeComponentBase component)
         {
             TLog.MethodStart();
             TLog.Info("OptimizationWindow is open");
             InitializeComponent();
+            InitializeChart();
 
             _component = component;
             _component.GhInOutInstantiate();
@@ -95,17 +95,6 @@ namespace Tunny.UI
             TLog.MethodStart();
             optimizeBackgroundWorker.Dispose();
             outputResultBackgroundWorker.Dispose();
-        }
-
-        private void UpdateGrasshopper(IList<Parameter> parameters)
-        {
-            TLog.MethodStart();
-            GrasshopperStatus = GrasshopperStates.RequestProcessing;
-
-            //Calculate Grasshopper
-            _component.GhInOut.NewSolution(parameters);
-
-            GrasshopperStatus = GrasshopperStates.RequestProcessed;
         }
 
         private void OptimizationWindow_Load(object sender, EventArgs e)
@@ -197,6 +186,51 @@ namespace Tunny.UI
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
             _settings.Optimize.DisableViewportDrawing = disableRhinoViewportCheckBox.Checked;
             _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
+        }
+
+        private void InitializeChart()
+        {
+            liveChart.Series.Clear();
+            liveChart.ChartAreas.Clear();
+            liveChart.Titles.Clear();
+
+            var valueSeries = new Series("ValueData")
+            {
+                ChartType = SeriesChartType.Point,
+                MarkerStyle = MarkerStyle.Circle,
+                MarkerColor = System.Drawing.Color.FromArgb(255, 157, 196, 248),
+                MarkerSize = 8,
+                BorderColor = System.Drawing.Color.Gray,
+                BorderWidth = 2,
+            };
+            valueSeries.Points.AddXY(0, 0);
+
+            var bestSeries = new Series("BestData")
+            {
+                ChartType = SeriesChartType.Line,
+                MarkerStyle = MarkerStyle.None,
+                BorderColor = System.Drawing.Color.Gray,
+                BorderWidth = 2,
+            };
+
+            var area = new ChartArea("ScatterPlotArea");
+            area.AxisX.Title = "Trials";
+            area.AxisY.Title = "Objective Value";
+            area.AxisX.LabelStyle.Format = "N0";
+            area.AxisX.Minimum = 0;
+
+            liveChart.Series.Add(valueSeries);
+            liveChart.Series.Add(bestSeries);
+            liveChart.ChartAreas.Add(area);
+            liveChart.Legends.Clear();
+
+            liveChart.AntiAliasing = AntiAliasingStyles.All;
+            liveChart.TextAntiAliasingQuality = TextAntiAliasingQuality.High;
+
+            area.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            area.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            area.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
+            area.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
         }
     }
 }
