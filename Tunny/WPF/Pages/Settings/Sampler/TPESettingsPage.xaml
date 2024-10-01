@@ -1,0 +1,144 @@
+﻿<Page
+    x:Class="Tunny.WPF.Pages.Settings.Sampler.TPESettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Pages.Settings.Sampler"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="TPESettingsPage"
+    d:DesignHeight="350"
+    d:DesignWidth="350"
+    mc:Ignorable="d">
+
+    <GroupBox Margin="5" Header="TPE Settings">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                x:Name="tpeSeedLabel"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Seed" />
+            <TextBox
+                x:Name="tpeSeedTextBox"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Text=""
+                TextAlignment="Right" />
+            <Label
+                x:Name="tpeStartupTrialsLabel"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Number of Startup Trials" />
+            <TextBox
+                x:Name="tpeStartupTrialsTextBox"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Text="10"
+                TextAlignment="Right" />
+            <Label
+                x:Name="tpeEICandidatesLabel"
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Number of EI Candidates" />
+            <TextBox
+                x:Name="tpeEICandidateTextBox"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Text="24"
+                TextAlignment="Right" />
+            <Label
+                x:Name="tpeGammaLabel"
+                Grid.Row="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Gamma" />
+            <TextBox
+                x:Name="tpeGammaTextBox"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Text="25"
+                TextAlignment="Right" />
+            <Label
+                x:Name="tpePriorWeightLabel"
+                Grid.Row="4"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="Prior Weight" />
+            <TextBox
+                x:Name="tpePriorWeightTextBox"
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="5,5,5,5"
+                Text="1.0"
+                TextAlignment="Right" />
+            <CheckBox
+                x:Name="tpeConsiderPriorCheckBox"
+                Grid.Row="5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Consider Prior" />
+            <CheckBox
+                x:Name="tpeMultivariateCheckBox"
+                Grid.Row="5"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Multivariate" />
+            <CheckBox
+                x:Name="tpeConsiderEndpointsCheckBox"
+                Grid.Row="6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Consider Endpoints" />
+            <CheckBox
+                x:Name="tpeGroupCheckBox"
+                Grid.Row="6"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Group" />
+            <CheckBox
+                x:Name="tpeConsiderMagicClipCheckBox"
+                Grid.Row="7"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Consider Magic Clip" />
+            <CheckBox
+                x:Name="tpeConstantLiarCheckBox"
+                Grid.Row="7"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Constant Liar" />
+
+            <Button
+                x:Name="tpeDefaultButton"
+                Grid.Row="9"
+                Grid.Column="1"
+                Margin="5"
+                Content="Default" />
+        </Grid>
+
+    </GroupBox>
+</Page>

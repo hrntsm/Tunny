@@ -7,7 +7,7 @@
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="OptimizePage"
     d:DesignHeight="350"
-    d:DesignWidth="350"
+    d:DesignWidth="700"
     mc:Ignorable="d">
     <Page.DataContext>
         <viewModels:OptimizeViewModel />
@@ -18,12 +18,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="3*" />
+            <RowDefinition Height="4*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
@@ -35,9 +36,10 @@
             VerticalAlignment="Center"
             Content="Sampler" />
         <ComboBox
+            x:Name="OptimizeSamplerComboBox"
             Grid.Row="0"
             Grid.Column="1"
-            Margin="10,10,10,10"
+            Margin="5"
             ItemsSource="{Binding Samplers}"
             SelectedItem="{Binding SelectedSampler}" />
 
@@ -50,7 +52,7 @@
         <TextBox
             Grid.Row="1"
             Grid.Column="1"
-            Margin="10,10,10,8"
+            Margin="5"
             Text="100"
             TextAlignment="Right" />
 
@@ -63,7 +65,7 @@
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
-            Margin="10,10,10,8"
+            Margin="5"
             Text="0"
             TextAlignment="Right" />
 
@@ -94,7 +96,7 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
-                    Margin="5,5,5,5"
+                    Margin="5"
                     TextAlignment="Right" />
 
                 <CheckBox
@@ -126,7 +128,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
-                    Margin="5,5,5,5"
+                    Margin="5"
                     ItemsSource="{Binding Samplers}" />
             </Grid>
         </GroupBox>
@@ -142,11 +144,11 @@
                 </Grid.ColumnDefinitions>
                 <Button
                     Grid.Column="0"
-                    Margin="10,10,10,10"
+                    Margin="5"
                     Content="RunOptimize" />
                 <Button
                     Grid.Column="1"
-                    Margin="10,10,10,10"
+                    Margin="5"
                     Content="Stop" />
             </Grid>
         </StackPanel>
@@ -156,20 +158,26 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Height="20"
-            Margin="10,0,10,0"
+            Margin="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch" />
 
         <Label
             Grid.Row="6"
             Grid.Column="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
+            Margin="5"
             Content="Trial: #" />
         <Label
             Grid.Row="6"
             Grid.Column="1"
-            VerticalAlignment="Center"
-            Content="Estimated Time Remaining: #" />
+            Margin="5"
+            Content="ETA: #" />
+
+        <Frame
+            x:Name="optimizeDynamicFrame"
+            Grid.Row="0"
+            Grid.RowSpan="7"
+            Grid.Column="2" />
+
     </Grid>
 </Page>

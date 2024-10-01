@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="pythonnet" Version="3.0.1" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
