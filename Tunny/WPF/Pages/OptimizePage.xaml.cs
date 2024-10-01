@@ -11,7 +11,7 @@ namespace Tunny.WPF.Pages
             InitializeComponent();
             switch (OptimizeSamplerComboBox.SelectedItem)
             {
-                case "BO-TPE":
+                case "BayesianOptimization(TPE)":
                     optimizeDynamicFrame.Content = new TPESettingsPage();
                     break;
             }

@@ -40,6 +40,7 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="5"
+            FontSize="10"
             ItemsSource="{Binding Samplers}"
             SelectedItem="{Binding SelectedSampler}" />
 

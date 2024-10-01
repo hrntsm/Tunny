@@ -31,12 +31,12 @@ namespace Tunny.WPF.ViewModels
         {
             Samplers = new ObservableCollection<string>
             {
-                "BO-TPE",
-                "BO-GP:Optuna",
-                "BO-GP:Botorch",
-                "NSGA-II",
-                "NSGA-III",
-                "CMA-ES",
+                "BayesianOptimization(TPE)",
+                "BayesianOptimization(GP:Optuna)",
+                "BayesianOptimization(GP:Botorch)",
+                "GeneticAlgorithm(NSGA-II)",
+                "GeneticAlgorithm(NSGA-III)",
+                "EvolutionStrategy(CMA-ES)",
                 "Quasi-MonteCarlo",
                 "Random",
                 "BruteForce"
