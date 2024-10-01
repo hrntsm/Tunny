@@ -2251,6 +2251,7 @@ namespace Tunny.UI
             this.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MaximizeBox = false;
             this.Name = "OptimizationWindow";
             this.Text = "Tunny";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClosingXButton);

@@ -1,3 +1,7 @@
+using System.Reflection;
+
+using Optuna.Util;
+
 using Python.Runtime;
 
 namespace Optuna.Sampler
@@ -8,15 +12,12 @@ namespace Optuna.Sampler
     public class SamplerBase
     {
         public int? Seed { get; set; }
-        public const string ConstraintKey = "Constraint";
 
         public static dynamic ConstraintFunc()
         {
             PyModule ps = Py.CreateScope();
-            ps.Exec(
-                "def constraints(trial):\n" +
-                $"  return trial.user_attrs[\"{ConstraintKey}\"]\n"
-            );
+            var assembly = Assembly.GetExecutingAssembly();
+            ps.Exec(ReadFileFromResource.Text(assembly, "Optuna.Sampler.Python.constraints.py"));
             return ps.Get("constraints");
         }
     }

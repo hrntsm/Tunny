@@ -16,6 +16,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - Default log file is set to "Verbose" with a retention period of 1 day.
+- Stop log output to console.
+- Disable window minimize button.
 
 ### Deprecated
 
@@ -27,7 +29,9 @@ for now removed features.
 
 ### Fixed
 
-- Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize
+- Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize.
+- FishPrintByPath locks the image.
+- Mesh could not be put directly into Artifact.
 
 ### Security
 

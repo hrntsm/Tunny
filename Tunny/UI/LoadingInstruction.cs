@@ -232,7 +232,7 @@ namespace Tunny.UI
             TSettings settings;
             if (File.Exists(settingsPath))
             {
-                settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                settings = TSettings.Deserialize(settingsPath);
                 storagePath = settings.Storage.Path;
             }
             else

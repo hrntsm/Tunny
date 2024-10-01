@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 
 using Grasshopper.Kernel;
 
@@ -37,12 +38,16 @@ namespace Tunny.Component.Print
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Path is empty.");
                 return;
             }
-            if (!System.IO.File.Exists(path))
+            if (!File.Exists(path))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "File not found.");
                 return;
             }
-            var bitmap = Image.FromFile(path) as Bitmap;
+
+            var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            var bitmap = Image.FromStream(fs) as Bitmap;
+            fs.Close();
+
             DA.SetData(0, bitmap);
         }
 
