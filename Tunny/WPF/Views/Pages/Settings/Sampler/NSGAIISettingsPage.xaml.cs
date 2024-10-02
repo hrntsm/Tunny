@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Tunny.WPF.Pages.Settings.Sampler
+namespace Tunny.WPF.Views.Pages.Settings.Sampler
 {
     public partial class NSGAIISettingsPage : Page
     {

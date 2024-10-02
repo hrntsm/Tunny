@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Controls;
 
-using Tunny.WPF.Pages.Settings.Sampler;
+using Tunny.WPF.Views.Pages.Settings.Sampler;
 
-namespace Tunny.WPF.Pages
+namespace Tunny.WPF.Views.Pages
 {
     public partial class OptimizePage : Page
     {
@@ -18,31 +18,31 @@ namespace Tunny.WPF.Pages
             switch (OptimizeSamplerComboBox.SelectedItem)
             {
                 case "BayesianOptimization(TPE)":
-                    optimizeDynamicFrame.Content = new TPESettingsPage();
+                    OptimizeDynamicFrame.Content = new TPESettingsPage();
                     break;
                 case "BayesianOptimization(GP:Optuna)":
-                    optimizeDynamicFrame.Content = new GPOptunaSettingsPage();
+                    OptimizeDynamicFrame.Content = new GPOptunaSettingsPage();
                     break;
                 case "BayesianOptimization(GP:Botorch)":
-                    optimizeDynamicFrame.Content = new GPBoTorchSettingsPage();
+                    OptimizeDynamicFrame.Content = new GPBoTorchSettingsPage();
                     break;
                 case "GeneticAlgorithm(NSGA-II)":
-                    optimizeDynamicFrame.Content = new NSGAIISettingsPage();
+                    OptimizeDynamicFrame.Content = new NSGAIISettingsPage();
                     break;
                 case "GeneticAlgorithm(NSGA-III)":
-                    optimizeDynamicFrame.Content = new NSGAIIISettingsPage();
+                    OptimizeDynamicFrame.Content = new NSGAIIISettingsPage();
                     break;
                 case "EvolutionStrategy(CMA-ES)":
-                    optimizeDynamicFrame.Content = new CmaEsSettingsPage();
+                    OptimizeDynamicFrame.Content = new CmaEsSettingsPage();
                     break;
                 case "Quasi-MonteCarlo":
-                    optimizeDynamicFrame.Content = new QMCSettingsPage();
+                    OptimizeDynamicFrame.Content = new QmcSettingsPage();
                     break;
                 case "Random":
-                    optimizeDynamicFrame.Content = new RandomSettingsPage();
+                    OptimizeDynamicFrame.Content = new RandomSettingsPage();
                     break;
                 case "BruteForce":
-                    optimizeDynamicFrame.Content = new BruteForceSettingsPage();
+                    OptimizeDynamicFrame.Content = new BruteForceSettingsPage();
                     break;
                 default:
                     throw new ArgumentException("Invalid sampler selected.");

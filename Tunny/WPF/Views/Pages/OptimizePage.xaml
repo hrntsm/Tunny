@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Pages.OptimizePage"
+    x:Class="Tunny.WPF.Views.Pages.OptimizePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -175,7 +175,7 @@
             Content="ETA: #" />
 
         <Frame
-            x:Name="optimizeDynamicFrame"
+            x:Name="OptimizeDynamicFrame"
             Grid.Row="0"
             Grid.RowSpan="7"
             Grid.Column="2" />

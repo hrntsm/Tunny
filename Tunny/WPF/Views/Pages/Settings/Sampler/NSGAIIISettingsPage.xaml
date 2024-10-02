@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Pages.Settings.Sampler.NSGAIIISettingsPage"
+    x:Class="Tunny.WPF.Views.Pages.Settings.Sampler.NSGAIIISettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Tunny.WPF.Pages.Settings.Sampler"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Settings.Sampler"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="TPESettingsPage"
+    Title="NSGAIIISettingsPage"
     d:DesignHeight="350"
     d:DesignWidth="350"
     mc:Ignorable="d">
