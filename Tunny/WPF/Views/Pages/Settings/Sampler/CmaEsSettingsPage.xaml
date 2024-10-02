@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Pages.Settings.Sampler.TPESettingsPage"
+    x:Class="Tunny.WPF.Pages.Settings.Sampler.CmaEsSettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,7 @@
     d:DesignWidth="350"
     mc:Ignorable="d">
 
-    <GroupBox Margin="5" Header="TPE Settings">
+    <GroupBox Margin="5" Header="EvolutionStrategy (CMA-ES) Settings">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -30,110 +30,104 @@
             </Grid.ColumnDefinitions>
 
             <Label
-                x:Name="tpeSeedLabel"
-                HorizontalAlignment="Center"
+                x:Name="CmaEsSeedLabel"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Seed" />
             <TextBox
-                x:Name="tpeSeedTextBox"
+                x:Name="CmaEsSeedTextBox"
                 Grid.Column="1"
-                Margin="5,5,5,5"
+                Margin="5"
                 Text=""
                 TextAlignment="Right" />
-            <Label
-                x:Name="tpeStartupTrialsLabel"
+            <CheckBox
+                x:Name="CmaEsSigma0CheckBox"
                 Grid.Row="1"
-                HorizontalAlignment="Center"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Number of Startup Trials" />
+                Content="Sigma0" />
             <TextBox
-                x:Name="tpeStartupTrialsTextBox"
+                x:Name="CmaEsSigma0TextBox"
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="5,5,5,5"
-                Text="10"
+                Margin="5"
+                Text="0.00"
                 TextAlignment="Right" />
-            <Label
-                x:Name="tpeEICandidatesLabel"
+            <CheckBox
+                x:Name="CmaEsUseSepCMACheckBox"
                 Grid.Row="2"
-                HorizontalAlignment="Center"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Number of EI Candidates" />
-            <TextBox
-                x:Name="tpeEICandidateTextBox"
+                Content="Use Separable CMA" />
+            <CheckBox
+                x:Name="CmaEsWithMarginCheckBox"
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="5,5,5,5"
-                Text="24"
-                TextAlignment="Right" />
-            <Label
-                x:Name="tpeGammaLabel"
-                Grid.Row="3"
-                HorizontalAlignment="Center"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Gamma" />
-            <TextBox
-                x:Name="tpeGammaTextBox"
+                Content="With Margin" />
+            <CheckBox
+                x:Name="CmaEsRestartStrategyCheckBox"
                 Grid.Row="3"
-                Grid.Column="1"
-                Margin="5,5,5,5"
-                Text="25"
-                TextAlignment="Right" />
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Restart Strategy" />
             <Label
-                x:Name="tpePriorWeightLabel"
+                x:Name="CmaEsPopulationSizeLabel"
                 Grid.Row="4"
-                HorizontalAlignment="Center"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Prior Weight" />
+                Content="Population Size" />
             <TextBox
-                x:Name="tpePriorWeightTextBox"
+                x:Name="CmaEsPopulationSizeTextBox"
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="5,5,5,5"
-                Text="1.0"
+                Margin="5"
+                Text="1"
+                TextAlignment="Right" />
+            <Label
+                x:Name="CmaEsIncreasingPopulationSizeLabel"
+                Grid.Row="5"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Increasint Population Size" />
+            <TextBox
+                x:Name="CmaEsIncreasingPopulationSizeTextBox"
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="5"
+                Text="2"
                 TextAlignment="Right" />
             <CheckBox
-                x:Name="tpeConsiderPriorCheckBox"
-                Grid.Row="5"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Content="Consider Prior" />
-            <CheckBox
-                x:Name="tpeMultivariateCheckBox"
-                Grid.Row="5"
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Content="Multivariate" />
-            <CheckBox
-                x:Name="tpeConsiderEndpointsCheckBox"
+                x:Name="CmaEsWarmStartCmaEsCheckBox"
                 Grid.Row="6"
+                Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Consider Endpoints" />
-            <CheckBox
-                x:Name="tpeGroupCheckBox"
+                Content="Warm Start CMA-ES" />
+            <ListBox
+                x:Name="CmaEsWarnStartCmaEsListBox"
                 Grid.Row="6"
                 Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Content="Group" />
+                Margin="5"
+                d:ItemsSource="{d:SampleData ItemCount=5}" />
             <CheckBox
-                x:Name="tpeConsiderMagicClipCheckBox"
+                x:Name="CmaEsUserFirstFishEggToX0CheckBox"
                 Grid.Row="7"
+                Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Consider Magic Clip" />
-            <CheckBox
-                x:Name="tpeConstantLiarCheckBox"
-                Grid.Row="7"
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Content="Constant Liar" />
+                Content="User First FishEgg To X0" />
 
             <Button
-                x:Name="tpeDefaultButton"
+                x:Name="CmaEsDefaultButton"
                 Grid.Row="9"
                 Grid.Column="1"
                 Margin="5"
