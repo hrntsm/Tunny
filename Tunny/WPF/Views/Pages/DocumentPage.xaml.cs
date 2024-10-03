@@ -2,11 +2,8 @@
 
 using Microsoft.Web.WebView2.Wpf;
 
-namespace Tunny.WPF.Pages
+namespace Tunny.WPF.Views.Pages
 {
-    /// <summary>
-    /// Interaction logic for DocumentPage.xaml
-    /// </summary>
     public partial class DocumentPage : Page
     {
         public DocumentPage()

@@ -39,7 +39,7 @@
                 x:Name="RandomSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
-                Text=""
+                Text="AUTO"
                 TextAlignment="Right" />
 
             <Button

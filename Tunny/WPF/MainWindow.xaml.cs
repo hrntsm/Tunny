@@ -1,10 +1,11 @@
 ﻿using System.Windows;
+using System.Windows.Controls.Ribbon;
 
 using Tunny.Core.Util;
 
 namespace Tunny.WPF
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : RibbonWindow
     {
         public MainWindow()
         {

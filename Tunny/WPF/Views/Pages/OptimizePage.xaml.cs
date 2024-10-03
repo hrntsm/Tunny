@@ -15,7 +15,8 @@ namespace Tunny.WPF.Views.Pages
 
         private void ChangeFrameContent()
         {
-            switch (OptimizeSamplerComboBox.SelectedItem)
+            string i = "1";
+            switch (i)
             {
                 case "BayesianOptimization(TPE)":
                     OptimizeDynamicFrame.Content = new TPESettingsPage();
@@ -45,7 +46,8 @@ namespace Tunny.WPF.Views.Pages
                     OptimizeDynamicFrame.Content = new BruteForceSettingsPage();
                     break;
                 default:
-                    throw new ArgumentException("Invalid sampler selected.");
+                    OptimizeDynamicFrame.Content = new TPESettingsPage();
+                    break;
             }
         }
     }

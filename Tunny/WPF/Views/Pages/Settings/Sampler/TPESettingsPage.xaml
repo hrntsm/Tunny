@@ -10,7 +10,10 @@
     d:DesignWidth="350"
     mc:Ignorable="d">
 
-    <GroupBox Margin="5" Header="BayesianOptimization (TPE) Settings">
+    <GroupBox
+        Margin="5"
+        Header="BayesianOptimization (TPE) Settings">
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -39,7 +42,7 @@
                 x:Name="TpeSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
-                Text=""
+                Text="AUTO"
                 TextAlignment="Right" />
             <Label
                 x:Name="TpeStartupTrialsLabel"
@@ -53,7 +56,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
-                Text="10"
+                Text="AUTO"
                 TextAlignment="Right" />
             <Label
                 x:Name="TpeEICandidatesLabel"
@@ -103,7 +106,8 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Consider Prior" />
+                Content="Consider Prior"
+                IsChecked="True" />
             <CheckBox
                 x:Name="TpeMultivariateCheckBox"
                 Grid.Row="5"
@@ -111,7 +115,8 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Multivariate" />
+                Content="Multivariate"
+                IsChecked="True" />
             <CheckBox
                 x:Name="TpeConsiderEndpointsCheckBox"
                 Grid.Row="6"
@@ -133,7 +138,8 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Consider Magic Clip" />
+                Content="Consider Magic Clip"
+                IsChecked="True" />
             <CheckBox
                 x:Name="TpeConstantLiarCheckBox"
                 Grid.Row="7"

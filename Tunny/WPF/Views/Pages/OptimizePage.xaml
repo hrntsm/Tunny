@@ -30,41 +30,23 @@
         </Grid.ColumnDefinitions>
 
         <Label
-            Grid.Row="0"
-            Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Sampler" />
-        <ComboBox
-            x:Name="OptimizeSamplerComboBox"
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="5"
-            FontSize="10"
-            ItemsSource="{Binding Samplers}"
-            SelectedItem="{Binding SelectedSampler}" />
-
-        <Label
-            Grid.Row="1"
-            Grid.Column="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Number of trials" />
+            Content="Number of Trials" />
         <TextBox
-            Grid.Row="1"
             Grid.Column="1"
             Margin="5"
             Text="100"
             TextAlignment="Right" />
 
         <Label
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Time out(sec)" />
+            Content="Timeout (sec)" />
         <TextBox
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="1"
             Margin="5"
             Text="0"

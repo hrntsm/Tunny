@@ -1,9 +1,9 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Pages.VisualizePage"
+    x:Class="Tunny.WPF.Views.Pages.VisualizePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Tunny.WPF.Pages"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
     Title="VisualizePage"

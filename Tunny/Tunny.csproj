@@ -24,6 +24,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="WPF\Assets\DesignExplorer.png" />
+    <None Remove="WPF\Assets\Icon\ContentSave.png" />
+    <None Remove="WPF\Assets\Icon\FolderOpenOutline.png" />
+    <None Remove="WPF\Assets\Icon\HelpBox.png" />
+    <None Remove="WPF\Assets\Optuna.png" />
+    <None Remove="WPF\Assets\Tunny.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -106,6 +115,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="WPF\Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="WPF\Assets\Icon\ContentSave.png" />
+    <Resource Include="WPF\Assets\Icon\DesignExplorer.png" />
+    <Resource Include="WPF\Assets\Icon\FolderOpenOutline.png" />
+    <Resource Include="WPF\Assets\Icon\HelpBox.png" />
+    <Resource Include="WPF\Assets\Icon\Optuna.png" />
+    <Resource Include="WPF\Assets\Icon\Tunny.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </Resource>
   </ItemGroup>
 
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">

@@ -1,61 +1,110 @@
-﻿<Window
+﻿<RibbonWindow
     x:Class="Tunny.WPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Tunny UI"
+    Title="Tunny v1.0 - fish.log"
     Width="700"
-    Height="450"
+    Height="500"
     Background="#FF93C6F8"
+    Icon="Assets/Icon/Tunny.png"
     ResizeMode="CanMinimize"
     mc:Ignorable="d">
-    <Grid Background="#FF93C6F8">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="Save Settings" InputGestureText="Ctrl+S" />
-                <Separator />
-                <MenuItem Header="Set Storage Path" InputGestureText="Ctrl+O" />
-                <MenuItem Header="Open Tunny Folder" />
-                <Separator />
-                <MenuItem Click="ExitMenuItem_Click" Header="Exit" />
-            </MenuItem>
-            <MenuItem Header="Help">
-                <MenuItem Header="Document">
-                    <MenuItem Click="TunnyDocumentMenuItem_Click" Header="Tunny" />
-                    <MenuItem Click="OptunaSamplerMenuItem_Click" Header="Optuna Sampler" />
-                </MenuItem>
-                <MenuItem Header="License">
-                    <MenuItem Click="TunnyLicenseMenuItem_Click" Header="Tunny" />
-                    <MenuItem Click="PythonPackagesLicenseMenuItem_Click" Header="Python Library" />
-                    <MenuItem Click="TTDesignExplorerLicenseMenuItem_Click" Header="TT DesignExplorer" />
-                </MenuItem>
-            </MenuItem>
-        </Menu>
-        <TabControl
-            x:Name="tabControl"
+        <Ribbon x:Name="Ribbon" Grid.Row="0">
+            <Ribbon.HelpPaneContent>
+                <RibbonButton SmallImageSource="Assets/Icon/HelpBox.png" />
+            </Ribbon.HelpPaneContent>
+
+            <Ribbon.QuickAccessToolBar>
+                <RibbonQuickAccessToolBar>
+                    <RibbonButton SmallImageSource="Assets/Icon/FolderOpenOutline.png" />
+                    <RibbonButton SmallImageSource="Assets/Icon/ContentSave.png" />
+                </RibbonQuickAccessToolBar>
+            </Ribbon.QuickAccessToolBar>
+
+            <RibbonTab Header="Optimize">
+                <RibbonGroup Header="Bayesian Optimization">
+                    <RibbonButton Label="TPE" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="GP:Optuna" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="GP:BoTorch" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Generic Algorighm">
+                    <RibbonButton Label="NSGA-II" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="NSGA-III" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Evolution Strategy">
+                    <RibbonButton Label="CMA-ES" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Misc">
+                    <RibbonButton Label="Random" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="QMC" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="BruteForce" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Optuna Hub">
+                    <RibbonButton Label="Register Sampler" LargeImageSource="Assets/Icon/Optuna.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Visualize">
+                <RibbonGroup Header="Browser">
+                    <RibbonButton Label="Optuna Dashboard" LargeImageSource="Assets/Icon/Optuna.png" />
+                    <RibbonButton Label="TT Design Explorer" LargeImageSource="Assets/Icon/DesignExplorer.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Optuna Visualization">
+                    <RibbonButton Label="Pareto Front" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="History" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Slice" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Contour" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Parame Importance" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Parallel Coordinate" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Hyper volume" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="EDF" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Optuna Hub">
+                    <RibbonButton Label="Register Plot" LargeImageSource="Assets/Icon/Optuna.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Output">
+                <RibbonGroup Header="Target">
+                    <RibbonComboBox />
+                </RibbonGroup>
+                <RibbonGroup Header="Group Output">
+                    <RibbonButton Label="Pareto Solutions" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="All Trials" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Use Trial Numbers Output">
+                    <RibbonTextBox Label="Trial Numbers" />
+                    <RibbonButton Label="Reinstate to Slider" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Output to Component" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Help">
+                <RibbonGroup>
+                    <RibbonButton Label="About" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Help Pages">
+                    <RibbonButton Label="Tunny" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Optuna Sampler" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Optuna Hub" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="License">
+                    <RibbonButton Label="Tunny" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="PythonPackages" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Others" LargeImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+
+            </RibbonTab>
+        </Ribbon>
+
+        <Frame
             Grid.Row="1"
-            Margin="10,10,10,10">
-            <TabItem Header="Optimize">
-                <Frame Background="#FFF5F5F5" Source="pack://application:,,,/Tunny;component/WPF/Pages/OptimizePage.xaml" />
-            </TabItem>
-            <TabItem Header="Visualize">
-                <Frame Background="#FFF5F5F5" Source="pack://application:,,,/Tunny;component/WPF/Pages/VisualizePage.xaml" />
-            </TabItem>
-            <TabItem Header="Output">
-                <Grid Background="#FFF5F5F5" />
-            </TabItem>
-            <TabItem Header="Settings">
-                <Grid Background="#FFF5F5F5" />
-            </TabItem>
-            <TabItem Header="Ducument">
-                <Frame Background="#FFF5F5F5" Source="pack://application:,,,/Tunny;component/WPF/Pages/DocumentPage.xaml" />
-            </TabItem>
-        </TabControl>
+            Background="AliceBlue"
+            Source="pack://application:,,,/Tunny;component/WPF/Views/Pages/OptimizePage.xaml" />
     </Grid>
-</Window>
+</RibbonWindow>
