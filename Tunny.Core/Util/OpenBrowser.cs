@@ -1,3 +1,4 @@
+using System.Data;
 using System.Diagnostics;
 
 namespace Tunny.Core.Util
@@ -16,6 +17,12 @@ namespace Tunny.Core.Util
             Process.Start($@"https://optuna.readthedocs.io/en/stable/reference/samplers/index.html");
         }
 
+        public static void OptunaHubPage()
+        {
+            TLog.MethodStart();
+            Process.Start($@"https://hub.optuna.org/");
+        }
+
         public static void TunnyLicense()
         {
             TLog.MethodStart();
@@ -27,7 +34,7 @@ namespace Tunny.Core.Util
             Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
         }
 
-        public static void TTDesignExplorerLicense()
+        public static void OtherLicense()
         {
             TLog.MethodStart();
             Process.Start("https://github.com/hrntsm/DesignExplorer/blob/gh-pages/license.txt");

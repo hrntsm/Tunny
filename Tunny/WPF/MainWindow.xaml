@@ -19,7 +19,7 @@
 
         <Ribbon x:Name="Ribbon" Grid.Row="0">
             <Ribbon.HelpPaneContent>
-                <RibbonButton SmallImageSource="Assets/Icon/HelpBox.png" />
+                <RibbonButton Click="TunnyDocumentHelpButton_Click" SmallImageSource="Assets/Icon/HelpBox.png" />
             </Ribbon.HelpPaneContent>
 
             <Ribbon.QuickAccessToolBar>
@@ -89,14 +89,32 @@
                     <RibbonButton Label="About" LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Help Pages">
-                    <RibbonButton Label="Tunny" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Optuna Sampler" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Optuna Hub" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="TunnyDocumentHelpButton_Click"
+                        Label="Tunny"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptunaSamplerHelpButton_Click"
+                        Label="Optuna Sampler"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptunaHubHelpButton_Click"
+                        Label="Optuna Hub"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="License">
-                    <RibbonButton Label="Tunny" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="PythonPackages" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Others" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="TunnyLicenseHelpButton_Click"
+                        Label="Tunny"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="PythonPackagesLicenseHelpButton_Click"
+                        Label="PythonPackages"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OtherLicenseHelpButton_Click"
+                        Label="Others"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
 
             </RibbonTab>

@@ -12,29 +12,34 @@ namespace Tunny.WPF
             InitializeComponent();
         }
 
-        private void TunnyLicenseMenuItem_Click(object sender, RoutedEventArgs e)
+        private void TunnyLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
             OpenBrowser.TunnyLicense();
         }
 
-        private void PythonPackagesLicenseMenuItem_Click(object sender, RoutedEventArgs e)
+        private void PythonPackagesLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
             OpenBrowser.PythonPackagesLicense();
         }
 
-        private void TTDesignExplorerLicenseMenuItem_Click(object sender, RoutedEventArgs e)
+        private void OtherLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.TTDesignExplorerLicense();
+            OpenBrowser.OtherLicense();
         }
 
-        private void TunnyDocumentMenuItem_Click(object sender, RoutedEventArgs e)
+        private void TunnyDocumentHelpButton_Click(object sender, RoutedEventArgs e)
         {
             OpenBrowser.TunnyDocumentPage();
         }
 
-        private void OptunaSamplerMenuItem_Click(object sender, RoutedEventArgs e)
+        private void OptunaSamplerHelpButton_Click(object sender, RoutedEventArgs e)
         {
             OpenBrowser.OptunaSamplerPage();
+        }
+
+        private void OptunaHubHelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser.OptunaHubPage();
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
