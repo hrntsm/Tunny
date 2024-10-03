@@ -37,7 +37,7 @@ namespace Tunny.Core.Util
         public static void OtherLicense()
         {
             TLog.MethodStart();
-            Process.Start("https://github.com/hrntsm/DesignExplorer/blob/gh-pages/license.txt");
+            Process.Start("https://github.com/hrntsm/Tunny/blob/main/THIRD_PARTY_LICENSES");
         }
     }
 }
