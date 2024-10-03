@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Controls;
 
+using Tunny.Core.TEnum;
+using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages.Settings.Sampler;
 
 namespace Tunny.WPF.Views.Pages
@@ -10,45 +12,73 @@ namespace Tunny.WPF.Views.Pages
         public OptimizePage()
         {
             InitializeComponent();
-            ChangeFrameContent();
+            ChangeFrameContent(SamplerType.TPE);
         }
 
-        private void ChangeFrameContent()
+        public OptimizePage(SamplerType samplerType)
         {
-            string i = "1";
-            switch (i)
+            InitializeComponent();
+            ChangeFrameContent(samplerType);
+        }
+
+        private void ChangeFrameContent(SamplerType samplerType)
+        {
+            ITrialNumberParam param;
+            switch (samplerType)
             {
-                case "BayesianOptimization(TPE)":
-                    OptimizeDynamicFrame.Content = new TPESettingsPage();
+                case SamplerType.TPE:
+                    var tpePage = new TPESettingsPage();
+                    param = tpePage;
+                    OptimizeDynamicFrame.Content = tpePage;
                     break;
-                case "BayesianOptimization(GP:Optuna)":
-                    OptimizeDynamicFrame.Content = new GPOptunaSettingsPage();
+                case SamplerType.GP:
+                    var gpOptunaPage = new GPOptunaSettingsPage();
+                    param = gpOptunaPage;
+                    OptimizeDynamicFrame.Content = gpOptunaPage;
                     break;
-                case "BayesianOptimization(GP:Botorch)":
-                    OptimizeDynamicFrame.Content = new GPBoTorchSettingsPage();
+                case SamplerType.BoTorch:
+                    var gpBoTorchPage = new GPBoTorchSettingsPage();
+                    param = gpBoTorchPage;
+                    OptimizeDynamicFrame.Content = gpBoTorchPage;
                     break;
-                case "GeneticAlgorithm(NSGA-II)":
-                    OptimizeDynamicFrame.Content = new NSGAIISettingsPage();
+                case SamplerType.NSGAII:
+                    var nsgaiiPage = new NSGAIISettingsPage();
+                    param = nsgaiiPage;
+                    OptimizeDynamicFrame.Content = nsgaiiPage;
                     break;
-                case "GeneticAlgorithm(NSGA-III)":
+                case SamplerType.NSGAIII:
                     OptimizeDynamicFrame.Content = new NSGAIIISettingsPage();
+                    var nsgaiiiPage = new NSGAIIISettingsPage();
+                    param = nsgaiiiPage;
+                    OptimizeDynamicFrame.Content = nsgaiiiPage;
                     break;
-                case "EvolutionStrategy(CMA-ES)":
-                    OptimizeDynamicFrame.Content = new CmaEsSettingsPage();
+                case SamplerType.CmaEs:
+                    var cmaesPage = new CmaEsSettingsPage();
+                    param = cmaesPage;
+                    OptimizeDynamicFrame.Content = cmaesPage;
                     break;
-                case "Quasi-MonteCarlo":
-                    OptimizeDynamicFrame.Content = new QmcSettingsPage();
+                case SamplerType.Random:
+                    var randomPage = new RandomSettingsPage();
+                    param = randomPage;
+                    OptimizeDynamicFrame.Content = randomPage;
                     break;
-                case "Random":
-                    OptimizeDynamicFrame.Content = new RandomSettingsPage();
+                case SamplerType.QMC:
+                    var qmcPage = new QmcSettingsPage();
+                    param = qmcPage;
+                    OptimizeDynamicFrame.Content = qmcPage;
                     break;
-                case "BruteForce":
-                    OptimizeDynamicFrame.Content = new BruteForceSettingsPage();
+                case SamplerType.BruteForce:
+                    var bruteForcePage = new BruteForceSettingsPage();
+                    param = bruteForcePage;
+                    OptimizeDynamicFrame.Content = bruteForcePage;
                     break;
                 default:
-                    OptimizeDynamicFrame.Content = new TPESettingsPage();
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);
             }
+            OptimizeTrialNumberParam1Label.Content = param.Param1Label;
+            OptimizeTrialNumberParam2Label.Content = param.Param2Label;
+            OptimizeTrialNumberParam2Label.Visibility = param.Param2Visibility;
+            OptimizeTrialNumberParam2TextBox.Visibility = param.Param2Visibility;
         }
     }
 }

@@ -31,21 +31,48 @@
 
             <RibbonTab Header="Optimize">
                 <RibbonGroup Header="Bayesian Optimization">
-                    <RibbonButton Label="TPE" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="GP:Optuna" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="GP:BoTorch" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeTpeRibbonButton_Click"
+                        Label="TPE"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeGpOptunaRibbonButton_Click"
+                        Label="GP:Optuna"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeGpBoTorchRibbonButton_Click"
+                        Label="GP:BoTorch"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Generic Algorighm">
-                    <RibbonButton Label="NSGA-II" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="NSGA-III" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeNsgaiiRibbonButton_Click"
+                        Label="NSGA-II"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeNsgaiiiRibbonButton_Click"
+                        Label="NSGA-III"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Strategy">
-                    <RibbonButton Label="CMA-ES" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeCmaEsRibbonButton_Click"
+                        Label="CMA-ES"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Misc">
-                    <RibbonButton Label="Random" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="QMC" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="BruteForce" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeRandomRibbonButton_Click"
+                        Label="Random"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeQmcRibbonButton_Click"
+                        Label="QMC"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeBruteForceRibbonButton_Click"
+                        Label="BruteForce"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
                     <RibbonButton Label="Register Sampler" LargeImageSource="Assets/Icon/Optuna.png" />
@@ -109,7 +136,7 @@
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="PythonPackagesLicenseHelpButton_Click"
-                        Label="PythonPackages"
+                        Label="Python Packages"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OtherLicenseHelpButton_Click"
@@ -121,8 +148,10 @@
         </Ribbon>
 
         <Frame
+            x:Name="MainWindowFrame"
             Grid.Row="1"
             Background="AliceBlue"
+            NavigationUIVisibility="Hidden"
             Source="pack://application:,,,/Tunny;component/WPF/Views/Pages/OptimizePage.xaml" />
     </Grid>
 </RibbonWindow>

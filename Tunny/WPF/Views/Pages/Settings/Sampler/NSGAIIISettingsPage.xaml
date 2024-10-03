@@ -83,30 +83,16 @@
                 Margin="5"
                 Text="0.50"
                 TextAlignment="Right" />
-            <Label
-                x:Name="NsgaiiPopulationSizeLabel"
-                Grid.Row="4"
-                Margin="10,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Content="Population Size" />
-            <TextBox
-                x:Name="NsgaiiPopulationSizeTextBox"
-                Grid.Row="4"
-                Grid.Column="1"
-                Margin="5"
-                Text="50"
-                TextAlignment="Right" />
             <CheckBox
                 x:Name="NsgaiiCrossoverCheckBox"
-                Grid.Row="5"
+                Grid.Row="4"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Crossover" />
             <ListBox
                 x:Name="NsgaiiCrossoverListBox"
-                Grid.Row="5"
+                Grid.Row="4"
                 Grid.Column="1"
                 Margin="5"
                 d:ItemsSource="{d:SampleData ItemCount=5}" />

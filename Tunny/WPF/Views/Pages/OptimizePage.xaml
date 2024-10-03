@@ -30,23 +30,37 @@
         </Grid.ColumnDefinitions>
 
         <Label
+            x:Name="OptimizeTrialNumberParam1Label"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Number of Trials" />
+            Content="Trial Param1" />
         <TextBox
+            x:Name="OptimizeTrialNumberParam1TextBox"
             Grid.Column="1"
             Margin="5"
             Text="100"
             TextAlignment="Right" />
-
         <Label
+            x:Name="OptimizeTrialNumberParam2Label"
             Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Trial Param2" />
+        <TextBox
+            x:Name="OptimizeTrialNumberParam2TextBox"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5"
+            Text="100"
+            TextAlignment="Right" />
+        <Label
+            Grid.Row="2"
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Timeout (sec)" />
         <TextBox
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="1"
             Margin="5"
             Text="0"
@@ -80,6 +94,7 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="5"
+                    Text="AUTO"
                     TextAlignment="Right" />
 
                 <CheckBox

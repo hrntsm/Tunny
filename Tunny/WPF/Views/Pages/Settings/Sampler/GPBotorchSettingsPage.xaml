@@ -53,7 +53,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
-                Text="10"
+                Text="AUTO"
                 TextAlignment="Right" />
 
             <Button

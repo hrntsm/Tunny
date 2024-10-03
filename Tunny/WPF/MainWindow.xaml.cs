@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Ribbon;
 
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
+using Tunny.WPF.Views.Pages;
 
 namespace Tunny.WPF
 {
@@ -45,6 +47,51 @@ namespace Tunny.WPF
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.TPE);
+        }
+
+        private void OptimizeGpOptunaRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.GP);
+        }
+
+        private void OptimizeGpBoTorchRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.BoTorch);
+        }
+
+        private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAII);
+        }
+
+        private void OptimizeNsgaiiiRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAIII);
+        }
+
+        private void OptimizeCmaEsRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.CmaEs);
+        }
+
+        private void OptimizeRandomRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.Random);
+        }
+
+        private void OptimizeQmcRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.QMC);
+        }
+
+        private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce);
         }
     }
 }
