@@ -116,7 +116,10 @@
             </RibbonTab>
             <RibbonTab Header="Help">
                 <RibbonGroup>
-                    <RibbonButton Label="About" LargeImageSource="Assets/Icon/Tunny.png" Click="TunnyAboutButton_Click" />
+                    <RibbonButton
+                        Click="TunnyAboutButton_Click"
+                        Label="About"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Help Pages">
                     <RibbonButton
@@ -126,11 +129,11 @@
                     <RibbonButton
                         Click="OptunaSamplerHelpButton_Click"
                         Label="Optuna Sampler"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Optuna.png" />
                     <RibbonButton
                         Click="OptunaHubHelpButton_Click"
                         Label="Optuna Hub"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Optuna.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="License">
                     <RibbonButton
