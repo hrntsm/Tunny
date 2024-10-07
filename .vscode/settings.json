@@ -5,6 +5,8 @@
         "HITL",
         "hovertemplate",
         "showlegend",
+        "Skia",
+        "Subseparators",
         "yaxis",
         "zaxis"
     ],

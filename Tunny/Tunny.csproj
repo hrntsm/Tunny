@@ -43,6 +43,7 @@
   <ItemGroup>
     <PackageReference Include="CefSharp.Wpf" Version="129.0.110" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc3.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="pythonnet" Version="3.0.1" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
