@@ -84,7 +84,7 @@
                     <RibbonButton Label="TT Design Explorer" LargeImageSource="Assets/Icon/DesignExplorer.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Visualization">
-                    <RibbonButton Label="Pareto Front" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="Pareto Front" LargeImageSource="Assets/Icon/Tunny.png" Click="RibbonButton_Click"/>
                     <RibbonButton Label="History" LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton Label="Slice" LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton Label="Contour" LargeImageSource="Assets/Icon/Tunny.png" />

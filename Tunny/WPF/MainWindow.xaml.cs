@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Ribbon;
 
+using CefSharp;
+
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.WPF.Views.Pages;
@@ -92,6 +94,14 @@ namespace Tunny.WPF
         private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
         {
             MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce);
+        }
+
+        private void RibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            var browser = new CefSharp.Wpf.ChromiumWebBrowser(@"C:\Users\dev\Desktop\my_plot.html");
+            MainWindowFrame.Content = browser;
+            int a = 0;
         }
     }
 }
