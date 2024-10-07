@@ -7,7 +7,7 @@ namespace Tunny.WPF.Views.Pages
         public VisualizePage()
         {
             InitializeComponent();
-            var browser = new CefSharp.Wpf.ChromiumWebBrowser(@"https://github.com/hrntsm/Tunny/blob/main/LICENSE");
+            var browser = new CefSharp.Wpf.ChromiumWebBrowser(@"C:\Users\dev\Desktop\my_plot.html");
             VisualizePlotFrame.Content = browser;
         }
     }

@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="OptimizePage"
-    d:DesignHeight="350"
-    d:DesignWidth="700"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
     mc:Ignorable="d">
     <Page.DataContext>
         <viewModels:OptimizeViewModel />
@@ -21,12 +21,13 @@
             <RowDefinition Height="4*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
         <Label
@@ -38,6 +39,7 @@
             x:Name="OptimizeTrialNumberParam1TextBox"
             Grid.Column="1"
             Margin="5"
+            VerticalAlignment="Center"
             Text="100"
             TextAlignment="Right" />
         <Label
@@ -51,6 +53,7 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="5"
+            VerticalAlignment="Center"
             Text="100"
             TextAlignment="Right" />
         <Label
@@ -63,6 +66,7 @@
             Grid.Row="2"
             Grid.Column="1"
             Margin="5"
+            VerticalAlignment="Center"
             Text="0"
             TextAlignment="Right" />
 
@@ -94,6 +98,7 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="5"
+                    VerticalAlignment="Center"
                     Text="AUTO"
                     TextAlignment="Right" />
 
@@ -173,9 +178,8 @@
 
         <Frame
             x:Name="OptimizeDynamicFrame"
-            Grid.Row="0"
-            Grid.RowSpan="7"
-            Grid.Column="2" />
+            Grid.Row="7"
+            Grid.ColumnSpan="2" />
 
     </Grid>
 </Page>

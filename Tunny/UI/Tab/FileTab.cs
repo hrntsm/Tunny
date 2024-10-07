@@ -24,11 +24,11 @@ namespace Tunny.UI
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
         {
-            OpenBrowser.TunnyLicense();
+            //OpenBrowser.TunnyLicense();
         }
         private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
         {
-            OpenBrowser.PythonPackagesLicense();
+            //OpenBrowser.PythonPackagesLicense();
         }
 
         private void SetResultFilePathButton_Click(object sender, EventArgs e)

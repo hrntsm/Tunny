@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="HelpPage"
-    d:DesignHeight="350"
-    d:DesignWidth="700"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
     mc:Ignorable="d">
     <Page.DataContext>
         <viewModels:OptimizeViewModel />

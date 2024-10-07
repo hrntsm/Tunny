@@ -173,12 +173,12 @@ namespace Tunny.UI
 
         private void TunnyDocumentPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenBrowser.TunnyDocumentPage();
+            //OpenBrowser.TunnyDocumentPage();
         }
 
         private void OptunaSamplerPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenBrowser.OptunaSamplerPage();
+            //OpenBrowser.OptunaSamplerPage();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)

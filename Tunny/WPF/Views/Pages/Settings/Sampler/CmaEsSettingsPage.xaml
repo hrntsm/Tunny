@@ -22,7 +22,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -128,7 +127,7 @@
 
             <Button
                 x:Name="CmaEsDefaultButton"
-                Grid.Row="9"
+                Grid.Row="8"
                 Grid.Column="1"
                 Margin="5"
                 Content="Default" />
