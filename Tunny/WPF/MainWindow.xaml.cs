@@ -1,10 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Ribbon;
 
-using CefSharp;
-
 using Tunny.Core.TEnum;
-using Tunny.Core.Util;
+using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 
 namespace Tunny.WPF
@@ -16,34 +14,46 @@ namespace Tunny.WPF
             InitializeComponent();
         }
 
+        private void TunnyAboutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new HelpPage(HelpType.TunnyAbout);
+            MainWindowFrame.Content = page;
+        }
+
         private void TunnyLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.TunnyLicense();
+            var page = new HelpPage(HelpType.TunnyLicense);
+            MainWindowFrame.Content = page;
         }
 
         private void PythonPackagesLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.PythonPackagesLicense();
+            var page = new HelpPage(HelpType.PythonPackagesLicense);
+            MainWindowFrame.Content = page;
         }
 
         private void OtherLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.OtherLicense();
+            var page = new HelpPage(HelpType.OtherLicense);
+            MainWindowFrame.Content = page;
         }
 
         private void TunnyDocumentHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.TunnyDocumentPage();
+            var page = new HelpPage(HelpType.TunnyDocument);
+            MainWindowFrame.Content = page;
         }
 
         private void OptunaSamplerHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.OptunaSamplerPage();
+            var page = new HelpPage(HelpType.OptunaSampler);
+            MainWindowFrame.Content = page;
         }
 
         private void OptunaHubHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenBrowser.OptunaHubPage();
+            var page = new HelpPage(HelpType.OptunaHub);
+            MainWindowFrame.Content = page;
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -96,12 +106,9 @@ namespace Tunny.WPF
             MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce);
         }
 
-        private void RibbonButton_Click(object sender, RoutedEventArgs e)
+        private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-
-            var browser = new CefSharp.Wpf.ChromiumWebBrowser(@"C:\Users\dev\Desktop\my_plot.html");
-            MainWindowFrame.Content = browser;
-            int a = 0;
+            MainWindowFrame.Content = new VisualizePage();
         }
     }
 }

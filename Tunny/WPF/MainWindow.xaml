@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Tunny v1.0 - fish.log"
-    Width="700"
-    Height="500"
+    Width="1000"
+    Height="750"
     Background="#FF93C6F8"
     Icon="Assets/Icon/Tunny.png"
     ResizeMode="CanMinimize"
@@ -84,7 +84,10 @@
                     <RibbonButton Label="TT Design Explorer" LargeImageSource="Assets/Icon/DesignExplorer.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Visualization">
-                    <RibbonButton Label="Pareto Front" LargeImageSource="Assets/Icon/Tunny.png" Click="RibbonButton_Click"/>
+                    <RibbonButton
+                        Click="VisualizeParetoFrontRibbonButton_Click"
+                        Label="Pareto Front"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton Label="History" LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton Label="Slice" LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton Label="Contour" LargeImageSource="Assets/Icon/Tunny.png" />
@@ -113,7 +116,7 @@
             </RibbonTab>
             <RibbonTab Header="Help">
                 <RibbonGroup>
-                    <RibbonButton Label="About" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton Label="About" LargeImageSource="Assets/Icon/Tunny.png" Click="TunnyAboutButton_Click" />
                 </RibbonGroup>
                 <RibbonGroup Header="Help Pages">
                     <RibbonButton
