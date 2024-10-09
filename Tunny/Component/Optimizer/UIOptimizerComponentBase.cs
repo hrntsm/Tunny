@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 using Grasshopper;
 using Grasshopper.GUI;
@@ -50,8 +52,15 @@ namespace Tunny.Component.Optimizer
             }
             OptimizationWindow.Show(owner);
 
-            MainWindow = new MainWindow();
-            MainWindow.Show();
+            var wpfThread = new Thread(new ThreadStart(() =>
+            {
+                MainWindow = new MainWindow();
+                MainWindow.Show();
+                Dispatcher.Run();
+            }));
+
+            wpfThread.SetApartmentState(ApartmentState.STA);
+            wpfThread.Start();
         }
 
         public override void CreateAttributes()
