@@ -147,8 +147,10 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button
+                    x:Name="OptimizeRunButton"
                     Grid.Column="0"
                     Margin="5"
+                    Click="Button_Click"
                     Content="RunOptimize" />
                 <Button
                     Grid.Column="1"
@@ -158,6 +160,7 @@
         </StackPanel>
 
         <ProgressBar
+            x:Name="OptimizeProgressBar"
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="2"

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 using Tunny.Core.TEnum;
@@ -9,16 +11,22 @@ namespace Tunny.WPF.Views.Pages
 {
     public partial class OptimizePage : Page
     {
+        private readonly LongRunningProcess _process;
+        private readonly ProgressBar _progressBar;
+
         public OptimizePage()
         {
             InitializeComponent();
             ChangeFrameContent(SamplerType.TPE);
+            _process = new LongRunningProcess();
         }
 
-        public OptimizePage(SamplerType samplerType)
+        public OptimizePage(SamplerType samplerType, ProgressBar progressBar)
         {
             InitializeComponent();
             ChangeFrameContent(samplerType);
+            _process = new LongRunningProcess();
+            _progressBar = progressBar;
         }
 
         private void ChangeFrameContent(SamplerType samplerType)
@@ -79,6 +87,38 @@ namespace Tunny.WPF.Views.Pages
             OptimizeTrialNumberParam2Label.Content = param.Param2Label;
             OptimizeTrialNumberParam2Label.Visibility = param.Param2Visibility;
             OptimizeTrialNumberParam2TextBox.Visibility = param.Param2Visibility;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OptimizeRunButton.IsEnabled = false;
+            _progressBar.Value = 0;
+
+            var progress = new Progress<int>(value =>
+            {
+                _progressBar.Value = value;
+            });
+
+            try
+            {
+                await _process.RunAsync(progress);
+            }
+            finally
+            {
+                OptimizeRunButton.IsEnabled = true;
+            }
+        }
+    }
+
+    public class LongRunningProcess
+    {
+        public async Task RunAsync(IProgress<int> progress)
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                await Task.Delay(100); // Simulate work
+                progress.Report(i);
+            }
         }
     }
 }

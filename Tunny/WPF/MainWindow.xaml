@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="AUTO" />
         </Grid.RowDefinitions>
 
         <Ribbon x:Name="Ribbon" Grid.Row="0">
@@ -168,5 +169,41 @@
             Background="AliceBlue"
             NavigationUIVisibility="Hidden"
             Source="pack://application:,,,/Tunny;component/WPF/Views/Pages/OptimizePage.xaml" />
+        <StatusBar Grid.Row="2" Background="#FF93C6F8">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="300" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Text="Ready" />
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <TextBlock Text="Trial: #" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3">
+                <TextBlock Text="ETA: #" />
+            </StatusBarItem>
+            <Separator Grid.Column="4" />
+            <StatusBarItem Grid.Column="5">
+                <ProgressBar
+                    x:Name="StatusBarProgressBar"
+                    Width="300"
+                    Height="15"
+                    Maximum="100"
+                    Minimum="0"
+                    Value="0" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </RibbonWindow>
