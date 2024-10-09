@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Tunny v1.0 - fish.log"
+    Title="Tunny v1.0"
     Width="1000"
     Height="850"
     Background="#FF93C6F8"
@@ -19,13 +19,22 @@
 
         <Ribbon x:Name="Ribbon" Grid.Row="0">
             <Ribbon.HelpPaneContent>
-                <RibbonButton Click="TunnyDocumentHelpButton_Click" SmallImageSource="Assets/Icon/HelpBox.png" />
+                <RibbonButton
+                    Click="TunnyDocumentHelpButton_Click"
+                    SmallImageSource="Assets/Icon/HelpBox.png"
+                    ToolTip="Context Help" />
             </Ribbon.HelpPaneContent>
 
             <Ribbon.QuickAccessToolBar>
                 <RibbonQuickAccessToolBar>
-                    <RibbonButton SmallImageSource="Assets/Icon/FolderOpenOutline.png" />
-                    <RibbonButton SmallImageSource="Assets/Icon/ContentSave.png" />
+                    <RibbonButton
+                        Click="QuickAccessFileOpenRibbonButton_Click"
+                        SmallImageSource="Assets/Icon/FolderOpenOutline.png"
+                        ToolTip="Open Optimization Result File" />
+                    <RibbonButton
+                        Click="QuickAccessFileSaveRibbonButton_Click"
+                        SmallImageSource="Assets/Icon/ContentSave.png"
+                        ToolTip="Override Save Settings" />
                 </RibbonQuickAccessToolBar>
             </Ribbon.QuickAccessToolBar>
 

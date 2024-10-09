@@ -2,6 +2,7 @@
 using System.Windows.Controls.Ribbon;
 
 using Tunny.Core.TEnum;
+using Tunny.Type;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 
@@ -109,6 +110,28 @@ namespace Tunny.WPF
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
         {
             MainWindowFrame.Content = new VisualizePage();
+        }
+
+        private void QuickAccessFileOpenRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "fish.log",
+                DefaultExt = "log",
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Title = @"Set Tunny Result File Path",
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                Title = "Tunny v1.0 - " + dialog.FileName;
+            }
+        }
+
+        private void QuickAccessFileSaveRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

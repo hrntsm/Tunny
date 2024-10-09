@@ -18,9 +18,11 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="5*" />
+            <RowDefinition Height="4*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="5*" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -92,14 +94,25 @@
             </ListView.View>
         </ListView>
         <Button
-            Grid.Row="10"
+            Grid.Row="9"
             Margin="5"
             Content="Plot" />
+
+        <Label
+            Grid.Row="10"
+            Margin="5"
+            FontSize="10"
+            Content="Trial Number to Add Export List" />
+        <TextBox Grid.Row="11" Margin="5" />
+        <Button
+            Grid.Row="12"
+            Margin="5"
+            Content="Add Export" />
 
         <Frame
             x:Name="VisualizePlotFrame"
             Grid.Row="0"
-            Grid.RowSpan="11"
+            Grid.RowSpan="13"
             Grid.Column="1" />
 
     </Grid>
