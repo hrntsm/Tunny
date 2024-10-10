@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+using Optuna.Dashboard.HumanInTheLoop;
 using Optuna.Study;
 
 using Python.Runtime;
@@ -103,7 +104,7 @@ namespace Tunny.Solver
         private void PreferentialOptimization(int nBatch, dynamic storage, dynamic artifactBackend, out Parameter[] parameter, out TrialGrasshopperItems result, out dynamic study)
         {
             TLog.MethodStart();
-            var preferentialOpt = new HumanInTheLoop.Preferential(TEnvVariables.TmpDirPath, Settings.Storage.Path);
+            var preferentialOpt = new Preferential(TEnvVariables.TmpDirPath, Settings.Storage.Path);
             if (Objective.Length > 1)
             {
                 TunnyMessageBox.Show("Human-in-the-Loop(Preferential GP optimization) only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
@@ -112,7 +113,7 @@ namespace Tunny.Solver
             study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)), false);
-            HumanInTheLoop.HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage);
+            HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage.Path, TEnvVariables.PythonPath);
             optInfo.Preferential = preferentialOpt;
             RunPreferentialOptimize(optInfo, nBatch, out parameter, out result);
         }
@@ -136,8 +137,8 @@ namespace Tunny.Solver
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
-            var humanSliderInput = new HumanInTheLoop.HumanSliderInput(TEnvVariables.TmpDirPath, Settings.Storage.Path);
-            HumanInTheLoop.HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage);
+            var humanSliderInput = new HumanSliderInput(TEnvVariables.TmpDirPath, Settings.Storage.Path);
+            HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage.Path, TEnvVariables.PythonPath);
             humanSliderInput.SetObjective(study, objNickName);
             humanSliderInput.SetWidgets(study, objNickName);
             optInfo.HumanSliderInput = humanSliderInput;
@@ -253,7 +254,7 @@ namespace Tunny.Solver
                 {
                     break;
                 }
-                if (HumanInTheLoop.Preferential.GetRunningTrialNumber(optInfo.Study) >= nBatch)
+                if (Preferential.GetRunningTrialNumber(optInfo.Study) >= nBatch)
                 {
                     continue;
                 }
@@ -279,7 +280,7 @@ namespace Tunny.Solver
                 {
                     break;
                 }
-                if (HumanInTheLoop.HumanSliderInput.GetRunningTrialNumber(optInfo.Study) >= nBatch)
+                if (HumanSliderInput.GetRunningTrialNumber(optInfo.Study) >= nBatch)
                 {
                     continue;
                 }
