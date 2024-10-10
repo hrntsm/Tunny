@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using Optuna.Dashboard.HumanInTheLoop;
+
 using Tunny.Core.Util;
 using Tunny.Type;
 
@@ -14,8 +16,8 @@ namespace Tunny.Solver
         public dynamic ArtifactBackend { get; set; }
         public Dictionary<string, FishEgg> EnqueueItems { get; set; }
         public string[] ObjectiveNames { get; set; }
-        public HumanInTheLoop.HumanSliderInput HumanSliderInput { get; set; }
-        public HumanInTheLoop.Preferential Preferential { get; set; }
+        public HumanSliderInput HumanSliderInput { get; set; }
+        public Preferential Preferential { get; set; }
 
         public OptimizationHandlingInfo(int nTrials, double timeout, dynamic study, dynamic storage,
                                         dynamic artifactBackend, Dictionary<string, FishEgg> enqueueItems,
