@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 using Optuna.Dashboard.HumanInTheLoop;
 using Optuna.Study;
+using Optuna.Util;
 
 using Python.Runtime;
 
@@ -383,20 +385,8 @@ namespace Tunny.Solver
         {
             double[] values;
             PyModule ps = Py.CreateScope();
-            ps.Exec(
-                "def check_duplicate(trial):\n" +
-                "    import optuna\n" +
-                "    from optuna.trial import TrialState\n" +
-                "    states_to_consider = (TrialState.COMPLETE,)\n" +
-                "    trials_to_consider = trial.study.get_trials(deepcopy=False, states=states_to_consider)\n" +
-                "    for t in reversed(trials_to_consider):\n" +
-                "        if trial.params == t.params:\n" +
-                "            trial.set_user_attr('NOTE', f'trial {t.number} and trial {trial.number} were duplicate parameters.')\n" +
-                "            if 'Constraint' in t.user_attrs:\n" +
-                "               trial.set_user_attr('Constraint', t.user_attrs['Constraint'])\n" +
-                "            return t.values\n" +
-                "    return None\n"
-            );
+            var assembly = Assembly.GetExecutingAssembly();
+            ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Solver.Python.check_duplication.py"));
             dynamic checkDuplicate = ps.Get("check_duplicate");
             values = checkDuplicate(trial);
             result = new TrialGrasshopperItems(values);
