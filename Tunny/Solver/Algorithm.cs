@@ -465,7 +465,12 @@ namespace Tunny.Solver
             int nTrials = optInfo.NTrials;
             double timeout = optInfo.Timeout;
             dynamic study = optInfo.Study;
-            bool studyStopFlag = study._stop_flag;
+            bool studyStopFlag = false;
+            if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
+            {
+                studyStopFlag = study._stop_flag;
+            }
+
 
             bool isOptimizeCompleted = false;
             if (trialNum >= nTrials)
