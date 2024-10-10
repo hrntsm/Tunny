@@ -97,17 +97,6 @@ namespace Tunny.UI
             outputResultBackgroundWorker.Dispose();
         }
 
-        private void UpdateGrasshopper(IList<Parameter> parameters)
-        {
-            TLog.MethodStart();
-            GrasshopperStatus = GrasshopperStates.RequestProcessing;
-
-            //Calculate Grasshopper
-            _component.GhInOut.NewSolution(parameters);
-
-            GrasshopperStatus = GrasshopperStates.RequestProcessed;
-        }
-
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
             TLog.MethodStart();
@@ -159,7 +148,10 @@ namespace Tunny.UI
             {
                 TLog.Info("Set Tunny Human-in-the-loop mode");
                 Text = "Tunny (Human in the Loop mode)";
-                samplerComboBox.SelectedIndex = (int)SamplerType.GP; // GP
+                samplerComboBox.SelectedIndex = _component.GhInOut.Objectives.Length == 1
+                    ? (int)SamplerType.GP
+                    : (int)SamplerType.TPE;
+                tpeConstantLiarCheckBox.Checked = _component.GhInOut.Objectives.Length > 1;
                 samplerComboBox.Enabled = false;
                 inMemoryCheckBox.Checked = false;
                 inMemoryCheckBox.Enabled = false;
