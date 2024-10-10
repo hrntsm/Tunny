@@ -19,6 +19,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Stop log output to console.
 - Disable window minimize button.
 - No log output to the Rhino console.
+- Human in the loop code was moved to the Optuna project to improve maintainability.
 
 ### Deprecated
 
