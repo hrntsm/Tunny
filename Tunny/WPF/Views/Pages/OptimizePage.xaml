@@ -159,27 +159,6 @@
             </Grid>
         </StackPanel>
 
-        <ProgressBar
-            x:Name="OptimizeProgressBar"
-            Grid.Row="5"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Height="20"
-            Margin="5"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
-
-        <Label
-            Grid.Row="6"
-            Grid.Column="0"
-            Margin="5"
-            Content="Trial: #" />
-        <Label
-            Grid.Row="6"
-            Grid.Column="1"
-            Margin="5"
-            Content="ETA: #" />
-
         <Frame
             x:Name="OptimizeDynamicFrame"
             Grid.Row="7"
@@ -191,6 +170,7 @@
             HorizontalAlignment="Center"
             Content="Live Optimization History" />
         <lvc:CartesianChart
+            x:Name="OptimizaLiveChart"
             Grid.Row="1"
             Grid.RowSpan="6"
             Grid.Column="2"

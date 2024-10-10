@@ -19,6 +19,7 @@ namespace Tunny.WPF.Views.Pages
             InitializeComponent();
             ChangeFrameContent(SamplerType.TPE);
             _process = new LongRunningProcess();
+            _progressBar = new ProgressBar();
         }
 
         public OptimizePage(SamplerType samplerType, ProgressBar progressBar)
