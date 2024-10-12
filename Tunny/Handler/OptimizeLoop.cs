@@ -100,6 +100,10 @@ namespace Tunny.Handler
         {
             PrunerReport report = pruner.Evaluate();
             optunaTrial.report(report.Value, step);
+            if (string.IsNullOrEmpty(report.Attribute))
+            {
+                optunaTrial.set_user_attr("intermediate_value_step" + step, report.Attribute);
+            }
 
             if (optunaTrial.should_prune())
             {
