@@ -28,36 +28,25 @@ namespace Tunny.Core.Settings
         public ThresholdPruner Threshold { get; set; } = new ThresholdPruner();
         public WilcoxonPruner Wilcoxon { get; set; } = new WilcoxonPruner();
 
-        public double Evaluate()
+        public PrunerReport Evaluate()
         {
             var reporter = new Process();
+            var report = new PrunerReport();
             reporter.StartInfo.FileName = ReporterPath;
             reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
             reporter.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             reporter.Start();
             reporter.WaitForExit();
 
-            double value = double.NaN;
             try
             {
-                using (var reader = new StreamReader(ReportFilePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
-                    }
-                }
-                if (double.IsNaN(value))
-                {
-                    throw new FileLoadException("Failed to load the report file.");
-                }
+                report = PrunerReport.Deserialize(ReportFilePath);
             }
             catch (Exception e)
             {
                 TLog.Error(e.Message);
             }
-            return value;
+            return report;
         }
 
         public void Stop()

@@ -98,8 +98,8 @@ namespace Tunny.Handler
 
         private static void ReportPruner(dynamic optunaTrial, int step, Pruner pruner)
         {
-            double value = pruner.Evaluate();
-            optunaTrial.report(value, step);
+            PrunerReport report = pruner.Evaluate();
+            optunaTrial.report(report.Value, step);
 
             if (optunaTrial.should_prune())
             {
