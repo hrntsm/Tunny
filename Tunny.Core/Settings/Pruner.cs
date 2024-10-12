@@ -10,9 +10,11 @@ using Tunny.Core.Util;
 
 namespace Tunny.Core.Settings
 {
-    public class Pruner
+    public class Pruner : IDisposable
     {
         public PrunerType Type { get; set; } = PrunerType.None;
+        public int EvaluateIntervalSeconds { get; set; }
+        public bool IsWatcher { get; set; }
         public string ReporterPath { get; set; } = string.Empty;
         public string ReportFilePath { get; set; } = string.Empty;
         public string StopperPath { get; set; } = string.Empty;
@@ -27,25 +29,81 @@ namespace Tunny.Core.Settings
         public ThresholdPruner Threshold { get; set; } = new ThresholdPruner();
         public WilcoxonPruner Wilcoxon { get; set; } = new WilcoxonPruner();
 
+        private Process _reporter;
+        private PrunerStatus _status = PrunerStatus.None;
+
+        public PrunerStatus GetPrunerStatus()
+        {
+            return _status;
+        }
+
+        public PrunerStatus CheckStatus()
+        {
+            if (ReporterPath == string.Empty || ReportFilePath == string.Empty || StopperPath == string.Empty)
+            {
+                _status = PrunerStatus.None;
+            }
+            else if (!File.Exists(ReporterPath) && !File.Exists(StopperPath))
+            {
+                _status = PrunerStatus.PathError;
+            }
+            else
+            {
+                _status = PrunerStatus.Runnable;
+            }
+            return _status;
+        }
+
+        public void ClearReporter()
+        {
+            if (_reporter != null)
+            {
+                _reporter.Kill();
+                _reporter.Dispose();
+                _reporter = null;
+            }
+        }
+
         public PrunerReport Evaluate()
         {
-            var reporter = new Process();
-            var report = new PrunerReport();
-            reporter.StartInfo.FileName = ReporterPath;
-            reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
-            reporter.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            reporter.Start();
-            reporter.WaitForExit();
+            PrunerReport report = null;
+            if (_status != PrunerStatus.Runnable)
+            {
+                return report;
+            }
+
+            if (_reporter == null)
+            {
+                _reporter = new Process();
+                _reporter.StartInfo.FileName = ReporterPath;
+                _reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
+                _reporter.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                _reporter.Start();
+            }
+
+            if (!IsWatcher)
+            {
+                _reporter.WaitForExit();
+            }
 
             try
             {
-                report = PrunerReport.Deserialize(ReportFilePath);
-                File.Delete(ReportFilePath);
+                if (File.Exists(ReportFilePath))
+                {
+                    report = PrunerReport.Deserialize(ReportFilePath);
+                    File.Delete(ReportFilePath);
+                }
             }
             catch (Exception e)
             {
                 TLog.Error(e.Message);
             }
+
+            if (!IsWatcher)
+            {
+                _reporter = null;
+            }
+
             return report;
         }
 
@@ -99,6 +157,23 @@ namespace Tunny.Core.Settings
 
             return optunaPruner;
         }
+
+        public void Dispose()
+        {
+            if (_reporter != null)
+            {
+                _reporter.Kill();
+                _reporter.Dispose();
+            }
+            GC.SuppressFinalize(this);
+        }
+    }
+
+    public enum PrunerStatus
+    {
+        Runnable,
+        PathError,
+        None
     }
 
     public enum PrunerType
