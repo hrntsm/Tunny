@@ -151,6 +151,7 @@ namespace Tunny.Component.Optimizer
                 switch (docObject)
                 {
                     case Param_Geometry geometry:
+                    case Param_Mesh mesh:
                     case Param_FishPrint fPrint:
                     case Param_String text:
                     case Param_FilePath filePath:

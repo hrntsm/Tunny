@@ -30,11 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Solver\check_duplicate.py" />
+    <None Remove="Solver\Python\check_duplication.py" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Solver\check_duplicate.py" />
+    <EmbeddedResource Include="Solver\Python\check_duplication.py" />
   </ItemGroup>
 
   <ItemGroup>

@@ -219,7 +219,7 @@ namespace Tunny.UI
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
-                var settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                var settings = TSettings.Deserialize(settingsPath);
                 storagePath = settings.Storage.Path;
             }
             var ofd = new OpenFileDialog
@@ -243,7 +243,7 @@ namespace Tunny.UI
             TSettings settings;
             if (File.Exists(settingsPath))
             {
-                settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                settings = TSettings.Deserialize(settingsPath);
                 storagePath = settings.Storage.Path;
             }
             else
