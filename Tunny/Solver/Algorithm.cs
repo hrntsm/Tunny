@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -462,6 +463,12 @@ namespace Tunny.Solver
             double timeout = optInfo.Timeout;
             dynamic study = optInfo.Study;
             bool studyStopFlag = study._stop_flag;
+
+            if (File.Exists(TEnvVariables.QuitFishingPath))
+            {
+                OptimizeLoop.IsForcedStopOptimize = true;
+                File.Delete(TEnvVariables.QuitFishingPath);
+            }
 
             bool isOptimizeCompleted = false;
             if (trialNum >= nTrials)
