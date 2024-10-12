@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 
 using Optuna.Pruner;
@@ -41,6 +40,7 @@ namespace Tunny.Core.Settings
             try
             {
                 report = PrunerReport.Deserialize(ReportFilePath);
+                File.Delete(ReportFilePath);
             }
             catch (Exception e)
             {
