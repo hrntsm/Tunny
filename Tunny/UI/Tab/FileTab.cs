@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 
 using Tunny.Core.Storage;
@@ -13,7 +12,7 @@ namespace Tunny.UI
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
+            System.Diagnostics.Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
@@ -65,7 +64,7 @@ namespace Tunny.UI
             {
                 File.Delete(path);
             }
-            using (var process = new Process())
+            using (var process = new System.Diagnostics.Process())
             {
                 process.StartInfo.FileName = "PowerShell.exe";
                 process.StartInfo.Arguments = $"tree {TEnvVariables.TunnyEnvPath} > {path}";

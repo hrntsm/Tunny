@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -8,7 +8,6 @@ using Serilog.Events;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
-using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -48,7 +47,7 @@ namespace Tunny.UI
             _settings.Pruner.CheckStatus();
             if (_settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
             {
-                TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

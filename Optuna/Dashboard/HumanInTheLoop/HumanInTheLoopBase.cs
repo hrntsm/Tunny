@@ -53,17 +53,6 @@ namespace Optuna.Dashboard.HumanInTheLoop
             dashboard.Run(true);
         }
 
-        public static void ResultFileNotExistErrorMessage()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "Please set exist result file path.",
-                "Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
-        }
-
         public static int GetRunningTrialNumber(dynamic study)
         {
             PyModule lenModule = Py.CreateScope();
