@@ -9,10 +9,6 @@ namespace Tunny.Core.Util
         public double Value { get; set; }
         public string Attribute { get; set; }
 
-        public PrunerReport()
-        {
-        }
-
         public static PrunerReport Deserialize(string path)
         {
             string value = File.ReadAllText(path);

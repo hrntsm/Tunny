@@ -5,10 +5,6 @@ namespace Optuna.Pruner
     /// </summary>
     public class NopPruner : IPruner
     {
-        public NopPruner()
-        {
-        }
-
         public dynamic ToPython(dynamic optuna)
         {
             return optuna.pruners.NopPruner();
