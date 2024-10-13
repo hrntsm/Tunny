@@ -20,7 +20,6 @@ namespace Tunny.UI
     {
         private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
-        internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(OptimizeComponentBase component)
         {
@@ -40,6 +39,17 @@ namespace Tunny.UI
             SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
+            CheckPruner();
+        }
+
+        private void CheckPruner()
+        {
+            TLog.MethodStart();
+            _settings.Pruner.CheckStatus();
+            if (_settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
+            {
+                TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private static void SetupTTDesignExplorer()
@@ -171,7 +181,6 @@ namespace Tunny.UI
                 timeoutNumUpDown.Enabled = true;
                 timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
             }
-
         }
 
         private void GetUIValues()

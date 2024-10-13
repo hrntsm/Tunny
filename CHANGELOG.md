@@ -12,6 +12,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Disable Rhino viewport updates during optimization checkbox in Settings/Misc tab.
   - The drawing to viewport stops, allowing faster optimization to be performed.
+- Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
+- Optuna pruner support.
 
 ### Changed
 

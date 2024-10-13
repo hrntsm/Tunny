@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -124,7 +125,8 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
+            dynamic pruner = Settings.Pruner.ToPython();
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, pruner, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -135,7 +137,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, Settings.Optimize.ContinueStudy);
+            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, null, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -296,6 +298,7 @@ namespace Tunny.Solver
         private TrialGrasshopperItems RunSingleOptimizeStep(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, DateTime startTime)
         {
             TLog.MethodStart();
+            dynamic optuna = Py.Import("optuna");
             dynamic trial;
             int progress = trialNum * 100 / optInfo.NTrials;
             var result = new TrialGrasshopperItems();
@@ -312,7 +315,7 @@ namespace Tunny.Solver
 
                 trial = optInfo.Study.ask();
                 SetOptimizationParameter(parameter, trial);
-                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime);
+                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial, Settings.Pruner);
                 if (Settings.Optimize.IgnoreDuplicateSampling && IsSampleDuplicate(trial, out result))
                 {
                     TLog.Info($"Trial {trialNum} is duplicate sample.");
@@ -356,9 +359,13 @@ namespace Tunny.Solver
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
 
-                if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
+                if (!(bool)optInfo.Study._is_multi_objective() && (bool)trial.should_prune())
                 {
-                    dynamic optuna = Py.Import("optuna");
+                    optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
+                    TLog.Warning($"Trial {trialNum} pruned.");
+                }
+                else if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
+                {
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
                     TLog.Warning($"Trial {trialNum} failed.");
                 }
@@ -463,6 +470,12 @@ namespace Tunny.Solver
             }
 
 
+            if (File.Exists(TEnvVariables.QuitFishingPath))
+            {
+                OptimizeLoop.IsForcedStopOptimize = true;
+                File.Delete(TEnvVariables.QuitFishingPath);
+            }
+
             bool isOptimizeCompleted = false;
             if (trialNum >= nTrials)
             {
@@ -489,7 +502,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial, Pruner pruner)
         {
             TLog.MethodStart();
             double[][] bestValues = ComputeBestValues(optSet.Study);
@@ -500,6 +513,8 @@ namespace Tunny.Solver
                 BestValues = bestValues,
                 Parameter = parameter,
                 HypervolumeRatio = 0,
+                OptunaTrial = trial,
+                Pruner = pruner,
                 EstimatedTimeRemaining = optSet.Timeout <= 0
                     ? TimeSpan.FromSeconds((DateTime.Now - startTime).TotalSeconds * (optSet.NTrials - trialNum) / (trialNum + 1))
                     : TimeSpan.FromSeconds(optSet.Timeout - (DateTime.Now - startTime).TotalSeconds)
