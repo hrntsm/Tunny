@@ -6,6 +6,7 @@ using Grasshopper.GUI;
 using Tunny.Component.Optimizer;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 
@@ -17,9 +18,20 @@ namespace Tunny.WPF
         internal readonly OptimizeComponentBase Component;
         internal readonly TSettings Settings;
 
-        public MainWindow()
+        public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
+            TLog.MethodStart();
             InitializeComponent();
+
+            DocumentEditor = documentEditor;
+            Component = component;
+            Component.GhInOutInstantiate();
+            if (!Component.GhInOut.IsLoadCorrectly)
+            {
+                Close();
+            }
+
+            Settings = TSettings.LoadFromJson();
         }
 
         private void TunnyAboutButton_Click(object sender, RoutedEventArgs e)
@@ -143,7 +155,6 @@ namespace Tunny.WPF
 
         private void QuickAccessFileSaveRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }
