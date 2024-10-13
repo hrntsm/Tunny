@@ -53,6 +53,11 @@
                         Click="OptimizeGpBoTorchRibbonButton_Click"
                         Label="GP:BoTorch"
                         LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Click="OptimizeGpPreferentialRibbonButton_Click"
+                        IsEnabled="False"
+                        Label="GP:Preferential"
+                        LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Generic Algorighm">
                     <RibbonButton

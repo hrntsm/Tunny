@@ -90,7 +90,7 @@ namespace Tunny.WPF.Views.Pages
             OptimizeTrialNumberParam2TextBox.Visibility = param.Param2Visibility;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void RunOptimizeButton_Click(object sender, RoutedEventArgs e)
         {
             OptimizeRunButton.IsEnabled = false;
             _progressBar.Value = 0;

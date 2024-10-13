@@ -11,5 +11,6 @@ namespace Tunny.Core.TEnum
         QMC = 6,
         Random = 7,
         BruteForce = 8,
+        GpPreferential = 9,
     }
 }

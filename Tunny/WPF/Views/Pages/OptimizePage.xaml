@@ -150,7 +150,7 @@
                     x:Name="OptimizeRunButton"
                     Grid.Column="0"
                     Margin="5"
-                    Click="Button_Click"
+                    Click="RunOptimizeButton_Click"
                     Content="RunOptimize" />
                 <Button
                     Grid.Column="1"

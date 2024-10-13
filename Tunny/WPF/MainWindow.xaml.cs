@@ -76,6 +76,11 @@ namespace Tunny.WPF
         {
             MainWindowFrame.Content = new OptimizePage(SamplerType.BoTorch, StatusBarProgressBar);
         }
+        
+        private void OptimizeGpPreferentialRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowFrame.Content = new OptimizePage(SamplerType.GpPreferential, StatusBarProgressBar);
+        }
 
         private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
