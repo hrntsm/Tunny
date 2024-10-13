@@ -1,8 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Ribbon;
 
+using Grasshopper.GUI;
+
+using Tunny.Component.Optimizer;
+using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
-using Tunny.Type;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 
@@ -10,6 +13,10 @@ namespace Tunny.WPF
 {
     public partial class MainWindow : RibbonWindow
     {
+        internal readonly GH_DocumentEditor DocumentEditor;
+        internal readonly OptimizeComponentBase Component;
+        internal readonly TSettings Settings;
+
         public MainWindow()
         {
             InitializeComponent();

@@ -3,7 +3,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
+using Grasshopper.GUI;
+
+using Rhino.Display;
+
+using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
+using Tunny.Core.Util;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages.Settings.Sampler;
 
@@ -92,7 +99,15 @@ namespace Tunny.WPF.Views.Pages
 
         private async void RunOptimizeButton_Click(object sender, RoutedEventArgs e)
         {
+            TLog.MethodStart();
+            var parentWindow = Window.GetWindow(this) as MainWindow;
+            GH_DocumentEditor ghCanvas = parentWindow.DocumentEditor;
+            TSettings settings = parentWindow.Settings;
+            ghCanvas?.DisableUI();
+
             OptimizeRunButton.IsEnabled = false;
+            RhinoView.EnableDrawing = !settings.Optimize.DisableViewportDrawing;
+            OptimizeProcess.Settings = settings;
             _progressBar.Value = 0;
 
             var progress = new Progress<int>(value =>
