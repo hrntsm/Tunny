@@ -20,7 +20,6 @@ namespace Tunny.UI
     {
         private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
-        internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(OptimizeComponentBase component)
         {
@@ -40,6 +39,17 @@ namespace Tunny.UI
             SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
+            CheckPruner();
+        }
+
+        private void CheckPruner()
+        {
+            TLog.MethodStart();
+            _settings.Pruner.CheckStatus();
+            if (_settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
+            {
+                TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private static void SetupTTDesignExplorer()
@@ -97,17 +107,6 @@ namespace Tunny.UI
             outputResultBackgroundWorker.Dispose();
         }
 
-        private void UpdateGrasshopper(IList<Parameter> parameters)
-        {
-            TLog.MethodStart();
-            GrasshopperStatus = GrasshopperStates.RequestProcessing;
-
-            //Calculate Grasshopper
-            _component.GhInOut.NewSolution(parameters);
-
-            GrasshopperStatus = GrasshopperStates.RequestProcessed;
-        }
-
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
             TLog.MethodStart();
@@ -133,13 +132,39 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             TLog.Info("Set UI values");
+
+            // Study Name GroupBox
+            studyNameTextBox.Text = _settings.StudyName;
+            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
+            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
+            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
+            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
+            inMemoryCheckBox.Checked = _settings.Storage.Type == StorageType.InMemory;
+            UpdateStudyComboBox();
+            ShowRealtimeResultCheckBox.Checked = _settings.Optimize.ShowRealtimeResult;
+
+            outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
+            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
+            visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
+            InitializeSamplerSettings();
+
+            runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
+            miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
+            ignoreDuplicateSamplingCheckBox.Checked = _settings.Optimize.IgnoreDuplicateSampling;
+            disableRhinoViewportCheckBox.Checked = _settings.Optimize.DisableViewportDrawing;
+
             HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
             if (type != HumanInTheLoopType.None)
             {
                 TLog.Info("Set Tunny Human-in-the-loop mode");
                 Text = "Tunny (Human in the Loop mode)";
-                samplerComboBox.SelectedIndex = (int)SamplerType.GP; // GP
+                samplerComboBox.SelectedIndex = _component.GhInOut.Objectives.Length == 1
+                    ? (int)SamplerType.GP
+                    : (int)SamplerType.TPE;
+                tpeConstantLiarCheckBox.Checked = _component.GhInOut.Objectives.Length > 1;
                 samplerComboBox.Enabled = false;
+                inMemoryCheckBox.Checked = false;
+                inMemoryCheckBox.Enabled = false;
                 nTrialText.Text = "Number of batches";
                 nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;
                 timeoutNumUpDown.Value = 0;
@@ -156,25 +181,6 @@ namespace Tunny.UI
                 timeoutNumUpDown.Enabled = true;
                 timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
             }
-
-            // Study Name GroupBox
-            studyNameTextBox.Text = _settings.StudyName;
-            continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
-            existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
-            studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
-            copyStudyCheckBox.Enabled = _settings.Optimize.CopyStudy;
-            UpdateStudyComboBox();
-            ShowRealtimeResultCheckBox.Checked = _settings.Optimize.ShowRealtimeResult;
-
-            outputModelNumTextBox.Text = _settings.Result.OutputNumberString;
-            visualizeTypeComboBox.SelectedIndex = _settings.Result.SelectVisualizeType;
-            visualizeClusterNumUpDown.Value = _settings.Result.NumberOfClusters;
-            InitializeSamplerSettings();
-
-            runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
-            miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
-            ignoreDuplicateSamplingCheckBox.Checked = _settings.Optimize.IgnoreDuplicateSampling;
-            disableRhinoViewportCheckBox.Checked = _settings.Optimize.DisableViewportDrawing;
         }
 
         private void GetUIValues()

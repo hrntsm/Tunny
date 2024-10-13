@@ -1,12 +1,11 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
 using Python.Runtime;
 
-using Tunny.Core.Util;
-
-namespace Tunny.Solver.HumanInTheLoop
+namespace Optuna.Dashboard.HumanInTheLoop
 {
     public class HumanSliderInput : HumanInTheLoopBase
     {
@@ -15,7 +14,6 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public HumanSliderInput(string tmpPath, string storagePath) : base(tmpPath, storagePath)
         {
-            TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
             importedLibrary.Exec("from optuna_dashboard import save_note");
             importedLibrary.Exec("from optuna_dashboard import SliderWidget");
@@ -32,15 +30,13 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SetObjective(dynamic study, string[] objectiveNames)
         {
-            TLog.MethodStart();
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
-            PyList pyNameList = PyConverter.EnumeratorToPyList(objectiveNames.Select(s => s.Replace("Human-in-the-Loop", "HITL")));
+            PyList pyNameList = EnumeratorToPyList(objectiveNames.Select(s => s.Replace("Human-in-the-Loop", "HITL")));
             setObjectiveNames(study, pyNameList);
         }
 
         public void SetWidgets(dynamic study, string[] objectiveNames)
         {
-            TLog.MethodStart();
             dynamic registerObjectiveFromWidgets = _importedLibrary.Get("register_objective_form_widgets");
             dynamic sliderWidget = _importedLibrary.Get("SliderWidget");
             dynamic objectiveUserAttrRef = _importedLibrary.Get("ObjectiveUserAttrRef");
@@ -64,7 +60,6 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SaveNote(dynamic study, dynamic trial, Bitmap[] bitmaps)
         {
-            TLog.MethodStart();
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             var noteText = new StringBuilder();
             noteText.AppendLine("# Image");
@@ -84,6 +79,16 @@ namespace Tunny.Solver.HumanInTheLoop
             dynamic note = textWrap.dedent(noteText.ToString());
             dynamic saveNote = _importedLibrary.Get("save_note");
             saveNote(trial, note);
+        }
+
+        public static PyList EnumeratorToPyList(IEnumerable<string> enumerator)
+        {
+            var pyList = new PyList();
+            foreach (string item in enumerator)
+            {
+                pyList.Append(new PyString(item));
+            }
+            return pyList;
         }
     }
 }

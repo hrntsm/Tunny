@@ -4,11 +4,7 @@ using System.Windows;
 
 using Python.Runtime;
 
-using Tunny.Core.Settings;
-using Tunny.Core.Util;
-using Tunny.UI;
-
-namespace Tunny.Solver.HumanInTheLoop
+namespace Optuna.Dashboard.HumanInTheLoop
 {
     public class HumanInTheLoopBase
     {
@@ -17,14 +13,12 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public HumanInTheLoopBase(string tmpPath, string storagePath)
         {
-            TLog.MethodStart();
             _tmpPath = tmpPath;
             _artifactPath = Path.Combine(Path.GetDirectoryName(storagePath), "artifacts");
         }
 
         public PyModule ImportBaseLibrary()
         {
-            TLog.MethodStart();
             PyModule library = Py.CreateScope();
             SetStdOutErrDirection(library);
             library.Import("os");
@@ -38,7 +32,6 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SetStdOutErrDirection(PyModule importedLibrary)
         {
-            TLog.MethodStart();
             string ioPath = Path.Combine(_tmpPath, "hitl.tmp");
             importedLibrary.Import("sys");
             importedLibrary.Exec("path = r'" + ioPath + "'");
@@ -46,18 +39,16 @@ namespace Tunny.Solver.HumanInTheLoop
             importedLibrary.Exec("sys.stderr = open(path, 'w', encoding='utf-8')");
         }
 
-        public static void WakeOptunaDashboard(Storage storage)
+        public static void WakeOptunaDashboard(string storagePath, string pythonPath)
         {
-            TLog.MethodStart();
-            if (File.Exists(storage.Path) == false)
+            if (File.Exists(storagePath) == false)
             {
-                ResultFileNotExistErrorMessage();
-                return;
+                throw new FileNotFoundException("Storage file not found.", storagePath);
             }
 
-            var dashboard = new Optuna.Dashboard.Handler(
-                Path.Combine(TEnvVariables.PythonPath, "Scripts", "optuna-dashboard.exe"),
-                storage.Path
+            var dashboard = new Handler(
+                Path.Combine(pythonPath, "Scripts", "optuna-dashboard.exe"),
+                storagePath
             );
             dashboard.Run(true);
         }
@@ -75,7 +66,6 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public static int GetRunningTrialNumber(dynamic study)
         {
-            TLog.MethodStart();
             PyModule lenModule = Py.CreateScope();
             var pyCode = new StringBuilder();
             pyCode.AppendLine("import optuna");
@@ -93,7 +83,6 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void CheckDirectoryIsExist()
         {
-            TLog.MethodStart();
             if (!Directory.Exists(_artifactPath))
             {
                 Directory.CreateDirectory(_artifactPath);

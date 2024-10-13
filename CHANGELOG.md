@@ -12,12 +12,16 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 
 - Disable Rhino viewport updates during optimization checkbox in Settings/Misc tab.
   - The drawing to viewport stops, allowing faster optimization to be performed.
+- Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
+- Optuna pruner support.
 
 ### Changed
 
 - Default log file is set to "Verbose" with a retention period of 1 day.
 - Stop log output to console.
 - Disable window minimize button.
+- No log output to the Rhino console.
+- Human in the loop code was moved to the Optuna project to improve maintainability.
 
 ### Deprecated
 
@@ -32,6 +36,8 @@ for now removed features.
 - Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize.
 - FishPrintByPath locks the image.
 - Mesh could not be put directly into Artifact.
+- Human in the loop exception with _stop_flag.
+- Even the multi-purpose Human in the loop specifies GP and the optimization does not flow, so TPE is chosen.
 
 ### Security
 

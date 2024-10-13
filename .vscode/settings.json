@@ -4,9 +4,11 @@
         "Botorch",
         "HITL",
         "hovertemplate",
+        "Hyperband",
         "showlegend",
         "Skia",
         "Subseparators",
+        "Wilcoxon",
         "yaxis",
         "zaxis"
     ],

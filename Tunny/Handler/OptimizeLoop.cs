@@ -77,8 +77,14 @@ namespace Tunny.Handler
             }
 
             Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+
+            int step = 0;
+            DateTime timer = DateTime.Now;
             while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
-            { /*just wait*/ }
+            {
+                PrunerProgress(pState, ref step, ref timer);
+            }
+            pState.Pruner.ClearReporter();
 
             return new TrialGrasshopperItems
             {
@@ -87,6 +93,40 @@ namespace Tunny.Handler
                 Attribute = Component.GhInOut.GetAttributes(),
                 Artifacts = Component.GhInOut.Artifacts,
             };
+        }
+
+        private static void PrunerProgress(ProgressState pState, ref int step, ref DateTime timer)
+        {
+            if (pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
+                && DateTime.Now - timer > TimeSpan.FromSeconds(pState.Pruner.EvaluateIntervalSeconds))
+            {
+                step = ReportPruner(pState.OptunaTrial, step, pState.Pruner);
+                timer = DateTime.Now;
+            }
+        }
+
+        private static int ReportPruner(dynamic optunaTrial, int step, Pruner pruner)
+        {
+            PrunerReport report = pruner.Evaluate();
+            if (report == null)
+            {
+                return step;
+            }
+            else
+            {
+                optunaTrial.report(report.Value, step);
+                if (string.IsNullOrEmpty(report.Attribute))
+                {
+                    optunaTrial.set_user_attr("intermediate_value_step" + step, report.Attribute);
+                }
+
+                if (optunaTrial.should_prune())
+                {
+                    pruner.RunStopperProcess();
+                }
+
+                return step + 1;
+            }
         }
     }
 }

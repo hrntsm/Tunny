@@ -41,6 +41,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Solver\Python\check_duplication.py" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Solver\Python\check_duplication.py" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CefSharp.Wpf" Version="129.0.110" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc3.3" />
