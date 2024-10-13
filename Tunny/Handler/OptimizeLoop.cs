@@ -82,12 +82,7 @@ namespace Tunny.Handler
             DateTime timer = DateTime.Now;
             while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             {
-                if (pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
-                    && DateTime.Now - timer > TimeSpan.FromSeconds(pState.Pruner.EvaluateIntervalSeconds))
-                {
-                    step = ReportPruner(pState.OptunaTrial, step, pState.Pruner);
-                    timer = DateTime.Now;
-                }
+                PrunerProgress(pState, ref step, ref timer);
             }
             pState.Pruner.ClearReporter();
 
@@ -98,6 +93,16 @@ namespace Tunny.Handler
                 Attribute = Component.GhInOut.GetAttributes(),
                 Artifacts = Component.GhInOut.Artifacts,
             };
+        }
+
+        private static void PrunerProgress(ProgressState pState, ref int step, ref DateTime timer)
+        {
+            if (pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
+                && DateTime.Now - timer > TimeSpan.FromSeconds(pState.Pruner.EvaluateIntervalSeconds))
+            {
+                step = ReportPruner(pState.OptunaTrial, step, pState.Pruner);
+                timer = DateTime.Now;
+            }
         }
 
         private static int ReportPruner(dynamic optunaTrial, int step, Pruner pruner)
@@ -117,7 +122,7 @@ namespace Tunny.Handler
 
                 if (optunaTrial.should_prune())
                 {
-                    pruner.Stop();
+                    pruner.RunStopperProcess();
                 }
 
                 return step + 1;

@@ -6,6 +6,7 @@ using Optuna.Pruner;
 
 using Python.Runtime;
 
+using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 
 namespace Tunny.Core.Settings
@@ -74,11 +75,7 @@ namespace Tunny.Core.Settings
 
             if (_reporter == null)
             {
-                _reporter = new Process();
-                _reporter.StartInfo.FileName = ReporterPath;
-                _reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
-                _reporter.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                _reporter.Start();
+                RunReporterProcess();
             }
 
             if (!IsWatcher)
@@ -86,17 +83,10 @@ namespace Tunny.Core.Settings
                 _reporter.WaitForExit();
             }
 
-            try
+            if (File.Exists(ReportFilePath))
             {
-                if (File.Exists(ReportFilePath))
-                {
-                    report = PrunerReport.Deserialize(ReportFilePath);
-                    File.Delete(ReportFilePath);
-                }
-            }
-            catch (Exception e)
-            {
-                TLog.Error(e.Message);
+                report = PrunerReport.Deserialize(ReportFilePath);
+                File.Delete(ReportFilePath);
             }
 
             if (!IsWatcher)
@@ -107,7 +97,16 @@ namespace Tunny.Core.Settings
             return report;
         }
 
-        public void Stop()
+        private void RunReporterProcess()
+        {
+            _reporter = new Process();
+            _reporter.StartInfo.FileName = ReporterPath;
+            _reporter.StartInfo.Arguments = string.Join(" ", ReporterInput);
+            _reporter.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            _reporter.Start();
+        }
+
+        public void RunStopperProcess()
         {
             var stopper = new Process();
             stopper.StartInfo.FileName = StopperPath;
@@ -167,25 +166,5 @@ namespace Tunny.Core.Settings
             }
             GC.SuppressFinalize(this);
         }
-    }
-
-    public enum PrunerStatus
-    {
-        Runnable,
-        PathError,
-        None
-    }
-
-    public enum PrunerType
-    {
-        Hyperband,
-        Median,
-        Nop,
-        Patient,
-        Percentile,
-        SuccessiveHalving,
-        Threshold,
-        Wilcoxon,
-        None = -1
     }
 }
