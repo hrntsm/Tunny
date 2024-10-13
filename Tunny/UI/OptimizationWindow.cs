@@ -20,7 +20,6 @@ namespace Tunny.UI
     {
         private readonly OptimizeComponentBase _component;
         private readonly TSettings _settings;
-        internal GrasshopperStates GrasshopperStatus;
 
         public OptimizationWindow(OptimizeComponentBase component)
         {
@@ -182,7 +181,6 @@ namespace Tunny.UI
                 timeoutNumUpDown.Enabled = true;
                 timeoutNumUpDown.Value = (decimal)_settings.Optimize.Timeout;
             }
-
         }
 
         private void GetUIValues()
