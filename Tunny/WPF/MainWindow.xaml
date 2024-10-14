@@ -44,53 +44,70 @@
                     <RibbonButton
                         Click="OptimizeTpeRibbonButton_Click"
                         Label="TPE"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeGpOptunaRibbonButton_Click"
                         Label="GP:Optuna"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeGpBoTorchRibbonButton_Click"
                         Label="GP:BoTorch"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeGpPreferentialRibbonButton_Click"
                         IsEnabled="False"
                         Label="GP:Preferential"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Generic Algorighm">
                     <RibbonButton
                         Click="OptimizeNsgaiiRibbonButton_Click"
                         Label="NSGA-II"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeNsgaiiiRibbonButton_Click"
                         Label="NSGA-III"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Strategy">
                     <RibbonButton
                         Click="OptimizeCmaEsRibbonButton_Click"
                         Label="CMA-ES"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Misc">
                     <RibbonButton
                         Click="OptimizeRandomRibbonButton_Click"
                         Label="Random"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeQmcRibbonButton_Click"
                         Label="QMC"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeBruteForceRibbonButton_Click"
                         Label="BruteForce"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
-                    <RibbonButton Label="Register Sampler" LargeImageSource="Assets/Icon/Optuna.png" />
+                    <RibbonButton
+                        Label="Register Sampler"
+                        LargeImageSource="Assets/Icon/Optuna.png"
+                        SmallImageSource="Assets/Icon/Optuna.png" />
+                    <RibbonButton
+                        Label="MOEA/D"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Visualize">

@@ -18,23 +18,18 @@ namespace Tunny.WPF.Views.Pages
 {
     public partial class OptimizePage : Page
     {
-        private readonly LongRunningProcess _process;
-        private readonly ProgressBar _progressBar;
+        private ProgressBar _progressBar;
 
         public OptimizePage()
         {
             InitializeComponent();
             ChangeFrameContent(SamplerType.TPE);
-            _process = new LongRunningProcess();
-            _progressBar = new ProgressBar();
         }
 
-        public OptimizePage(SamplerType samplerType, ProgressBar progressBar)
+        public OptimizePage(SamplerType samplerType)
         {
             InitializeComponent();
             ChangeFrameContent(samplerType);
-            _process = new LongRunningProcess();
-            _progressBar = progressBar;
         }
 
         private void ChangeFrameContent(SamplerType samplerType)
@@ -108,6 +103,8 @@ namespace Tunny.WPF.Views.Pages
             OptimizeRunButton.IsEnabled = false;
             RhinoView.EnableDrawing = !settings.Optimize.DisableViewportDrawing;
             OptimizeProcess.Settings = settings;
+
+            _progressBar = parentWindow.StatusBarProgressBar;
             _progressBar.Value = 0;
 
             var progress = new Progress<int>(value =>
@@ -117,7 +114,7 @@ namespace Tunny.WPF.Views.Pages
 
             try
             {
-                await _process.RunAsync(progress);
+                await LongRunningProcess.RunAsync(progress);
             }
             finally
             {
@@ -126,9 +123,9 @@ namespace Tunny.WPF.Views.Pages
         }
     }
 
-    public class LongRunningProcess
+    public static class LongRunningProcess
     {
-        public async Task RunAsync(IProgress<int> progress)
+        public static async Task RunAsync(IProgress<int> progress)
         {
             for (int i = 0; i <= 100; i++)
             {

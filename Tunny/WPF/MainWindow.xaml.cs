@@ -83,52 +83,52 @@ namespace Tunny.WPF
 
         private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.TPE, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.TPE);
         }
 
         private void OptimizeGpOptunaRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.GP, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.GP);
         }
 
         private void OptimizeGpBoTorchRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.BoTorch, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.BoTorch);
         }
-        
+
         private void OptimizeGpPreferentialRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.GpPreferential, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.GpPreferential);
         }
 
         private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAII, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAII);
         }
 
         private void OptimizeNsgaiiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAIII, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAIII);
         }
 
         private void OptimizeCmaEsRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.CmaEs, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.CmaEs);
         }
 
         private void OptimizeRandomRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.Random, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.Random);
         }
 
         private void OptimizeQmcRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.QMC, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.QMC);
         }
 
         private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce, StatusBarProgressBar);
+            MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce);
         }
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)

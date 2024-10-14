@@ -2,6 +2,7 @@
     "dotnet.defaultSolution": "Tunny.sln",
     "cSpell.words": [
         "Botorch",
+        "cmaes",
         "HITL",
         "hovertemplate",
         "Hyperband",
