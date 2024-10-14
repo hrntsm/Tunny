@@ -38,7 +38,7 @@ namespace Tunny.Util
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
-        public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
+        public Dictionary<string, FishEgg> FishEggs { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsLoadCorrectly { get; }
 
@@ -107,7 +107,7 @@ namespace Tunny.Util
                     case Param_FishEgg fishEgg:
                         if (fishEgg.VolatileDataCount != 0)
                         {
-                            EnqueueItems = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
+                            FishEggs = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
                         }
                         break;
                     default:

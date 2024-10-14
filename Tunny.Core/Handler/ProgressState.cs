@@ -17,6 +17,7 @@ namespace Tunny.Core.Handler
         public bool IsReportOnly { get; set; }
         public dynamic OptunaTrial { get; set; }
         public Pruner Pruner { get; set; }
+        public int PercentComplete { get; set; }
 
         public ProgressState()
         {

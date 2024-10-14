@@ -9,9 +9,9 @@ using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
+using Tunny.Process;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -93,7 +93,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             MessageBoxResult msgResult = MessageBoxResult.None;
             ToComponentEndMessage(optimize);
-            if (OptimizeLoop.Component is UIOptimizeComponentBase)
+            if (OptimizeProcess.Component is UIOptimizeComponentBase)
             {
                 msgResult = ShowUIEndMessages(optimize.EndState, isMultiObjective);
             }
@@ -128,11 +128,11 @@ namespace Tunny.Solver
                     message = ErrorMessagePrefix;
                     break;
             }
-            if (OptimizeLoop.Component is BoneFishComponent)
+            if (OptimizeProcess.Component is BoneFishComponent)
             {
                 TLog.Info(message);
             }
-            OptimizeLoop.Component.SetInfo(message);
+            OptimizeProcess.Component.SetInfo(message);
         }
 
         private static MessageBoxResult ShowUIEndMessages(EndState endState, bool isMultiObjective)

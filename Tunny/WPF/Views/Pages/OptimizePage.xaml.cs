@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,6 +6,7 @@ using Grasshopper.GUI;
 
 using Rhino.Display;
 
+using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -18,6 +18,7 @@ namespace Tunny.WPF.Views.Pages
 {
     public partial class OptimizePage : Page
     {
+        private const string TrialNumberLabelPrefix = "Trial: ";
         private ProgressBar _progressBar;
 
         public OptimizePage()
@@ -102,36 +103,40 @@ namespace Tunny.WPF.Views.Pages
 
             OptimizeRunButton.IsEnabled = false;
             RhinoView.EnableDrawing = !settings.Optimize.DisableViewportDrawing;
-            OptimizeProcess.Settings = settings;
 
             _progressBar = parentWindow.StatusBarProgressBar;
             _progressBar.Value = 0;
 
-            var progress = new Progress<int>(value =>
-            {
-                _progressBar.Value = value;
-            });
+            InitializeOptimizeProcess(parentWindow, settings);
 
             try
             {
-                await LongRunningProcess.RunAsync(progress);
+                await OptimizeProcess.RunAsync();
             }
             finally
             {
                 OptimizeRunButton.IsEnabled = true;
+                ghCanvas?.EnableUI();
             }
         }
-    }
 
-    public static class LongRunningProcess
-    {
-        public static async Task RunAsync(IProgress<int> progress)
+        private void InitializeOptimizeProcess(MainWindow parentWindow, TSettings settings)
         {
-            for (int i = 0; i <= 100; i++)
+            Progress<ProgressState> progress = CreateProgressAction(parentWindow);
+            OptimizeProcess.Component = parentWindow.Component;
+            OptimizeProcess.Settings = settings;
+            OptimizeProcess.AddProgress(progress);
+        }
+
+        private Progress<ProgressState> CreateProgressAction(MainWindow parentWindow)
+        {
+            return new Progress<ProgressState>(value =>
             {
-                await Task.Delay(100); // Simulate work
-                progress.Report(i);
-            }
+                TLog.MethodStart();
+                parentWindow.Component.UpdateGrasshopper(value);
+                parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}{value.TrialNumber + 1}";
+                _progressBar.Value = value.PercentComplete;
+            });
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Tunny.Handler
             TLog.MethodStart();
             List<VariableBase> variables = Component.GhInOut.Variables;
             Objective objectives = Component.GhInOut.Objectives;
-            Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
+            Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.FishEggs;
             bool hasConstraint = Component.GhInOut.HasConstraint;
             var progressState = new ProgressState(Array.Empty<Parameter>());
 

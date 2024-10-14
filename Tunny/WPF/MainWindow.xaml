@@ -196,7 +196,7 @@
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="5*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -207,14 +207,14 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem>
-                <TextBlock Text="Ready" />
+                <Label Content="Ready" />
             </StatusBarItem>
             <Separator Grid.Column="1" />
-            <StatusBarItem Grid.Column="2">
-                <TextBlock Text="Trial: #" />
+            <StatusBarItem x:Name="StatusBarTrialNumberLabel" Grid.Column="2">
+                <Label Content="Trial: #" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="3">
-                <TextBlock Text="ETA: #" />
+            <StatusBarItem x:Name="StatuBarETALabel" Grid.Column="3">
+                <Label Content="ETA: #" />
             </StatusBarItem>
             <Separator Grid.Column="4" />
             <StatusBarItem Grid.Column="5">

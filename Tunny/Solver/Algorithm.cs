@@ -20,9 +20,9 @@ using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
+using Tunny.Process;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -58,7 +58,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             EndState = EndState.Error;
-            OptimizeLoop.IsForcedStopOptimize = false;
+            OptimizeProcess.IsForcedStopOptimize = false;
             SamplerType samplerType = Settings.Optimize.SelectSampler;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
@@ -307,7 +307,7 @@ namespace Tunny.Solver
 
             while (true)
             {
-                if (optInfo.Preferential != null && !optInfo.Study.should_generate() && !OptimizeLoop.IsForcedStopOptimize)
+                if (optInfo.Preferential != null && !optInfo.Study.should_generate() && !OptimizeProcess.IsForcedStopOptimize)
                 {
                     Thread.Sleep(100);
                     continue;
@@ -315,7 +315,7 @@ namespace Tunny.Solver
 
                 trial = optInfo.Study.ask();
                 SetOptimizationParameter(parameter, trial);
-                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial, Settings.Pruner);
+                ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial, Settings.Pruner, progress);
                 if (Settings.Optimize.IgnoreDuplicateSampling && IsSampleDuplicate(trial, out result))
                 {
                     TLog.Info($"Trial {trialNum} is duplicate sample.");
@@ -440,7 +440,7 @@ namespace Tunny.Solver
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
             string message = sb.ToString();
-            OptimizeLoop.Component.SetInfo(message);
+            OptimizeProcess.Component.SetInfo(message);
             TLog.Info(sb.ToString());
         }
 
@@ -472,7 +472,7 @@ namespace Tunny.Solver
 
             if (File.Exists(TEnvVariables.QuitFishingPath))
             {
-                OptimizeLoop.IsForcedStopOptimize = true;
+                OptimizeProcess.IsForcedStopOptimize = true;
                 File.Delete(TEnvVariables.QuitFishingPath);
             }
 
@@ -487,10 +487,10 @@ namespace Tunny.Solver
                 EndState = EndState.Timeout;
                 isOptimizeCompleted = true;
             }
-            else if (OptimizeLoop.IsForcedStopOptimize)
+            else if (OptimizeProcess.IsForcedStopOptimize)
             {
                 EndState = EndState.StoppedByUser;
-                OptimizeLoop.IsForcedStopOptimize = false;
+                OptimizeProcess.IsForcedStopOptimize = false;
                 isOptimizeCompleted = true;
             }
             else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null && studyStopFlag)
@@ -502,12 +502,13 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial, Pruner pruner)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial, Pruner pruner, int progress)
         {
             TLog.MethodStart();
             double[][] bestValues = ComputeBestValues(optSet.Study);
             return new ProgressState
             {
+                PercentComplete = progress,
                 TrialNumber = trialNum,
                 ObjectiveNum = Objective.Length,
                 BestValues = bestValues,
