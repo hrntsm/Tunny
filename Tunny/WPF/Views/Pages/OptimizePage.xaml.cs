@@ -117,6 +117,7 @@ namespace Tunny.WPF.Views.Pages
             {
                 OptimizeRunButton.IsEnabled = true;
                 ghCanvas?.EnableUI();
+                parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}#";
             }
         }
 
