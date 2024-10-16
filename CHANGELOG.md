@@ -38,6 +38,7 @@ for now removed features.
 - Mesh could not be put directly into Artifact.
 - Human in the loop exception with _stop_flag.
 - Even the multi-purpose Human in the loop specifies GP and the optimization does not flow, so TPE is chosen.
+- Pareto Front plot with 3 objectives visualize error
 
 ### Security
 
