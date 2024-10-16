@@ -115,7 +115,7 @@ namespace Tunny.Handler
             else
             {
                 optunaTrial.report(report.Value, step);
-                if (string.IsNullOrEmpty(report.Attribute))
+                if (!string.IsNullOrEmpty(report.Attribute))
                 {
                     optunaTrial.set_user_attr("intermediate_value_step" + step, report.Attribute);
                 }
