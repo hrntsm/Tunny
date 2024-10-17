@@ -30,8 +30,15 @@ namespace Tunny.WPF
             {
                 Close();
             }
-
             Settings = TSettings.LoadFromJson();
+
+            UpdateTitle();
+        }
+
+        private void UpdateTitle()
+        {
+            string storagePath = Settings.Storage.Path;
+            Title = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
         }
 
         private void TunnyAboutButton_Click(object sender, RoutedEventArgs e)
@@ -149,7 +156,8 @@ namespace Tunny.WPF
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                Title = "Tunny v1.0 - " + dialog.FileName;
+                Settings.Storage.Path = dialog.FileName;
+                UpdateTitle();
             }
         }
 
