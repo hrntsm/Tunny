@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -286,6 +287,14 @@ namespace Tunny.WPF.Views.Pages
                     Chart2Points.Add(new ObservablePoint(objectives.Numbers[0], objectives.Numbers[1]));
                 }
             });
+        }
+
+        private void OptimizeStopButton_Click(object sender, RoutedEventArgs e)
+        {
+            TLog.MethodStart();
+            using (FileStream fs = File.Create(TEnvVariables.QuitFishingPath))
+            {
+            }
         }
     }
 }
