@@ -245,6 +245,7 @@ namespace Tunny.WPF.Views.Pages
             ghCanvas?.DisableUI();
 
             OptimizeRunButton.IsEnabled = false;
+            OptimizeStopButton.IsEnabled = true;
             RhinoView.EnableDrawing = !settings.Optimize.DisableViewportDrawing;
 
             _progressBar = parentWindow.StatusBarProgressBar;
@@ -259,6 +260,7 @@ namespace Tunny.WPF.Views.Pages
             finally
             {
                 OptimizeRunButton.IsEnabled = true;
+                OptimizeStopButton.IsEnabled = false;
                 ghCanvas?.EnableUI();
                 parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}#";
             }

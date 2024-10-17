@@ -153,10 +153,12 @@
                     Click="RunOptimizeButton_Click"
                     Content="RunOptimize" />
                 <Button
+                    x:Name="OptimizeStopButton"
                     Grid.Column="1"
                     Margin="5"
                     Click="OptimizeStopButton_Click"
-                    Content="Stop" />
+                    Content="Stop"
+                    IsEnabled="False" />
             </Grid>
         </StackPanel>
 
