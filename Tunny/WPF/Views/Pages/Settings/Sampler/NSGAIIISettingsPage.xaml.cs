@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 using Tunny.WPF.Common;
@@ -14,6 +15,8 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
         public NSGAIIISettingsPage()
         {
             InitializeComponent();
+            NsgaiiiCrossoverComboBox.ItemsSource = Enum.GetNames(typeof(NsgaCrossoverType));
+            NsgaiiiCrossoverComboBox.SelectedIndex = 0;
         }
     }
 }

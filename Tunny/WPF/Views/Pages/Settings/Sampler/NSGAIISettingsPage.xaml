@@ -29,7 +29,6 @@
             </Grid.ColumnDefinitions>
 
             <Label
-                x:Name="NsgaiiSeedLabel"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -55,7 +54,6 @@
                 Text="0.00"
                 TextAlignment="Right" />
             <Label
-                x:Name="NsgaiiCrossoverProbabilityLabel"
                 Grid.Row="2"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -69,7 +67,6 @@
                 Text="0.90"
                 TextAlignment="Right" />
             <Label
-                x:Name="NsgaiiSwappingProbabilityLabel"
                 Grid.Row="3"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -82,20 +79,17 @@
                 Margin="5"
                 Text="0.50"
                 TextAlignment="Right" />
-            <CheckBox
-                x:Name="NsgaiiCrossoverCheckBox"
+            <Label
                 Grid.Row="4"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Crossover" />
-            <ListBox
-                x:Name="NsgaiiCrossoverListBox"
+            <ComboBox
+                x:Name="NsgaiiCrossoverComboBox"
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="5"
-                d:ItemsSource="{d:SampleData ItemCount=5}" />
-
+                Margin="5" />
             <Button
                 x:Name="NsgaiiDefaultButton"
                 Grid.Row="8"

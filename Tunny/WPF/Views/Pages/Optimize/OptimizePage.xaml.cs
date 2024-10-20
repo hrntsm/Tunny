@@ -25,12 +25,35 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private ProgressBar _progressBar;
         private LiveChartPage _chart1;
         private LiveChartPage _chart2;
+        private TPESettingsPage _tpePage;
+        private GPOptunaSettingsPage _gpOptunaPage;
+        private GPBoTorchSettingsPage _gpBoTorchPage;
+        private NSGAIISettingsPage _nsgaiiPage;
+        private NSGAIIISettingsPage _nsgaiiiPage;
+        private CmaEsSettingsPage _cmaesPage;
+        private RandomSettingsPage _randomPage;
+        private QmcSettingsPage _qmcPage;
+        private BruteForceSettingsPage _bruteForcePage;
 
         public OptimizePage(SamplerType samplerType)
         {
             InitializeComponent();
             InitializeChart();
-            ChangeFrameContent(samplerType);
+            InitializeSamplerPage();
+            ChangeTargetSampler(samplerType);
+        }
+
+        private void InitializeSamplerPage()
+        {
+            _tpePage = new TPESettingsPage();
+            _gpOptunaPage = new GPOptunaSettingsPage();
+            _gpBoTorchPage = new GPBoTorchSettingsPage();
+            _nsgaiiPage = new NSGAIISettingsPage();
+            _nsgaiiiPage = new NSGAIIISettingsPage();
+            _cmaesPage = new CmaEsSettingsPage();
+            _randomPage = new RandomSettingsPage();
+            _qmcPage = new QmcSettingsPage();
+            _bruteForcePage = new BruteForceSettingsPage();
         }
 
         private void InitializeChart()
@@ -41,56 +64,46 @@ namespace Tunny.WPF.Views.Pages.Optimize
             OptimizeLiveChart2.Content = _chart2;
         }
 
-        private void ChangeFrameContent(SamplerType samplerType)
+        public void ChangeTargetSampler(SamplerType samplerType)
         {
             ITrialNumberParam param;
             switch (samplerType)
             {
                 case SamplerType.TPE:
-                    var tpePage = new TPESettingsPage();
-                    param = tpePage;
-                    OptimizeSettingsPage.Content = tpePage;
+                    param = _tpePage;
+                    OptimizeSettingsPage.Content = _tpePage;
                     break;
                 case SamplerType.GP:
-                    var gpOptunaPage = new GPOptunaSettingsPage();
-                    param = gpOptunaPage;
-                    OptimizeSettingsPage.Content = gpOptunaPage;
+                    param = _gpOptunaPage;
+                    OptimizeSettingsPage.Content = _gpOptunaPage;
                     break;
                 case SamplerType.BoTorch:
-                    var gpBoTorchPage = new GPBoTorchSettingsPage();
-                    param = gpBoTorchPage;
-                    OptimizeSettingsPage.Content = gpBoTorchPage;
+                    param = _gpBoTorchPage;
+                    OptimizeSettingsPage.Content = _gpBoTorchPage;
                     break;
                 case SamplerType.NSGAII:
-                    var nsgaiiPage = new NSGAIISettingsPage();
-                    param = nsgaiiPage;
-                    OptimizeSettingsPage.Content = nsgaiiPage;
+                    param = _nsgaiiPage;
+                    OptimizeSettingsPage.Content = _nsgaiiPage;
                     break;
                 case SamplerType.NSGAIII:
-                    OptimizeSettingsPage.Content = new NSGAIIISettingsPage();
-                    var nsgaiiiPage = new NSGAIIISettingsPage();
-                    param = nsgaiiiPage;
-                    OptimizeSettingsPage.Content = nsgaiiiPage;
+                    param = _nsgaiiiPage;
+                    OptimizeSettingsPage.Content = _nsgaiiiPage;
                     break;
                 case SamplerType.CmaEs:
-                    var cmaesPage = new CmaEsSettingsPage();
-                    param = cmaesPage;
-                    OptimizeSettingsPage.Content = cmaesPage;
+                    param = _cmaesPage;
+                    OptimizeSettingsPage.Content = _cmaesPage;
                     break;
                 case SamplerType.Random:
-                    var randomPage = new RandomSettingsPage();
-                    param = randomPage;
-                    OptimizeSettingsPage.Content = randomPage;
+                    param = _randomPage;
+                    OptimizeSettingsPage.Content = _randomPage;
                     break;
                 case SamplerType.QMC:
-                    var qmcPage = new QmcSettingsPage();
-                    param = qmcPage;
-                    OptimizeSettingsPage.Content = qmcPage;
+                    param = _qmcPage;
+                    OptimizeSettingsPage.Content = _qmcPage;
                     break;
                 case SamplerType.BruteForce:
-                    var bruteForcePage = new BruteForceSettingsPage();
-                    param = bruteForcePage;
-                    OptimizeSettingsPage.Content = bruteForcePage;
+                    param = _bruteForcePage;
+                    OptimizeSettingsPage.Content = _bruteForcePage;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);

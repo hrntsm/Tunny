@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 using Tunny.WPF.Common;
@@ -14,6 +15,8 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
         public QmcSettingsPage()
         {
             InitializeComponent();
+            QmcTypeComboBox.ItemsSource = Enum.GetNames(enumType: typeof(QmcType));
+            QmcTypeComboBox.SelectedIndex = 0;
         }
     }
 }

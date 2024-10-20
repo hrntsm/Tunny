@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
 
 using Grasshopper.GUI;
@@ -19,7 +18,8 @@ namespace Tunny.WPF
         internal readonly GH_DocumentEditor DocumentEditor;
         internal readonly OptimizeComponentBase Component;
         internal readonly TSettings Settings;
-        private readonly Page _optimizePage;
+
+        private readonly OptimizePage _optimizePage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
@@ -95,52 +95,52 @@ namespace Tunny.WPF
 
         private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.TPE);
+            _optimizePage.ChangeTargetSampler(SamplerType.TPE);
         }
 
         private void OptimizeGpOptunaRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.GP);
+            _optimizePage.ChangeTargetSampler(SamplerType.GP);
         }
 
         private void OptimizeGpBoTorchRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.BoTorch);
+            _optimizePage.ChangeTargetSampler(SamplerType.BoTorch);
         }
 
         private void OptimizeGpPreferentialRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.GpPreferential);
+            _optimizePage.ChangeTargetSampler(SamplerType.GpPreferential);
         }
 
         private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAII);
+            _optimizePage.ChangeTargetSampler(SamplerType.NSGAII);
         }
 
         private void OptimizeNsgaiiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.NSGAIII);
+            _optimizePage.ChangeTargetSampler(SamplerType.NSGAIII);
         }
 
         private void OptimizeCmaEsRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.CmaEs);
+            _optimizePage.ChangeTargetSampler(SamplerType.CmaEs);
         }
 
         private void OptimizeRandomRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.Random);
+            _optimizePage.ChangeTargetSampler(SamplerType.Random);
         }
 
         private void OptimizeQmcRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.QMC);
+            _optimizePage.ChangeTargetSampler(SamplerType.QMC);
         }
 
         private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new OptimizePage(SamplerType.BruteForce);
+            _optimizePage.ChangeTargetSampler(SamplerType.BruteForce);
         }
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)

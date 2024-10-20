@@ -81,6 +81,16 @@
                         Label="CMA-ES"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="MO-CMA-ES"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Evolution Algorithm">
+                    <RibbonButton
+                        Label="MOEA/D"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Misc">
                     <RibbonButton
@@ -104,10 +114,6 @@
                         Label="Register Sampler"
                         LargeImageSource="Assets/Icon/Optuna.png"
                         SmallImageSource="Assets/Icon/Optuna.png" />
-                    <RibbonButton
-                        Label="MOEA/D"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="Visualize">

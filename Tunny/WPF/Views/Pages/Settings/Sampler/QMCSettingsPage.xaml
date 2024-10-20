@@ -29,7 +29,6 @@
             </Grid.ColumnDefinitions>
 
             <Label
-                x:Name="CmaEsSeedLabel"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -41,25 +40,24 @@
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
-                x:Name="QmcTypeLabel"
                 Grid.Row="1"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="QMC Type" />
-            <ListBox
-                x:Name="QmcTypeListBox"
+            <ComboBox
+                x:Name="QmcTypeComboBox"
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="5"
-                d:ItemsSource="{d:SampleData ItemCount=5}" />
+                Margin="5" />
             <CheckBox
                 x:Name="QmcScrambleCheckBox"
                 Grid.Row="2"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Scramble" />
+                Content="Scramble"
+                IsChecked="True" />
 
             <Button
                 x:Name="QmcDefaultButton"
