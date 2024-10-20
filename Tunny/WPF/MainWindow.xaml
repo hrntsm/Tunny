@@ -189,8 +189,7 @@
             x:Name="MainWindowFrame"
             Grid.Row="1"
             Background="AliceBlue"
-            NavigationUIVisibility="Hidden"
-            Source="pack://application:,,,/Tunny;component/WPF/Views/Pages/OptimizePage.xaml" />
+            NavigationUIVisibility="Hidden" />
         <StatusBar Grid.Row="2" Background="#FF93C6F8">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>

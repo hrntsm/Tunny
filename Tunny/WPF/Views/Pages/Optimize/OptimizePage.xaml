@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Views.Pages.OptimizePage"
+    x:Class="Tunny.WPF.Views.Pages.Optimize.OptimizePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -163,98 +163,20 @@
         </StackPanel>
 
         <Frame
-            x:Name="OptimizeDynamicFrame"
+            x:Name="OptimizeSettingsPage"
             Grid.Row="7"
             Grid.ColumnSpan="2" />
 
-        <Grid Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-
-            <CheckBox
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="Live Chart1"
-                IsChecked="True" />
-            <Label
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="X Target" />
-            <ComboBox
-                x:Name="Chart1XTargetComboBox"
-                Grid.Column="2"
-                Margin="5" />
-            <Label
-                Grid.Column="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="Y Target" />
-            <ComboBox
-                x:Name="Chart1YTargetComboBox"
-                Grid.Column="4"
-                Margin="5" />
-        </Grid>
-        <lvc:CartesianChart
-            x:Name="OptimizaLiveChart1"
-            Grid.Row="1"
-            Grid.RowSpan="5"
+        <Frame
+            x:Name="OptimizeLiveChart1"
+            Grid.RowSpan="6"
             Grid.Column="2"
-            Margin="5"
-            AnimationsSpeed="0"
-            DrawMarginFrame="{Binding ChartDrawingMarginFrame}"
-            Series="{Binding Chart1Series}"
-            XAxes="{Binding Chart1XAxes}"
-            YAxes="{Binding Chart1YAxes}" />
-
-        <Grid Grid.Row="6" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-
-            <CheckBox
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="Live Chart2"
-                IsChecked="True" />
-            <Label
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="X Target" />
-            <ComboBox
-                x:Name="Chart2XTargetComboBox"
-                Grid.Column="2"
-                Margin="5" />
-            <Label
-                Grid.Column="3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="Y Target" />
-            <ComboBox
-                x:Name="Chart2YTargetComboBox"
-                Grid.Column="4"
-                Margin="5" />
-        </Grid>
-
-        <lvc:CartesianChart
-            x:Name="OptimizaLiveChart2"
-            Grid.Row="7"
+            Margin="5" />
+        <Frame
+            x:Name="OptimizeLiveChart2"
+            Grid.Row="6"
+            Grid.RowSpan="3"
             Grid.Column="2"
-            Margin="5"
-            AnimationsSpeed="0"
-            DrawMarginFrame="{Binding ChartDrawingMarginFrame}"
-            Series="{Binding Chart2Series}"
-            XAxes="{Binding Chart2XAxes}"
-            YAxes="{Binding Chart2YAxes}" />
+            Margin="5" />
     </Grid>
 </Page>

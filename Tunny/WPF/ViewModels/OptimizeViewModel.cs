@@ -1,12 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-
-using SkiaSharp;
-
 namespace Tunny.WPF.ViewModels
 {
     public class OptimizeViewModel : INotifyPropertyChanged
@@ -32,7 +26,6 @@ namespace Tunny.WPF.ViewModels
                 OnPropertyChanged(nameof(SelectedSampler));
             }
         }
-
 
         public OptimizeViewModel()
         {

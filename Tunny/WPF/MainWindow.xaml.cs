@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Ribbon;
 
 using Grasshopper.GUI;
@@ -9,6 +10,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
+using Tunny.WPF.Views.Pages.Optimize;
 
 namespace Tunny.WPF
 {
@@ -17,11 +19,14 @@ namespace Tunny.WPF
         internal readonly GH_DocumentEditor DocumentEditor;
         internal readonly OptimizeComponentBase Component;
         internal readonly TSettings Settings;
+        private readonly Page _optimizePage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
             TLog.MethodStart();
             InitializeComponent();
+            _optimizePage = new OptimizePage(SamplerType.TPE);
+            MainWindowFrame.Content = _optimizePage;
 
             DocumentEditor = documentEditor;
             Component = component;
