@@ -17,16 +17,14 @@ namespace Tunny.WPF
     {
         internal readonly GH_DocumentEditor DocumentEditor;
         internal readonly OptimizeComponentBase Component;
-        internal readonly TSettings Settings;
 
+        private readonly TSettings _settings;
         private readonly OptimizePage _optimizePage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
             TLog.MethodStart();
             InitializeComponent();
-            _optimizePage = new OptimizePage(SamplerType.TPE);
-            MainWindowFrame.Content = _optimizePage;
 
             DocumentEditor = documentEditor;
             Component = component;
@@ -35,14 +33,16 @@ namespace Tunny.WPF
             {
                 Close();
             }
-            Settings = TSettings.LoadFromJson();
+            _settings = TSettings.LoadFromJson();
+            _optimizePage = new OptimizePage(_settings);
+            MainWindowFrame.Content = _optimizePage;
 
             UpdateTitle();
         }
 
         private void UpdateTitle()
         {
-            string storagePath = Settings.Storage.Path;
+            string storagePath = _settings.Storage.Path;
             Title = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
         }
 
@@ -95,52 +95,58 @@ namespace Tunny.WPF
 
         private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.TPE);
+            SetSamplerType(SamplerType.TPE);
         }
 
         private void OptimizeGpOptunaRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.GP);
+            SetSamplerType(SamplerType.GP);
         }
 
         private void OptimizeGpBoTorchRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.BoTorch);
+            SetSamplerType(SamplerType.BoTorch);
         }
 
         private void OptimizeGpPreferentialRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.GpPreferential);
+            SetSamplerType(SamplerType.GpPreferential);
         }
 
         private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.NSGAII);
+            SetSamplerType(SamplerType.NSGAII);
         }
 
         private void OptimizeNsgaiiiRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.NSGAIII);
+            SetSamplerType(SamplerType.NSGAIII);
         }
 
         private void OptimizeCmaEsRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.CmaEs);
+            SetSamplerType(SamplerType.CmaEs);
         }
 
         private void OptimizeRandomRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.Random);
+            SetSamplerType(SamplerType.Random);
         }
 
         private void OptimizeQmcRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.QMC);
+            SetSamplerType(SamplerType.QMC);
         }
 
         private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _optimizePage.ChangeTargetSampler(SamplerType.BruteForce);
+            SetSamplerType(SamplerType.BruteForce);
+        }
+
+        private void SetSamplerType(SamplerType samplerType)
+        {
+            _optimizePage.ChangeTargetSampler(samplerType);
+            _settings.Optimize.SelectSampler = samplerType;
         }
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
@@ -161,13 +167,15 @@ namespace Tunny.WPF
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                Settings.Storage.Path = dialog.FileName;
+                _settings.Storage.Path = dialog.FileName;
                 UpdateTitle();
             }
         }
 
         private void QuickAccessFileSaveRibbonButton_Click(object sender, RoutedEventArgs e)
         {
+            _settings.Optimize.Sampler = _optimizePage.GetCurrentSettings();
+            _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
     }
 }

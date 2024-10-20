@@ -9,7 +9,7 @@ namespace Optuna.Sampler
     {
         public double? MutationProb { get; set; }
         public int PopulationSize { get; set; } = 50;
-        public string Crossover { get; set; } = string.Empty;
+        public string Crossover { get; set; } = "BLXAlpha";
         public double CrossoverProb { get; set; } = 0.9;
         public double SwappingProb { get; set; } = 0.5;
 

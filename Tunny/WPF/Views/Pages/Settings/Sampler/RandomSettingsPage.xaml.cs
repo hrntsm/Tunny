@@ -1,6 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 
+using Optuna.Sampler;
+
+using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
 namespace Tunny.WPF.Views.Pages.Settings.Sampler
@@ -14,6 +19,26 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
         public RandomSettingsPage()
         {
             InitializeComponent();
+        }
+
+        internal RandomSampler ToSettings()
+        {
+            return new RandomSampler
+            {
+                Seed = RandomSeedTextBox.Text == "AUTO"
+                    ? null
+                    : (int?)int.Parse(RandomSeedTextBox.Text, CultureInfo.InvariantCulture),
+            };
+        }
+
+        internal static RandomSettingsPage FromSettings(TSettings settings)
+        {
+            RandomSampler random = settings.Optimize.Sampler.Random;
+            var page = new RandomSettingsPage();
+            page.RandomSeedTextBox.Text = random.Seed == null
+                ? "AUTO"
+                : random.Seed.Value.ToString(CultureInfo.InvariantCulture);
+            return page;
         }
     }
 }

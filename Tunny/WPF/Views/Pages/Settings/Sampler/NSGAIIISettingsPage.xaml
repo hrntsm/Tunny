@@ -39,19 +39,18 @@
                 Margin="5"
                 Text="AUTO"
                 TextAlignment="Right" />
-            <CheckBox
-                x:Name="NsgaiiiMutationProbabilityCheckBox"
+            <Label
                 Grid.Row="1"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Mutation Probability" />
             <TextBox
-                x:Name="NsgaiiiMutationProbabiltyTextBox"
+                x:Name="NsgaiiiMutationProbabilityTextBox"
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
-                Text="0.00"
+                Text="AUTO"
                 TextAlignment="Right" />
             <Label
                 Grid.Row="2"
@@ -60,7 +59,7 @@
                 VerticalAlignment="Center"
                 Content="Crossover Probability" />
             <TextBox
-                x:Name="NsgaiiiCrossoverProbabiltyTextBox"
+                x:Name="NsgaiiiCrossoverProbabilityTextBox"
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="5"
@@ -73,7 +72,7 @@
                 VerticalAlignment="Center"
                 Content="Swapping Probability" />
             <TextBox
-                x:Name="NsgaiiiSwappingProbabiltyTextBox"
+                x:Name="NsgaiiiSwappingProbabilityTextBox"
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="5"

@@ -22,6 +22,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
     public partial class OptimizePage : Page
     {
         private const string TrialNumberLabelPrefix = "Trial: ";
+        private readonly TSettings _settings;
         private ProgressBar _progressBar;
         private LiveChartPage _chart1;
         private LiveChartPage _chart2;
@@ -35,25 +36,26 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private QmcSettingsPage _qmcPage;
         private BruteForceSettingsPage _bruteForcePage;
 
-        public OptimizePage(SamplerType samplerType)
+        public OptimizePage(TSettings settings)
         {
+            _settings = settings;
             InitializeComponent();
             InitializeChart();
             InitializeSamplerPage();
-            ChangeTargetSampler(samplerType);
+            ChangeTargetSampler(settings.Optimize.SelectSampler);
         }
 
         private void InitializeSamplerPage()
         {
-            _tpePage = new TPESettingsPage();
-            _gpOptunaPage = new GPOptunaSettingsPage();
-            _gpBoTorchPage = new GPBoTorchSettingsPage();
-            _nsgaiiPage = new NSGAIISettingsPage();
-            _nsgaiiiPage = new NSGAIIISettingsPage();
-            _cmaesPage = new CmaEsSettingsPage();
-            _randomPage = new RandomSettingsPage();
-            _qmcPage = new QmcSettingsPage();
-            _bruteForcePage = new BruteForceSettingsPage();
+            _tpePage = TPESettingsPage.FromSettings(_settings);
+            _gpOptunaPage = GPOptunaSettingsPage.FromSettings(_settings);
+            _gpBoTorchPage = GPBoTorchSettingsPage.FromSettings(_settings);
+            _nsgaiiPage = NSGAIISettingsPage.FromSettings(_settings);
+            _nsgaiiiPage = NSGAIIISettingsPage.FromSettings(_settings);
+            _cmaesPage = CmaEsSettingsPage.FromSettings(_settings);
+            _randomPage = RandomSettingsPage.FromSettings(_settings);
+            _qmcPage = QmcSettingsPage.FromSettings(_settings);
+            _bruteForcePage = BruteForceSettingsPage.FromSettings(_settings);
         }
 
         private void InitializeChart()
@@ -119,17 +121,16 @@ namespace Tunny.WPF.Views.Pages.Optimize
             TLog.MethodStart();
             var parentWindow = Window.GetWindow(this) as MainWindow;
             GH_DocumentEditor ghCanvas = parentWindow.DocumentEditor;
-            TSettings settings = parentWindow.Settings;
             ghCanvas?.DisableUI();
 
             OptimizeRunButton.IsEnabled = false;
             OptimizeStopButton.IsEnabled = true;
-            RhinoView.EnableDrawing = !settings.Optimize.DisableViewportDrawing;
+            RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
 
             _progressBar = parentWindow.StatusBarProgressBar;
             _progressBar.Value = 0;
 
-            InitializeOptimizeProcess(parentWindow, settings);
+            InitializeOptimizeProcess(parentWindow, _settings);
 
             try
             {
@@ -175,6 +176,22 @@ namespace Tunny.WPF.Views.Pages.Optimize
             using (FileStream fs = File.Create(TEnvVariables.QuitFishingPath))
             {
             }
+        }
+
+        internal Sampler GetCurrentSettings()
+        {
+            return new Sampler
+            {
+                Tpe = _tpePage.ToSettings(),
+                GP = _gpOptunaPage.ToSettings(),
+                BoTorch = _gpBoTorchPage.ToSettings(),
+                NsgaII = _nsgaiiPage.ToSettings(),
+                NsgaIII = _nsgaiiiPage.ToSettings(),
+                CmaEs = _cmaesPage.ToSettings(),
+                Random = _randomPage.ToSettings(),
+                QMC = _qmcPage.ToSettings(),
+                BruteForce = _bruteForcePage.ToSettings()
+            };
         }
     }
 }

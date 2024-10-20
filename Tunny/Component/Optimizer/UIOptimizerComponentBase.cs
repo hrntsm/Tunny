@@ -38,18 +38,6 @@ namespace Tunny.Component.Optimizer
             GH_DocumentEditor owner = Instances.DocumentEditor;
             TEnvVariables.GrasshopperWindowHandle = owner.Handle;
 
-            if (OptimizationWindow == null || OptimizationWindow.IsDisposed)
-            {
-                OptimizationWindow = new OptimizationWindow(this)
-                {
-                    StartPosition = FormStartPosition.Manual
-                };
-
-                GH_WindowsFormUtil.CenterFormOnWindow(OptimizationWindow, owner, true);
-                owner.FormShepard.RegisterForm(OptimizationWindow);
-            }
-            OptimizationWindow.Show(owner);
-
             MainWindow = new MainWindow(owner, this);
             MainWindow.Show();
         }

@@ -34,7 +34,7 @@
                 VerticalAlignment="Center"
                 Content="Seed" />
             <TextBox
-                x:Name="CmaEsSeedTextBox"
+                x:Name="QmcSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
                 Text="AUTO"

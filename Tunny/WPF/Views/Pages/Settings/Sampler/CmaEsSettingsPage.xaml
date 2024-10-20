@@ -29,7 +29,6 @@
             </Grid.ColumnDefinitions>
 
             <Label
-                x:Name="CmaEsSeedLabel"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -40,8 +39,7 @@
                 Margin="5"
                 Text="AUTO"
                 TextAlignment="Right" />
-            <CheckBox
-                x:Name="CmaEsSigma0CheckBox"
+            <Label
                 Grid.Row="1"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -52,7 +50,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
-                Text="0.00"
+                Text="AUTO"
                 TextAlignment="Right" />
             <CheckBox
                 x:Name="CmaEsUseSepCMACheckBox"
@@ -69,15 +67,18 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="With Margin" />
-            <CheckBox
-                x:Name="CmaEsRestartStrategyCheckBox"
+            <Label
                 Grid.Row="3"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Restart Strategy" />
+            <ComboBox
+                x:Name="CmaEsRestartStrategyComboBox"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="5" />
             <Label
-                x:Name="CmaEsPopulationSizeLabel"
                 Grid.Row="4"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -91,7 +92,6 @@
                 Text="1"
                 TextAlignment="Right" />
             <Label
-                x:Name="CmaEsIncreasingPopulationSizeLabel"
                 Grid.Row="5"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -111,19 +111,18 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Warm Start CMA-ES" />
-            <ListBox
-                x:Name="CmaEsWarnStartCmaEsListBox"
+            <ComboBox
+                x:Name="CmaEsWarnStartCmaEsComboBox"
                 Grid.Row="6"
                 Grid.Column="1"
-                Margin="5"
-                d:ItemsSource="{d:SampleData ItemCount=5}" />
+                Margin="5" />
             <CheckBox
-                x:Name="CmaEsUserFirstFishEggToX0CheckBox"
+                x:Name="CmaEsUseFirstFishEggToX0CheckBox"
                 Grid.Row="7"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="User First FishEgg To X0" />
+                Content="Use First FishEgg To X0" />
 
             <Button
                 x:Name="CmaEsDefaultButton"

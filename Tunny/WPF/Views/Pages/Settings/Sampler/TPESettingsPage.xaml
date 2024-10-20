@@ -30,7 +30,6 @@
             </Grid.ColumnDefinitions>
 
             <Label
-                x:Name="TpeSeedLabel"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -42,7 +41,6 @@
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
-                x:Name="TpeStartupTrialsLabel"
                 Grid.Row="1"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -56,7 +54,6 @@
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
-                x:Name="TpeEICandidatesLabel"
                 Grid.Row="2"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -70,7 +67,6 @@
                 Text="24"
                 TextAlignment="Right" />
             <Label
-                x:Name="TpeGammaLabel"
                 Grid.Row="3"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
@@ -84,7 +80,6 @@
                 Text="25"
                 TextAlignment="Right" />
             <Label
-                x:Name="TpePriorWeightLabel"
                 Grid.Row="4"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"

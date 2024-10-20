@@ -1,6 +1,7 @@
 {
     "dotnet.defaultSolution": "Tunny.sln",
     "cSpell.words": [
+        "bipop",
         "Botorch",
         "cmaes",
         "HITL",
