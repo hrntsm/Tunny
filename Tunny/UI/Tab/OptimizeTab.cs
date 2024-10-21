@@ -104,9 +104,9 @@ namespace Tunny.UI
                 case true when copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked:
                     if (string.IsNullOrEmpty(studyNameTextBox.Text))
                     {
-                        _settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                        _settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
                     }
-                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, _settings.StudyName, _settings.Storage);
+                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, _settings.Optimize.StudyName, _settings.Storage);
                     break;
                 case true when continueStudyCheckBox.Checked:
                     checkResult = CheckSameStudyName(ghCanvas);
@@ -124,7 +124,7 @@ namespace Tunny.UI
             {
                 return SameStudyNameMassage(ghCanvas);
             }
-            _settings.StudyName = existingStudyComboBox.Text;
+            _settings.Optimize.StudyName = existingStudyComboBox.Text;
 
             return true;
         }

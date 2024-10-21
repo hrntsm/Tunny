@@ -136,7 +136,7 @@ namespace Tunny.Component.Optimizer
 
             Message = "Outputting";
             Study[] studies = OptimizeLoop.Settings.Storage.GetAllStudies();
-            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeLoop.Settings.StudyName);
+            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeLoop.Settings.Optimize.StudyName);
 
             string versionString = (study.UserAttrs["tunny_version"] as string[])[0];
             var version = new Version(versionString);

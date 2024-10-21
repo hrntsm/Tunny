@@ -16,7 +16,6 @@ namespace Tunny.Core.Settings
         public Optimize Optimize { get; set; } = new Optimize();
         public Pruner Pruner { get; set; } = new Pruner();
         public Result Result { get; set; } = new Result();
-        public string StudyName { get; set; } = string.Empty;
         public Storage Storage { get; set; } = new Storage();
         public bool CheckPythonLibraries { get; set; } = true;
         public LogEventLevel LogLevel { get; set; } = LogEventLevel.Verbose;

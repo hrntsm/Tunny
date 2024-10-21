@@ -133,7 +133,7 @@ namespace Tunny.UI
             TLog.Info("Set UI values");
 
             // Study Name GroupBox
-            studyNameTextBox.Text = _settings.StudyName;
+            studyNameTextBox.Text = _settings.Optimize.StudyName;
             continueStudyCheckBox.Checked = _settings.Optimize.ContinueStudy;
             existingStudyComboBox.Enabled = continueStudyCheckBox.Checked;
             studyNameTextBox.Enabled = !continueStudyCheckBox.Checked;
@@ -174,7 +174,7 @@ namespace Tunny.UI
                 TLog.Info("Set Tunny normal optimization mode");
                 Text = "Tunny";
                 samplerComboBox.Enabled = true;
-                samplerComboBox.SelectedIndex = (int)_settings.Optimize.SelectSampler;
+                samplerComboBox.SelectedIndex = (int)_settings.Optimize.SamplerType;
                 nTrialText.Text = "Number of trials";
                 nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
                 timeoutNumUpDown.Enabled = true;
@@ -185,14 +185,14 @@ namespace Tunny.UI
         private void GetUIValues()
         {
             TLog.MethodStart();
-            _settings.Optimize.SelectSampler = (SamplerType)samplerComboBox.SelectedIndex;
+            _settings.Optimize.SamplerType = (SamplerType)samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
             _settings.Optimize.CopyStudy = copyStudyCheckBox.Checked;
             _settings.Optimize.ShowRealtimeResult = ShowRealtimeResultCheckBox.Checked;
             _settings.Storage.Type = inMemoryCheckBox.Checked ? StorageType.InMemory : _settings.Storage.Type;
-            _settings.StudyName = studyNameTextBox.Text;
+            _settings.Optimize.StudyName = studyNameTextBox.Text;
             _settings.Result.OutputNumberString = outputModelNumTextBox.Text;
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;

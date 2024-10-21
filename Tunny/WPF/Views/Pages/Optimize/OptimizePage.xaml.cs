@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,9 +41,23 @@ namespace Tunny.WPF.Views.Pages.Optimize
         {
             _settings = settings;
             InitializeComponent();
+            InitializeUIValues();
             InitializeChart();
             InitializeSamplerPage();
-            ChangeTargetSampler(settings.Optimize.SelectSampler);
+            ChangeTargetSampler(settings.Optimize.SamplerType);
+        }
+
+        private void InitializeUIValues()
+        {
+            OptimizeTimeoutTextBox.Text = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
+
+            OptimizeStudyNameTextBox.Text = _settings.Optimize.StudyName;
+            OptimizeInMemoryCheckBox.IsChecked = _settings.Storage.Type == StorageType.InMemory;
+            OptimizeContinueCheckBox.IsChecked = _settings.Optimize.ContinueStudy;
+            OptimizeCopyCheckBox.IsChecked = _settings.Optimize.CopyStudy;
+
+            OptimizeIgnoreDuplicateSamplingCheckBox.IsChecked = _settings.Optimize.IgnoreDuplicateSampling;
+            OptimizeDisableViewportUpdateCheckBox.IsChecked = _settings.Optimize.DisableViewportDrawing;
         }
 
         private void InitializeSamplerPage()
@@ -114,17 +129,34 @@ namespace Tunny.WPF.Views.Pages.Optimize
             OptimizeTrialNumberParam2Label.Content = param.Param2Label;
             OptimizeTrialNumberParam2Label.Visibility = param.Param2Visibility;
             OptimizeTrialNumberParam2TextBox.Visibility = param.Param2Visibility;
+
+            if (samplerType == SamplerType.NSGAII || samplerType == SamplerType.NSGAIII)
+            {
+                int total = _settings.Optimize.NumberOfTrials;
+                int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize;
+                int numGeneration = total / _settings.Optimize.Sampler.NsgaII.PopulationSize;
+                OptimizeTrialNumberParam1TextBox.Text = numGeneration.ToString(CultureInfo.InvariantCulture);
+                OptimizeTrialNumberParam2TextBox.Text = populationSize.ToString(CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                OptimizeTrialNumberParam1TextBox.Text = _settings.Optimize.NumberOfTrials.ToString(CultureInfo.InvariantCulture);
+            }
         }
 
         private async void RunOptimizeButton_Click(object sender, RoutedEventArgs e)
         {
             TLog.MethodStart();
+            OptimizeRunButton.IsEnabled = false;
+            OptimizeStopButton.IsEnabled = true;
+            _chart1.ClearPoints();
+            _chart2.ClearPoints();
+
+            _settings.Optimize = GetCurrentSettings();
+
             var parentWindow = Window.GetWindow(this) as MainWindow;
             GH_DocumentEditor ghCanvas = parentWindow.DocumentEditor;
             ghCanvas?.DisableUI();
-
-            OptimizeRunButton.IsEnabled = false;
-            OptimizeStopButton.IsEnabled = true;
             RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
 
             _progressBar = parentWindow.StatusBarProgressBar;
@@ -173,14 +205,16 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private void OptimizeStopButton_Click(object sender, RoutedEventArgs e)
         {
             TLog.MethodStart();
+            OptimizeProcess.IsForcedStopOptimize = true;
             using (FileStream fs = File.Create(TEnvVariables.QuitFishingPath))
             {
             }
         }
 
-        internal Sampler GetCurrentSettings()
+        internal Core.Settings.Optimize GetCurrentSettings()
         {
-            return new Sampler
+            TLog.MethodStart();
+            var sampler = new Sampler
             {
                 Tpe = _tpePage.ToSettings(),
                 GP = _gpOptunaPage.ToSettings(),
@@ -191,6 +225,29 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 Random = _randomPage.ToSettings(),
                 QMC = _qmcPage.ToSettings(),
                 BruteForce = _bruteForcePage.ToSettings()
+            };
+
+            int param1 = int.Parse(OptimizeTrialNumberParam1TextBox.Text, CultureInfo.InvariantCulture);
+            int param2 = int.Parse(OptimizeTrialNumberParam2TextBox.Text, CultureInfo.InvariantCulture);
+            SamplerType type = _settings.Optimize.SamplerType;
+            int numOfTrials = type == SamplerType.NSGAII || type == SamplerType.NSGAIII
+                ? param1 * param2
+                : param1;
+            sampler.NsgaII.PopulationSize = param2;
+            sampler.NsgaIII.PopulationSize = param2;
+            return new Core.Settings.Optimize
+            {
+                StudyName = OptimizeStudyNameTextBox.Text,
+                Sampler = sampler,
+                NumberOfTrials = numOfTrials,
+                ContinueStudy = OptimizeContinueCheckBox.IsChecked == true,
+                CopyStudy = OptimizeCopyCheckBox.IsChecked == true,
+                SamplerType = _settings.Optimize.SamplerType,
+                Timeout = double.Parse(OptimizeTimeoutTextBox.Text, CultureInfo.InvariantCulture),
+                GcAfterTrial = GcAfterTrial.HasGeometry,
+                ShowRealtimeResult = false,
+                IgnoreDuplicateSampling = OptimizeIgnoreDuplicateSamplingCheckBox.IsChecked == true,
+                DisableViewportDrawing = OptimizeDisableViewportUpdateCheckBox.IsChecked == true
             };
         }
     }

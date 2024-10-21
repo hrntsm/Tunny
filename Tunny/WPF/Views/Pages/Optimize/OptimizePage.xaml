@@ -64,6 +64,7 @@
             VerticalAlignment="Center"
             Content="Timeout (sec)" />
         <TextBox
+            x:Name="OptimizeTimeoutTextBox"
             Grid.Row="2"
             Grid.Column="1"
             Margin="5"
@@ -95,6 +96,7 @@
                     VerticalAlignment="Center"
                     Content="Create New" />
                 <TextBox
+                    x:Name="OptimizeStudyNameTextBox"
                     Grid.Row="0"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
@@ -104,18 +106,21 @@
                     TextAlignment="Right" />
 
                 <CheckBox
+                    x:Name="OptimizeInMemoryCheckBox"
                     Grid.Row="1"
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="InMemory" />
                 <CheckBox
+                    x:Name="OptimizeContinueCheckBox"
                     Grid.Row="1"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="Continue" />
                 <CheckBox
+                    x:Name="OptimizeCopyCheckBox"
                     Grid.Row="1"
                     Grid.Column="2"
                     HorizontalAlignment="Center"
@@ -136,31 +141,36 @@
                     ItemsSource="{Binding Samplers}" />
             </Grid>
         </GroupBox>
-
-        <StackPanel
+        <CheckBox
+            x:Name="OptimizeIgnoreDuplicateSamplingCheckBox"
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button
-                    x:Name="OptimizeRunButton"
-                    Grid.Column="0"
-                    Margin="5"
-                    Click="RunOptimizeButton_Click"
-                    Content="RunOptimize" />
-                <Button
-                    x:Name="OptimizeStopButton"
-                    Grid.Column="1"
-                    Margin="5"
-                    Click="OptimizeStopButton_Click"
-                    Content="Stop"
-                    IsEnabled="False" />
-            </Grid>
-        </StackPanel>
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Ignore Duplicate Sampling" />
+        <CheckBox
+            x:Name="OptimizeDisableViewportUpdateCheckBox"
+            Grid.Row="4"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Disable Viewport Update" />
+
+        <Button
+            x:Name="OptimizeRunButton"
+            Grid.Row="6"
+            Grid.Column="0"
+            Margin="5"
+            Click="RunOptimizeButton_Click"
+            Content="RunOptimize" />
+        <Button
+            x:Name="OptimizeStopButton"
+            Grid.Row="6"
+            Grid.Column="1"
+            Margin="5"
+            Click="OptimizeStopButton_Click"
+            Content="Stop"
+            IsEnabled="False" />
 
         <Frame
             x:Name="OptimizeSettingsPage"

@@ -59,15 +59,15 @@ namespace Tunny.Solver
             TLog.MethodStart();
             EndState = EndState.Error;
             OptimizeProcess.IsForcedStopOptimize = false;
-            SamplerType samplerType = Settings.Optimize.SelectSampler;
+            SamplerType samplerType = Settings.Optimize.SamplerType;
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = Objective.Directions;
-            if (string.IsNullOrEmpty(Settings.StudyName))
+            if (string.IsNullOrEmpty(Settings.Optimize.StudyName) || Settings.Optimize.StudyName.Equals("AUTO", StringComparison.OrdinalIgnoreCase))
             {
-                Settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                Settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
             }
-            TLog.Info($"Optimization \"{Settings.StudyName}\" started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
+            TLog.Info($"Optimization \"{Settings.Optimize.StudyName}\" started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             InitializePythonEngine();
             using (Py.GIL())
@@ -113,7 +113,7 @@ namespace Tunny.Solver
                 TunnyMessageBox.Show("Human-in-the-Loop(Preferential GP optimization) only supports single objective optimization. Optimization is run without considering constraints.", "Tunny");
             }
             string[] objNickName = Objective.GetNickNames();
-            study = preferentialOpt.CreateStudy(nBatch, Settings.StudyName, storage, objNickName[0]);
+            study = preferentialOpt.CreateStudy(nBatch, Settings.Optimize.StudyName, storage, objNickName[0]);
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, 0, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)), false);
             HumanInTheLoopBase.WakeOptunaDashboard(Settings.Storage.Path, TEnvVariables.PythonPath);
@@ -126,7 +126,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
             dynamic pruner = Settings.Pruner.ToPython();
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, pruner, Settings.Optimize.ContinueStudy);
+            study = Study.CreateStudy(optuna, Settings.Optimize.StudyName, sampler, directions, storage, pruner, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(nTrials, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -137,7 +137,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             PyObject optuna = Py.Import("optuna");
-            study = Study.CreateStudy(optuna, Settings.StudyName, sampler, directions, storage, null, Settings.Optimize.ContinueStudy);
+            study = Study.CreateStudy(optuna, Settings.Optimize.StudyName, sampler, directions, storage, null, Settings.Optimize.ContinueStudy);
             string[] objNickName = Objective.GetNickNames();
             var optInfo = new OptimizationHandlingInfo(int.MaxValue, timeout, study, storage, artifactBackend, FishEgg, objNickName);
             SetStudyUserAttr(study, PyConverter.EnumeratorToPyList(Variables.Select(v => v.NickName)));
@@ -154,7 +154,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             var storage = new StorageHandler();
             StudySummary[] studySummaries = storage.GetStudySummaries(Settings.Storage.Path);
-            bool containStudyName = studySummaries.Select(s => s.StudyName).Contains(Settings.StudyName);
+            bool containStudyName = studySummaries.Select(s => s.StudyName).Contains(Settings.Optimize.StudyName);
 
             if (!containStudyName)
             {
@@ -166,7 +166,7 @@ namespace Tunny.Solver
                 return false;
             }
 
-            bool isSameObjectiveNumber = studySummaries.FirstOrDefault(s => s.StudyName == Settings.StudyName)?.Directions.Length == nObjective;
+            bool isSameObjectiveNumber = studySummaries.FirstOrDefault(s => s.StudyName == Settings.Optimize.StudyName)?.Directions.Length == nObjective;
             if (isSameObjectiveNumber)
             {
                 return true;
@@ -542,7 +542,7 @@ namespace Tunny.Solver
             if (Settings.Storage.Type == StorageType.InMemory)
             {
                 dynamic optuna = Py.Import("optuna");
-                string studyName = Settings.StudyName;
+                string studyName = Settings.Optimize.StudyName;
                 optuna.copy_study(from_study_name: studyName, to_study_name: studyName, from_storage: storage, to_storage: new StorageHandler().CreateNewTStorage(false, Settings.Storage));
             }
         }

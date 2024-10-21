@@ -146,7 +146,7 @@ namespace Tunny.WPF
         private void SetSamplerType(SamplerType samplerType)
         {
             _optimizePage.ChangeTargetSampler(samplerType);
-            _settings.Optimize.SelectSampler = samplerType;
+            _settings.Optimize.SamplerType = samplerType;
         }
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
@@ -174,7 +174,7 @@ namespace Tunny.WPF
 
         private void QuickAccessFileSaveRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            _settings.Optimize.Sampler = _optimizePage.GetCurrentSettings();
+            _settings.Optimize = _optimizePage.GetCurrentSettings();
             _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
     }

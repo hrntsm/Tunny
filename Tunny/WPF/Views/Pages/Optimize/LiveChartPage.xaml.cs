@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 using LiveChartsCore.Defaults;
@@ -23,6 +24,11 @@ namespace Tunny.WPF.Views.Pages.Optimize
         public void AddPoint(ObservablePoint point)
         {
             _viewModel.ChartPoints.Add(point);
+        }
+
+        internal void ClearPoints()
+        {
+            _viewModel.ChartPoints.Clear();
         }
     }
 }
