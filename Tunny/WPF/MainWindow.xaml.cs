@@ -1,5 +1,9 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls.Ribbon;
+
+using CefSharp;
+using CefSharp.Wpf;
 
 using Grasshopper.GUI;
 
@@ -25,6 +29,7 @@ namespace Tunny.WPF
         {
             TLog.MethodStart();
             InitializeComponent();
+            InitializeCef();
 
             DocumentEditor = documentEditor;
             Component = component;
@@ -38,6 +43,17 @@ namespace Tunny.WPF
             MainWindowFrame.Content = _optimizePage;
 
             UpdateTitle();
+        }
+
+        private static void InitializeCef()
+        {
+            string cachePath = Path.Combine(TEnvVariables.TunnyEnvPath, "Cef");
+            var cefSettings = new CefSettings
+            {
+                LogFile = Path.Combine(cachePath, "cef_log.txt"),
+                CachePath = Path.Combine(cachePath, "Cache"),
+            };
+            Cef.Initialize(settings: cefSettings, performDependencyCheck: false, browserProcessHandler: null);
         }
 
         private void UpdateTitle()

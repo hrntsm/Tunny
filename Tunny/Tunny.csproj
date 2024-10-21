@@ -25,6 +25,7 @@
     <Platforms>$(Platform)</Platforms>
     <PlatformName>$(Platform)</PlatformName>
     <PlatformTarget>$(Platform)</PlatformTarget>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 
+using CefSharp;
+
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
@@ -25,6 +27,7 @@ namespace Tunny.UI
         public override GH_LoadingInstruction PriorityLoad()
         {
             TLog.InitializeLogger();
+            CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
