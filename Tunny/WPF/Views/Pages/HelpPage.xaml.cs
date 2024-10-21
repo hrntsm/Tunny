@@ -1,47 +1,57 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+
+using CefSharp;
 
 using Tunny.WPF.Common;
 
 namespace Tunny.WPF.Views.Pages
 {
-    public partial class HelpPage : Page
+    public partial class HelpPage : Page, IDisposable
     {
+        private readonly CefSharp.Wpf.ChromiumWebBrowser _browser;
+
         public HelpPage()
         {
             InitializeComponent();
+            _browser = new CefSharp.Wpf.ChromiumWebBrowser();
+            HelpPageFrame.Content = _browser;
         }
-
-        public HelpPage(HelpType type)
+        internal void OpenSite(HelpType type)
         {
-            InitializeComponent();
-            var browser = new CefSharp.Wpf.ChromiumWebBrowser();
             switch (type)
             {
                 case HelpType.TunnyAbout:
-                    browser.Address = "https://tunny-docs.deno.dev/";
+                    _browser.Address = "https://tunny-docs.deno.dev/";
                     break;
                 case HelpType.TunnyDocument:
-                    browser.Address = "https://tunny-docs.deno.dev/docs/getting-start";
+                    _browser.Address = "https://tunny-docs.deno.dev/docs/getting-start";
                     break;
                 case HelpType.OptunaSampler:
-                    browser.Address = "https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
+                    _browser.Address = "https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
                     break;
                 case HelpType.OptunaHub:
-                    browser.Address = "https://hub.optuna.org/";
+                    _browser.Address = "https://hub.optuna.org/";
                     break;
                 case HelpType.TunnyLicense:
-                    browser.Address = "https://github.com/hrntsm/Tunny/blob/main/LICENSE";
+                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/LICENSE";
                     break;
                 case HelpType.PythonPackagesLicense:
-                    browser.Address = "https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES";
+                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES";
                     break;
                 case HelpType.OtherLicense:
-                    browser.Address = "https://github.com/hrntsm/Tunny/blob/main/THIRD_PARTY_LICENSES";
+                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/THIRD_PARTY_LICENSES";
                     break;
                 default:
-                    throw new System.ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
-            HelpPageFrame.Content = browser;
+        }
+
+        public void Dispose()
+        {
+            Cef.Shutdown();
+            _browser?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

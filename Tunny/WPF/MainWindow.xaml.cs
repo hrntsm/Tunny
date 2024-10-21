@@ -24,12 +24,13 @@ namespace Tunny.WPF
 
         private readonly TSettings _settings;
         private readonly OptimizePage _optimizePage;
+        private readonly HelpPage _helpPage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
             TLog.MethodStart();
             InitializeComponent();
-            InitializeCef();
+            _helpPage = new HelpPage();
 
             DocumentEditor = documentEditor;
             Component = component;
@@ -45,16 +46,6 @@ namespace Tunny.WPF
             UpdateTitle();
         }
 
-        private static void InitializeCef()
-        {
-            string cachePath = Path.Combine(TEnvVariables.TunnyEnvPath, "Cef");
-            var cefSettings = new CefSettings
-            {
-                LogFile = Path.Combine(cachePath, "cef_log.txt"),
-                CachePath = Path.Combine(cachePath, "Cache"),
-            };
-            Cef.Initialize(settings: cefSettings, performDependencyCheck: false, browserProcessHandler: null);
-        }
 
         private void UpdateTitle()
         {
@@ -64,49 +55,43 @@ namespace Tunny.WPF
 
         private void TunnyAboutButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.TunnyAbout);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.TunnyAbout);
         }
 
         private void TunnyLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.TunnyLicense);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.TunnyLicense);
         }
 
         private void PythonPackagesLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.PythonPackagesLicense);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.PythonPackagesLicense);
         }
 
         private void OtherLicenseHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.OtherLicense);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.OtherLicense);
         }
 
         private void TunnyDocumentHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.TunnyDocument);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.TunnyDocument);
         }
 
         private void OptunaSamplerHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.OptunaSampler);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.OptunaSampler);
         }
 
         private void OptunaHubHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = new HelpPage(HelpType.OptunaHub);
-            MainWindowFrame.Content = page;
+            OpenHelpPage(HelpType.OptunaHub);
         }
 
-        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
+        private void OpenHelpPage(HelpType helpType)
         {
-            Application.Current.Shutdown();
+            _helpPage.OpenSite(helpType);
+            MainWindowFrame.Content = _helpPage;
         }
 
         private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
@@ -163,6 +148,7 @@ namespace Tunny.WPF
         {
             _optimizePage.ChangeTargetSampler(samplerType);
             _settings.Optimize.SamplerType = samplerType;
+            MainWindowFrame.Content = _optimizePage;
         }
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
