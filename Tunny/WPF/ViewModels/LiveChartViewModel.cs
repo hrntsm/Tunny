@@ -17,6 +17,12 @@ namespace Tunny.WPF.ViewModels
 {
     public class LiveChartViewModel : INotifyPropertyChanged
     {
+        private ObservableCollection<string> _xTarget;
+        public ObservableCollection<string> XTarget { get => _xTarget; set => SetProperty(ref _xTarget, value); }
+
+        private ObservableCollection<string> _yTarget;
+        public ObservableCollection<string> YTarget { get => _yTarget; set => SetProperty(ref _yTarget, value); }
+
         private ObservableCollection<ObservablePoint> _chartPoints;
         public ObservableCollection<ObservablePoint> ChartPoints { get => _chartPoints; set => SetProperty(ref _chartPoints, value); }
 

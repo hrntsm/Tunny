@@ -1,9 +1,5 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Ribbon;
-
-using CefSharp;
-using CefSharp.Wpf;
 
 using Grasshopper.GUI;
 
@@ -45,7 +41,6 @@ namespace Tunny.WPF
 
             UpdateTitle();
         }
-
 
         private void UpdateTitle()
         {

@@ -42,7 +42,8 @@
             <ComboBox
                 x:Name="ChartXTargetComboBox"
                 Grid.Column="2"
-                Margin="5" />
+                Margin="5"
+                ItemsSource="{Binding XTarget}" />
             <Label
                 Grid.Column="3"
                 HorizontalAlignment="Center"
@@ -51,7 +52,8 @@
             <ComboBox
                 x:Name="ChartYTargetComboBox"
                 Grid.Column="4"
-                Margin="5" />
+                Margin="5"
+                ItemsSource="{Binding YTarget}" />
         </Grid>
 
         <lvc:CartesianChart
