@@ -63,10 +63,6 @@ namespace Tunny.Solver
             int nTrials = Settings.Optimize.NumberOfTrials;
             double timeout = Settings.Optimize.Timeout <= 0 ? -1 : Settings.Optimize.Timeout;
             string[] directions = Objective.Directions;
-            if (string.IsNullOrEmpty(Settings.Optimize.StudyName) || Settings.Optimize.StudyName.Equals("AUTO", StringComparison.OrdinalIgnoreCase))
-            {
-                Settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
-            }
             TLog.Info($"Optimization \"{Settings.Optimize.StudyName}\" started with {nTrials} trials and {timeout} seconds timeout and {samplerType} sampler.");
 
             InitializePythonEngine();

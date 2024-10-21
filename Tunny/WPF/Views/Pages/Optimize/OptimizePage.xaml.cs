@@ -152,7 +152,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             _chart1.ClearPoints();
             _chart2.ClearPoints();
 
-            _settings.Optimize = GetCurrentSettings();
+            _settings.Optimize = GetCurrentSettings(true);
 
             var parentWindow = Window.GetWindow(this) as MainWindow;
             GH_DocumentEditor ghCanvas = parentWindow.DocumentEditor;
@@ -211,7 +211,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             }
         }
 
-        internal Core.Settings.Optimize GetCurrentSettings()
+        internal Core.Settings.Optimize GetCurrentSettings(bool computeAutoValue = false)
         {
             TLog.MethodStart();
             var sampler = new Sampler
@@ -235,7 +235,8 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 : param1;
             sampler.NsgaII.PopulationSize = param2;
             sampler.NsgaIII.PopulationSize = param2;
-            return new Core.Settings.Optimize
+
+            var settings = new Core.Settings.Optimize
             {
                 StudyName = OptimizeStudyNameTextBox.Text,
                 Sampler = sampler,
@@ -249,6 +250,13 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 IgnoreDuplicateSampling = OptimizeIgnoreDuplicateSamplingCheckBox.IsChecked == true,
                 DisableViewportDrawing = OptimizeDisableViewportUpdateCheckBox.IsChecked == true
             };
+
+            if (computeAutoValue)
+            {
+                settings.ComputeAutoValue();
+            }
+
+            return settings;
         }
     }
 }
