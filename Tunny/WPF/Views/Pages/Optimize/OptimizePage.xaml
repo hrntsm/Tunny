@@ -19,8 +19,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="4*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="4*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="9*" />
@@ -32,12 +32,18 @@
         </Grid.ColumnDefinitions>
 
         <Label
+            x:Name="OptimizeSamplerTypeLabel"
+            Content="SamplerType:"
+            FontWeight="Bold" />
+        <Label
             x:Name="OptimizeTrialNumberParam1Label"
+            Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Trial Param1" />
         <TextBox
             x:Name="OptimizeTrialNumberParam1TextBox"
+            Grid.Row="1"
             Grid.Column="1"
             Margin="5"
             VerticalAlignment="Center"
@@ -45,27 +51,27 @@
             TextAlignment="Right" />
         <Label
             x:Name="OptimizeTrialNumberParam2Label"
-            Grid.Row="1"
+            Grid.Row="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Trial Param2" />
         <TextBox
             x:Name="OptimizeTrialNumberParam2TextBox"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.Column="1"
             Margin="5"
             VerticalAlignment="Center"
             Text="100"
             TextAlignment="Right" />
         <Label
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Timeout (sec)" />
         <TextBox
             x:Name="OptimizeTimeoutTextBox"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="1"
             Margin="5"
             VerticalAlignment="Center"
@@ -73,7 +79,7 @@
             TextAlignment="Right" />
 
         <GroupBox
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Header="Study Name">
@@ -143,14 +149,14 @@
         </GroupBox>
         <CheckBox
             x:Name="OptimizeIgnoreDuplicateSamplingCheckBox"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Ignore Duplicate Sampling" />
         <CheckBox
             x:Name="OptimizeDisableViewportUpdateCheckBox"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"

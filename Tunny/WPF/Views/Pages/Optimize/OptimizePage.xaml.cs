@@ -22,6 +22,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 {
     public partial class OptimizePage : Page
     {
+        private const string SamplerTypeLabelPrefix = "SamplerType: ";
         private const string TrialNumberLabelPrefix = "Trial: ";
         private readonly TSettings _settings;
         private ProgressBar _progressBar;
@@ -49,6 +50,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
         private void InitializeUIValues()
         {
+            OptimizeSamplerTypeLabel.Content = SamplerTypeLabelPrefix + _settings.Optimize.SamplerType; 
             OptimizeTimeoutTextBox.Text = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
 
             OptimizeStudyNameTextBox.Text = _settings.Optimize.StudyName;
