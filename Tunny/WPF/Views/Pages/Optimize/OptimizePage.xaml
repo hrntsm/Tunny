@@ -17,10 +17,8 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="4*" />
+            <RowDefinition Height="3.5*" />
+            <RowDefinition Height="3.5*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="9*" />
@@ -33,53 +31,70 @@
 
         <Label
             x:Name="OptimizeSamplerTypeLabel"
-            Content="SamplerType:"
+            Grid.ColumnSpan="2"
+            FontSize="16"
             FontWeight="Bold" />
-        <Label
-            x:Name="OptimizeTrialNumberParam1Label"
-            Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Trial Param1" />
-        <TextBox
-            x:Name="OptimizeTrialNumberParam1TextBox"
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="5"
-            VerticalAlignment="Center"
-            Text="100"
-            TextAlignment="Right" />
-        <Label
-            x:Name="OptimizeTrialNumberParam2Label"
-            Grid.Row="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Trial Param2" />
-        <TextBox
-            x:Name="OptimizeTrialNumberParam2TextBox"
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="5"
-            VerticalAlignment="Center"
-            Text="100"
-            TextAlignment="Right" />
-        <Label
-            Grid.Row="3"
-            Grid.Column="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Timeout (sec)" />
-        <TextBox
-            x:Name="OptimizeTimeoutTextBox"
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="5"
-            VerticalAlignment="Center"
-            Text="0"
-            TextAlignment="Right" />
 
         <GroupBox
-            Grid.Row="4"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Header="Number of Trials">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    x:Name="OptimizeTrialNumberParam1Label"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Trial Param1" />
+                <TextBox
+                    x:Name="OptimizeTrialNumberParam1TextBox"
+                    Grid.Column="1"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="100"
+                    TextAlignment="Right" />
+                <Label
+                    x:Name="OptimizeTrialNumberParam2Label"
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Trial Param2" />
+                <TextBox
+                    x:Name="OptimizeTrialNumberParam2TextBox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="100"
+                    TextAlignment="Right" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Timeout (sec)" />
+                <TextBox
+                    x:Name="OptimizeTimeoutTextBox"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="5"
+                    VerticalAlignment="Center"
+                    Text="0"
+                    TextAlignment="Right" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Header="Study Name">
@@ -147,16 +162,17 @@
                     ItemsSource="{Binding Samplers}" />
             </Grid>
         </GroupBox>
+
         <CheckBox
             x:Name="OptimizeIgnoreDuplicateSamplingCheckBox"
-            Grid.Row="5"
+            Grid.Row="3"
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Content="Ignore Duplicate Sampling" />
         <CheckBox
             x:Name="OptimizeDisableViewportUpdateCheckBox"
-            Grid.Row="5"
+            Grid.Row="3"
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -164,14 +180,14 @@
 
         <Button
             x:Name="OptimizeRunButton"
-            Grid.Row="6"
+            Grid.Row="4"
             Grid.Column="0"
             Margin="5"
             Click="RunOptimizeButton_Click"
             Content="RunOptimize" />
         <Button
             x:Name="OptimizeStopButton"
-            Grid.Row="6"
+            Grid.Row="4"
             Grid.Column="1"
             Margin="5"
             Click="OptimizeStopButton_Click"
@@ -180,17 +196,17 @@
 
         <Frame
             x:Name="OptimizeSettingsPage"
-            Grid.Row="7"
+            Grid.Row="5"
             Grid.ColumnSpan="2" />
 
         <Frame
             x:Name="OptimizeLiveChart1"
-            Grid.RowSpan="6"
+            Grid.RowSpan="4"
             Grid.Column="2"
             Margin="5" />
         <Frame
             x:Name="OptimizeLiveChart2"
-            Grid.Row="6"
+            Grid.Row="4"
             Grid.RowSpan="3"
             Grid.Column="2"
             Margin="5" />

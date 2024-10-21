@@ -50,7 +50,6 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
         private void InitializeUIValues()
         {
-            OptimizeSamplerTypeLabel.Content = SamplerTypeLabelPrefix + _settings.Optimize.SamplerType; 
             OptimizeTimeoutTextBox.Text = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
 
             OptimizeStudyNameTextBox.Text = _settings.Optimize.StudyName;
@@ -127,6 +126,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 default:
                     throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);
             }
+            OptimizeSamplerTypeLabel.Content = SamplerTypeLabelPrefix + samplerType; 
             OptimizeTrialNumberParam1Label.Content = param.Param1Label;
             OptimizeTrialNumberParam2Label.Content = param.Param2Label;
             OptimizeTrialNumberParam2Label.Visibility = param.Param2Visibility;
