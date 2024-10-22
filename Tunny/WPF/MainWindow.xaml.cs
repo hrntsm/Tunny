@@ -159,7 +159,7 @@ namespace Tunny.WPF
             {
                 FileName = "fish.log",
                 DefaultExt = "log",
-                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite|All Files (*.*)|*.*",
                 Title = @"Set Tunny Result File Path",
             };
 
