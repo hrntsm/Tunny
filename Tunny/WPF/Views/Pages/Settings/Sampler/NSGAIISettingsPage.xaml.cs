@@ -50,7 +50,8 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                 : nsgaii.MutationProb.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
             page.NsgaiiCrossoverProbabilityTextBox.Text = nsgaii.CrossoverProb.ToString(System.Globalization.CultureInfo.InvariantCulture);
             page.NsgaiiSwappingProbabilityTextBox.Text = nsgaii.SwappingProb.ToString(System.Globalization.CultureInfo.InvariantCulture);
-            page.NsgaiiCrossoverComboBox.SelectedIndex = (int)Enum.Parse(typeof(NsgaCrossoverType), nsgaii.Crossover);
+            page.NsgaiiCrossoverComboBox.SelectedIndex = string.IsNullOrEmpty(nsgaii.Crossover)
+                ? 0 : (int)Enum.Parse(typeof(NsgaCrossoverType), nsgaii.Crossover);
             return page;
         }
     }
