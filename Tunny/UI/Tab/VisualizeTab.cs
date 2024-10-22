@@ -17,17 +17,7 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            if (File.Exists(_settings.Storage.Path) == false)
-            {
-                ResultFileNotExistErrorMessage();
-                return;
-            }
-            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
-            string storagePath = _settings.Storage.Path;
-
-            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
-            dashboard.Run(true);
+            throw new NotImplementedException("Already implemented in Tunny.WPF");
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)

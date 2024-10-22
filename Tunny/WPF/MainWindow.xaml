@@ -40,6 +40,12 @@
             </Ribbon.QuickAccessToolBar>
 
             <RibbonTab Header="Optimize">
+                <RibbonGroup>
+                    <RibbonButton
+                        Label="AUTO Sampler"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
                 <RibbonGroup Header="Bayesian Optimization">
                     <RibbonButton
                         Click="OptimizeTpeRibbonButton_Click"
@@ -63,7 +69,7 @@
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
-                <RibbonGroup Header="Generic Algorighm">
+                <RibbonGroup Header="Genetic Algorighm">
                     <RibbonButton
                         Click="OptimizeNsgaiiRibbonButton_Click"
                         Label="NSGA-II"
@@ -118,8 +124,16 @@
             </RibbonTab>
             <RibbonTab Header="Visualize">
                 <RibbonGroup Header="Browser">
-                    <RibbonButton Label="Optuna Dashboard" LargeImageSource="Assets/Icon/Optuna.png" />
-                    <RibbonButton Label="TT Design Explorer" LargeImageSource="Assets/Icon/DesignExplorer.png" />
+                    <RibbonButton
+                        Click="VisualizeRunOptunaDashboardRibbonButton_Click"
+                        Label="Optuna Dashboard"
+                        LargeImageSource="Assets/Icon/Optuna.png"
+                        SmallImageSource="Assets/Icon/Optuna.png" />
+                    <RibbonButton
+                        Click="VisualizeRunDesignExplorerRibbonButton_Click"
+                        Label="TT Design Explorer"
+                        LargeImageSource="Assets/Icon/DesignExplorer.png"
+                        SmallImageSource="Assets/Icon/DesignExplorer.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Visualization">
                     <RibbonButton
@@ -196,6 +210,7 @@
             Grid.Row="1"
             Background="AliceBlue"
             NavigationUIVisibility="Hidden" />
+
         <StatusBar Grid.Row="2" Background="#FF93C6F8">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -212,7 +227,7 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem>
-                <Label Content="Ready" />
+                <Label x:Name="StatusBarLabel" Content="Ready" />
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem x:Name="StatusBarTrialNumberLabel" Grid.Column="2">

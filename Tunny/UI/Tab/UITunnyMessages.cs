@@ -71,17 +71,6 @@ namespace Tunny.UI
         }
 
         // VisualizeTab ==========================
-        private static void ResultFileNotExistErrorMessage()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "Please set exist result file path.",
-                "Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
-        }
-
         private static bool HandleOnly1ObjectiveMessage()
         {
             TLog.MethodStart();

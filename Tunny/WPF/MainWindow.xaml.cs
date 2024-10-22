@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls.Ribbon;
 
 using Grasshopper.GUI;
@@ -13,7 +15,7 @@ using Tunny.WPF.Views.Pages.Optimize;
 
 namespace Tunny.WPF
 {
-    public partial class MainWindow : RibbonWindow
+    public partial class MainWindow : RibbonWindow, IDisposable
     {
         internal readonly GH_DocumentEditor DocumentEditor;
         internal readonly OptimizeComponentBase Component;
@@ -173,6 +175,41 @@ namespace Tunny.WPF
         {
             _settings.Optimize = _optimizePage.GetCurrentSettings();
             _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
+        }
+
+        private void VisualizeRunOptunaDashboardRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            TLog.MethodStart();
+            if (File.Exists(_settings.Storage.Path) == false)
+            {
+                TunnyMessageBox.Error_ResultFileNotExist();
+                return;
+            }
+            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
+            string storagePath = _settings.Storage.Path;
+
+            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
+            dashboard.Run(true);
+        }
+
+        private void VisualizeRunDesignExplorerRibbonButton_Click(object sender, RoutedEventArgs e)
+        {
+            TLog.MethodStart();
+            TunnyMessageBox.Error_NoImplemented();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _helpPage?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
