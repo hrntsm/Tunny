@@ -12,6 +12,7 @@ using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
+using Tunny.WPF.Views.Windows;
 
 namespace Tunny.WPF
 {
@@ -195,7 +196,8 @@ namespace Tunny.WPF
         private void VisualizeRunDesignExplorerRibbonButton_Click(object sender, RoutedEventArgs e)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Error_NoImplemented();
+            var selector = new TargetStudyNameSelector(_settings);
+            selector.Show();
         }
 
         protected virtual void Dispose(bool disposing)

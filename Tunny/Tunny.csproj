@@ -57,6 +57,7 @@
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc3.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Prism.Core" Version="9.0.537" />
     <PackageReference Include="pythonnet" Version="3.0.1" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
@@ -126,9 +127,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WPF\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WPF\Assets\Icon\ContentSave.png" />

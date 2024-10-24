@@ -38,6 +38,17 @@ namespace Tunny.WPF.Common
             }
         }
 
+        internal static void Error_NoStudyNameSelected()
+        {
+            TLog.MethodStart();
+            Show(
+                "Please set StudyName.",
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+        }
+
         internal static void Error_ResultFileNotExist()
         {
             TLog.MethodStart();
