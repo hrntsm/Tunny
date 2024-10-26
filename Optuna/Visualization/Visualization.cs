@@ -126,12 +126,14 @@ namespace Optuna.Visualization
         public string Show()
         {
             CheckPlotCreated();
+            _fig.update_layout(paper_bgcolor: "rgba(0,0,0,0)");
             return _fig.to_html();
         }
 
         public void SaveHtml(string path)
         {
             CheckPlotCreated();
+            _fig.update_layout(paper_bgcolor: "rgba(0,0,0,0)");
             _fig.write_html(path);
         }
     }
