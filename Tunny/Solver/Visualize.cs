@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows;
 
 using Optuna.Study;
@@ -25,9 +26,10 @@ namespace Tunny.Solver
             _hasConstraint = hasConstraint;
         }
 
-        public void Plot(Plot pSettings)
+        public string Plot(Plot pSettings)
         {
             TLog.MethodStart();
+            string htmlPath = string.Empty;
             PythonEngine.Initialize();
             using (Py.GIL())
             {
@@ -36,13 +38,13 @@ namespace Tunny.Solver
                 dynamic study = Study.LoadStudy(optuna, storage, pSettings.TargetStudyName);
                 if (study == null)
                 {
-                    return;
+                    return string.Empty;
                 }
 
                 try
                 {
                     Visualization visualize = CreateFigure(study, pSettings);
-                    FigureActions(visualize, pSettings);
+                    htmlPath = FigureActions(visualize, pSettings);
                 }
                 catch (Exception)
                 {
@@ -51,6 +53,7 @@ namespace Tunny.Solver
                 }
             }
             PythonEngine.Shutdown();
+            return htmlPath;
         }
 
         private Visualization CreateFigure(dynamic study, Plot pSettings)
@@ -94,32 +97,52 @@ namespace Tunny.Solver
             return visualize;
         }
 
-        private static void FigureActions(Visualization visualize, Plot pSettings)
+        private static string FigureActions(Visualization visualize, Plot pSettings)
         {
             TLog.MethodStart();
             if (visualize.HasFigure && pSettings.PlotActionType == PlotActionType.Show)
             {
-                visualize.Show();
+                return SaveFigure(visualize, pSettings.PlotTypeName, true);
             }
             else if (visualize.HasFigure && pSettings.PlotActionType == PlotActionType.Save)
             {
-                SaveFigure(visualize, pSettings.PlotTypeName);
+                return SaveFigure(visualize, pSettings.PlotTypeName, false);
+            }
+            else
+            {
+                throw new ArgumentException("This visualization type is not supported in this study case.");
             }
         }
 
-        private static void SaveFigure(Visualization visualize, string name)
+        private static string SaveFigure(Visualization visualize, string name, bool forShow)
         {
             TLog.MethodStart();
-            var sfd = new Microsoft.Win32.SaveFileDialog
+            string savePath = string.Empty;
+            if (forShow)
             {
-                FileName = name + ".html",
-                Filter = @"HTML file(*.html)|*.html",
-                Title = @"Save"
-            };
-            if (sfd.ShowDialog() == true)
-            {
-                visualize.SaveHtml(sfd.FileName);
+                savePath = Path.Combine(TEnvVariables.TmpDirPath, name + ".html");
             }
+            else
+            {
+                var sfd = new Microsoft.Win32.SaveFileDialog
+                {
+                    FileName = name + ".html",
+                    Filter = @"HTML file(*.html)|*.html",
+                    Title = @"Save"
+                };
+                if (sfd.ShowDialog() == true)
+                {
+                    savePath = sfd.FileName;
+                }
+
+            }
+            if (string.IsNullOrEmpty(savePath))
+            {
+                return string.Empty;
+            }
+
+            visualize.SaveHtml(savePath);
+            return savePath;
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 
+using Optuna.Storage;
 using Optuna.Util;
 
 using Python.Runtime;
@@ -20,6 +21,12 @@ namespace Optuna.Visualization
         public Visualization(dynamic study)
         {
             _study = study;
+        }
+
+        public Visualization(string storagePath, string studyName)
+        {
+            IOptunaStorage storage = StorageHelper.GetStorage(storagePath);
+            _study = Study.Study.LoadStudy(Py.Import("optuna"), storage, studyName);
         }
 
         public void Slice(string objectiveName, int objectiveIndex, string variableName)
@@ -116,10 +123,10 @@ namespace Optuna.Visualization
             }
         }
 
-        public void Show()
+        public string Show()
         {
             CheckPlotCreated();
-            _fig.show();
+            return _fig.to_html();
         }
 
         public void SaveHtml(string path)

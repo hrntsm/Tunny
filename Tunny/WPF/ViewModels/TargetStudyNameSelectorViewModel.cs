@@ -86,7 +86,7 @@ namespace Tunny.WPF.ViewModels
         {
         }
 
-        public TargetStudyNameSelectorViewModel(Core.Settings.TSettings settings)
+        public TargetStudyNameSelectorViewModel(TSettings settings)
         {
             _settings = settings;
             StudyNameItems = StudyNamesFromStorage(settings.Storage.Path);

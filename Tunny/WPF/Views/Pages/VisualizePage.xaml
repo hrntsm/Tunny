@@ -10,7 +10,7 @@
     d:DesignWidth="1000"
     mc:Ignorable="d">
     <Page.DataContext>
-        <viewModels:OptimizeViewModel />
+        <viewModels:VisualizeViewModel />
     </Page.DataContext>
 
     <Grid Margin="10">
@@ -38,12 +38,14 @@
             x:Name="VisualizeTargetStudyLabel"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Target Study" />
+            Content="Select Target Study" />
         <ComboBox
             x:Name="VisualizeTargetStudyComboBox"
             Grid.Row="1"
             Margin="5"
-            ItemsSource="{Binding Samplers}" />
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding StudyNameItems}"
+            SelectedItem="{Binding SelectedStudyName}" />
 
         <Label
             x:Name="VisualizeTargetObjectiveLabel"
@@ -55,20 +57,24 @@
             x:Name="VisualizeTargetObjectiveListView"
             Grid.Row="3"
             Margin="5"
-            d:ItemsSource="{d:SampleData ItemCount=5}">
+            ItemsSource="{Binding ObjectiveItems}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn>
+                    <GridViewColumn Width="50" Header="IsTarget">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Margin="5,0" />
+                                <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn />
+                    <GridViewColumn
+                        Width="90"
+                        DisplayMemberBinding="{Binding Name}"
+                        Header="Objective Name" />
                 </GridView>
             </ListView.View>
         </ListView>
+
         <Label
             x:Name="VisualizeTargetVariableLabel"
             Grid.Row="4"
@@ -79,41 +85,57 @@
             x:Name="VisualizeTargetVariableListView"
             Grid.Row="5"
             Margin="5"
-            d:ItemsSource="{d:SampleData ItemCount=5}">
+            ItemsSource="{Binding VariableItems}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn>
+                    <GridViewColumn Width="50" Header="IsTarget">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Margin="5,0" />
+                                <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn />
+                    <GridViewColumn
+                        Width="90"
+                        DisplayMemberBinding="{Binding Name}"
+                        Header="Variable Name" />
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button
-            Grid.Row="9"
-            Margin="5"
-            Content="Plot" />
+
+        <Grid Grid.Row="9">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Margin="5"
+                Command="{Binding PlotCommand}"
+                Content="Plot" />
+            <Button
+                Grid.Column="1"
+                Margin="5"
+                Command="{Binding PlotCommand}"
+                Content="Save" />
+        </Grid>
 
         <Label
             Grid.Row="10"
             Margin="5"
-            FontSize="10"
-            Content="Trial Number to Add Export List" />
+            Content="Trial Number to Add Export List"
+            FontSize="10" />
         <TextBox Grid.Row="11" Margin="5" />
         <Button
             Grid.Row="12"
-            Margin="5"
+            Margin="20,5,20,5"
             Content="Add Export" />
 
         <Frame
             x:Name="VisualizePlotFrame"
             Grid.Row="0"
             Grid.RowSpan="13"
-            Grid.Column="1" />
+            Grid.Column="1"
+            Content="{Binding PlotFrame}" />
 
     </Grid>
 </Page>

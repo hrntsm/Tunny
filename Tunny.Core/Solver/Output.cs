@@ -23,7 +23,7 @@ namespace Tunny.Core.Solver
         public Trial[] GetTargetTrial(int[] targetNumbers, string studyName)
         {
             TLog.MethodStart();
-            IOptunaStorage storage = StorageHandler.GetStorage(_storagePath);
+            IOptunaStorage storage = StorageHelper.GetStorage(_storagePath);
             Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
             return targetStudy == null ? Array.Empty<Trial>() : GetTargetTrials(targetNumbers, targetStudy);
         }
@@ -31,7 +31,7 @@ namespace Tunny.Core.Solver
         public string[] GetMetricNames(string studyName)
         {
             TLog.MethodStart();
-            IOptunaStorage storage = StorageHandler.GetStorage(_storagePath);
+            IOptunaStorage storage = StorageHelper.GetStorage(_storagePath);
             Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
             if (targetStudy == null)
             {

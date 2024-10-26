@@ -23,6 +23,7 @@ namespace Tunny.WPF
 
         private readonly TSettings _settings;
         private readonly OptimizePage _optimizePage;
+        private readonly VisualizePage _visualizePage;
         private readonly HelpPage _helpPage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
@@ -40,6 +41,7 @@ namespace Tunny.WPF
             }
             _settings = TSettings.LoadFromJson();
             _optimizePage = new OptimizePage(_settings);
+            _visualizePage = new VisualizePage(_settings);
             MainWindowFrame.Content = _optimizePage;
 
             UpdateTitle();
@@ -151,7 +153,13 @@ namespace Tunny.WPF
 
         private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowFrame.Content = new VisualizePage();
+            SetVisualizeType(VisualizeType.ParetoFront);
+        }
+
+        private void SetVisualizeType(VisualizeType visualizeType)
+        {
+            _visualizePage.SetTargetVisualizeType(visualizeType);
+            MainWindowFrame.Content = _visualizePage;
         }
 
         private void QuickAccessFileOpenRibbonButton_Click(object sender, RoutedEventArgs e)
