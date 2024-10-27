@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Tunny v1.0"
+    Title="Tunny"
     Width="1000"
     Height="850"
     Background="#FF93C6F8"
@@ -122,6 +122,7 @@
                         SmallImageSource="Assets/Icon/Optuna.png" />
                 </RibbonGroup>
             </RibbonTab>
+
             <RibbonTab Header="Visualize">
                 <RibbonGroup Header="Browser">
                     <RibbonButton
@@ -152,6 +153,7 @@
                     <RibbonButton Label="Register Plot" LargeImageSource="Assets/Icon/Optuna.png" />
                 </RibbonGroup>
             </RibbonTab>
+
             <RibbonTab Header="Output">
                 <RibbonGroup Header="Target">
                     <RibbonComboBox />
@@ -166,6 +168,22 @@
                     <RibbonButton Label="Output to Component" LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
             </RibbonTab>
+
+            <RibbonTab Header="Misc">
+                <RibbonGroup Header="Pruning">
+                    <RibbonButton
+                        Label="Nop"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Termination">
+                    <RibbonButton
+                        Label="EMMR"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                </RibbonGroup>
+            </RibbonTab>
+
             <RibbonTab Header="Help">
                 <RibbonGroup>
                     <RibbonButton

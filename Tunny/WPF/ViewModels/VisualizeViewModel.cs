@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -112,7 +114,23 @@ namespace Tunny.WPF.ViewModels
         internal void SetTargetVisualizeType(VisualizeType visualizeType)
         {
             _targetVisualizeType = visualizeType;
-            PlotFrame.LoadHtml("<html><body><h3>Select your target and press the Plot button</h3></body></html>");
+            string resource = "Tunny.WPF.Assets.html.visualize_top.html";
+            string content = LoadEmbeddedHtml(resource);
+            PlotFrame.LoadHtml(content);
+        }
+
+        private static string LoadEmbeddedHtml(string resource)
+        {
+            string content = string.Empty;
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                if (stream != null)
+                {
+                    content = new StreamReader(stream).ReadToEnd();
+                }
+            }
+
+            return content;
         }
 
         internal void SetStudyNameItems(TSettings settings)
@@ -162,11 +180,15 @@ namespace Tunny.WPF.ViewModels
 
         private async void PlotParetoFront()
         {
-            string loadingAnimationPath = "C:\\Users\\hiroa\\Desktop\\simple.html";
-            string loadingUrl = "file:///" + loadingAnimationPath.Replace("\\", "/");
-            PlotFrame.Load(loadingUrl);
-
+            SetLoadingPage();
             await Task.Run(() => PlotParetoFrontAsync());
+        }
+
+        private void SetLoadingPage()
+        {
+            string resource = "Tunny.WPF.Assets.html.loading.html";
+            string content = LoadEmbeddedHtml(resource);
+            PlotFrame.LoadHtml(content);
         }
 
         private void PlotParetoFrontAsync()
