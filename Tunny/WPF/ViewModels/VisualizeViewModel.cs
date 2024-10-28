@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,11 +15,10 @@ using Prism.Mvvm;
 
 using Tunny.Core.Settings;
 using Tunny.Core.Storage;
-using Tunny.Core.TEnum;
-using Tunny.Core.Util;
 using Tunny.Solver;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
+using Tunny.WPF.Views.Pages.Visualize;
 
 namespace Tunny.WPF.ViewModels
 {
@@ -48,8 +46,8 @@ namespace Tunny.WPF.ViewModels
             StudySummary targetStudySummary = summaries.FirstOrDefault(s => s.StudyName == _selectedStudyName.Name);
             if (targetStudySummary != null)
             {
-                SetObjectiveListItems(targetStudySummary);
                 SetVariableListItems(targetStudySummary);
+                PlotSettingsFrame.SetTargetStudy(targetStudySummary);
             }
         }
 
@@ -66,23 +64,6 @@ namespace Tunny.WPF.ViewModels
             }
         }
 
-        private void SetObjectiveListItems(StudySummary visualizeStudySummary)
-        {
-            string versionString = (visualizeStudySummary.UserAttrs["tunny_version"] as string[])[0];
-            var version = new Version(versionString);
-            string[] metricNames = version <= TEnvVariables.OldStorageVersion
-                ? visualizeStudySummary.UserAttrs["objective_names"] as string[]
-                : visualizeStudySummary.SystemAttrs["study:metric_names"] as string[];
-            ObjectiveItems.Clear();
-            for (int i = 0; i < metricNames.Length; i++)
-            {
-                ObjectiveItems.Add(new VisualizeListItem()
-                {
-                    Name = metricNames[i]
-                });
-            }
-        }
-
         public VisualizeViewModel()
         {
         }
@@ -91,6 +72,7 @@ namespace Tunny.WPF.ViewModels
         {
             _settings = settings;
             PlotFrame = new ChromiumWebBrowser();
+            PlotSettingsFrame = new ParetoFrontPage();
             ObjectiveItems = new ObservableCollection<VisualizeListItem>();
             VariableItems = new ObservableCollection<VisualizeListItem>();
         }
@@ -194,18 +176,8 @@ namespace Tunny.WPF.ViewModels
         private void PlotParetoFrontAsync()
         {
             var vis = new Visualize(_settings, false);
-            var settings = new Plot
-            {
-                TargetStudyName = _selectedStudyName.Name,
-                PlotActionType = PlotActionType.Show,
-                PlotTypeName = "pareto front",
-                TargetObjectiveName = ObjectiveItems.Where(o => o.IsSelected).Select(o => o.Name).ToArray(),
-                TargetObjectiveIndex = ObjectiveItems.Where(o => o.IsSelected).Select(o => ObjectiveItems.IndexOf(o)).ToArray(),
-                TargetVariableName = VariableItems.Where(v => v.IsSelected).Select(v => v.Name).ToArray(),
-                TargetVariableIndex = VariableItems.Where(v => v.IsSelected).Select(v => VariableItems.IndexOf(v)).ToArray(),
-                ClusterCount = 0,
-                IncludeDominatedTrials = true
-            };
+            Plot settings = PlotSettingsFrame.GetPlotSettings();
+            settings.TargetStudyName = SelectedStudyName.Name;
             string htmlPath = vis.Plot(settings);
             string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
             PlotFrame.Load(fileUrl);
@@ -218,5 +190,8 @@ namespace Tunny.WPF.ViewModels
         public ObservableCollection<VisualizeListItem> ObjectiveItems { get => _objectiveItems; set => SetProperty(ref _objectiveItems, value); }
         private ObservableCollection<VisualizeListItem> _variableItems;
         public ObservableCollection<VisualizeListItem> VariableItems { get => _variableItems; set => SetProperty(ref _variableItems, value); }
+
+        private ParetoFrontPage _plotSettingsFrame;
+        public ParetoFrontPage PlotSettingsFrame { get => _plotSettingsFrame; set => SetProperty(ref _plotSettingsFrame, value); }
     }
 }

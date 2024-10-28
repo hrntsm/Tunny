@@ -141,13 +141,46 @@
                         Click="VisualizeParetoFrontRibbonButton_Click"
                         Label="Pareto Front"
                         LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="History" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Slice" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Contour" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Param Importance" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Parallel Coordinate" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Hyper volume" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="EDF" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="History"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Slice"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Contour"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Param Importance"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Parallel Coordinate"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Hyper volume"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="EDF"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Rank"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Timeline"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Terminator Improvement"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
                     <RibbonButton Label="Register Plot" LargeImageSource="Assets/Icon/Optuna.png" />

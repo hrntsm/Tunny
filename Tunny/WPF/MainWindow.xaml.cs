@@ -12,6 +12,7 @@ using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
+using Tunny.WPF.Views.Pages.Visualize;
 using Tunny.WPF.Views.Windows;
 
 namespace Tunny.WPF

@@ -5,7 +5,7 @@ using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels;
 
-namespace Tunny.WPF.Views.Pages
+namespace Tunny.WPF.Views.Pages.Visualize
 {
     public partial class VisualizePage : Page
     {
