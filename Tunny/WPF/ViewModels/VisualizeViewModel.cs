@@ -54,11 +54,7 @@ namespace Tunny.WPF.ViewModels
 
         public VisualizeViewModel()
         {
-        }
-
-        public VisualizeViewModel(TSettings settings)
-        {
-            _settings = settings;
+            _settings = OptimizeProcess.Settings;
             PlotFrame = new ChromiumWebBrowser();
             PlotSettingsFrame = new ParetoFrontPage();
             ObjectiveItems = new ObservableCollection<VisualizeListItem>();
@@ -127,9 +123,9 @@ namespace Tunny.WPF.ViewModels
             return content;
         }
 
-        internal void SetStudyNameItems(TSettings settings)
+        internal void SetStudyNameItems()
         {
-            StudyNameItems = StudyNamesFromStorage(settings.Storage.Path);
+            StudyNameItems = StudyNamesFromStorage(_settings.Storage.Path);
             SelectedStudyName = StudyNameItems[0];
         }
 

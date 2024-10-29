@@ -9,6 +9,7 @@ using Tunny.Component.Optimizer;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
@@ -20,7 +21,6 @@ namespace Tunny.WPF
     public partial class MainWindow : RibbonWindow, IDisposable
     {
         internal readonly GH_DocumentEditor DocumentEditor;
-        internal readonly OptimizeComponentBase Component;
 
         private readonly TSettings _settings;
         private readonly OptimizePage _optimizePage;
@@ -34,15 +34,16 @@ namespace Tunny.WPF
             _helpPage = new HelpPage();
 
             DocumentEditor = documentEditor;
-            Component = component;
-            Component.GhInOutInstantiate();
-            if (!Component.GhInOut.IsLoadCorrectly)
+            OptimizeProcess.Component = component;
+            component.GhInOutInstantiate();
+            if (!component.GhInOut.IsLoadCorrectly)
             {
                 Close();
             }
             _settings = TSettings.LoadFromJson();
-            _optimizePage = new OptimizePage(_settings);
-            _visualizePage = new VisualizePage(_settings);
+            OptimizeProcess.Settings = _settings;
+            _optimizePage = new OptimizePage();
+            _visualizePage = new VisualizePage();
             MainWindowFrame.Content = _optimizePage;
 
             UpdateTitle();

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using LiveChartsCore.Defaults;
 
 using Tunny.Component.Optimizer;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels;
 
@@ -25,8 +26,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
         private void SetTargetComboBoxItems(object sender, RoutedEventArgs e)
         {
-            var parentWindow = Window.GetWindow(this) as MainWindow;
-            OptimizeComponentBase component = parentWindow?.Component;
+            OptimizeComponentBase component = OptimizeProcess.Component;
             string[] metricNames = component.GhInOut.Objectives.GetNickNames();
             _viewModel.XTarget = new ObservableCollection<string> { "Trial Number" };
             _viewModel.YTarget = new ObservableCollection<string> { "Trial Number" };

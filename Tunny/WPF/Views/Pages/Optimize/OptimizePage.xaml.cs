@@ -38,14 +38,14 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private QmcSettingsPage _qmcPage;
         private BruteForceSettingsPage _bruteForcePage;
 
-        public OptimizePage(TSettings settings)
+        public OptimizePage()
         {
-            _settings = settings;
+            _settings = OptimizeProcess.Settings;
             InitializeComponent();
             InitializeUIValues();
             InitializeChart();
             InitializeSamplerPage();
-            ChangeTargetSampler(settings.Optimize.SamplerType);
+            ChangeTargetSampler(_settings.Optimize.SamplerType);
         }
 
         private void InitializeUIValues()
@@ -182,7 +182,6 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private void InitializeOptimizeProcess(MainWindow parentWindow, TSettings settings)
         {
             Progress<ProgressState> progress = CreateProgressAction(parentWindow);
-            OptimizeProcess.Component = parentWindow.Component;
             OptimizeProcess.Settings = settings;
             OptimizeProcess.AddProgress(progress);
         }
@@ -192,12 +191,12 @@ namespace Tunny.WPF.Views.Pages.Optimize
             return new Progress<ProgressState>(value =>
             {
                 TLog.MethodStart();
-                parentWindow.Component.UpdateGrasshopper(value);
+                OptimizeProcess.Component.UpdateGrasshopper(value);
                 parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}{value.TrialNumber + 1}";
                 _progressBar.Value = value.PercentComplete;
                 if (!value.IsReportOnly)
                 {
-                    Input.Objective objectives = parentWindow.Component.GhInOut.Objectives;
+                    Input.Objective objectives = OptimizeProcess.Component.GhInOut.Objectives;
                     _chart1.AddPoint(new ObservablePoint(value.TrialNumber + 1, objectives.Numbers[0]));
                     _chart2.AddPoint(new ObservablePoint(objectives.Numbers[0], objectives.Numbers[1]));
                 }

@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 
 using Tunny.Core.Settings;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels;
 
@@ -14,20 +15,16 @@ namespace Tunny.WPF.Views.Pages.Visualize
 
         public VisualizePage()
         {
-        }
-
-        public VisualizePage(TSettings settings)
-        {
             InitializeComponent();
-            _settings = settings;
-            _viewModel = new VisualizeViewModel(settings);
+            _settings = OptimizeProcess.Settings;
+            _viewModel = new VisualizeViewModel();
             DataContext = _viewModel;
             Loaded += SetStudyNameComboBoxItems;
         }
 
         private void SetStudyNameComboBoxItems(object sender, RoutedEventArgs e)
         {
-            _viewModel.SetStudyNameItems(_settings);
+            _viewModel.SetStudyNameItems();
         }
 
         internal void SetTargetVisualizeType(VisualizeType visualizeType)
