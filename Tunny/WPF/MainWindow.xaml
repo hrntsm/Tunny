@@ -203,15 +203,55 @@
             </RibbonTab>
 
             <RibbonTab Header="Misc">
-                <RibbonGroup Header="Pruning">
+                <RibbonGroup Header="Pruner">
+                    <RibbonButton
+                        Label="Median"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Label="Nop"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Patient"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Successive Halving"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Hyperband"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Threshold"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Wilcoxon"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Termination">
                     <RibbonButton
+                        Label="Regret Bound"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="BestValue Stagnation"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
                         Label="EMMR"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Static Error"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Median Error"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
