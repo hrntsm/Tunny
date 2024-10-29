@@ -6,23 +6,24 @@ import plotly.graph_objects as go
 
 def plot_pareto_front(
     study: Study,
-    objective_name: str,
+    objective_names: list[str],
     objective_index: list[int],
     hasConstraint: bool,
     includeDominatedTrials: bool,
 ) -> go.Figure:
-    fig = optuna.visualization.plot_pareto_front(
+    if len(objective_index) == 2:
+        targets = lambda t: (t.values[objective_index[0]], t.values[objective_index[1]])
+    elif len(objective_index) == 3:
+        targets = lambda t: [
+            t.values[objective_index[0]],
+            t.values[objective_index[1]],
+            t.values[objective_index[2]],
+        ]
+
+    fig: go.Figure = optuna.visualization.plot_pareto_front(
         study,
-        target_names=objective_name,
-        targets=lambda t: (
-            [t.values[objective_index[0]], t.values[objective_index[1]]]
-            if len(objective_index) == 2
-            else lambda t: [
-                t.values[objective_index[0]],
-                t.values[objective_index[1]],
-                t.values[objective_index[2]],
-            ]
-        ),
+        target_names=objective_names,
+        targets=targets,
         constraints_func=constraint_func if hasConstraint else None,
         include_dominated_trials=True if includeDominatedTrials else False,
     )
