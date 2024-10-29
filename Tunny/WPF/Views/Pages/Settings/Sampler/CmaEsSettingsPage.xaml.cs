@@ -44,6 +44,8 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                     ? CmaEsWarnStartCmaEsComboBox.SelectedItem.ToString()
                     : string.Empty,
                 UseFirstEggToX0 = (bool)CmaEsUseFirstFishEggToX0CheckBox.IsChecked,
+                LrAdapt = (bool)CmaEsLrAdaptCheckBox.IsChecked,
+                ConsiderPrunedTrials = (bool)CmaEsConsiderPrundeTrialsCheckBox.IsChecked,
             };
         }
 
@@ -69,6 +71,8 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.CmaEsWarmStartCmaEsCheckBox.IsChecked = cmaEs.WarmStartStudyName != string.Empty;
             page.CmaEsWarnStartCmaEsComboBox.SelectedItem = cmaEs.WarmStartStudyName;
             page.CmaEsUseFirstFishEggToX0CheckBox.IsChecked = cmaEs.UseFirstEggToX0;
+            page.CmaEsConsiderPrundeTrialsCheckBox.IsChecked = cmaEs.ConsiderPrunedTrials;
+            page.CmaEsLrAdaptCheckBox.IsChecked = cmaEs.LrAdapt;
             return page;
         }
     }

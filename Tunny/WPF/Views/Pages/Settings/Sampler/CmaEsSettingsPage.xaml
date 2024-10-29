@@ -67,58 +67,73 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="With Margin" />
-            <Label
+            <CheckBox
+                x:Name="CmaEsLrAdaptCheckBox"
                 Grid.Row="3"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Learing Rate Adaptation" />
+            <CheckBox
+                x:Name="CmaEsConsiderPrundeTrialsCheckBox"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Consider Pruned Trials" />
+            <Label
+                Grid.Row="4"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Restart Strategy" />
             <ComboBox
                 x:Name="CmaEsRestartStrategyComboBox"
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="1"
                 Margin="5" />
             <Label
-                Grid.Row="4"
+                Grid.Row="5"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Population Size" />
             <TextBox
                 x:Name="CmaEsPopulationSizeTextBox"
-                Grid.Row="4"
+                Grid.Row="5"
                 Grid.Column="1"
                 Margin="5"
                 Text="1"
                 TextAlignment="Right" />
             <Label
-                Grid.Row="5"
+                Grid.Row="6"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Increasint Population Size" />
             <TextBox
                 x:Name="CmaEsIncreasingPopulationSizeTextBox"
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="1"
                 Margin="5"
                 Text="2"
                 TextAlignment="Right" />
             <CheckBox
                 x:Name="CmaEsWarmStartCmaEsCheckBox"
-                Grid.Row="6"
+                Grid.Row="7"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="Warm Start CMA-ES" />
             <ComboBox
                 x:Name="CmaEsWarnStartCmaEsComboBox"
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.Column="1"
                 Margin="5" />
             <CheckBox
                 x:Name="CmaEsUseFirstFishEggToX0CheckBox"
-                Grid.Row="7"
+                Grid.Row="8"
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
