@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="Tunny"
     Width="1000"
     Height="850"
@@ -11,6 +12,10 @@
     Icon="Assets/Icon/Tunny.png"
     ResizeMode="CanMinimize"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO" />
@@ -54,6 +59,7 @@
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Click="OptimizeGpOptunaRibbonButton_Click"
+                        IsEnabled="{Binding IsSingleObjective}"
                         Label="GP:Optuna"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
@@ -85,16 +91,19 @@
                     <RibbonButton
                         Click="OptimizeCmaEsRibbonButton_Click"
                         Label="CMA-ES"
+                        IsEnabled="{Binding IsSingleObjective}"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Label="MO-CMA-ES"
+                        IsEnabled="{Binding IsMultiObjective}"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Algorithm">
                     <RibbonButton
                         Label="MOEA/D"
+                        IsEnabled="{Binding IsMultiObjective}"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>

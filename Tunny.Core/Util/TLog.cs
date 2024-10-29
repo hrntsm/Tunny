@@ -7,6 +7,8 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
+using Tunny.Core.Settings;
+
 namespace Tunny.Core.Util
 {
     public static class TLog
@@ -26,7 +28,7 @@ namespace Tunny.Core.Util
 
         private static void SetInitialLogLevels()
         {
-            var settings = Settings.TSettings.LoadFromJson();
+            TSettings.TryLoadFromJson(out TSettings settings);
             LevelSwitch.MinimumLevel = settings.LogLevel;
         }
 

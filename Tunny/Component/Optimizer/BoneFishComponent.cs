@@ -62,7 +62,7 @@ namespace Tunny.Component.Optimizer
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
-            var settings = TSettings.LoadFromJson();
+            TSettings.TryLoadFromJson(out TSettings settings);
             string tunnyAssembleVersion = TEnvVariables.Version.ToString();
             if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
             {

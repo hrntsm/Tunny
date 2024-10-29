@@ -32,7 +32,7 @@ namespace Tunny.UI
             {
                 FormClosingXButton(this, null);
             }
-            _settings = TSettings.LoadFromJson();
+            TSettings.TryLoadFromJson(out _settings);
             SetUIValues();
             RunPythonInstaller();
             SetupTTDesignExplorer();

@@ -72,20 +72,20 @@ namespace Tunny.Core.Settings
             Serialize(path);
         }
 
-        public static TSettings LoadFromJson()
+        public static bool TryLoadFromJson(out TSettings settings)
         {
-            TSettings settings;
             string settingsPath = TEnvVariables.OptimizeSettingsPath;
             if (File.Exists(settingsPath))
             {
                 TLog.Info("Load existing setting.json");
                 settings = Deserialize(settingsPath);
+                return true;
             }
             else
             {
                 settings = new TSettings(TEnvVariables.OptimizeSettingsPath, TEnvVariables.DefaultStoragePath, StorageType.Journal, true);
+                return false;
             }
-            return settings;
         }
     }
 }

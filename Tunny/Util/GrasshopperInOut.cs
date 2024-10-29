@@ -40,6 +40,7 @@ namespace Tunny.Util
         public Artifact Artifacts { get; private set; }
         public Dictionary<string, FishEgg> FishEggs { get; private set; }
         public bool HasConstraint { get; private set; }
+        public bool IsMultiObjective => Objectives.Length > 1;
         public bool IsLoadCorrectly { get; }
 
         public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)

@@ -11,6 +11,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
+using Tunny.WPF.ViewModels;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
 using Tunny.WPF.Views.Pages.Visualize;
@@ -30,22 +31,27 @@ namespace Tunny.WPF
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
             TLog.MethodStart();
-            InitializeComponent();
-            _helpPage = new HelpPage();
-
             DocumentEditor = documentEditor;
-            OptimizeProcess.Component = component;
             component.GhInOutInstantiate();
             if (!component.GhInOut.IsLoadCorrectly)
             {
+                TunnyMessageBox.Error_ComponentLoadFail();
                 Close();
             }
-            _settings = TSettings.LoadFromJson();
+            OptimizeProcess.Component = component;
+
+            if (!TSettings.TryLoadFromJson(out _settings))
+            {
+                TunnyMessageBox.Warn_SettingsJsonFileLoadFail();
+            }
             OptimizeProcess.Settings = _settings;
             _optimizePage = new OptimizePage();
             _visualizePage = new VisualizePage();
-            MainWindowFrame.Content = _optimizePage;
+            _helpPage = new HelpPage();
 
+            InitializeComponent();
+            MainWindowFrame.Content = _optimizePage;
+            DataContext = new MainWindowViewModel();
             UpdateTitle();
         }
 

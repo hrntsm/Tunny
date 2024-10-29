@@ -38,6 +38,28 @@ namespace Tunny.WPF.Common
             }
         }
 
+        internal static void Error_ComponentLoadFail()
+        {
+            TLog.MethodStart();
+            Show(
+                "Fail to load Grasshopper data into Tunny",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+        }
+
+        internal static void Warn_SettingsJsonFileLoadFail()
+        {
+            TLog.MethodStart();
+            Show(
+                "Failed to load settings file. Start with default settings.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+        }
+
         internal static void Error_NoStudyNameSelected()
         {
             TLog.MethodStart();
