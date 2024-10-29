@@ -9,6 +9,9 @@
         ParameterImportance,
         Hypervolume,
         EDF,
+        Rank,
+        TimeLine,
+        TerminatorImprovement,
         OptunaHub
     }
 }
