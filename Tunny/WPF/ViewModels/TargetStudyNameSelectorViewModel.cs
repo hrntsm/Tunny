@@ -12,6 +12,7 @@ using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Core.Util;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 
@@ -84,12 +85,8 @@ namespace Tunny.WPF.ViewModels
 
         public TargetStudyNameSelectorViewModel()
         {
-        }
-
-        public TargetStudyNameSelectorViewModel(TSettings settings)
-        {
-            _settings = settings;
-            StudyNameItems = StudyNamesFromStorage(settings.Storage.Path);
+            _settings = OptimizeProcess.Settings;
+            StudyNameItems = StudyNamesFromStorage(_settings.Storage.Path);
             SelectedStudyName = StudyNameItems[0];
         }
 

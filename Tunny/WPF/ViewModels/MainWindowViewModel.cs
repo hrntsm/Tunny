@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.IO;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 using Prism.Commands;
@@ -11,6 +12,7 @@ using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
 using Tunny.WPF.Views.Pages.Visualize;
+using Tunny.WPF.Views.Windows;
 
 namespace Tunny.WPF.ViewModels
 {
@@ -24,6 +26,8 @@ namespace Tunny.WPF.ViewModels
         public bool IsMultiObjective { get => _isMultiObjective; set => SetProperty(ref _isMultiObjective, value); }
         private Page _mainWindowFrame;
         public Page MainWindowFrame { get => _mainWindowFrame; set => SetProperty(ref _mainWindowFrame, value); }
+        private string _windowTitle;
+        public string WindowTitle { get => _windowTitle; set => SetProperty(ref _windowTitle, value); }
 
         public MainWindowViewModel()
         {
@@ -31,6 +35,13 @@ namespace Tunny.WPF.ViewModels
             _visualizePage = new VisualizePage();
             _helpPage = new HelpPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
+            UpdateTitle();
+        }
+
+        private void UpdateTitle()
+        {
+            string storagePath = OptimizeProcess.Settings.Storage.Path;
+            WindowTitle = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
         }
 
         private void SetVisualizeType(VisualizeType visualizeType)
@@ -345,6 +356,85 @@ namespace Tunny.WPF.ViewModels
         {
             OptimizeProcess.Settings.Optimize = _optimizePage.GetCurrentSettings();
             OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
+        }
+
+        private DelegateCommand _quickAccessFileOpenCommand;
+        public ICommand QuickAccessFileOpenCommand
+        {
+            get
+            {
+                if (_quickAccessFileOpenCommand == null)
+                {
+                    _quickAccessFileOpenCommand = new DelegateCommand(QuickAccessFileOpen);
+                }
+
+                return _quickAccessFileOpenCommand;
+            }
+        }
+        private void QuickAccessFileOpen()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "fish.log",
+                DefaultExt = "log",
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite|All Files (*.*)|*.*",
+                Title = @"Set Tunny Result File Path",
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                OptimizeProcess.Settings.Storage.Path = dialog.FileName;
+                UpdateTitle();
+            }
+        }
+
+        private DelegateCommand _runOptunaDashboardCommand;
+        public ICommand RunOptunaDashboardCommand
+        {
+            get
+            {
+                if (_runOptunaDashboardCommand == null)
+                {
+                    _runOptunaDashboardCommand = new DelegateCommand(RunOptunaDashboard);
+                }
+
+                return _runOptunaDashboardCommand;
+            }
+        }
+        private void RunOptunaDashboard()
+        {
+            TLog.MethodStart();
+            if (File.Exists(OptimizeProcess.Settings.Storage.Path) == false)
+            {
+                TunnyMessageBox.Error_ResultFileNotExist();
+                return;
+            }
+            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
+            string storagePath = OptimizeProcess.Settings.Storage.Path;
+
+            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
+            dashboard.Run(true);
+        }
+
+        private DelegateCommand _runDesignExplorerCommand;
+        public ICommand RunDesignExplorerCommand
+        {
+            get
+            {
+                if (_runDesignExplorerCommand == null)
+                {
+                    _runDesignExplorerCommand = new DelegateCommand(RunDesignExplorer);
+                }
+
+                return _runDesignExplorerCommand;
+            }
+        }
+        private void RunDesignExplorer()
+        {
+            TLog.MethodStart();
+            var selector = new TargetStudyNameSelector();
+            selector.Show();
         }
     }
 }

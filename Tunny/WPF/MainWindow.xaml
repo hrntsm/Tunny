@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
-    Title="Tunny"
+    Title="{Binding WindowTitle}"
     Width="1000"
     Height="850"
     Background="#FF93C6F8"
@@ -32,7 +32,7 @@
             <Ribbon.QuickAccessToolBar>
                 <RibbonQuickAccessToolBar>
                     <RibbonButton
-                        Click="QuickAccessFileOpenRibbonButton_Click"
+                        Command="{Binding QuickAccessFileOpenCommand}"
                         SmallImageSource="Assets/Icon/FolderOpenOutline.png"
                         ToolTip="Open Optimization Result File" />
                     <RibbonButton
@@ -150,12 +150,12 @@
             <RibbonTab Header="Visualize">
                 <RibbonGroup Header="Browser">
                     <RibbonButton
-                        Click="VisualizeRunOptunaDashboardRibbonButton_Click"
+                        Command="{Binding RunOptunaDashboardCommand}"
                         Label="Optuna Dashboard"
                         LargeImageSource="Assets/Icon/Optuna.png"
                         SmallImageSource="Assets/Icon/Optuna.png" />
                     <RibbonButton
-                        Click="VisualizeRunDesignExplorerRibbonButton_Click"
+                        Command="{Binding RunDesignExplorerCommand}"
                         Label="TT Design Explorer"
                         LargeImageSource="Assets/Icon/DesignExplorer.png"
                         SmallImageSource="Assets/Icon/DesignExplorer.png" />
