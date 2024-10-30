@@ -31,11 +31,14 @@ namespace Tunny.WPF.ViewModels
 
         public MainWindowViewModel()
         {
-            _optimizePage = new OptimizePage();
             _visualizePage = new VisualizePage();
             _helpPage = new HelpPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
+
+            _optimizePage = new OptimizePage();
+            _optimizePage.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
+            MainWindowFrame = _optimizePage;
         }
 
         private void UpdateTitle()
