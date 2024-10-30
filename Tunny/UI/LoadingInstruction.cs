@@ -155,11 +155,7 @@ namespace Tunny.UI
             TLog.Debug("PythonInstallStripMenuItem Clicked");
             if (Directory.Exists(TEnvVariables.PythonPath))
             {
-                MessageBoxResult result = TunnyMessageBox.Show(
-                    "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
-                    "Python is already installed",
-                    MessageBoxButton.OKCancel,
-                    MessageBoxImage.Information);
+                MessageBoxResult result = WPF.Common.TunnyMessageBox.Info_PythonAlreadyInstalled();
                 if (result == MessageBoxResult.Cancel)
                 {
                     TLog.Info("From menu item Python installation canceled by user.");
@@ -193,10 +189,7 @@ namespace Tunny.UI
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))
             {
-                TunnyMessageBox.Show("optuna-dashboard is not installed.\nFirst install optuna-dashboard from the Tunny component.",
-                                     "optuna-dashboard is not installed",
-                                     MessageBoxButton.OK,
-                                     MessageBoxImage.Error);
+                WPF.Common.TunnyMessageBox.Info_OptunaDashboardAlreadyInstalled();
             }
             else
             {
