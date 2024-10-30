@@ -50,8 +50,7 @@ namespace Tunny.WPF
             _helpPage = new HelpPage();
 
             InitializeComponent();
-            MainWindowFrame.Content = _optimizePage;
-            DataContext = new MainWindowViewModel();
+            DataContext = new MainWindowViewModel(_optimizePage, _visualizePage);
             UpdateTitle();
         }
 
@@ -100,74 +99,6 @@ namespace Tunny.WPF
         {
             _helpPage.OpenSite(helpType);
             MainWindowFrame.Content = _helpPage;
-        }
-
-        private void OptimizeTpeRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.TPE);
-        }
-
-        private void OptimizeGpOptunaRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.GP);
-        }
-
-        private void OptimizeGpBoTorchRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.BoTorch);
-        }
-
-        private void OptimizeGpPreferentialRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.GpPreferential);
-        }
-
-        private void OptimizeNsgaiiRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.NSGAII);
-        }
-
-        private void OptimizeNsgaiiiRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.NSGAIII);
-        }
-
-        private void OptimizeCmaEsRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.CmaEs);
-        }
-
-        private void OptimizeRandomRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.Random);
-        }
-
-        private void OptimizeQmcRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.QMC);
-        }
-
-        private void OptimizeBruteForceRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetSamplerType(SamplerType.BruteForce);
-        }
-
-        private void SetSamplerType(SamplerType samplerType)
-        {
-            _optimizePage.ChangeTargetSampler(samplerType);
-            _settings.Optimize.SamplerType = samplerType;
-            MainWindowFrame.Content = _optimizePage;
-        }
-
-        private void VisualizeParetoFrontRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            SetVisualizeType(VisualizeType.ParetoFront);
-        }
-
-        private void SetVisualizeType(VisualizeType visualizeType)
-        {
-            _visualizePage.SetTargetVisualizeType(visualizeType);
-            MainWindowFrame.Content = _visualizePage;
         }
 
         private void QuickAccessFileOpenRibbonButton_Click(object sender, RoutedEventArgs e)

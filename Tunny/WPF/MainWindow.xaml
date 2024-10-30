@@ -2,6 +2,7 @@
     x:Class="Tunny.WPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:Tunny.WPF.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
@@ -47,29 +48,31 @@
             <RibbonTab Header="Optimize">
                 <RibbonGroup>
                     <RibbonButton
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:EnumSamplerType.Auto}"
                         Label="AUTO Sampler"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Bayesian Optimization">
                     <RibbonButton
-                        Click="OptimizeTpeRibbonButton_Click"
+                        Command="{Binding TpeSamplerCommand}"
                         Label="TPE"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeGpOptunaRibbonButton_Click"
+                        Command="{Binding GpOptunaSamplerCommand}"
                         IsEnabled="{Binding IsSingleObjective}"
                         Label="GP:Optuna"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeGpBoTorchRibbonButton_Click"
+                        Command="{Binding GpBotorchCommand}"
                         Label="GP:BoTorch"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeGpPreferentialRibbonButton_Click"
+                        Command="{Binding GpPreferentialCommand}"
                         IsEnabled="False"
                         Label="GP:Preferential"
                         LargeImageSource="Assets/Icon/Tunny.png"
@@ -77,55 +80,58 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Genetic Algorighm">
                     <RibbonButton
-                        Click="OptimizeNsgaiiRibbonButton_Click"
+                        Command="{Binding NsgaiiSamplerCommand}"
                         Label="NSGA-II"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeNsgaiiiRibbonButton_Click"
+                        Command="{Binding NsgaiiiSamplerCommand}"
                         Label="NSGA-III"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Strategy">
                     <RibbonButton
-                        Click="OptimizeCmaEsRibbonButton_Click"
-                        Label="CMA-ES"
+                        Command="{Binding CmaEsSamplerCommand}"
                         IsEnabled="{Binding IsSingleObjective}"
+                        Label="CMA-ES"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Label="MO-CMA-ES"
+                        Command="{Binding MoCmaEsSamplerCommand}"
                         IsEnabled="{Binding IsMultiObjective}"
+                        Label="MO-CMA-ES"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Algorithm">
                     <RibbonButton
-                        Label="MOEA/D"
+                        Command="{Binding MoeadSamplerCommand}"
                         IsEnabled="{Binding IsMultiObjective}"
+                        Label="MOEA/D"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Misc">
                     <RibbonButton
-                        Click="OptimizeRandomRibbonButton_Click"
+                        Command="{Binding RandomSamplerCommand}"
                         Label="Random"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeQmcRibbonButton_Click"
+                        Command="{Binding QmcSamplerCommand}"
                         Label="QMC"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptimizeBruteForceRibbonButton_Click"
+                        Command="{Binding BruteForceSamplerCommand}"
                         Label="BruteForce"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
                     <RibbonButton
+                        Command="{Binding RegisterOptunaHubSamplerCommand}"
                         Label="Register Sampler"
                         LargeImageSource="Assets/Icon/Optuna.png"
                         SmallImageSource="Assets/Icon/Optuna.png" />
@@ -147,46 +153,56 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Visualization">
                     <RibbonButton
-                        Click="VisualizeParetoFrontRibbonButton_Click"
+                        Command="{Binding PlotParetoFrontCommand}"
                         Label="Pareto Front"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotHistoryCommand}"
                         Label="History"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotSliceCommand}"
                         Label="Slice"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotContourCommand}"
                         Label="Contour"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotParameterImportanceCommand}"
                         Label="Param Importance"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotParallelCoordinateCommand}"
                         Label="Parallel Coordinate"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotHyperVolumeCommand}"
                         Label="Hyper volume"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotEdfCommand}"
                         Label="EDF"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotRankCommand}"
                         Label="Rank"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotTimelineCommand}"
                         Label="Timeline"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
+                        Command="{Binding PlotTerminatorImprovementCommand}"
                         Label="Terminator Improvement"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
@@ -306,9 +322,9 @@
         </Ribbon>
 
         <Frame
-            x:Name="MainWindowFrame"
             Grid.Row="1"
             Background="AliceBlue"
+            Content="{Binding MainFrameWindow}"
             NavigationUIVisibility="Hidden" />
 
         <StatusBar Grid.Row="2" Background="#FF93C6F8">
