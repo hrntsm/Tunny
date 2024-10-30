@@ -15,9 +15,7 @@
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="12*" />
+            <RowDefinition Height="14*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -28,25 +26,12 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <Label
-            x:Name="VisualizeTargetStudyLabel"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Select Target Study" />
-        <ComboBox
-            x:Name="VisualizeTargetStudyComboBox"
-            Grid.Row="1"
-            Margin="5"
-            DisplayMemberPath="Name"
-            ItemsSource="{Binding StudyNameItems}"
-            SelectedItem="{Binding SelectedStudyName}" />
-
         <Frame
             x:Name="VisualizePlotSettingsFrame"
-            Grid.Row="2"
-            Content="{Binding PlotSettingsFrame}" />
+            Content="{Binding PlotSettingsFrame}"
+            NavigationUIVisibility="Hidden" />
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -63,13 +48,13 @@
         </Grid>
 
         <Label
-            Grid.Row="4"
+            Grid.Row="2"
             Margin="5"
             Content="Trial Number to Add Export List"
             FontSize="10" />
-        <TextBox Grid.Row="5" Margin="5" />
+        <TextBox Grid.Row="3" Margin="5" />
         <Button
-            Grid.Row="6"
+            Grid.Row="4"
             Margin="20,5,20,5"
             Content="Add Export" />
 

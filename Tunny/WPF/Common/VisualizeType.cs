@@ -7,6 +7,7 @@
         Slice,
         Contour,
         ParameterImportance,
+        ParallelCoordinate,
         Hypervolume,
         EDF,
         Rank,

@@ -197,7 +197,8 @@
         <Frame
             x:Name="OptimizeSettingsPage"
             Grid.Row="5"
-            Grid.ColumnSpan="2" />
+            Grid.ColumnSpan="2"
+            NavigationUIVisibility="Hidden" />
 
         <Frame
             x:Name="OptimizeLiveChart1"

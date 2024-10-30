@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 using CefSharp;
@@ -37,20 +39,8 @@ namespace Tunny.WPF.ViewModels
         private ObservableCollection<VisualizeListItem> _variableItems;
         public ObservableCollection<VisualizeListItem> VariableItems { get => _variableItems; set => SetProperty(ref _variableItems, value); }
 
-        private ParetoFrontPage _plotSettingsFrame;
-        public ParetoFrontPage PlotSettingsFrame { get => _plotSettingsFrame; set => SetProperty(ref _plotSettingsFrame, value); }
-        private ObservableCollection<NameComboBoxItem> _studyNameItems;
-        public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
-        private NameComboBoxItem _selectedStudyName;
-        public NameComboBoxItem SelectedStudyName
-        {
-            get => _selectedStudyName;
-            set
-            {
-                SetProperty(ref _selectedStudyName, value);
-                UpdateListView();
-            }
-        }
+        private Page _plotSettingsFrame;
+        public Page PlotSettingsFrame { get => _plotSettingsFrame; set => SetProperty(ref _plotSettingsFrame, value); }
 
         public VisualizeViewModel()
         {
@@ -80,12 +70,12 @@ namespace Tunny.WPF.ViewModels
         private void UpdateListView()
         {
             StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
-            StudySummary targetStudySummary = summaries.FirstOrDefault(s => s.StudyName == _selectedStudyName.Name);
-            if (targetStudySummary != null)
-            {
-                SetVariableListItems(targetStudySummary);
-                PlotSettingsFrame.SetTargetStudy(targetStudySummary);
-            }
+            //StudySummary targetStudySummary = summaries.FirstOrDefault(s => s.StudyName == _selectedStudyName.Name);
+            //if (targetStudySummary != null)
+            //{
+            //    SetVariableListItems(targetStudySummary);
+            //    PlotSettingsFrame.SetTargetStudy(targetStudySummary);
+            //}
         }
 
         private void SetVariableListItems(StudySummary visualizeStudySummary)
@@ -104,9 +94,43 @@ namespace Tunny.WPF.ViewModels
         internal void SetTargetVisualizeType(VisualizeType visualizeType)
         {
             _targetVisualizeType = visualizeType;
+            SetSettingsPage();
             string resource = "Tunny.WPF.Assets.html.visualize_top.html";
             string content = LoadEmbeddedHtml(resource);
             PlotFrame.LoadHtml(content);
+        }
+
+        private void SetSettingsPage()
+        {
+            switch (_targetVisualizeType)
+            {
+                case VisualizeType.ParetoFront:
+                    PlotSettingsFrame = new ParetoFrontPage();
+                    break;
+                case VisualizeType.OptimizationHistory:
+                    PlotSettingsFrame = new OptimizationHistoryPage();
+                    break;
+                case VisualizeType.Slice:
+                    break;
+                case VisualizeType.Contour:
+                    break;
+                case VisualizeType.ParameterImportance:
+                    break;
+                case VisualizeType.ParallelCoordinate:
+                    break;
+                case VisualizeType.Hypervolume:
+                    break;
+                case VisualizeType.EDF:
+                    break;
+                case VisualizeType.Rank:
+                    break;
+                case VisualizeType.TimeLine:
+                    break;
+                case VisualizeType.TerminatorImprovement:
+                    break;
+                case VisualizeType.OptunaHub:
+                    break;
+            }
         }
 
         private static string LoadEmbeddedHtml(string resource)
@@ -121,12 +145,6 @@ namespace Tunny.WPF.ViewModels
             }
 
             return content;
-        }
-
-        internal void SetStudyNameItems()
-        {
-            StudyNameItems = StudyNamesFromStorage(_settings.Storage.Path);
-            SelectedStudyName = StudyNameItems[0];
         }
 
         private DelegateCommand _plotCommand;
@@ -194,8 +212,9 @@ namespace Tunny.WPF.ViewModels
         private void PlotParetoFrontAsync()
         {
             var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            Plot settings = PlotSettingsFrame.GetPlotSettings();
-            settings.TargetStudyName = SelectedStudyName.Name;
+            var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
+            Plot settings = viewModel.GetPlotSettings();
+            //settings.TargetStudyName = SelectedStudyName.Name;
             string htmlPath = vis.Plot(settings);
             string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
             PlotFrame.Load(fileUrl);

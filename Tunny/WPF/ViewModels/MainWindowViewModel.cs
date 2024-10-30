@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -16,7 +17,7 @@ using Tunny.WPF.Views.Windows;
 
 namespace Tunny.WPF.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly OptimizePage _optimizePage;
         private readonly VisualizePage _visualizePage;
@@ -47,202 +48,31 @@ namespace Tunny.WPF.ViewModels
             WindowTitle = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
         }
 
-        private void SetVisualizeType(VisualizeType visualizeType)
+        private DelegateCommand<VisualizeType?> _selectVisualizeTypeCommand;
+        public ICommand SelectVisualizeTypeCommand
         {
-            _visualizePage.SetTargetVisualizeType(visualizeType);
+            get
+            {
+                if (_selectVisualizeTypeCommand == null)
+                {
+                    _selectVisualizeTypeCommand = new DelegateCommand<VisualizeType?>(SelectVisualizeType);
+                }
+
+                return _selectVisualizeTypeCommand;
+            }
+        }
+        private void SelectVisualizeType(VisualizeType? visualizeType)
+        {
+            if (visualizeType == null)
+            {
+                return;
+            }
+            var viewModel = (VisualizeViewModel)_visualizePage.DataContext;
+            viewModel.SetTargetVisualizeType(visualizeType.Value);
             MainWindowFrame = _visualizePage;
         }
 
-        private DelegateCommand _plotParetoFrontCommand;
-        public ICommand PlotParetoFrontCommand
-        {
-            get
-            {
-                if (_plotParetoFrontCommand == null)
-                {
-                    _plotParetoFrontCommand = new DelegateCommand(PlotParetoFront);
-                }
-
-                return _plotParetoFrontCommand;
-            }
-        }
-        private void PlotParetoFront()
-        {
-            SetVisualizeType(VisualizeType.ParetoFront);
-        }
-
-        private DelegateCommand _plotHistoryCommand;
-        public ICommand PlotHistoryCommand
-        {
-            get
-            {
-                if (_plotHistoryCommand == null)
-                {
-                    _plotHistoryCommand = new DelegateCommand(PlotHistory);
-                }
-
-                return _plotHistoryCommand;
-            }
-        }
-        private void PlotHistory()
-        {
-        }
-
-        private DelegateCommand _plotSliceCommand;
-        public ICommand PlotSliceCommand
-        {
-            get
-            {
-                if (_plotSliceCommand == null)
-                {
-                    _plotSliceCommand = new DelegateCommand(PlotSlice);
-                }
-
-                return _plotSliceCommand;
-            }
-        }
-        private void PlotSlice()
-        {
-        }
-
-        private DelegateCommand _plotContourCommand;
-        public ICommand PlotContourCommand
-        {
-            get
-            {
-                if (_plotContourCommand == null)
-                {
-                    _plotContourCommand = new DelegateCommand(PlotContour);
-                }
-
-                return _plotContourCommand;
-            }
-        }
-        private void PlotContour()
-        {
-        }
-
-        private DelegateCommand _plotParameterImportanceCommand;
-        public ICommand PlotParameterImportanceCommand
-        {
-            get
-            {
-                if (_plotParameterImportanceCommand == null)
-                {
-                    _plotParameterImportanceCommand = new DelegateCommand(PlotParameterImportance);
-                }
-
-                return _plotParameterImportanceCommand;
-            }
-        }
-        private void PlotParameterImportance()
-        {
-        }
-
-        private DelegateCommand _plotParallelCoordinateCommand;
-        public ICommand PlotParallelCoordinateCommand
-        {
-            get
-            {
-                if (_plotParallelCoordinateCommand == null)
-                {
-                    _plotParallelCoordinateCommand = new DelegateCommand(PlotParallelCoordinate);
-                }
-
-                return _plotParallelCoordinateCommand;
-            }
-        }
-        private void PlotParallelCoordinate()
-        {
-        }
-
-        private DelegateCommand _plotHyperVolumeCommand;
-        public ICommand PlotHyperVolumeCommand
-        {
-            get
-            {
-                if (_plotHyperVolumeCommand == null)
-                {
-                    _plotHyperVolumeCommand = new DelegateCommand(PlotHyperVolume);
-                }
-
-                return _plotHyperVolumeCommand;
-            }
-        }
-        private void PlotHyperVolume()
-        {
-        }
-
-        private DelegateCommand _plotEdfCommand;
-        public ICommand PlotEdfCommand
-        {
-            get
-            {
-                if (_plotEdfCommand == null)
-                {
-                    _plotEdfCommand = new DelegateCommand(PlotEdf);
-                }
-
-                return _plotEdfCommand;
-            }
-        }
-        private void PlotEdf()
-        {
-        }
-
-        private DelegateCommand _plotRankCommand;
-        public ICommand PlotRankCommand
-        {
-            get
-            {
-                if (_plotRankCommand == null)
-                {
-                    _plotRankCommand = new DelegateCommand(PlotRank);
-                }
-
-                return _plotRankCommand;
-            }
-        }
-        private void PlotRank()
-        {
-        }
-
-        private DelegateCommand _plotTimelineCommand;
-        public ICommand PlotTimelineCommand
-        {
-            get
-            {
-                if (_plotTimelineCommand == null)
-                {
-                    _plotTimelineCommand = new DelegateCommand(PlotTimeline);
-                }
-
-                return _plotTimelineCommand;
-            }
-        }
-        private void PlotTimeline()
-        {
-        }
-
-        private DelegateCommand _plotTerminatorImprovementCommand;
-        public ICommand PlotTerminatorImprovementCommand
-        {
-            get
-            {
-                if (_plotTerminatorImprovementCommand == null)
-                {
-                    _plotTerminatorImprovementCommand = new DelegateCommand(PlotTerminatorImprovement);
-                }
-
-                return _plotTerminatorImprovementCommand;
-            }
-        }
-        private void PlotTerminatorImprovement()
-        {
-        }
-
         private DelegateCommand _registerOptunaHubSamplerCommand;
-
         public ICommand RegisterOptunaHubSamplerCommand
         {
             get
@@ -255,7 +85,6 @@ namespace Tunny.WPF.ViewModels
                 return _registerOptunaHubSamplerCommand;
             }
         }
-
         private void RegisterOptunaHubSampler()
         {
         }
@@ -438,6 +267,12 @@ namespace Tunny.WPF.ViewModels
             TLog.MethodStart();
             var selector = new TargetStudyNameSelector();
             selector.Show();
+        }
+
+        public void Dispose()
+        {
+            _helpPage.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

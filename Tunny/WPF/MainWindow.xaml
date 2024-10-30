@@ -162,56 +162,67 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Visualization">
                     <RibbonButton
-                        Command="{Binding PlotParetoFrontCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.ParetoFront}"
                         Label="Pareto Front"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotHistoryCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.OptimizationHistory}"
                         Label="History"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotSliceCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.Slice}"
                         Label="Slice"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotContourCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.Contour}"
                         Label="Contour"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotParameterImportanceCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.ParameterImportance}"
                         Label="Param Importance"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotParallelCoordinateCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.ParallelCoordinate}"
                         Label="Parallel Coordinate"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotHyperVolumeCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.Hypervolume}"
                         Label="Hyper volume"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotEdfCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.EDF}"
                         Label="EDF"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotRankCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.Rank}"
                         Label="Rank"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotTimelineCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.TimeLine}"
                         Label="Timeline"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding PlotTerminatorImprovementCommand}"
+                        Command="{Binding SelectVisualizeTypeCommand}"
+                        CommandParameter="{x:Static common:VisualizeType.TerminatorImprovement}"
                         Label="Terminator Improvement"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />

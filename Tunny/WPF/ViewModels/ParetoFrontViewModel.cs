@@ -9,12 +9,17 @@ using Prism.Mvvm;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
+using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 
 namespace Tunny.WPF.ViewModels
 {
-    internal class ParetoFrontViewModel : BindableBase
+    internal class ParetoFrontViewModel : BindableBase, IPlotSettings
     {
+        private ObservableCollection<NameComboBoxItem> _studyNameItems;
+        public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
+        private NameComboBoxItem _selectedStudyName;
+        public NameComboBoxItem SelectedStudyName { get => _selectedStudyName; set => SetProperty(ref _selectedStudyName, value); }
         private ObservableCollection<VisualizeListItem> _objectiveItems;
         public ObservableCollection<VisualizeListItem> ObjectiveItems { get => _objectiveItems; set => SetProperty(ref _objectiveItems, value); }
 
@@ -52,7 +57,7 @@ namespace Tunny.WPF.ViewModels
             }
         }
 
-        internal Plot GetPlotSettings()
+        public Plot GetPlotSettings()
         {
             return new Plot()
             {
