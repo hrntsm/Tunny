@@ -17,10 +17,11 @@ namespace Tunny.WPF.Views.Pages
             _browser = new CefSharp.Wpf.ChromiumWebBrowser();
             HelpPageFrame.Content = _browser;
         }
-        internal void OpenSite(HelpType type)
+        internal void OpenSite(HelpType? type)
         {
             switch (type)
             {
+                case null:
                 case HelpType.TunnyAbout:
                     _browser.Address = "https://tunny-docs.deno.dev/";
                     break;

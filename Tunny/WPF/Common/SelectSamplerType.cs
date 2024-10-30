@@ -1,8 +1,8 @@
-namespace Tunny.WPF.Common
+﻿namespace Tunny.WPF.Common
 {
-    public enum SamplerType
+    internal enum SelectSamplerType
     {
-        Auto,
+        AUTO,
         TPE,
         GpOptuna,
         GpBoTorch,
@@ -12,8 +12,8 @@ namespace Tunny.WPF.Common
         CmaEs,
         MoCmaEs,
         MOEAD,
-        QMC,
         Random,
-        BruteForce,
+        QMC,
+        BruteForce
     }
 }

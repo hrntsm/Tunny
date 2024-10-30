@@ -1,11 +1,14 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 
+using Prism.Commands;
+using Prism.Mvvm;
+
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
+using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Optimize;
 using Tunny.WPF.Views.Pages.Visualize;
 
@@ -15,6 +18,7 @@ namespace Tunny.WPF.ViewModels
     {
         private readonly OptimizePage _optimizePage;
         private readonly VisualizePage _visualizePage;
+        private readonly HelpPage _helpPage;
         public bool IsSingleObjective { get => !_isMultiObjective; }
         private bool _isMultiObjective;
         public bool IsMultiObjective { get => _isMultiObjective; set => SetProperty(ref _isMultiObjective, value); }
@@ -23,20 +27,10 @@ namespace Tunny.WPF.ViewModels
 
         public MainWindowViewModel()
         {
-        }
-
-        public MainWindowViewModel(OptimizePage optimizePage, VisualizePage visualizePage)
-        {
-            _optimizePage = optimizePage;
-            _visualizePage = visualizePage;
+            _optimizePage = new OptimizePage();
+            _visualizePage = new VisualizePage();
+            _helpPage = new HelpPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
-        }
-
-        private void SetSamplerType(Common.SamplerType samplerType)
-        {
-            _optimizePage.ChangeTargetSampler(samplerType);
-            OptimizeProcess.Settings.Optimize.SamplerType = samplerType;
-            MainWindowFrame = _optimizePage;
         }
 
         private void SetVisualizeType(VisualizeType visualizeType)
@@ -233,23 +227,6 @@ namespace Tunny.WPF.ViewModels
         {
         }
 
-        private DelegateCommand _autoSamplerCommand;
-        public ICommand AutoSamplerCommand
-        {
-            get
-            {
-                if (_autoSamplerCommand == null)
-                {
-                    _autoSamplerCommand = new DelegateCommand(AutoSampler);
-                }
-
-                return _autoSamplerCommand;
-            }
-        }
-        private void AutoSampler()
-        {
-        }
-
         private DelegateCommand _registerOptunaHubSamplerCommand;
 
         public ICommand RegisterOptunaHubSamplerCommand
@@ -267,6 +244,107 @@ namespace Tunny.WPF.ViewModels
 
         private void RegisterOptunaHubSampler()
         {
+        }
+
+        private DelegateCommand<SelectSamplerType?> _selectSamplerCommand;
+        public ICommand SelectSamplerCommand
+        {
+            get
+            {
+                if (_selectSamplerCommand == null)
+                {
+                    _selectSamplerCommand = new DelegateCommand<SelectSamplerType?>(SelectSampler);
+                }
+
+                return _selectSamplerCommand;
+            }
+        }
+
+        private void SelectSampler(SelectSamplerType? selectSamplerType)
+        {
+            SamplerType samplerType;
+            switch (selectSamplerType)
+            {
+                case SelectSamplerType.AUTO:
+                case SelectSamplerType.GpPreferential:
+                case SelectSamplerType.MoCmaEs:
+                case SelectSamplerType.MOEAD:
+                case null:
+                    return;
+                case SelectSamplerType.TPE:
+                    samplerType = SamplerType.TPE;
+                    break;
+                case SelectSamplerType.GpOptuna:
+                    samplerType = SamplerType.GP;
+                    break;
+                case SelectSamplerType.GpBoTorch:
+                    samplerType = SamplerType.BoTorch;
+                    break;
+                case SelectSamplerType.NSGAII:
+                    samplerType = SamplerType.NSGAII;
+                    break;
+                case SelectSamplerType.NSGAIII:
+                    samplerType = SamplerType.NSGAIII;
+                    break;
+                case SelectSamplerType.CmaEs:
+                    samplerType = SamplerType.CmaEs;
+                    break;
+                case SelectSamplerType.Random:
+                    samplerType = SamplerType.Random;
+                    break;
+                case SelectSamplerType.QMC:
+                    samplerType = SamplerType.QMC;
+                    break;
+                case SelectSamplerType.BruteForce:
+                    samplerType = SamplerType.BruteForce;
+                    break;
+                default:
+                    samplerType = SamplerType.TPE;
+                    break;
+            }
+            _optimizePage.ChangeTargetSampler(samplerType);
+            OptimizeProcess.Settings.Optimize.SamplerType = samplerType;
+            MainWindowFrame = _optimizePage;
+        }
+
+        private DelegateCommand<HelpType?> _openHelpPageCommand;
+        public ICommand OpenHelpPageCommand
+        {
+            get
+            {
+                if (_openHelpPageCommand == null)
+                {
+                    _openHelpPageCommand = new DelegateCommand<HelpType?>(OpenHelpPage);
+                }
+
+                return _openHelpPageCommand;
+            }
+        }
+
+        private void OpenHelpPage(HelpType? helpType)
+        {
+            _helpPage.OpenSite(helpType);
+            MainWindowFrame = _helpPage;
+        }
+
+        private DelegateCommand _quickAccessFileSaveCommand;
+        public ICommand QuickAccessFileSaveCommand
+        {
+            get
+            {
+                if (_quickAccessFileSaveCommand == null)
+                {
+                    _quickAccessFileSaveCommand = new DelegateCommand(QuickAccessFileSave);
+                }
+
+                return _quickAccessFileSaveCommand;
+            }
+        }
+
+        private void QuickAccessFileSave()
+        {
+            OptimizeProcess.Settings.Optimize = _optimizePage.GetCurrentSettings();
+            OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
     }
 }

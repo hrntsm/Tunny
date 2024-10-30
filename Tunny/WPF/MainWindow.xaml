@@ -26,10 +26,7 @@
 
         <Ribbon x:Name="Ribbon" Grid.Row="0">
             <Ribbon.HelpPaneContent>
-                <RibbonButton
-                    Click="TunnyDocumentHelpButton_Click"
-                    SmallImageSource="Assets/Icon/HelpBox.png"
-                    ToolTip="Context Help" />
+                <RibbonButton SmallImageSource="Assets/Icon/HelpBox.png" ToolTip="Context Help" />
             </Ribbon.HelpPaneContent>
 
             <Ribbon.QuickAccessToolBar>
@@ -39,7 +36,7 @@
                         SmallImageSource="Assets/Icon/FolderOpenOutline.png"
                         ToolTip="Open Optimization Result File" />
                     <RibbonButton
-                        Click="QuickAccessFileSaveRibbonButton_Click"
+                        Command="{Binding QuickAccessFileSaveCommand}"
                         SmallImageSource="Assets/Icon/ContentSave.png"
                         ToolTip="Override Save Settings" />
                 </RibbonQuickAccessToolBar>
@@ -49,30 +46,34 @@
                 <RibbonGroup>
                     <RibbonButton
                         Command="{Binding SelectSamplerCommand}"
-                        CommandParameter="{x:Static common:EnumSamplerType.Auto}"
+                        CommandParameter="{x:Static common:SelectSamplerType.AUTO}"
                         Label="AUTO Sampler"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Bayesian Optimization">
                     <RibbonButton
-                        Command="{Binding TpeSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.TPE}"
                         Label="TPE"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding GpOptunaSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.GpOptuna}"
                         IsEnabled="{Binding IsSingleObjective}"
                         Label="GP:Optuna"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding GpBotorchCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.GpBoTorch}"
                         Label="GP:BoTorch"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding GpPreferentialCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.GpPreferential}"
                         IsEnabled="False"
                         Label="GP:Preferential"
                         LargeImageSource="Assets/Icon/Tunny.png"
@@ -80,25 +81,29 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Genetic Algorighm">
                     <RibbonButton
-                        Command="{Binding NsgaiiSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.NSGAII}"
                         Label="NSGA-II"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding NsgaiiiSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.NSGAIII}"
                         Label="NSGA-III"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Strategy">
                     <RibbonButton
-                        Command="{Binding CmaEsSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.CmaEs}"
                         IsEnabled="{Binding IsSingleObjective}"
                         Label="CMA-ES"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding MoCmaEsSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.MoCmaEs}"
                         IsEnabled="{Binding IsMultiObjective}"
                         Label="MO-CMA-ES"
                         LargeImageSource="Assets/Icon/Tunny.png"
@@ -106,7 +111,8 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Evolution Algorithm">
                     <RibbonButton
-                        Command="{Binding MoeadSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.MOEAD}"
                         IsEnabled="{Binding IsMultiObjective}"
                         Label="MOEA/D"
                         LargeImageSource="Assets/Icon/Tunny.png"
@@ -114,17 +120,20 @@
                 </RibbonGroup>
                 <RibbonGroup Header="Misc">
                     <RibbonButton
-                        Command="{Binding RandomSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.Random}"
                         Label="Random"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding QmcSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.QMC}"
                         Label="QMC"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Command="{Binding BruteForceSamplerCommand}"
+                        Command="{Binding SelectSamplerCommand}"
+                        CommandParameter="{x:Static common:SelectSamplerType.BruteForce}"
                         Label="BruteForce"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
@@ -285,35 +294,42 @@
             <RibbonTab Header="Help">
                 <RibbonGroup>
                     <RibbonButton
-                        Click="TunnyAboutButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.TunnyAbout}"
                         Label="About"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Help Pages">
                     <RibbonButton
-                        Click="TunnyDocumentHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.TunnyDocument}"
                         Label="Tunny"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OptunaSamplerHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.OptunaSampler}"
                         Label="Optuna Sampler"
                         LargeImageSource="Assets/Icon/Optuna.png" />
                     <RibbonButton
-                        Click="OptunaHubHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.OptunaHub}"
                         Label="Optuna Hub"
                         LargeImageSource="Assets/Icon/Optuna.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="License">
                     <RibbonButton
-                        Click="TunnyLicenseHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.TunnyLicense}"
                         Label="Tunny"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="PythonPackagesLicenseHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.PythonPackagesLicense}"
                         Label="Python Packages"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
-                        Click="OtherLicenseHelpButton_Click"
+                        Command="{Binding OpenHelpPageCommand}"
+                        CommandParameter="{x:Static common:HelpType.OtherLicense}"
                         Label="Others"
                         LargeImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
@@ -324,7 +340,7 @@
         <Frame
             Grid.Row="1"
             Background="AliceBlue"
-            Content="{Binding MainFrameWindow}"
+            Content="{Binding MainWindowFrame}"
             NavigationUIVisibility="Hidden" />
 
         <StatusBar Grid.Row="2" Background="#FF93C6F8">

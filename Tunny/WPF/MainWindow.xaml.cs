@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls.Ribbon;
 
@@ -7,26 +6,18 @@ using Grasshopper.GUI;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Settings;
-using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
-using Tunny.WPF.ViewModels;
-using Tunny.WPF.Views.Pages;
-using Tunny.WPF.Views.Pages.Optimize;
-using Tunny.WPF.Views.Pages.Visualize;
 using Tunny.WPF.Views.Windows;
 
 namespace Tunny.WPF
 {
-    public partial class MainWindow : RibbonWindow, IDisposable
+    public partial class MainWindow : RibbonWindow
     {
         internal readonly GH_DocumentEditor DocumentEditor;
 
         private readonly TSettings _settings;
-        private readonly OptimizePage _optimizePage;
-        private readonly VisualizePage _visualizePage;
-        private readonly HelpPage _helpPage;
 
         public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
         {
@@ -45,12 +36,8 @@ namespace Tunny.WPF
                 TunnyMessageBox.Warn_SettingsJsonFileLoadFail();
             }
             OptimizeProcess.Settings = _settings;
-            _optimizePage = new OptimizePage();
-            _visualizePage = new VisualizePage();
-            _helpPage = new HelpPage();
 
             InitializeComponent();
-            DataContext = new MainWindowViewModel(_optimizePage, _visualizePage);
             UpdateTitle();
         }
 
@@ -58,47 +45,6 @@ namespace Tunny.WPF
         {
             string storagePath = _settings.Storage.Path;
             Title = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
-        }
-
-        private void TunnyAboutButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.TunnyAbout);
-        }
-
-        private void TunnyLicenseHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.TunnyLicense);
-        }
-
-        private void PythonPackagesLicenseHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.PythonPackagesLicense);
-        }
-
-        private void OtherLicenseHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.OtherLicense);
-        }
-
-        private void TunnyDocumentHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.TunnyDocument);
-        }
-
-        private void OptunaSamplerHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.OptunaSampler);
-        }
-
-        private void OptunaHubHelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenHelpPage(HelpType.OptunaHub);
-        }
-
-        private void OpenHelpPage(HelpType helpType)
-        {
-            _helpPage.OpenSite(helpType);
-            MainWindowFrame.Content = _helpPage;
         }
 
         private void QuickAccessFileOpenRibbonButton_Click(object sender, RoutedEventArgs e)
@@ -117,12 +63,6 @@ namespace Tunny.WPF
                 _settings.Storage.Path = dialog.FileName;
                 UpdateTitle();
             }
-        }
-
-        private void QuickAccessFileSaveRibbonButton_Click(object sender, RoutedEventArgs e)
-        {
-            _settings.Optimize = _optimizePage.GetCurrentSettings();
-            _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
         private void VisualizeRunOptunaDashboardRibbonButton_Click(object sender, RoutedEventArgs e)
@@ -145,20 +85,6 @@ namespace Tunny.WPF
             TLog.MethodStart();
             var selector = new TargetStudyNameSelector(_settings);
             selector.Show();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _helpPage?.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
