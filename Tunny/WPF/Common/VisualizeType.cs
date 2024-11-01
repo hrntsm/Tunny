@@ -6,12 +6,12 @@
         OptimizationHistory,
         Slice,
         Contour,
-        ParameterImportance,
+        ParamImportances,
         ParallelCoordinate,
         Hypervolume,
         EDF,
         Rank,
-        TimeLine,
+        Timeline,
         TerminatorImprovement,
         OptunaHub
     }

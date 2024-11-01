@@ -12,7 +12,7 @@ using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 
-namespace Tunny.WPF.ViewModels
+namespace Tunny.WPF.ViewModels.Visualize
 {
     internal class ParetoFrontViewModel : BindableBase, IPlotSettings
     {

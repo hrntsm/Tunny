@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -18,12 +16,11 @@ using Prism.Mvvm;
 using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Process;
-using Tunny.Solver;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 using Tunny.WPF.Views.Pages.Visualize;
 
-namespace Tunny.WPF.ViewModels
+namespace Tunny.WPF.ViewModels.Visualize
 {
     internal class VisualizeViewModel : BindableBase
     {
@@ -111,22 +108,31 @@ namespace Tunny.WPF.ViewModels
                     PlotSettingsFrame = new OptimizationHistoryPage();
                     break;
                 case VisualizeType.Slice:
+                    PlotSettingsFrame = new SlicePage();
                     break;
                 case VisualizeType.Contour:
+                    PlotSettingsFrame = new ContourPage();
                     break;
-                case VisualizeType.ParameterImportance:
+                case VisualizeType.ParamImportances:
+                    PlotSettingsFrame = new ParamImportancesPage();
                     break;
                 case VisualizeType.ParallelCoordinate:
+                    PlotSettingsFrame = new ParallelCoordinatePage();
                     break;
                 case VisualizeType.Hypervolume:
+                    PlotSettingsFrame = new HypervolumePage();
                     break;
                 case VisualizeType.EDF:
+                    PlotSettingsFrame = new EdfPage();
                     break;
                 case VisualizeType.Rank:
+                    PlotSettingsFrame = new RankPage();
                     break;
-                case VisualizeType.TimeLine:
+                case VisualizeType.Timeline:
+                    PlotSettingsFrame = new TimelinePage();
                     break;
                 case VisualizeType.TerminatorImprovement:
+                    PlotSettingsFrame = new TerminatorImprovementPage();
                     break;
                 case VisualizeType.OptunaHub:
                     break;
@@ -179,7 +185,7 @@ namespace Tunny.WPF.ViewModels
                 case VisualizeType.Contour:
                     await Task.Run(() => PlotContourAsync());
                     break;
-                case VisualizeType.ParameterImportance:
+                case VisualizeType.ParamImportances:
                     await Task.Run(() => PlotParameterImportanceAsync());
                     break;
                 case VisualizeType.Hypervolume:
@@ -191,7 +197,7 @@ namespace Tunny.WPF.ViewModels
                 case VisualizeType.Rank:
                     await Task.Run(() => PlotRankAsync());
                     break;
-                case VisualizeType.TimeLine:
+                case VisualizeType.Timeline:
                     await Task.Run(() => PlotTimeLineAsync());
                     break;
                 case VisualizeType.TerminatorImprovement:
@@ -211,7 +217,7 @@ namespace Tunny.WPF.ViewModels
 
         private void PlotParetoFrontAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
             Plot settings = viewModel.GetPlotSettings();
             //settings.TargetStudyName = SelectedStudyName.Name;
@@ -222,55 +228,55 @@ namespace Tunny.WPF.ViewModels
 
         private void PlotOptimizationHistoryAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotSliceAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotContourAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotParameterImportanceAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotHypervolumeAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotEdfAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotRankAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotTimeLineAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
 
         private void PlotTerminatorImprovementAsync()
         {
-            var vis = new Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
+            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             TunnyMessageBox.Error_NoImplemented();
         }
     }

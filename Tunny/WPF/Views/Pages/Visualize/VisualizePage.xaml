@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
     Title="VisualizePage"
     d:DesignHeight="650"
     d:DesignWidth="1000"

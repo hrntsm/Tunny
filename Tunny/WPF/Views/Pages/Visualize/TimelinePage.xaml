@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="Tunny.WPF.Views.Pages.Visualize.TimelinePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Visualize"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
+    Title="TimelinePage"
+    d:DesignHeight="450"
+    d:DesignWidth="160"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:TimelineViewModel />
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+        </Grid.RowDefinitions>
+
+        <Label
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Content="Type: Timeline"
+            FontSize="16"
+            FontWeight="Bold" />
+
+        <Label
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Target Study" />
+        <ComboBox
+            Grid.Row="2"
+            Margin="5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding StudyNameItems}"
+            SelectedItem="{Binding SelectedStudyName}" />
+    </Grid>
+</Page>

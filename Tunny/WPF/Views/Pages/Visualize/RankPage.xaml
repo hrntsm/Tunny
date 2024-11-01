@@ -1,17 +1,17 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Views.Pages.Visualize.OptimizationHistoryPage"
+    x:Class="Tunny.WPF.Views.Pages.Visualize.RankPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Visualize"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
-    Title="OptimizationHisotry"
+    Title="RankPage"
     d:DesignHeight="450"
     d:DesignWidth="160"
     mc:Ignorable="d">
     <Page.DataContext>
-        <viewModels:OptimizationHistoryViewModel />
+        <viewModels:RankViewModel />
     </Page.DataContext>
 
     <Grid>
@@ -23,13 +23,12 @@
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="AUTO" />
         </Grid.RowDefinitions>
 
         <Label
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Content="Type: History"
+            Content="Type: Rank"
             FontSize="16"
             FontWeight="Bold" />
 
@@ -37,7 +36,7 @@
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Select Base Study" />
+            Content="Target Study" />
         <ComboBox
             Grid.Row="2"
             Margin="5"
@@ -61,11 +60,11 @@
             Grid.Row="5"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Select Compare Study" />
+            Content="Target Params" />
         <ListView
             Grid.Row="6"
             Margin="5"
-            ItemsSource="{Binding CompareStudyNameItems}">
+            ItemsSource="{Binding ParamItems}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="50" Header="IsTarget">
@@ -78,15 +77,9 @@
                     <GridViewColumn
                         Width="90"
                         DisplayMemberBinding="{Binding Name}"
-                        Header="Study Name" />
+                        Header="Param Name" />
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <CheckBox
-            Grid.Row="7"
-            Margin="5"
-            Content="Show Error Bar"
-            IsChecked="{Binding ShowErrorBar}" />
     </Grid>
 </Page>

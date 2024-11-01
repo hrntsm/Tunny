@@ -1,10 +1,9 @@
 ﻿using System.Windows.Controls;
-
 namespace Tunny.WPF.Views.Pages.Visualize
 {
-    public partial class OptimizationHistoryPage : Page
+    public partial class HypervolumePage : Page
     {
-        public OptimizationHistoryPage()
+        public HypervolumePage()
         {
             InitializeComponent();
         }

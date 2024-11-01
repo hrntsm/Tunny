@@ -186,7 +186,7 @@
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
-                        CommandParameter="{x:Static common:VisualizeType.ParameterImportance}"
+                        CommandParameter="{x:Static common:VisualizeType.ParamImportances}"
                         Label="Param Importance"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
@@ -216,7 +216,7 @@
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
-                        CommandParameter="{x:Static common:VisualizeType.TimeLine}"
+                        CommandParameter="{x:Static common:VisualizeType.Timeline}"
                         Label="Timeline"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />

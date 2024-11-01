@@ -1,17 +1,17 @@
 ﻿<Page
-    x:Class="Tunny.WPF.Views.Pages.Visualize.ParetoFrontPage"
+    x:Class="Tunny.WPF.Views.Pages.Visualize.HypervolumePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Visualize"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
-    Title="ParetoFront"
+    Title="HypervolumePage"
     d:DesignHeight="450"
     d:DesignWidth="160"
     mc:Ignorable="d">
     <Page.DataContext>
-        <viewModels:ParetoFrontViewModel />
+        <viewModels:HypervolumeViewModel />
     </Page.DataContext>
 
     <Grid>
@@ -20,14 +20,13 @@
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="AUTO" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="AUTO" />
         </Grid.RowDefinitions>
 
         <Label
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Content="Type: Pareto Front"
+            Content="Type: Hypervolume"
             FontSize="16"
             FontWeight="Bold" />
 
@@ -35,7 +34,7 @@
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Select Target Study" />
+            Content="Target Study" />
         <ComboBox
             Grid.Row="2"
             Margin="5"
@@ -47,33 +46,11 @@
             Grid.Row="3"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Target Objective" />
-        <ListView
+            Content="Reference Point" />
+        <TextBox
             Grid.Row="4"
             Margin="5"
-            ItemsSource="{Binding ObjectiveItems}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="50" Header="IsTarget">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn
-                        Width="90"
-                        DisplayMemberBinding="{Binding Name}"
-                        Header="Objective Name" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-
-        <CheckBox
-            Grid.Row="5"
-            Margin="5"
-            Content="Include Dominated Trials"
-            IsChecked="{Binding IncludeDominatedTrials}" />
+            Text="{Binding ReferencePoint}" />
 
     </Grid>
 </Page>

@@ -2,9 +2,9 @@
 
 namespace Tunny.WPF.Views.Pages.Visualize
 {
-    public partial class OptimizationHistoryPage : Page
+    public partial class RankPage : Page
     {
-        public OptimizationHistoryPage()
+        public RankPage()
         {
             InitializeComponent();
         }
