@@ -1,16 +1,9 @@
-﻿using Prism.Mvvm;
-
-using Tunny.Core.Settings;
-using Tunny.WPF.Common;
+﻿using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class TerminatorImprovementViewModel : BindableBase, IPlotSettings
+    class TerminatorImprovementViewModel : PlotSettingsViewModelBase
     {
-        private System.Collections.IEnumerable _studyNameItems;
-        public System.Collections.IEnumerable StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
-        private object _selectedStudyName;
-        public object SelectedStudyName { get => _selectedStudyName; set => SetProperty(ref _selectedStudyName, value); }
         private System.Collections.IEnumerable _improvementEvaluatorItems;
         public System.Collections.IEnumerable ImprovementEvaluatorItems { get => _improvementEvaluatorItems; set => SetProperty(ref _improvementEvaluatorItems, value); }
         private object _selectedImprovementEvaluator;
@@ -30,7 +23,7 @@ namespace Tunny.WPF.ViewModels.Visualize
             PlotError = false;
         }
 
-        public Plot GetPlotSettings()
+        public override PlotSettings GetPlotSettings()
         {
             throw new System.NotImplementedException();
         }

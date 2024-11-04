@@ -2,7 +2,7 @@ using Tunny.Core.TEnum;
 
 namespace Tunny.Core.Settings
 {
-    public class Plot
+    public class PlotSettings
     {
         public PlotActionType PlotActionType { get; set; }
         public string PlotTypeName { get; set; }

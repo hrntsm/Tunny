@@ -5,6 +5,8 @@ using System.Linq;
 using Optuna.Storage;
 using Optuna.Trial;
 
+using Python.Runtime;
+
 namespace Optuna.Study
 {
     public class Study
@@ -152,9 +154,12 @@ namespace Optuna.Study
             return study;
         }
 
-        public static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
+        public static dynamic LoadStudy(dynamic storage, string studyName)
         {
-            return optuna.load_study(storage: storage, study_name: studyName);
+            dynamic optuna = Py.Import("optuna");
+            return studyName == null
+                ? throw new ArgumentException("studyName must not be null.")
+                : optuna.load_study(storage: storage, study_name: studyName);
         }
     }
 }

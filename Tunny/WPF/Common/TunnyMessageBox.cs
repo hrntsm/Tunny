@@ -114,6 +114,17 @@ namespace Tunny.WPF.Common
             );
         }
 
+        internal static void Error_VisualizationTypeNotSupported()
+        {
+            TLog.MethodStart();
+            Show(
+                "This visualization type is not supported in this study case.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+        }
+
         internal static void Error_NoImplemented()
         {
             TLog.MethodStart();

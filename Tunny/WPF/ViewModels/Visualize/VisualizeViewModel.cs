@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -8,16 +8,12 @@ using System.Windows.Input;
 using CefSharp;
 using CefSharp.Wpf;
 
-using Optuna.Study;
-
 using Prism.Commands;
 using Prism.Mvvm;
 
 using Tunny.Core.Settings;
-using Tunny.Core.Storage;
 using Tunny.Process;
 using Tunny.WPF.Common;
-using Tunny.WPF.Models;
 using Tunny.WPF.Views.Pages.Visualize;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -26,16 +22,10 @@ namespace Tunny.WPF.ViewModels.Visualize
     {
         private readonly TSettings _settings;
         private VisualizeType _targetVisualizeType;
-
+        private Dictionary<VisualizeType, Page> _plotSettingPages;
 
         private ChromiumWebBrowser _plotFrame;
         public ChromiumWebBrowser PlotFrame { get => _plotFrame; set => SetProperty(ref _plotFrame, value); }
-
-        private ObservableCollection<VisualizeListItem> _objectiveItems;
-        public ObservableCollection<VisualizeListItem> ObjectiveItems { get => _objectiveItems; set => SetProperty(ref _objectiveItems, value); }
-        private ObservableCollection<VisualizeListItem> _variableItems;
-        public ObservableCollection<VisualizeListItem> VariableItems { get => _variableItems; set => SetProperty(ref _variableItems, value); }
-
         private Page _plotSettingsFrame;
         public Page PlotSettingsFrame { get => _plotSettingsFrame; set => SetProperty(ref _plotSettingsFrame, value); }
 
@@ -43,100 +33,35 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
             _settings = OptimizeProcess.Settings;
             PlotFrame = new ChromiumWebBrowser();
-            PlotSettingsFrame = new ParetoFrontPage();
-            ObjectiveItems = new ObservableCollection<VisualizeListItem>();
-            VariableItems = new ObservableCollection<VisualizeListItem>();
+            InitializeSettingPages();
         }
 
-        private static ObservableCollection<NameComboBoxItem> StudyNamesFromStorage(string storagePath)
+        private void InitializeSettingPages()
         {
-            var items = new ObservableCollection<NameComboBoxItem>();
-            StudySummary[] summaries = new StorageHandler().GetStudySummaries(storagePath);
-            for (int i = 0; i < summaries.Length; i++)
+            _plotSettingPages = new Dictionary<VisualizeType, Page>
             {
-                StudySummary summary = summaries[i];
-                items.Add(new NameComboBoxItem()
-                {
-                    Id = i,
-                    Name = summary.StudyName
-                });
-            }
-            return items;
-        }
-
-        private void UpdateListView()
-        {
-            StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
-            //StudySummary targetStudySummary = summaries.FirstOrDefault(s => s.StudyName == _selectedStudyName.Name);
-            //if (targetStudySummary != null)
-            //{
-            //    SetVariableListItems(targetStudySummary);
-            //    PlotSettingsFrame.SetTargetStudy(targetStudySummary);
-            //}
-        }
-
-        private void SetVariableListItems(StudySummary visualizeStudySummary)
-        {
-            string[] variableNames = visualizeStudySummary.UserAttrs["variable_names"] as string[];
-            VariableItems.Clear();
-            for (int i = 0; i < variableNames.Length; i++)
-            {
-                VariableItems.Add(new VisualizeListItem()
-                {
-                    Name = variableNames[i]
-                });
-            }
+                {VisualizeType.ParetoFront, new ParetoFrontPage()},
+                {VisualizeType.OptimizationHistory, new OptimizationHistoryPage()},
+                {VisualizeType.Slice, new SlicePage()},
+                {VisualizeType.Contour, new ContourPage()},
+                {VisualizeType.ParamImportances, new ParamImportancesPage()},
+                {VisualizeType.ParallelCoordinate, new ParallelCoordinatePage()},
+                {VisualizeType.Hypervolume, new HypervolumePage()},
+                {VisualizeType.EDF, new EdfPage()},
+                {VisualizeType.Rank, new RankPage()},
+                {VisualizeType.Timeline, new TimelinePage()},
+                {VisualizeType.TerminatorImprovement, new TerminatorImprovementPage()}
+            };
+            PlotSettingsFrame = _plotSettingPages[VisualizeType.ParetoFront];
         }
 
         internal void SetTargetVisualizeType(VisualizeType visualizeType)
         {
             _targetVisualizeType = visualizeType;
-            SetSettingsPage();
+            PlotSettingsFrame = _plotSettingPages[_targetVisualizeType];
             string resource = "Tunny.WPF.Assets.html.visualize_top.html";
             string content = LoadEmbeddedHtml(resource);
             PlotFrame.LoadHtml(content);
-        }
-
-        private void SetSettingsPage()
-        {
-            switch (_targetVisualizeType)
-            {
-                case VisualizeType.ParetoFront:
-                    PlotSettingsFrame = new ParetoFrontPage();
-                    break;
-                case VisualizeType.OptimizationHistory:
-                    PlotSettingsFrame = new OptimizationHistoryPage();
-                    break;
-                case VisualizeType.Slice:
-                    PlotSettingsFrame = new SlicePage();
-                    break;
-                case VisualizeType.Contour:
-                    PlotSettingsFrame = new ContourPage();
-                    break;
-                case VisualizeType.ParamImportances:
-                    PlotSettingsFrame = new ParamImportancesPage();
-                    break;
-                case VisualizeType.ParallelCoordinate:
-                    PlotSettingsFrame = new ParallelCoordinatePage();
-                    break;
-                case VisualizeType.Hypervolume:
-                    PlotSettingsFrame = new HypervolumePage();
-                    break;
-                case VisualizeType.EDF:
-                    PlotSettingsFrame = new EdfPage();
-                    break;
-                case VisualizeType.Rank:
-                    PlotSettingsFrame = new RankPage();
-                    break;
-                case VisualizeType.Timeline:
-                    PlotSettingsFrame = new TimelinePage();
-                    break;
-                case VisualizeType.TerminatorImprovement:
-                    PlotSettingsFrame = new TerminatorImprovementPage();
-                    break;
-                case VisualizeType.OptunaHub:
-                    break;
-            }
         }
 
         private static string LoadEmbeddedHtml(string resource)
@@ -168,42 +93,15 @@ namespace Tunny.WPF.ViewModels.Visualize
             }
         }
 
-        private async void Plot()
+        private void Plot()
         {
             SetLoadingPage();
             switch (_targetVisualizeType)
             {
-                case VisualizeType.ParetoFront:
-                    await Task.Run(() => PlotParetoFrontAsync());
-                    break;
-                case VisualizeType.OptimizationHistory:
-                    await Task.Run(() => PlotOptimizationHistoryAsync());
-                    break;
-                case VisualizeType.Slice:
-                    await Task.Run(() => PlotSliceAsync());
-                    break;
-                case VisualizeType.Contour:
-                    await Task.Run(() => PlotContourAsync());
-                    break;
-                case VisualizeType.ParamImportances:
-                    await Task.Run(() => PlotParameterImportanceAsync());
-                    break;
-                case VisualizeType.Hypervolume:
-                    await Task.Run(() => PlotHypervolumeAsync());
-                    break;
-                case VisualizeType.EDF:
-                    await Task.Run(() => PlotEdfAsync());
-                    break;
-                case VisualizeType.Rank:
-                    await Task.Run(() => PlotRankAsync());
-                    break;
-                case VisualizeType.Timeline:
-                    await Task.Run(() => PlotTimeLineAsync());
-                    break;
-                case VisualizeType.TerminatorImprovement:
-                    await Task.Run(() => PlotTerminatorImprovementAsync());
-                    break;
                 case VisualizeType.OptunaHub:
+                    break;
+                default:
+                    PlotAsync();
                     break;
             }
         }
@@ -215,69 +113,17 @@ namespace Tunny.WPF.ViewModels.Visualize
             PlotFrame.LoadHtml(content);
         }
 
-        private void PlotParetoFrontAsync()
+        private async void PlotAsync()
         {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
             var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
-            Plot settings = viewModel.GetPlotSettings();
-            //settings.TargetStudyName = SelectedStudyName.Name;
-            string htmlPath = vis.Plot(settings);
-            string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
-            PlotFrame.Load(fileUrl);
-        }
-
-        private void PlotOptimizationHistoryAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotSliceAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotContourAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotParameterImportanceAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotHypervolumeAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotEdfAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotRankAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotTimeLineAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
-        }
-
-        private void PlotTerminatorImprovementAsync()
-        {
-            var vis = new Solver.Visualize(_settings, OptimizeProcess.Component.GhInOut.HasConstraint);
-            TunnyMessageBox.Error_NoImplemented();
+            PlotSettings plotSettings = viewModel.GetPlotSettings();
+            await Task.Run(() =>
+            {
+                var vis = new VisualizeProcess();
+                string htmlPath = vis.Plot(_settings.Storage, plotSettings);
+                string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
+                PlotFrame.Load(fileUrl);
+            });
         }
     }
 }

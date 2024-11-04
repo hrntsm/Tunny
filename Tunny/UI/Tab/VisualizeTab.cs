@@ -82,26 +82,9 @@ namespace Tunny.UI
         private void Plot(PlotActionType pActionType)
         {
             TLog.MethodStart();
-            var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            var pSettings = new Plot
-            {
-                TargetStudyName = visualizeTargetStudyComboBox.Text,
-                PlotActionType = pActionType,
-                PlotTypeName = visualizeTypeComboBox.Text,
-                TargetObjectiveName = visualizeVariableListBox.SelectedItems.Cast<string>().ToArray(),
-                TargetObjectiveIndex = visualizeVariableListBox.SelectedIndices.Cast<int>().ToArray(),
-                TargetVariableName = visualizeObjectiveListBox.SelectedItems.Cast<string>().ToArray(),
-                TargetVariableIndex = visualizeObjectiveListBox.SelectedIndices.Cast<int>().ToArray(),
-                ClusterCount = (int)visualizeClusterNumUpDown.Value,
-                IncludeDominatedTrials = visualizeIncludeDominatedCheckBox.Checked,
-            };
-
-            if (!CheckTargetValues(pSettings)) { return; }
-
-            optunaVis.Plot(pSettings);
         }
 
-        private static bool CheckTargetValues(Plot pSettings)
+        private static bool CheckTargetValues(PlotSettings pSettings)
         {
             TLog.MethodStart();
             switch (pSettings.PlotTypeName)
@@ -120,7 +103,7 @@ namespace Tunny.UI
             }
         }
 
-        private static bool CheckClusteringTargets(Plot pSettings)
+        private static bool CheckClusteringTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -133,7 +116,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjectives(Plot pSettings)
+        private static bool CheckOneObjectives(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -145,7 +128,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckParetoFrontTargets(Plot pSettings)
+        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -157,7 +140,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjSomeVarTargets(Plot pSettings)
+        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
