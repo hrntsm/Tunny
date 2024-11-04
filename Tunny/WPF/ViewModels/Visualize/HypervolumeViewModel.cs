@@ -1,4 +1,6 @@
-﻿using Tunny.Core.Settings;
+﻿using System.Linq;
+
+using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
@@ -7,9 +9,22 @@ namespace Tunny.WPF.ViewModels.Visualize
         private string _referencePoint;
         public string ReferencePoint { get => _referencePoint; set => SetProperty(ref _referencePoint, value); }
 
+        public HypervolumeViewModel()
+        {
+            ReferencePoint = "AUTO";
+        }
+
         public override PlotSettings GetPlotSettings()
         {
-            throw new System.NotImplementedException();
+            double[] referencePoint = string.IsNullOrEmpty(ReferencePoint) || ReferencePoint.Equals("AUTO", System.StringComparison.OrdinalIgnoreCase)
+                ? null
+                : ReferencePoint.Split(',').Select(double.Parse).ToArray();
+            return new PlotSettings()
+            {
+                TargetStudyName = SelectedStudyName.Name,
+                PlotTypeName = "hypervolume",
+                ReferencePoint = referencePoint
+            };
         }
     }
 }

@@ -74,12 +74,12 @@ namespace Optuna.Visualization
             return new PlotlyFigure(fig);
         }
 
-        public static PlotlyFigure PlotHypervolume(dynamic study)
+        public static PlotlyFigure PlotHypervolume(dynamic study, double[] referencePoint)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_hypervolume.py"));
             dynamic pyPlotHypervolume = ps.Get("plot_hypervolume");
-            dynamic fig = pyPlotHypervolume(study);
+            dynamic fig = pyPlotHypervolume(study, referencePoint);
             return new PlotlyFigure(fig);
         }
 

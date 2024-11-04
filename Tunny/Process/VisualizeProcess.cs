@@ -45,30 +45,30 @@ namespace Tunny.Process
             return htmlPath;
         }
 
-        private static PlotlyFigure CreateFigure(dynamic study, PlotSettings pSettings)
+        private static PlotlyFigure CreateFigure(dynamic study, PlotSettings settings)
         {
             TLog.MethodStart();
-            switch (pSettings.PlotTypeName)
+            switch (settings.PlotTypeName)
             {
                 case "contour":
-                    return Visualization.PlotContour(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName);
+                    return Visualization.PlotContour(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "EDF":
-                    return Visualization.PlotEDF(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
+                    return Visualization.PlotEDF(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0]);
                 case "optimization history":
-                    return Visualization.PlotOptimizationHistory(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0]);
+                    return Visualization.PlotOptimizationHistory(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0]);
                 case "parallel coordinate":
-                    return Visualization.PlotParallelCoordinate(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName);
+                    return Visualization.PlotParallelCoordinate(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "param importances":
-                    return Visualization.PlotParamImportances(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName);
+                    return Visualization.PlotParamImportances(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "pareto front":
-                    PlotlyFigure fig = Visualization.PlotParetoFront(study, pSettings.TargetObjectiveName, pSettings.TargetObjectiveIndex, pSettings.IncludeDominatedTrials);
+                    PlotlyFigure fig = Visualization.PlotParetoFront(study, settings.TargetObjectiveName, settings.TargetObjectiveIndex, settings.IncludeDominatedTrials);
                     return Visualization.TruncateParetoFrontPlotHover(study, fig);
                 case "slice":
-                    return Visualization.PlotSlice(study, pSettings.TargetObjectiveName[0], pSettings.TargetObjectiveIndex[0], pSettings.TargetVariableName[0]);
+                    return Visualization.PlotSlice(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName[0]);
                 case "hypervolume":
-                    return Visualization.PlotHypervolume(study);
+                    return Visualization.PlotHypervolume(study, settings.ReferencePoint);
                 case "clustering":
-                    return Visualization.PlotClustering(study, pSettings.ClusterCount, pSettings.TargetObjectiveIndex, pSettings.TargetVariableIndex);
+                    return Visualization.PlotClustering(study, settings.ClusterCount, settings.TargetObjectiveIndex, settings.TargetVariableIndex);
                 default:
                     throw new ArgumentException("Invalid plot type");
             }

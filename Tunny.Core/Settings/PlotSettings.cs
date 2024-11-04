@@ -13,5 +13,6 @@ namespace Tunny.Core.Settings
         public int[] TargetVariableIndex { get; set; }
         public int ClusterCount { get; set; }
         public bool IncludeDominatedTrials { get; set; }
+        public double[] ReferencePoint { get; set; }
     }
 }
