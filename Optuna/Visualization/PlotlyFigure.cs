@@ -19,7 +19,7 @@
             PyFigure.show();
         }
 
-        public void WtiteHtml(string path)
+        public void WriteHtml(string path)
         {
             PyFigure.write_html(path);
         }

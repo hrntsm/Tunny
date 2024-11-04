@@ -9,6 +9,8 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Python.Runtime;
+
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
 using Tunny.Resources;
@@ -28,6 +30,7 @@ namespace Tunny.UI
         {
             TLog.InitializeLogger();
             CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
+            Runtime.PythonDLL = Path.Combine(TEnvVariables.TunnyEnvPath, "python", @"python312.dll");
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;

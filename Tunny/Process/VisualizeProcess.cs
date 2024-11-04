@@ -18,7 +18,7 @@ namespace Tunny.Process
         {
             TLog.MethodStart();
             string htmlPath = string.Empty;
-            PythonEngine.Initialize();
+            InitializePythonEngine();
             using (Py.GIL())
             {
                 dynamic optunaStorage = storage.CreateNewOptunaStorage(false);
@@ -31,9 +31,9 @@ namespace Tunny.Process
                 try
                 {
                     PlotlyFigure figure = CreateFigure(optunaStudy, plotSettings);
-                    htmlPath = Path.Combine(TEnvVariables.TunnyEnvPath, "temp", "plot.html");
+                    htmlPath = Path.Combine(TEnvVariables.TmpDirPath, "plot.html");
                     figure.UpdateLayout(new FigureLayout { PaperBgColor = "rgba(0,0,0,0)" });
-                    figure.WtiteHtml(htmlPath);
+                    figure.WriteHtml(htmlPath);
                 }
                 catch (Exception)
                 {

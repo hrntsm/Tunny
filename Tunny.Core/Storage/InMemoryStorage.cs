@@ -13,7 +13,7 @@ namespace Tunny.Core.Storage
             TLog.MethodStart();
             if (useInnerPythonEngine)
             {
-                PythonEngine.Initialize();
+                InitializePythonEngine();
                 using (Py.GIL())
                 {
                     CreateTStorageProcess();

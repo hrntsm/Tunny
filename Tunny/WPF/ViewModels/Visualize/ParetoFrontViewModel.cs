@@ -19,6 +19,7 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
             return new PlotSettings()
             {
+                TargetStudyName = SelectedStudyName.Name,
                 PlotActionType = PlotActionType.Show,
                 PlotTypeName = "pareto front",
                 IncludeDominatedTrials = IncludeDominatedTrials.Value,

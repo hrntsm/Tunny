@@ -39,6 +39,7 @@ for now removed features.
 - Human in the loop exception with _stop_flag.
 - Even the multi-purpose Human in the loop specifies GP and the optimization does not flow, so TPE is chosen.
 - Pareto Front plot with 3 objectives visualize error
+- Delegate initialize error when push run optimize button
 
 ### Security
 
