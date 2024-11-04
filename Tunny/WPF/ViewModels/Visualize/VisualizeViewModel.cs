@@ -59,6 +59,9 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
             _targetVisualizeType = visualizeType;
             PlotSettingsFrame = _plotSettingPages[_targetVisualizeType];
+            var frameViewModel = (PlotSettingsViewModelBase)PlotSettingsFrame.DataContext;
+            frameViewModel.UpdateItems();
+
             string resource = "Tunny.WPF.Assets.html.visualize_top.html";
             string content = LoadEmbeddedHtml(resource);
             PlotFrame.LoadHtml(content);

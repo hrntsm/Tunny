@@ -49,6 +49,12 @@ namespace Tunny.WPF.ViewModels.Visualize
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
 
+        public void UpdateItems()
+        {
+            StudyNameItems = StudyNamesFromStorage(OptimizeProcess.Settings.Storage.Path);
+            SelectedStudyName = StudyNameItems.FirstOrDefault();
+        }
+
         private ObservableCollection<NameComboBoxItem> StudyNamesFromStorage(string storagePath)
         {
             var items = new ObservableCollection<NameComboBoxItem>();
