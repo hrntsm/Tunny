@@ -14,6 +14,7 @@ namespace Tunny.Core.Util
         public static string DesignExplorerPath { get; } = Path.Combine(TunnyEnvPath, "TT-DesignExplorer");
         public static string OptimizeSettingsPath { get; } = Path.Combine(TunnyEnvPath, "settings.json");
         public static string PythonPath { get; } = Path.Combine(TunnyEnvPath, "python");
+        public static string PythonDllPath { get; } = Path.Combine(PythonPath, @"python312.dll");
         public static string ComponentFolder { get; } = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string ExampleDirPath { get; } = Path.Combine(ComponentFolder, "Examples", "Grasshopper");
         public static Version OldStorageVersion { get; } = new Version("0.9.1");
