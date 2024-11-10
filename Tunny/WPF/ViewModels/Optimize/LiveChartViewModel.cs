@@ -13,7 +13,7 @@ using SkiaSharp;
 
 using Tunny.WPF.Common;
 
-namespace Tunny.WPF.ViewModels
+namespace Tunny.WPF.ViewModels.Optimize
 {
     public class LiveChartViewModel : INotifyPropertyChanged
     {

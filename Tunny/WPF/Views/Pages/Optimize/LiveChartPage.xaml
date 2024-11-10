@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Optimize"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="clr-namespace:Tunny.WPF.ViewModels"
+    xmlns:viewmodels="clr-namespace:Tunny.WPF.ViewModels.Optimize"
     Title="LiveChartPage"
     d:DesignHeight="450"
     d:DesignWidth="800"

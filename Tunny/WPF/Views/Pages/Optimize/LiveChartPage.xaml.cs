@@ -7,7 +7,7 @@ using LiveChartsCore.Defaults;
 using Tunny.Component.Optimizer;
 using Tunny.Process;
 using Tunny.WPF.Common;
-using Tunny.WPF.ViewModels;
+using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.WPF.Views.Pages.Optimize
 {

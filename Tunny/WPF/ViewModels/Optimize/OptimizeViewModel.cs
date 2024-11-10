@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace Tunny.WPF.ViewModels
+namespace Tunny.WPF.ViewModels.Optimize
 {
     public class OptimizeViewModel : BindableBase
     {
