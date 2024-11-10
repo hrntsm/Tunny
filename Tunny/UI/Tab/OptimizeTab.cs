@@ -14,7 +14,7 @@ using Tunny.Core.Handler;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
+using Tunny.Process;
 
 namespace Tunny.UI
 {
@@ -76,7 +76,7 @@ namespace Tunny.UI
             GetUIValues();
             RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
             ShowRealtimeResultCheckBox.Enabled = false;
-            OptimizeLoop.Settings = _settings;
+            OptimizeProcess.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
             {
@@ -154,7 +154,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
-            OptimizeLoop.IsForcedStopOptimize = true;
+            OptimizeProcess.IsForcedStopOptimize = true;
             ShowRealtimeResultCheckBox.Enabled = true;
             optimizeBackgroundWorker?.Dispose();
 

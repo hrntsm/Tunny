@@ -82,7 +82,7 @@ namespace Tunny.UI
         private void SetOptimizeBackgroundWorker()
         {
             TLog.MethodStart();
-            optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
+            //optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
             optimizeBackgroundWorker.WorkerReportsProgress = true;
