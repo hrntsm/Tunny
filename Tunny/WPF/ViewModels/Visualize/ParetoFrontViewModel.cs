@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
 using Tunny.Core.Settings;
-using Tunny.Core.TEnum;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {

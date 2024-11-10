@@ -52,7 +52,7 @@ namespace Optuna.Visualization
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_optimization_history.py"));
             dynamic pyPlotOptimizationHistory = ps.Get("plot_optimization_history");
-            dynamic fig = pyPlotOptimizationHistory(study, objectiveName, objectiveIndex);
+            dynamic fig = pyPlotOptimizationHistory(study, objectiveName, objectiveIndex, false);
             return new PlotlyFigure(fig);
         }
 
