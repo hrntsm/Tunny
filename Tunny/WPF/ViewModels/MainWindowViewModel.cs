@@ -12,6 +12,7 @@ using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels.Visualize;
 using Tunny.WPF.Views.Pages;
+using Tunny.WPF.Views.Pages.Expert;
 using Tunny.WPF.Views.Pages.Optimize;
 using Tunny.WPF.Views.Pages.Visualize;
 using Tunny.WPF.Views.Windows;
@@ -23,6 +24,7 @@ namespace Tunny.WPF.ViewModels
         private readonly OptimizePage _optimizePage;
         private readonly VisualizePage _visualizePage;
         private readonly HelpPage _helpPage;
+        private readonly ExpertPage _expertPage;
         public bool IsSingleObjective { get => !_isMultiObjective; }
         private bool _isMultiObjective;
         public bool IsMultiObjective { get => _isMultiObjective; set => SetProperty(ref _isMultiObjective, value); }
@@ -35,6 +37,7 @@ namespace Tunny.WPF.ViewModels
         {
             _visualizePage = new VisualizePage();
             _helpPage = new HelpPage();
+            _expertPage = new ExpertPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
 

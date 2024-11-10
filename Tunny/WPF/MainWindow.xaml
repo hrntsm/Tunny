@@ -248,7 +248,7 @@
                 </RibbonGroup>
             </RibbonTab>
 
-            <RibbonTab Header="Misc">
+            <RibbonTab Header="Expert">
                 <RibbonGroup Header="Pruner">
                     <RibbonButton
                         Label="Median"
@@ -260,6 +260,10 @@
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton
                         Label="Patient"
+                        LargeImageSource="Assets/Icon/Tunny.png"
+                        SmallImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Percentile"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
                     <RibbonButton

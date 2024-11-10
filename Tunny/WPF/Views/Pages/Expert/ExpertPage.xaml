@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="Tunny.WPF.Views.Pages.Expert.ExpertPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Expert"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Expert"
+    Title="ExpertPage"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:ExpertPageViewModel />
+    </Page.DataContext>
+
+    <Grid />
+</Page>
