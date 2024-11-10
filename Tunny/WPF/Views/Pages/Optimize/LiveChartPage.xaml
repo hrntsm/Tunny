@@ -33,27 +33,33 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="Live Chart"
-                IsChecked="True" />
+                IsChecked="{Binding ChartEnable}" />
             <Label
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Content="X Target" />
+                Content="X Target"
+                IsEnabled="{Binding ChartEnable}" />
             <ComboBox
                 x:Name="ChartXTargetComboBox"
                 Grid.Column="2"
                 Margin="5"
-                ItemsSource="{Binding XTarget}" />
+                IsEnabled="{Binding ChartEnable}"
+                ItemsSource="{Binding XTarget}"
+                SelectedItem="{Binding SelectedXTarget}" />
             <Label
                 Grid.Column="3"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Content="Y Target" />
+                Content="Y Target"
+                IsEnabled="{Binding ChartEnable}" />
             <ComboBox
                 x:Name="ChartYTargetComboBox"
                 Grid.Column="4"
                 Margin="5"
-                ItemsSource="{Binding YTarget}" />
+                IsEnabled="{Binding ChartEnable}"
+                ItemsSource="{Binding YTarget}"
+                SelectedItem="{Binding SelectedYTarget}" />
         </Grid>
 
         <lvc:CartesianChart
@@ -61,6 +67,7 @@
             Grid.Row="1"
             Margin="5"
             AnimationsSpeed="0"
+            IsEnabled="{Binding ChartEnable}"
             Series="{Binding ChartSeries}"
             XAxes="{Binding ChartXAxes}"
             YAxes="{Binding ChartYAxes}" />

@@ -6,8 +6,6 @@ using System.Windows.Controls;
 
 using Grasshopper.GUI;
 
-using LiveChartsCore.Defaults;
-
 using Rhino.Display;
 
 using Tunny.Core.Handler;
@@ -76,9 +74,9 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
         private void InitializeChart()
         {
-            _chart1 = new LiveChartPage("Trial Number", "Objective 1", ChartType.Line);
+            _chart1 = new LiveChartPage();
             OptimizeLiveChart1.Content = _chart1;
-            _chart2 = new LiveChartPage("Objective 1", "Objective 2", ChartType.Scatter);
+            _chart2 = new LiveChartPage();
             OptimizeLiveChart2.Content = _chart2;
         }
 
@@ -197,8 +195,8 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 if (!value.IsReportOnly)
                 {
                     Input.Objective objectives = OptimizeProcess.Component.GhInOut.Objectives;
-                    _chart1.AddPoint(new ObservablePoint(value.TrialNumber + 1, objectives.Numbers[0]));
-                    _chart2.AddPoint(new ObservablePoint(objectives.Numbers[0], objectives.Numbers[1]));
+                    _chart1.AddPoint(value.TrialNumber + 1, objectives.Numbers);
+                    _chart2.AddPoint(value.TrialNumber + 1, objectives.Numbers);
                 }
             });
         }

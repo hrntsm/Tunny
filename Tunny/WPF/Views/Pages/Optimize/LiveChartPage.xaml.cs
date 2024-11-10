@@ -6,7 +6,6 @@ using LiveChartsCore.Defaults;
 
 using Tunny.Component.Optimizer;
 using Tunny.Process;
-using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.WPF.Views.Pages.Optimize
@@ -15,10 +14,10 @@ namespace Tunny.WPF.Views.Pages.Optimize
     {
         private readonly LiveChartViewModel _viewModel;
 
-        public LiveChartPage(string xAxisName, string yAxisName, ChartType chartType)
+        public LiveChartPage()
         {
             InitializeComponent();
-            _viewModel = new LiveChartViewModel(xAxisName, yAxisName, chartType);
+            _viewModel = new LiveChartViewModel();
             DataContext = _viewModel;
 
             Loaded += SetTargetComboBoxItems;
@@ -39,9 +38,18 @@ namespace Tunny.WPF.Views.Pages.Optimize
             ChartYTargetComboBox.SelectedIndex = 1;
         }
 
-        public void AddPoint(ObservablePoint point)
+        public void AddPoint(int trialNumber, double[] objectives)
         {
-            _viewModel.ChartPoints.Add(point);
+            if (_viewModel.ChartEnable)
+            {
+                double x = ChartXTargetComboBox.SelectedIndex == 0
+                    ? trialNumber
+                    : objectives[ChartXTargetComboBox.SelectedIndex - 1];
+                double y = ChartYTargetComboBox.SelectedIndex == 0
+                    ? trialNumber
+                    : objectives[ChartYTargetComboBox.SelectedIndex - 1];
+                _viewModel.ChartPoints.Add(new ObservablePoint(x, y));
+            }
         }
 
         internal void ClearPoints()
