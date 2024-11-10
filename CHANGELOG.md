@@ -14,6 +14,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - The drawing to viewport stops, allowing faster optimization to be performed.
 - Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
 - Optuna pruner support.
+- NEW UI
 
 ### Changed
 
@@ -22,6 +23,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Disable window minimize button.
 - No log output to the Rhino console.
 - Human in the loop code was moved to the Optuna project to improve maintainability.
+- Update optuna v4.0
 
 ### Deprecated
 
