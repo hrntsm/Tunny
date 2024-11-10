@@ -1,12 +1,18 @@
 {
     "dotnet.defaultSolution": "Tunny.sln",
     "cSpell.words": [
+        "bipop",
+        "Botorch",
+        "cmaes",
         "HITL",
         "hovertemplate",
         "Hyperband",
         "showlegend",
+        "Skia",
+        "Subseparators",
         "Wilcoxon",
         "yaxis",
         "zaxis"
-    ]
+    ],
+    "dotnet.preferCSharpExtension": true
 }

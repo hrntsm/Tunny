@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
@@ -9,9 +9,9 @@ using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
 using Tunny.Input;
 using Tunny.PostProcess;
+using Tunny.Process;
 using Tunny.Type;
 using Tunny.UI;
 
@@ -50,9 +50,9 @@ namespace Tunny.Solver
                 var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
-                DialogResult dialogResult = EndMessage(optimize, objectives.Length > 1);
+                MessageBoxResult msgResult = EndMessage(optimize, objectives.Length > 1);
 
-                return dialogResult == DialogResult.Yes;
+                return msgResult == MessageBoxResult.Yes;
             }
             catch (Exception e)
             {
@@ -88,16 +88,16 @@ namespace Tunny.Solver
             }
         }
 
-        private static DialogResult EndMessage(Algorithm optimize, bool isMultiObjective)
+        private static MessageBoxResult EndMessage(Algorithm optimize, bool isMultiObjective)
         {
             TLog.MethodStart();
-            DialogResult dialogResult = DialogResult.None;
+            MessageBoxResult msgResult = MessageBoxResult.None;
             ToComponentEndMessage(optimize);
-            if (OptimizeLoop.Component is UIOptimizeComponentBase)
+            if (OptimizeProcess.Component is UIOptimizeComponentBase)
             {
-                dialogResult = ShowUIEndMessages(optimize.EndState, isMultiObjective);
+                msgResult = ShowUIEndMessages(optimize.EndState, isMultiObjective);
             }
-            return dialogResult;
+            return msgResult;
         }
 
         private static void ToComponentEndMessage(Algorithm optimize)
@@ -128,47 +128,47 @@ namespace Tunny.Solver
                     message = ErrorMessagePrefix;
                     break;
             }
-            if (OptimizeLoop.Component is BoneFishComponent)
+            if (OptimizeProcess.Component is BoneFishComponent)
             {
                 TLog.Info(message);
             }
-            OptimizeLoop.Component.SetInfo(message);
+            OptimizeProcess.Component.SetInfo(message);
         }
 
-        private static DialogResult ShowUIEndMessages(EndState endState, bool isMultiObjective)
+        private static MessageBoxResult ShowUIEndMessages(EndState endState, bool isMultiObjective)
         {
             TLog.MethodStart();
-            DialogResult dialogResult;
-            MessageBoxButtons button = isMultiObjective ? MessageBoxButtons.OK : MessageBoxButtons.YesNo;
+            MessageBoxResult msgResult;
+            MessageBoxButton button = isMultiObjective ? MessageBoxButton.OK : MessageBoxButton.YesNo;
             string reinstateMessage = isMultiObjective ? string.Empty : "\nReinstate the best trial to the slider?";
             switch (endState)
             {
                 case EndState.Timeout:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified time has elapsed." + reinstateMessage, "Tunny", button);
+                    msgResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified time has elapsed." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.AllTrialCompleted:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified number of trials has been completed." + reinstateMessage, "Tunny", button);
+                    msgResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe specified number of trials has been completed." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByUser:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe user stopped the solver." + reinstateMessage, "Tunny", button);
+                    msgResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe user stopped the solver." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.StoppedByOptuna:
-                    dialogResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe Optuna stopped the solver." + reinstateMessage, "Tunny", button);
+                    msgResult = TunnyMessageBox.Show(CompleteMessagePrefix + "\n\nThe Optuna stopped the solver." + reinstateMessage, "Tunny", button);
                     break;
                 case EndState.DirectionNumNotMatch:
-                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    msgResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\nThe number of Objective in the existing Study does not match the one that you tried to run; Match the number of objective, or change the \"Study Name\".", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
                 case EndState.UseExitStudyWithoutContinue:
-                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    msgResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n\"Load if study file exists\" was false even though the same \"Study Name\" exists. Please change the name or set it to true.", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
                     break;
                 case EndState.Error:
-                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix, "Tunny");
+                    msgResult = TunnyMessageBox.Show(ErrorMessagePrefix, "Tunny");
                     break;
                 default:
-                    dialogResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n Unexpected exception.", "Tunny");
+                    msgResult = TunnyMessageBox.Show(ErrorMessagePrefix + "\n\n Unexpected exception.", "Tunny");
                     break;
             }
-            return dialogResult;
+            return msgResult;
         }
 
         private static void ShowErrorMessages(Exception e)
@@ -181,7 +181,8 @@ namespace Tunny.Solver
                 "Source: " + e.Source + " \n" +
                 "Message: " + e.Message,
                 "Tunny",
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 }

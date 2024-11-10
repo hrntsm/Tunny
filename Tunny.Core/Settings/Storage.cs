@@ -12,7 +12,7 @@ using Tunny.Core.Util;
 
 namespace Tunny.Core.Settings
 {
-    public class Storage
+    public class Storage : PythonInit
     {
         public string Path { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/fish.log";
         public StorageType Type { get; set; } = StorageType.Journal;
@@ -105,7 +105,7 @@ namespace Tunny.Core.Settings
 
             if (useInnerPythonEngine)
             {
-                PythonEngine.Initialize();
+                InitializePythonEngine();
                 using (Py.GIL())
                 {
                     backend = CreateArtifactBackendProcess();

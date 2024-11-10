@@ -12,7 +12,7 @@ namespace Tunny.Core.Settings
 {
     public class Sampler
     {
-        public RandomSampler Random { get; } = new RandomSampler();
+        public RandomSampler Random { get; set; } = new RandomSampler();
         public TpeSampler Tpe { get; set; } = new TpeSampler();
         public CmaEsSampler CmaEs { get; set; } = new CmaEsSampler();
         public NSGAIISampler NsgaII { get; set; } = new NSGAIISampler();

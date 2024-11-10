@@ -8,7 +8,6 @@ def plot_pareto_front(
     study: Study,
     objective_names: list[str],
     objective_index: list[int],
-    hasConstraint: bool,
     includeDominatedTrials: bool,
 ) -> go.Figure:
     if len(objective_index) == 2:
@@ -24,15 +23,10 @@ def plot_pareto_front(
         study,
         target_names=objective_names,
         targets=targets,
-        constraints_func=constraint_func if hasConstraint else None,
         include_dominated_trials=True if includeDominatedTrials else False,
     )
 
     return fig
-
-
-def constraint_func(trial):
-    return trial.user_attrs["Constraint"]
 
 
 def truncate(fig, study: Study) -> go.Figure:

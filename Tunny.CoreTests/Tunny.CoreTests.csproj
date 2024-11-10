@@ -4,6 +4,7 @@
     <TargetFrameworks>net48; net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+using System.Windows;
 
 using Grasshopper.GUI;
 
@@ -15,8 +15,8 @@ namespace Tunny.UI
             TunnyMessageBox.Show(
                 "CMA-ES & GP:Optuna samplers only support single objective optimization.",
                 "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
             );
             ghCanvas.EnableUI();
             optimizeRunButton.Enabled = true;
@@ -29,8 +29,8 @@ namespace Tunny.UI
             TunnyMessageBox.Show(
                 "Please choose any study name.",
                 "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
             );
             ghCanvas.EnableUI();
             optimizeRunButton.Enabled = true;
@@ -43,8 +43,8 @@ namespace Tunny.UI
             TunnyMessageBox.Show(
                 "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
                 "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
             );
             ghCanvas.EnableUI();
             optimizeRunButton.Enabled = true;
@@ -71,17 +71,6 @@ namespace Tunny.UI
         }
 
         // VisualizeTab ==========================
-        private static void ResultFileNotExistErrorMessage()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "Please set exist result file path.",
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-        }
-
         private static bool HandleOnly1ObjectiveMessage()
         {
             TLog.MethodStart();

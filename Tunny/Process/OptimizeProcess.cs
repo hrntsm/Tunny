@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Threading.Tasks;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
@@ -8,27 +8,30 @@ using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.Type;
 
-namespace Tunny.Handler
+namespace Tunny.Process
 {
-    internal static class OptimizeLoop
+    internal static class OptimizeProcess
     {
-        private static BackgroundWorker s_worker;
         public static OptimizeComponentBase Component;
         public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
 
-        internal static void RunMultiple(object sender, DoWorkEventArgs e)
+        private static IProgress<ProgressState> s_progress;
+
+        internal static void AddProgress(IProgress<ProgressState> progress)
         {
             TLog.MethodStart();
-            s_worker = sender as BackgroundWorker;
-            Component = e.Argument as OptimizeComponentBase;
+            s_progress = progress;
+        }
+
+        internal async static Task RunAsync()
+        {
+            TLog.MethodStart();
             Component?.GhInOutInstantiate();
 
-            ProgressState progressState = RunOptimizationLoop(s_worker);
+            ProgressState progressState = await RunOptimizationLoopAsync();
             if (progressState.Parameter == null || progressState.Parameter.Count == 0)
             {
                 return;
@@ -37,30 +40,31 @@ namespace Tunny.Handler
             if (Component != null)
             {
                 Component.GrasshopperStatus = GrasshopperStates.RequestSent;
-                s_worker.ReportProgress(100, progressState);
+                await ReportAsync(progressState);
                 while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
                 { /* just wait until the cows come home */ }
             }
-
-            s_worker?.CancelAsync();
         }
 
-        private static ProgressState RunOptimizationLoop(BackgroundWorker worker)
+        private static async Task ReportAsync(ProgressState progressState)
+        {
+            TLog.MethodStart();
+            await Task.Run(() => s_progress.Report(progressState));
+        }
+
+        private static async Task<ProgressState> RunOptimizationLoopAsync()
         {
             TLog.MethodStart();
             List<VariableBase> variables = Component.GhInOut.Variables;
-            Objective objectives = Component.GhInOut.Objectives;
-            Dictionary<string, FishEgg> enqueueItems = Component.GhInOut.EnqueueItems;
+            Input.Objective objectives = Component.GhInOut.Objectives;
+            Dictionary<string, Type.FishEgg> fishEggs = Component.GhInOut.FishEggs;
             bool hasConstraint = Component.GhInOut.HasConstraint;
             var progressState = new ProgressState(Array.Empty<Parameter>());
 
-            if (worker.CancellationPending)
-            {
-                return progressState;
-            }
-
             var optunaSolver = new Solver.Solver(Settings, hasConstraint);
-            bool reinstateResult = optunaSolver.RunSolver(variables, objectives, enqueueItems, EvaluateFunction);
+            bool reinstateResult = await Task.Run(() =>
+                optunaSolver.RunSolver(variables, objectives, fishEggs, EvaluateFunction)
+            );
 
             return reinstateResult
                 ? new ProgressState(optunaSolver.OptimalParameters)
@@ -70,7 +74,7 @@ namespace Tunny.Handler
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
             TLog.MethodStart();
-            s_worker.ReportProgress(progress, pState);
+            s_progress.Report(pState);
             if (pState.IsReportOnly)
             {
                 return null;

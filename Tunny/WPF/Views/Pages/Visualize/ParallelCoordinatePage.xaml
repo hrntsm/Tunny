@@ -1,0 +1,86 @@
+﻿<Page
+    x:Class="Tunny.WPF.Views.Pages.Visualize.ParallelCoordinatePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Visualize"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
+    Title="ParallelCoordinatePage"
+    d:DesignHeight="450"
+    d:DesignWidth="160"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:ParallelCoordinateViewModel />
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Content="Type: Parallel Coordinate"
+            FontSize="13"
+            FontWeight="Bold" />
+
+        <Label
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Target Study" />
+        <ComboBox
+            Grid.Row="3"
+            Margin="5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding StudyNameItems}"
+            SelectedItem="{Binding SelectedStudyName}" />
+
+        <Label
+            Grid.Row="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Target Objective" />
+        <ComboBox
+            Grid.Row="5"
+            Margin="5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding ObjectiveItems}"
+            SelectedItem="{Binding SelectedObjective}" />
+
+        <Label
+            Grid.Row="6"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Target Params" />
+        <ListView
+            Grid.Row="7"
+            Margin="5"
+            ItemsSource="{Binding VariableItems}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="50" Header="IsTarget">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn
+                        Width="90"
+                        DisplayMemberBinding="{Binding Name}"
+                        Header="Param Name" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

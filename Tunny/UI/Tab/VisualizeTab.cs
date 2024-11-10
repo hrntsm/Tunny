@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 using Optuna.Study;
 
@@ -17,17 +17,7 @@ namespace Tunny.UI
     {
         private void DashboardButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            if (File.Exists(_settings.Storage.Path) == false)
-            {
-                ResultFileNotExistErrorMessage();
-                return;
-            }
-            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
-            string storagePath = _settings.Storage.Path;
-
-            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
-            dashboard.Run(true);
+            throw new NotImplementedException("Already implemented in Tunny.WPF");
         }
 
         private void VisualizeTargetStudy_Changed(object sender, EventArgs e)
@@ -92,26 +82,9 @@ namespace Tunny.UI
         private void Plot(PlotActionType pActionType)
         {
             TLog.MethodStart();
-            var optunaVis = new Visualize(_settings, _component.GhInOut.HasConstraint);
-            var pSettings = new Plot
-            {
-                TargetStudyName = visualizeTargetStudyComboBox.Text,
-                PlotActionType = pActionType,
-                PlotTypeName = visualizeTypeComboBox.Text,
-                TargetObjectiveName = visualizeVariableListBox.SelectedItems.Cast<string>().ToArray(),
-                TargetObjectiveIndex = visualizeVariableListBox.SelectedIndices.Cast<int>().ToArray(),
-                TargetVariableName = visualizeObjectiveListBox.SelectedItems.Cast<string>().ToArray(),
-                TargetVariableIndex = visualizeObjectiveListBox.SelectedIndices.Cast<int>().ToArray(),
-                ClusterCount = (int)visualizeClusterNumUpDown.Value,
-                IncludeDominatedTrials = visualizeIncludeDominatedCheckBox.Checked,
-            };
-
-            if (!CheckTargetValues(pSettings)) { return; }
-
-            optunaVis.Plot(pSettings);
         }
 
-        private static bool CheckTargetValues(Plot pSettings)
+        private static bool CheckTargetValues(PlotSettings pSettings)
         {
             TLog.MethodStart();
             switch (pSettings.PlotTypeName)
@@ -130,7 +103,7 @@ namespace Tunny.UI
             }
         }
 
-        private static bool CheckClusteringTargets(Plot pSettings)
+        private static bool CheckClusteringTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -143,7 +116,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjectives(Plot pSettings)
+        private static bool CheckOneObjectives(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -155,7 +128,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckParetoFrontTargets(Plot pSettings)
+        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -167,7 +140,7 @@ namespace Tunny.UI
             return result;
         }
 
-        private static bool CheckOneObjSomeVarTargets(Plot pSettings)
+        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
         {
             TLog.MethodStart();
             bool result = true;
@@ -192,7 +165,11 @@ namespace Tunny.UI
             TLog.MethodStart();
             if (visualizeTargetStudyComboBox.Text == string.Empty)
             {
-                TunnyMessageBox.Show("There is no study to visualize.\nPlease set 'Target Study'", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                TunnyMessageBox.Show(
+                    "There is no study to visualize.\nPlease set 'Target Study'",
+                    "Tunny",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 

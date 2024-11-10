@@ -14,7 +14,7 @@ using Tunny.Core.Handler;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
+using Tunny.Process;
 
 namespace Tunny.UI
 {
@@ -76,7 +76,7 @@ namespace Tunny.UI
             GetUIValues();
             RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
             ShowRealtimeResultCheckBox.Enabled = false;
-            OptimizeLoop.Settings = _settings;
+            OptimizeProcess.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
             {
@@ -104,9 +104,9 @@ namespace Tunny.UI
                 case true when copyStudyCheckBox.Enabled && copyStudyCheckBox.Checked:
                     if (string.IsNullOrEmpty(studyNameTextBox.Text))
                     {
-                        _settings.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                        _settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
                     }
-                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, _settings.StudyName, _settings.Storage);
+                    new StorageHandler().DuplicateStudyInStorage(existingStudyComboBox.Text, _settings.Optimize.StudyName, _settings.Storage);
                     break;
                 case true when continueStudyCheckBox.Checked:
                     checkResult = CheckSameStudyName(ghCanvas);
@@ -124,7 +124,7 @@ namespace Tunny.UI
             {
                 return SameStudyNameMassage(ghCanvas);
             }
-            _settings.StudyName = existingStudyComboBox.Text;
+            _settings.Optimize.StudyName = existingStudyComboBox.Text;
 
             return true;
         }
@@ -154,7 +154,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             optimizeRunButton.Enabled = true;
             optimizeStopButton.Enabled = false;
-            OptimizeLoop.IsForcedStopOptimize = true;
+            OptimizeProcess.IsForcedStopOptimize = true;
             ShowRealtimeResultCheckBox.Enabled = true;
             optimizeBackgroundWorker?.Dispose();
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Forms;
 
 using GalapagosComponents;
 
@@ -21,7 +20,7 @@ using Tunny.Core.Input;
 using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.Type;
-using Tunny.UI;
+using Tunny.WPF.Common;
 
 namespace Tunny.Util
 {
@@ -38,8 +37,9 @@ namespace Tunny.Util
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
-        public Dictionary<string, FishEgg> EnqueueItems { get; private set; }
+        public Dictionary<string, FishEgg> FishEggs { get; private set; }
         public bool HasConstraint { get; private set; }
+        public bool IsMultiObjective => Objectives.Length > 1;
         public bool IsLoadCorrectly { get; }
 
         public GrasshopperInOut(GH_Component component, bool getVariableOnly = false)
@@ -64,7 +64,7 @@ namespace Tunny.Util
             _inputGuids.AddRange(_component.Params.Input[0].Sources.Select(source => source.InstanceGuid));
             if (_inputGuids.Count == 0)
             {
-                NoVariableInputError();
+                TunnyMessageBox.Error_NoVariableInput();
                 return false;
             }
 
@@ -77,15 +77,6 @@ namespace Tunny.Util
             return true;
         }
 
-        private static void NoVariableInputError()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "No input variables found. \nPlease connect a number slider to the input of the component.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-        }
 
         private bool FilterInputVariables()
         {
@@ -107,7 +98,7 @@ namespace Tunny.Util
                     case Param_FishEgg fishEgg:
                         if (fishEgg.VolatileDataCount != 0)
                         {
-                            EnqueueItems = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
+                            FishEggs = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
                         }
                         break;
                     default:
@@ -127,11 +118,7 @@ namespace Tunny.Util
         private bool ShowIncorrectVariableInputMessage(IEnumerable<Guid> errorGuids)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
-                "Input variables must be either a number slider or a gene pool.\nError input will automatically remove.",
-                "Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+            TunnyMessageBox.Error_IncorrectVariableInput();
             foreach (Guid guid in errorGuids)
             {
                 _component.Params.Input[0].RemoveSource(guid);
@@ -232,7 +219,7 @@ namespace Tunny.Util
             TLog.MethodStart();
             if (_component.Params.Input[1].SourceCount == 0)
             {
-                return ShowNoObjectiveFoundMessage();
+                return TunnyMessageBox.Error_ShowNoObjectiveFound();
             }
             var unsupportedObjectives = new List<IGH_Param>();
             foreach (IGH_Param param in _component.Params.Input[1].Sources)
@@ -256,13 +243,6 @@ namespace Tunny.Util
             return true;
         }
 
-        private static bool ShowNoObjectiveFoundMessage()
-        {
-            TLog.MethodStart();
-            TunnyMessageBox.Show("No objective found.\nPlease connect number or FishPrint to the objective.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
-        }
-
         private static bool CheckObjectiveNicknameDuplication(IEnumerable<IGH_Param> objectives)
         {
             TLog.MethodStart();
@@ -270,7 +250,7 @@ namespace Tunny.Util
                                      .GroupBy(name => name).Where(name => name.Count() > 1).Select(group => group.Key).ToList();
             if (nickname.Count > 0)
             {
-                TunnyMessageBox.Show("Objective nicknames must be unique.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TunnyMessageBox.Error_ObjectiveNicknamesMustUnique();
                 return false;
             }
             return true;
@@ -279,7 +259,7 @@ namespace Tunny.Util
         private bool ShowIncorrectObjectiveInputMessage(List<IGH_Param> unsupportedSources)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show("Objective supports only the Number or FishPrint input.\nError input will automatically remove.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            TunnyMessageBox.Error_IncorrectObjectiveInput();
             foreach (IGH_Param unsupportedSource in unsupportedSources)
             {
                 _component.Params.Input[1].RemoveSource(unsupportedSource);
@@ -327,23 +307,21 @@ namespace Tunny.Util
                 }
                 else
                 {
-                    string message = "Direction must be either 1(maximize) or -1(minimize).";
-                    TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw new ArgumentException(message);
+                    TunnyMessageBox.Error_DirectionValue();
+                    throw new ArgumentException("Direction must be either 1(maximize) or -1(minimize).");
                 }
             }
             if (!Objectives.SetDirections(directions))
             {
-                string message = "The number of the direction in FishAttr must be the same as the number of the objective.";
-                TunnyMessageBox.Show(message, "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw new ArgumentException(message);
+                TunnyMessageBox.Error_DirectionCountNotMatch();
+                throw new ArgumentException("The number of the direction in FishAttr must be the same as the number of the objective.");
             }
         }
 
         private static bool ShowIncorrectAttributeInputMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show("Inputs to Attribute should be grouped together into one FishAttribute.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            TunnyMessageBox.Error_IncorrectAttributeInput();
             return false;
         }
 

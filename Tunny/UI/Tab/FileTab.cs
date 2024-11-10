@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
@@ -14,7 +12,7 @@ namespace Tunny.UI
         private void OpenResultFolderButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
+            System.Diagnostics.Process.Start("EXPLORER.EXE", Path.GetDirectoryName(_settings.Storage.Path));
         }
 
         private void ClearResultButton_Click(object sender, EventArgs e)
@@ -25,25 +23,23 @@ namespace Tunny.UI
 
         private void ShowTunnyLicenseButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            Process.Start("https://github.com/hrntsm/Tunny/blob/main/LICENSE");
+            //OpenBrowser.TunnyLicense();
         }
         private void ShowThirdPartyLicenseButton_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            Process.Start("https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES");
+            //OpenBrowser.PythonPackagesLicense();
         }
 
         private void SetResultFilePathButton_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            var sfd = new SaveFileDialog
+            var sfd = new Microsoft.Win32.SaveFileDialog
             {
                 FileName = Path.GetFileName(_settings.Storage.Path),
                 Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = @"Set Tunny result file path",
             };
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (sfd.ShowDialog() == true)
             {
                 _settings.Storage.Path = sfd.FileName;
                 _settings.Storage.Type = Path.GetExtension(sfd.FileName) == ".log"
@@ -68,7 +64,7 @@ namespace Tunny.UI
             {
                 File.Delete(path);
             }
-            using (var process = new Process())
+            using (var process = new System.Diagnostics.Process())
             {
                 process.StartInfo.FileName = "PowerShell.exe";
                 process.StartInfo.Arguments = $"tree {TEnvVariables.TunnyEnvPath} > {path}";

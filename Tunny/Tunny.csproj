@@ -20,7 +20,24 @@
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>TunnyIcon.png</PackageIcon>
+    <UseWPF>true</UseWPF>
+    <Platform>x64</Platform>
+    <Platforms>$(Platform)</Platforms>
+    <PlatformName>$(Platform)</PlatformName>
+    <PlatformTarget>$(Platform)</PlatformTarget>
+    <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="WPF\Assets\DesignExplorer.png" />
+    <None Remove="WPF\Assets\html\loading.html" />
+    <None Remove="WPF\Assets\html\visualize_top.html" />
+    <None Remove="WPF\Assets\Icon\ContentSave.png" />
+    <None Remove="WPF\Assets\Icon\FolderOpenOutline.png" />
+    <None Remove="WPF\Assets\Icon\HelpBox.png" />
+    <None Remove="WPF\Assets\Optuna.png" />
+    <None Remove="WPF\Assets\Tunny.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md">
@@ -38,12 +55,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CefSharp.Wpf" Version="130.1.90" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc3.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="pythonnet" Version="3.0.1" />
+    <PackageReference Include="Prism.Core" Version="9.0.537" />
+    <PackageReference Include="pythonnet" Version="3.0.4" />
     <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.116" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <ProjectReference Include="..\Optuna\Optuna.csproj" />
     <ProjectReference Include="..\Tunny.Core\Tunny.Core.csproj" />
     <Reference Include="GalapagosComponents">
@@ -57,6 +83,33 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\BruteForceSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\RandomSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\QMCSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\CmaEsSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\NSGAIIISettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\NSGAIISettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\GPBotorchSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\GPOptunaSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\RandomSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +130,19 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WPF\Assets\html\loading.html" />
+    <EmbeddedResource Include="WPF\Assets\html\visualize_top.html" />
+    <Resource Include="WPF\Assets\Icon\ContentSave.png" />
+    <Resource Include="WPF\Assets\Icon\DesignExplorer.png" />
+    <Resource Include="WPF\Assets\Icon\FolderOpenOutline.png" />
+    <Resource Include="WPF\Assets\Icon\HelpBox.png" />
+    <Resource Include="WPF\Assets\Icon\Optuna.png" />
+    <Resource Include="WPF\Assets\Icon\Tunny.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </Resource>
+  </ItemGroup>
 
   <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
     <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
@@ -88,7 +154,23 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 

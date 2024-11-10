@@ -1,3 +1,5 @@
+using System;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -6,6 +8,14 @@ namespace Optuna.Sampler
     public class BoTorchSampler : SamplerBase
     {
         public int NStartupTrials { get; set; } = 10;
+
+        public void ComputeAutoValue(int numberOfTrials)
+        {
+            if (NStartupTrials == -1)
+            {
+                NStartupTrials = Math.Min(10, numberOfTrials / 10);
+            }
+        }
 
         public dynamic ToPython(dynamic optuna, bool hasConstraints)
         {

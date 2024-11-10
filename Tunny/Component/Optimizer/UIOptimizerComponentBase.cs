@@ -9,12 +9,14 @@ using Grasshopper.Kernel;
 
 using Tunny.Core.Util;
 using Tunny.UI;
+using Tunny.WPF;
 
 namespace Tunny.Component.Optimizer
 {
     public class UIOptimizeComponentBase : OptimizeComponentBase, IDisposable
     {
         internal OptimizationWindow OptimizationWindow;
+        internal MainWindow MainWindow;
 
         public UIOptimizeComponentBase(string name, string nickname, string description)
           : base(name, nickname, description)
@@ -36,17 +38,8 @@ namespace Tunny.Component.Optimizer
             GH_DocumentEditor owner = Instances.DocumentEditor;
             TEnvVariables.GrasshopperWindowHandle = owner.Handle;
 
-            if (OptimizationWindow == null || OptimizationWindow.IsDisposed)
-            {
-                OptimizationWindow = new OptimizationWindow(this)
-                {
-                    StartPosition = FormStartPosition.Manual
-                };
-
-                GH_WindowsFormUtil.CenterFormOnWindow(OptimizationWindow, owner, true);
-                owner.FormShepard.RegisterForm(OptimizationWindow);
-            }
-            OptimizationWindow.Show(owner);
+            MainWindow = new MainWindow(owner, this);
+            MainWindow.Show();
         }
 
         public override void CreateAttributes()

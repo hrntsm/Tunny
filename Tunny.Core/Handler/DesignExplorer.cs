@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -15,7 +14,7 @@ using Tunny.Core.Util;
 
 namespace Tunny.Core.Handler
 {
-    public class DesignExplorer
+    public class DesignExplorer : PythonInit
     {
         private bool _hasImage;
         private readonly string _targetStudyName;
@@ -67,14 +66,7 @@ namespace Tunny.Core.Handler
         private void OutputResultCsv()
         {
             TLog.MethodStart();
-            string envPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", @"python310.dll");
-            Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", envPath, EnvironmentVariableTarget.Process);
-            if (PythonEngine.IsInitialized)
-            {
-                PythonEngine.Shutdown();
-                TLog.Warning("PythonEngine is unintentionally initialized and therefore shut it down.");
-            }
-            PythonEngine.Initialize();
+            InitializePythonEngine();
             using (Py.GIL())
             {
                 PyModule ps = Py.CreateScope();

@@ -45,7 +45,7 @@ namespace Tunny.Core.Storage
             string storagePath = storageSetting.GetOptunaStoragePathByExtension();
             if (useInnerPythonEngine)
             {
-                PythonEngine.Initialize();
+                InitializePythonEngine();
                 using (Py.GIL())
                 {
                     CreateTStorageProcess(storagePath);
@@ -71,7 +71,7 @@ namespace Tunny.Core.Storage
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
         {
             TLog.MethodStart();
-            PythonEngine.Initialize();
+            InitializePythonEngine();
             using (Py.GIL())
             {
                 dynamic optuna = Py.Import("optuna");

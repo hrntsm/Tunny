@@ -17,6 +17,7 @@ using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
 using Tunny.Handler;
+using Tunny.Process;
 using Tunny.Type;
 namespace Tunny.Component.Optimizer
 {
@@ -62,7 +63,7 @@ namespace Tunny.Component.Optimizer
             CheckObjectivesInput(Params.Input[1].Sources.Select(ghParam => ghParam.InstanceGuid));
             CheckArtifactsInput(Params.Input[3].Sources.Select(ghParam => ghParam.InstanceGuid));
 
-            var settings = TSettings.LoadFromJson();
+            TSettings.TryLoadFromJson(out TSettings settings);
             string tunnyAssembleVersion = TEnvVariables.Version.ToString();
             if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
             {
@@ -92,7 +93,7 @@ namespace Tunny.Component.Optimizer
 
             if (start && stop)
             {
-                OptimizeLoop.IsForcedStopOptimize = true;
+                OptimizeProcess.IsForcedStopOptimize = true;
             }
 
             if (start && !_running)
@@ -105,17 +106,7 @@ namespace Tunny.Component.Optimizer
                 Params.Output[1].ClearData();
                 Params.Output[2].ClearData();
 
-                OptimizeLoop.Settings = settings;
-                var worker = new BackgroundWorker
-                {
-                    WorkerReportsProgress = true,
-                    WorkerSupportsCancellation = true,
-                };
-                worker.DoWork += OptimizeLoop.RunMultiple;
-                worker.ProgressChanged += OptimizeProgressChangedHandler;
-                worker.RunWorkerCompleted += StopOptimize;
-
-                worker.RunWorkerAsync(this);
+                OptimizeProcess.Settings = settings;
             }
 
             DA.SetData(0, Info);
@@ -132,11 +123,11 @@ namespace Tunny.Component.Optimizer
         private void StopOptimize(object sender, RunWorkerCompletedEventArgs e)
         {
             _running = false;
-            OptimizeLoop.IsForcedStopOptimize = true;
+            OptimizeProcess.IsForcedStopOptimize = true;
 
             Message = "Outputting";
-            Study[] studies = OptimizeLoop.Settings.Storage.GetAllStudies();
-            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeLoop.Settings.StudyName);
+            Study[] studies = OptimizeProcess.Settings.Storage.GetAllStudies();
+            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeProcess.Settings.Optimize.StudyName);
 
             string versionString = (study.UserAttrs["tunny_version"] as string[])[0];
             var version = new Version(versionString);

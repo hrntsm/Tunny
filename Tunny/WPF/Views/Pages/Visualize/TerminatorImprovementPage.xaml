@@ -1,0 +1,89 @@
+﻿<Page
+    x:Class="Tunny.WPF.Views.Pages.Visualize.TerminatorImprovementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Visualize"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Visualize"
+    Title="TerminatorImprovementPage"
+    d:DesignHeight="450"
+    d:DesignWidth="160"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:TerminatorImprovementViewModel />
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="AUTO" />
+        </Grid.RowDefinitions>
+
+        <Label
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Content="Type: Terminator Improvement"
+            FontSize="10.5"
+            FontWeight="Bold" />
+
+        <Label
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Target Study" />
+        <ComboBox
+            Grid.Row="2"
+            Margin="5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding StudyNameItems}"
+            SelectedItem="{Binding SelectedStudyName}" />
+
+        <Label
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Improvement Evaluator" />
+        <ComboBox
+            Grid.Row="4"
+            Margin="5"
+            ItemsSource="{Binding ImprovementEvaluatorItems}"
+            SelectedItem="{Binding SelectedImprovementEvaluator}" />
+
+        <Label
+            Grid.Row="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Error Evaluator" />
+        <ComboBox
+            Grid.Row="6"
+            Margin="5"
+            ItemsSource="{Binding ErrorEvaluatorItems}"
+            SelectedItem="{Binding SelectedErrorEvaluator}" />
+
+        <Label
+            Grid.Row="7"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Min Number Of Trials" />
+        <TextBox
+            Grid.Row="8"
+            Margin="5"
+            Text="{Binding MinNumberOfTrials}" />
+
+        <CheckBox
+            Grid.Row="9"
+            Margin="5"
+            Content="Plot Error"
+            IsChecked="{Binding PlotError}" />
+
+    </Grid>
+</Page>

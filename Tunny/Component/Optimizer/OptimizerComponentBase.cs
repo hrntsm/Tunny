@@ -52,7 +52,7 @@ namespace Tunny.Component.Optimizer
         private void Menu_OpenSettingsClicked(object sender, EventArgs e)
         {
             TLog.MethodStart();
-            var process = new Process();
+            var process = new System.Diagnostics.Process();
             process.StartInfo.FileName = "notepad.exe";
             process.StartInfo.Arguments = $"\"{TEnvVariables.OptimizeSettingsPath}\"";
             process.Start();

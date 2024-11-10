@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 using Optuna.Trial;
 
@@ -44,12 +44,20 @@ namespace Tunny.Handler
                 string[] metricNames = output.GetMetricNames(StudyName);
                 if (targetTrials.Length == 0)
                 {
-                    TunnyMessageBox.Show("There are no output models. Please check study name.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TunnyMessageBox.Show(
+                        "There are no output models. Please check study name.",
+                        "Tunny",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     return;
                 }
                 if (Component.GhInOut.HasConstraint && Indices[0] == -1)
                 {
-                    TunnyMessageBox.Show("Pareto solution is output with no constraints taken into account.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TunnyMessageBox.Show(
+                        "Pareto solution is output with no constraints taken into account.",
+                        "Tunny",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
 
                 if (metricNames == null || metricNames.Length == 0)
@@ -57,7 +65,11 @@ namespace Tunny.Handler
                     metricNames = Component.GhInOut.Objectives.GetNickNames();
                     if (metricNames.Length != targetTrials[0].Values.Length)
                     {
-                        TunnyMessageBox.Show("The number of objective functions in the result file does not match the number of objective functions in the Grasshopper file.\nThe two should be the same number.", "Tunny", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        TunnyMessageBox.Show(
+                            "The number of objective functions in the result file does not match the number of objective functions in the Grasshopper file.\nThe two should be the same number.",
+                            "Tunny",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         return;
                     }
                 }

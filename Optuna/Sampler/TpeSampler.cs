@@ -1,3 +1,5 @@
+using System;
+
 using Python.Runtime;
 
 namespace Optuna.Sampler
@@ -18,6 +20,14 @@ namespace Optuna.Sampler
         public bool Group { get; set; }
         public bool WarnIndependentSampling { get; set; } = true;
         public bool ConstantLiar { get; set; }
+
+        public void ComputeAutoValue(int numberOfTrials)
+        {
+            if (NStartupTrials == -1)
+            {
+                NStartupTrials = Math.Min(100, numberOfTrials / 10);
+            }
+        }
 
         public dynamic ToPython(dynamic optuna, bool hasConstraints)
         {

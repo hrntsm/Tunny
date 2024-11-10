@@ -1,131 +1,121 @@
-using System;
-
 using Optuna.Util;
 
 using Python.Runtime;
 
 namespace Optuna.Visualization
 {
-    public class Visualization
+    public static class Visualization
     {
-        public bool HasFigure
-        {
-            get
-            { return _fig != null; }
-        }
-
-        private readonly dynamic _study;
-        private dynamic _fig;
-
-        public Visualization(dynamic study)
-        {
-            _study = study;
-        }
-
-        public void Slice(string objectiveName, int objectiveIndex, string variableName)
+        public static PlotlyFigure PlotSlice(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_slice.py"));
-            dynamic visualize = ps.Get("plot_slice");
-            _fig = visualize(_study, objectiveName, objectiveIndex, variableName);
+            dynamic pyPlotSlice = ps.Get("plot_slice");
+            dynamic fig = pyPlotSlice(study, objectiveName, objectiveIndex, variableNames);
+            return new PlotlyFigure(fig);
         }
 
-        public void ParetoFront(string[] objectiveNames, int[] objectiveIndices, bool hasConstraint, bool includeDominatedTrials)
+        public static PlotlyFigure PlotParetoFront(dynamic study, string[] objectiveNames, int[] objectiveIndices, bool includeDominatedTrials)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_pareto_front.py"));
-            dynamic visualize = ps.Get("plot_pareto_front");
-            _fig = visualize(_study, objectiveNames, objectiveIndices, hasConstraint, includeDominatedTrials);
+            dynamic pyPlotParetoFront = ps.Get("plot_pareto_front");
+            dynamic fig = pyPlotParetoFront(study, objectiveNames, objectiveIndices, includeDominatedTrials);
+            return new PlotlyFigure(fig);
         }
 
-        public void ParamImportances(string objectiveName, int objectiveIndex, string[] variableNames)
+        public static PlotlyFigure PlotParamImportances(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames, string evaluator)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_importances.py"));
-            dynamic visualize = ps.Get("plot_importances");
+            dynamic pyPlotParamImportances = ps.Get("plot_importances");
             var pyList = new PyList();
             foreach (string item in variableNames)
             {
                 pyList.Append(new PyString(item));
             }
-            _fig = visualize(_study, objectiveName, objectiveIndex, pyList);
+            dynamic fig = pyPlotParamImportances(study, objectiveName, objectiveIndex, pyList, evaluator);
+            return new PlotlyFigure(fig);
         }
 
-        public void ParallelCoordinate(string objectiveName, int objectiveIndex, string[] variableNames)
+        public static PlotlyFigure PlotParallelCoordinate(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_parallel_coordinate.py"));
-            dynamic visualize = ps.Get("plot_parallel_coordinate");
-            _fig = visualize(_study, objectiveName, objectiveIndex, variableNames);
+            dynamic pyPlotParallelCoordinate = ps.Get("plot_parallel_coordinate");
+            dynamic fig = pyPlotParallelCoordinate(study, objectiveName, objectiveIndex, variableNames);
+            return new PlotlyFigure(fig);
         }
 
-        public void OptimizationHistory(string objectiveName, int objectiveIndex)
+        public static PlotlyFigure PlotOptimizationHistory(dynamic study, string objectiveName, int objectiveIndex)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_optimization_history.py"));
-            dynamic visualize = ps.Get("plot_optimization_history");
-            _fig = visualize(_study, objectiveName, objectiveIndex);
+            dynamic pyPlotOptimizationHistory = ps.Get("plot_optimization_history");
+            dynamic fig = pyPlotOptimizationHistory(study, objectiveName, objectiveIndex, false);
+            return new PlotlyFigure(fig);
         }
 
-        public void EDF(string objectiveName, int objectiveIndex)
+        public static PlotlyFigure PlotEDF(dynamic study, string objectiveName, int objectiveIndex)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_edf.py"));
-            dynamic visualize = ps.Get("plot_edf");
-            _fig = visualize(_study, objectiveName, objectiveIndex);
+            dynamic pyPlotEDF = ps.Get("plot_edf");
+            dynamic fig = pyPlotEDF(study, objectiveName, objectiveIndex);
+            return new PlotlyFigure(fig);
         }
 
-        public void Contour(string objectiveName, int objectiveIndex, string[] variableNames)
+        public static PlotlyFigure PlotContour(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_contour.py"));
-            dynamic visualize = ps.Get("plot_contour");
-            _fig = visualize(_study, objectiveName, objectiveIndex, variableNames);
+            dynamic pyPlotContour = ps.Get("plot_contour");
+            dynamic fig = pyPlotContour(study, objectiveName, objectiveIndex, variableNames);
+            return new PlotlyFigure(fig);
         }
 
-        public void Hypervolume()
+        public static PlotlyFigure PlotHypervolume(dynamic study, double[] referencePoint)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_hypervolume.py"));
-            dynamic visualize = ps.Get("plot_hypervolume");
-            _fig = visualize(_study);
+            dynamic pyPlotHypervolume = ps.Get("plot_hypervolume");
+            dynamic fig = pyPlotHypervolume(study, referencePoint);
+            return new PlotlyFigure(fig);
         }
 
-        public void Clustering(int nClusters, int[] objectiveIndex, int[] variableIndex)
+        public static PlotlyFigure PlotClustering(dynamic study, int nClusters, int[] objectiveIndex, int[] variableIndex)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_clustering.py"));
-            dynamic visualize = ps.Get("plot_clustering");
-            _fig = visualize(_study, nClusters, objectiveIndex, variableIndex);
+            dynamic pyPlotClustering = ps.Get("plot_clustering");
+            dynamic fig = pyPlotClustering(study, nClusters, objectiveIndex, variableIndex);
+            return new PlotlyFigure(fig);
         }
 
-        public void TruncateParetoFrontPlotHover()
+        public static PlotlyFigure TruncateParetoFrontPlotHover(dynamic study, PlotlyFigure fig)
         {
-            CheckPlotCreated();
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_pareto_front.py"));
             dynamic truncate = ps.Get("truncate");
-            _fig = truncate(_fig, _study);
+            return new PlotlyFigure(truncate(fig.PyFigure, study));
         }
 
-        private void CheckPlotCreated()
+        public static PlotlyFigure PlotRank(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
         {
-            if (_fig == null)
-            {
-                throw new InvalidOperationException("No plot has been created yet.");
-            }
+            PyModule ps = Py.CreateScope();
+            ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_rank.py"));
+            dynamic pyPlotRank = ps.Get("plot_rank");
+            dynamic fig = pyPlotRank(study, objectiveName, objectiveIndex, variableNames);
+            return new PlotlyFigure(fig);
         }
 
-        public void Show()
+        public static PlotlyFigure PlotTimeline(dynamic study)
         {
-            CheckPlotCreated();
-            _fig.show();
-        }
-
-        public void SaveHtml(string path)
-        {
-            CheckPlotCreated();
-            _fig.write_html(path);
+            PyModule ps = Py.CreateScope();
+            ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_timeline.py"));
+            dynamic pyPlotTimeline = ps.Get("plot_timeline");
+            dynamic fig = pyPlotTimeline(study);
+            return new PlotlyFigure(fig);
         }
     }
 }

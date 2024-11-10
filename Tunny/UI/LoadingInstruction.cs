@@ -1,12 +1,15 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
+using System.Windows;
 using System.Windows.Forms;
+
+using CefSharp;
 
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
+
+using Python.Runtime;
 
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
@@ -26,6 +29,8 @@ namespace Tunny.UI
         public override GH_LoadingInstruction PriorityLoad()
         {
             TLog.InitializeLogger();
+            CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
+            Runtime.PythonDLL = Path.Combine(TEnvVariables.PythonDllPath);
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
@@ -57,7 +62,7 @@ namespace Tunny.UI
             });
 
             tunnyToolStripMenuItem.Name = "TunnyToolStripMenuItem";
-            tunnyToolStripMenuItem.Size = new Size(125, 29);
+            tunnyToolStripMenuItem.Size = new System.Drawing.Size(125, 29);
             tunnyToolStripMenuItem.Text = "Tunny";
             AddTunnyMenuItems(tunnyToolStripMenuItem.DropDownItems);
 
@@ -143,8 +148,8 @@ namespace Tunny.UI
             TunnyMessageBox.Show(
                 "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
                 "About Tunny",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
 
         private void PythonInstallStripMenuItem_Click(object sender, EventArgs e)
@@ -153,12 +158,8 @@ namespace Tunny.UI
             TLog.Debug("PythonInstallStripMenuItem Clicked");
             if (Directory.Exists(TEnvVariables.PythonPath))
             {
-                DialogResult result = TunnyMessageBox.Show(
-                    "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
-                    "Python is already installed",
-                    MessageBoxButtons.OKCancel,
-                    MessageBoxIcon.Information);
-                if (result == DialogResult.Cancel)
+                MessageBoxResult result = WPF.Common.TunnyMessageBox.Info_PythonAlreadyInstalled();
+                if (result == MessageBoxResult.Cancel)
                 {
                     TLog.Info("From menu item Python installation canceled by user.");
                     return;
@@ -167,29 +168,19 @@ namespace Tunny.UI
             TLog.Info("From menu item Python installation started.");
             var pythonInstallDialog = new PythonInstallDialog();
             pythonInstallDialog.ShowDialog();
-            var settings = TSettings.LoadFromJson();
+            TSettings.TryLoadFromJson(out TSettings settings);
             settings.CheckPythonLibraries = false;
             settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
         private void TunnyDocumentPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            TLog.Debug("TunnyDocumentPageStripMenuItem Clicked");
-            var browser = new Process();
-            browser.StartInfo.FileName = $@"https://tunny-docs.deno.dev/";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+            //OpenBrowser.TunnyDocumentPage();
         }
 
         private void OptunaSamplerPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            TLog.MethodStart();
-            TLog.Debug("OptunaSamplerPageStripMenuItem Clicked");
-            var browser = new Process();
-            browser.StartInfo.FileName = $@"https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
-            browser.StartInfo.UseShellExecute = true;
-            browser.Start();
+            //OpenBrowser.OptunaSamplerPage();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -201,10 +192,7 @@ namespace Tunny.UI
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))
             {
-                TunnyMessageBox.Show("optuna-dashboard is not installed.\nFirst install optuna-dashboard from the Tunny component.",
-                                     "optuna-dashboard is not installed",
-                                     MessageBoxButtons.OK,
-                                     MessageBoxIcon.Error);
+                WPF.Common.TunnyMessageBox.Info_OptunaDashboardAlreadyInstalled();
             }
             else
             {
@@ -222,13 +210,13 @@ namespace Tunny.UI
                 var settings = TSettings.Deserialize(settingsPath);
                 storagePath = settings.Storage.Path;
             }
-            var ofd = new OpenFileDialog
+            var ofd = new Microsoft.Win32.OpenFileDialog
             {
                 FileName = Path.GetFileName(storagePath),
                 Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
                 Title = @"Set Tunny result file path",
             };
-            if (ofd.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog() == true)
             {
                 var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
                 dashboard.Run(true);

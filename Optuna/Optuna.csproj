@@ -5,6 +5,7 @@
     <Version>0.12.0</Version>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,8 @@
     <None Remove="Visualization\Python\plot_parallel_coordinate.py" />
     <None Remove="Visualization\Python\plot_pareto_front.py" />
     <None Remove="Visualization\Python\plot_slice.py" />
+    <None Remove="Visualization\Python\plot_rank.py" />
+    <None Remove="Visualization\Python\plot_timeline.py" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,10 +34,12 @@
     <EmbeddedResource Include="Visualization\Python\plot_parallel_coordinate.py" />
     <EmbeddedResource Include="Visualization\Python\plot_pareto_front.py" />
     <EmbeddedResource Include="Visualization\Python\plot_slice.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_rank.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_timeline.py" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="pythonnet" Version="3.0.1" />
+    <PackageReference Include="pythonnet" Version="3.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.0" />
     <PackageReference Include="Stub.System.Data.SQLite.Core.NetFramework" Version="1.0.116" />
