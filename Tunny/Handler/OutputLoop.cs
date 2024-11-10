@@ -14,7 +14,7 @@ using Tunny.Core.Solver;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
-using Tunny.UI;
+using Tunny.WPF.Common;
 
 namespace Tunny.Handler
 {

@@ -44,7 +44,7 @@ namespace Tunny.UI
             }
             else if (txt == "Killed process: optuna-dashboard")
             {
-                TunnyMessageBox.Show(
+                WPF.Common.TunnyMessageBox.Show(
                  "Stopped the Optuna Dashboard process to prevent the installation of Python libraries.",
                  "Warning",
                  MessageBoxButton.OK,

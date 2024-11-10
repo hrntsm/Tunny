@@ -6,7 +6,7 @@ namespace Tunny.WPF.Common
 {
     internal static class TunnyMessageBox
     {
-        private static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
+        internal static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
             WriteLog(messageBoxText, icon);
 

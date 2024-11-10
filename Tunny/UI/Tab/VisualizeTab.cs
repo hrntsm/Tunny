@@ -109,7 +109,7 @@ namespace Tunny.UI
             bool result = true;
             if (pSettings.TargetObjectiveName.Length == 0 && pSettings.TargetVariableName.Length == 0)
             {
-                TunnyMessageBox.Show("Please select one or more.", "Tunny");
+                WPF.Common.TunnyMessageBox.Show("Please select one or more.", "Tunny");
                 result = false;
             }
 
@@ -165,7 +165,7 @@ namespace Tunny.UI
             TLog.MethodStart();
             if (visualizeTargetStudyComboBox.Text == string.Empty)
             {
-                TunnyMessageBox.Show(
+                WPF.Common.TunnyMessageBox.Show(
                     "There is no study to visualize.\nPlease set 'Target Study'",
                     "Tunny",
                     MessageBoxButton.OK,

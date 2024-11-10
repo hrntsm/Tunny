@@ -13,7 +13,7 @@ using Tunny.Input;
 using Tunny.PostProcess;
 using Tunny.Process;
 using Tunny.Type;
-using Tunny.UI;
+using Tunny.WPF.Common;
 
 namespace Tunny.Solver
 {

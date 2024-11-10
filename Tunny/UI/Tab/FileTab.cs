@@ -72,7 +72,7 @@ namespace Tunny.UI
                 process.StartInfo.UseShellExecute = false;
                 process.Start();
             }
-            TunnyMessageBox.Show("Debug log file is created at\n" + path, "Tunny");
+            WPF.Common.TunnyMessageBox.Show("Debug log file is created at\n" + path, "Tunny");
         }
     }
 }

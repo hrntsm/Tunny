@@ -145,7 +145,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             TLog.Debug("AboutTunnyStripMenuItem Clicked");
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
                 "About Tunny",
                 MessageBoxButton.OK,

@@ -47,7 +47,7 @@ namespace Tunny.UI
             _settings.Pruner.CheckStatus();
             if (_settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
             {
-                TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
+                WPF.Common.TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
