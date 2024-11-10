@@ -99,5 +99,23 @@ namespace Optuna.Visualization
             dynamic truncate = ps.Get("truncate");
             return new PlotlyFigure(truncate(fig.PyFigure, study));
         }
+
+        public static PlotlyFigure PlotRank(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_rank.py"));
+            dynamic pyPlotRank = ps.Get("plot_rank");
+            dynamic fig = pyPlotRank(study, objectiveName, objectiveIndex, variableNames);
+            return new PlotlyFigure(fig);
+        }
+
+        public static PlotlyFigure PlotTimeline(dynamic study)
+        {
+            PyModule ps = Py.CreateScope();
+            ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_timeline.py"));
+            dynamic pyPlotTimeline = ps.Get("plot_timeline");
+            dynamic fig = pyPlotTimeline(study);
+            return new PlotlyFigure(fig);
+        }
     }
 }

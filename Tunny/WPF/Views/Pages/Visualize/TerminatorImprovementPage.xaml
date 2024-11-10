@@ -55,7 +55,6 @@
         <ComboBox
             Grid.Row="4"
             Margin="5"
-            DisplayMemberPath="Name"
             ItemsSource="{Binding ImprovementEvaluatorItems}"
             SelectedItem="{Binding SelectedImprovementEvaluator}" />
 
@@ -67,7 +66,6 @@
         <ComboBox
             Grid.Row="6"
             Margin="5"
-            DisplayMemberPath="Name"
             ItemsSource="{Binding ErrorEvaluatorItems}"
             SelectedItem="{Binding SelectedErrorEvaluator}" />
 

@@ -67,8 +67,14 @@ namespace Tunny.Process
                     return Visualization.PlotSlice(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "hypervolume":
                     return Visualization.PlotHypervolume(study, settings.ReferencePoint);
-                case "clustering":
-                    return Visualization.PlotClustering(study, settings.ClusterCount, settings.TargetObjectiveIndex, settings.TargetVariableIndex);
+                case "rank":
+                    return Visualization.PlotRank(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
+                case "timeline":
+                    return Visualization.PlotTimeline(study);
+                //case "TerminatorImprovement":
+                //    return Visualization.PlotTerminatorImprovement(study);
+                //case "clustering":
+                //    return Visualization.PlotClustering(study, settings.ClusterCount, settings.TargetObjectiveIndex, settings.TargetVariableIndex);
                 default:
                     throw new ArgumentException("Invalid plot type");
             }

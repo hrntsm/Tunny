@@ -6,7 +6,11 @@ namespace Tunny.WPF.ViewModels.Visualize
     {
         public override PlotSettings GetPlotSettings()
         {
-            throw new System.NotImplementedException();
+            return new PlotSettings
+            {
+                PlotTypeName = "timeline",
+                TargetStudyName = SelectedStudyName.Name,
+            };
         }
     }
 }

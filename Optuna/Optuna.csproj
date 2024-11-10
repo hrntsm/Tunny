@@ -19,6 +19,8 @@
     <None Remove="Visualization\Python\plot_parallel_coordinate.py" />
     <None Remove="Visualization\Python\plot_pareto_front.py" />
     <None Remove="Visualization\Python\plot_slice.py" />
+    <None Remove="Visualization\Python\plot_rank.py" />
+    <None Remove="Visualization\Python\plot_timeline.py" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +34,8 @@
     <EmbeddedResource Include="Visualization\Python\plot_parallel_coordinate.py" />
     <EmbeddedResource Include="Visualization\Python\plot_pareto_front.py" />
     <EmbeddedResource Include="Visualization\Python\plot_slice.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_rank.py" />
+    <EmbeddedResource Include="Visualization\Python\plot_timeline.py" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,15 +1,17 @@
-﻿using Tunny.Core.Settings;
+﻿using System.Collections.ObjectModel;
+
+using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
     class TerminatorImprovementViewModel : PlotSettingsViewModelBase
     {
-        private System.Collections.IEnumerable _improvementEvaluatorItems;
-        public System.Collections.IEnumerable ImprovementEvaluatorItems { get => _improvementEvaluatorItems; set => SetProperty(ref _improvementEvaluatorItems, value); }
-        private object _selectedImprovementEvaluator;
-        public object SelectedImprovementEvaluator { get => _selectedImprovementEvaluator; set => SetProperty(ref _selectedImprovementEvaluator, value); }
-        private System.Collections.IEnumerable _errorEvaluatorItems;
-        public System.Collections.IEnumerable ErrorEvaluatorItems { get => _errorEvaluatorItems; set => SetProperty(ref _errorEvaluatorItems, value); }
+        private ObservableCollection<string> _improvementEvaluatorItems;
+        public ObservableCollection<string> ImprovementEvaluatorItems { get => _improvementEvaluatorItems; set => SetProperty(ref _improvementEvaluatorItems, value); }
+        private string _selectedImprovementEvaluator;
+        public string SelectedImprovementEvaluator { get => _selectedImprovementEvaluator; set => SetProperty(ref _selectedImprovementEvaluator, value); }
+        private ObservableCollection<string> _errorEvaluatorItems;
+        public ObservableCollection<string> ErrorEvaluatorItems { get => _errorEvaluatorItems; set => SetProperty(ref _errorEvaluatorItems, value); }
         private object _selectedErrorEvaluator;
         public object SelectedErrorEvaluator { get => _selectedErrorEvaluator; set => SetProperty(ref _selectedErrorEvaluator, value); }
         private string _minNumberOfTrials;
@@ -21,6 +23,23 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
             MinNumberOfTrials = "20";
             PlotError = false;
+
+            ImprovementEvaluatorItems = new ObservableCollection<string>()
+            {
+                "AUTO",
+                "RegretBound",
+                "BestValueStagnation",
+                "EMMR"
+            };
+            SelectedImprovementEvaluator = ImprovementEvaluatorItems[0];
+
+            ErrorEvaluatorItems = new ObservableCollection<string>()
+            {
+                "AUTO",
+                "StaticError",
+                "MedianError",
+            };
+            SelectedErrorEvaluator = ErrorEvaluatorItems[0];
         }
 
         public override PlotSettings GetPlotSettings()

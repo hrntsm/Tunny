@@ -223,6 +223,7 @@
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.TerminatorImprovement}"
+                        IsEnabled="False"
                         Label="Terminator Improvement"
                         LargeImageSource="Assets/Icon/Tunny.png"
                         SmallImageSource="Assets/Icon/Tunny.png" />
