@@ -6,12 +6,12 @@ namespace Optuna.Visualization
 {
     public static class Visualization
     {
-        public static PlotlyFigure PlotSlice(dynamic study, string objectiveName, int objectiveIndex, string variableName)
+        public static PlotlyFigure PlotSlice(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_slice.py"));
             dynamic pyPlotSlice = ps.Get("plot_slice");
-            dynamic fig = pyPlotSlice(study, objectiveName, objectiveIndex, variableName);
+            dynamic fig = pyPlotSlice(study, objectiveName, objectiveIndex, variableNames);
             return new PlotlyFigure(fig);
         }
 

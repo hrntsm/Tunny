@@ -64,7 +64,7 @@ namespace Tunny.Process
                     PlotlyFigure fig = Visualization.PlotParetoFront(study, settings.TargetObjectiveName, settings.TargetObjectiveIndex, settings.IncludeDominatedTrials);
                     return Visualization.TruncateParetoFrontPlotHover(study, fig);
                 case "slice":
-                    return Visualization.PlotSlice(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName[0]);
+                    return Visualization.PlotSlice(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "hypervolume":
                     return Visualization.PlotHypervolume(study, settings.ReferencePoint);
                 case "clustering":
