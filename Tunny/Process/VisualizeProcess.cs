@@ -59,7 +59,7 @@ namespace Tunny.Process
                 case "parallel coordinate":
                     return Visualization.PlotParallelCoordinate(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
                 case "param importances":
-                    return Visualization.PlotParamImportances(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName);
+                    return Visualization.PlotParamImportances(study, settings.TargetObjectiveName[0], settings.TargetObjectiveIndex[0], settings.TargetVariableName, settings.ImportanceEvaluator);
                 case "pareto front":
                     PlotlyFigure fig = Visualization.PlotParetoFront(study, settings.TargetObjectiveName, settings.TargetObjectiveIndex, settings.IncludeDominatedTrials);
                     return Visualization.TruncateParetoFrontPlotHover(study, fig);

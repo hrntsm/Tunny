@@ -52,7 +52,6 @@
         <ComboBox
             Grid.Row="4"
             Margin="5"
-            DisplayMemberPath="Name"
             ItemsSource="{Binding EvaluatorItems}"
             SelectedItem="{Binding SelectedEvaluator}" />
 

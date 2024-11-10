@@ -24,7 +24,7 @@ namespace Optuna.Visualization
             return new PlotlyFigure(fig);
         }
 
-        public static PlotlyFigure PlotParamImportances(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames)
+        public static PlotlyFigure PlotParamImportances(dynamic study, string objectiveName, int objectiveIndex, string[] variableNames, string evaluator)
         {
             PyModule ps = Py.CreateScope();
             ps.Exec(ReadFileFromResource.Text("Optuna.Visualization.Python.plot_importances.py"));
@@ -34,7 +34,7 @@ namespace Optuna.Visualization
             {
                 pyList.Append(new PyString(item));
             }
-            dynamic fig = pyPlotParamImportances(study, objectiveName, objectiveIndex, pyList);
+            dynamic fig = pyPlotParamImportances(study, objectiveName, objectiveIndex, pyList, evaluator);
             return new PlotlyFigure(fig);
         }
 
