@@ -1,5 +1,3 @@
-using Tunny.Core.TEnum;
-
 namespace Tunny.Core.Settings
 {
     public class PlotSettings
