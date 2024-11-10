@@ -179,7 +179,7 @@ namespace Tunny.UI
             catch (Exception)
             {
                 string message = "The storage file loading error.Please check the storage path or use new storage file.";
-                TunnyMessageBox.Show(message, "Error");
+                WPF.Common.TunnyMessageBox.Show(message, "Error");
             }
         }
 

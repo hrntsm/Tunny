@@ -12,7 +12,7 @@ namespace Tunny.UI
         private bool SupportOneObjectiveMessage(GH_DocumentEditor ghCanvas)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "CMA-ES & GP:Optuna samplers only support single objective optimization.",
                 "Tunny",
                 MessageBoxButton.OK,
@@ -26,7 +26,7 @@ namespace Tunny.UI
         private bool SameStudyNameMassage(GH_DocumentEditor ghCanvas)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "Please choose any study name.",
                 "Tunny",
                 MessageBoxButton.OK,
@@ -40,7 +40,7 @@ namespace Tunny.UI
         private bool NameAlreadyExistMessage(GH_DocumentEditor ghCanvas)
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "New study name already exists. Please choose another name. Or check 'Continue' checkbox.",
                 "Tunny",
                 MessageBoxButton.OK,
@@ -55,7 +55,7 @@ namespace Tunny.UI
         private static bool IncorrectParseModeNumberInputMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "The model number format of the input is incorrect. \nPlease use a comma separator as follows.\n\"1,2,3\"",
                 "Tunny");
             return false;
@@ -64,7 +64,7 @@ namespace Tunny.UI
         private static void UseFirstTrialNumberToReflectMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "You input multi trial numbers, but this function only reflect variables to slider or gene pool to first one.",
                 "Tunny"
             );
@@ -74,7 +74,7 @@ namespace Tunny.UI
         private static bool HandleOnly1ObjectiveMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "This plot can only handle one objective function.",
                 "Tunny"
             );
@@ -84,7 +84,7 @@ namespace Tunny.UI
         private static bool HandleOnly2or3ObjectiveMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "This plot can only handle 2 or 3 objective function.",
                 "Tunny"
             );
@@ -94,7 +94,7 @@ namespace Tunny.UI
         private static bool RequireLeast1VariableMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "This plot requires at least one variable.",
                 "Tunny"
             );
@@ -104,7 +104,7 @@ namespace Tunny.UI
         private static bool RequireLeast2VariableMessage()
         {
             TLog.MethodStart();
-            TunnyMessageBox.Show(
+            WPF.Common.TunnyMessageBox.Show(
                 "This plot requires at least two variables.",
                 "Tunny"
             );

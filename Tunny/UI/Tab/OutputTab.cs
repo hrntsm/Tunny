@@ -45,7 +45,7 @@ namespace Tunny.UI
             OutputLoop.StudyName = outputTargetStudyComboBox.Text;
             if (string.IsNullOrEmpty(OutputLoop.StudyName))
             {
-                TunnyMessageBox.Show(
+                WPF.Common.TunnyMessageBox.Show(
                     "Please select study name.",
                     "Tunny",
                     MessageBoxButton.OK,
