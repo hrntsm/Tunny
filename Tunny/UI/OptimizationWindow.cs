@@ -38,17 +38,6 @@ namespace Tunny.UI
             SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
-            CheckPruner();
-        }
-
-        private void CheckPruner()
-        {
-            TLog.MethodStart();
-            _settings.Pruner.CheckStatus();
-            if (_settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
-            {
-                WPF.Common.TunnyMessageBox.Show("PrunerPath has something wrong. Please check.", "Tunny", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         private static void SetupTTDesignExplorer()
