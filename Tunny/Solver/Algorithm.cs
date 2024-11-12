@@ -355,9 +355,7 @@ namespace Tunny.Solver
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
 
-                bool shouldPrune = CheckShouldPrune(trial);
-
-                if (Objective.Length == 1 && shouldPrune)
+                if (Objective.Length == 1 && CheckShouldPrune(trial))
                 {
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
                     TLog.Warning($"Trial {trialNum} pruned.");
