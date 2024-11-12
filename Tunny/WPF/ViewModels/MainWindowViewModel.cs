@@ -44,12 +44,24 @@ namespace Tunny.WPF.ViewModels
             _optimizePage = new OptimizePage();
             _optimizePage.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
             MainWindowFrame = _optimizePage;
+
+            CheckPruner();
         }
 
         private void UpdateTitle()
         {
             string storagePath = OptimizeProcess.Settings.Storage.Path;
             WindowTitle = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
+        }
+
+        private static void CheckPruner()
+        {
+            TLog.MethodStart();
+            OptimizeProcess.Settings.Pruner.CheckStatus();
+            if (OptimizeProcess.Settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
+            {
+                TunnyMessageBox.Error_PrunerPath();
+            }
         }
 
         private DelegateCommand<VisualizeType?> _selectVisualizeTypeCommand;

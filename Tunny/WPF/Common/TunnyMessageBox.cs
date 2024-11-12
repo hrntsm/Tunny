@@ -48,6 +48,16 @@ namespace Tunny.WPF.Common
                 MessageBoxImage.Error);
         }
 
+        internal static void Error_PrunerPath()
+        {
+            TLog.MethodStart();
+            Show(
+                "PrunerPath has something wrong. Please check.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+
         internal static void Error_IncorrectObjectiveInput()
         {
             TLog.MethodStart();
