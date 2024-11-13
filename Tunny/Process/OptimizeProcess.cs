@@ -101,7 +101,8 @@ namespace Tunny.Process
 
         private static void PrunerProgress(ProgressState pState, ref int step, ref DateTime timer)
         {
-            if (pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
+            if (Settings.Pruner.IsEnabled
+                && pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
                 && DateTime.Now - timer > TimeSpan.FromSeconds(pState.Pruner.EvaluateIntervalSeconds))
             {
                 step = ReportPruner(pState.OptunaTrial, step, pState.Pruner);

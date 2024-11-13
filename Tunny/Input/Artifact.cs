@@ -31,7 +31,7 @@ namespace Tunny.Input
         public int Count()
         {
             TLog.MethodStart();
-            return Geometries.Count + Images.Count;
+            return Geometries.Count + Images.Count + ArtifactPaths.Count;
         }
 
         public void UploadArtifacts(dynamic artifactBackend, dynamic trial)

@@ -14,6 +14,7 @@ namespace Tunny.Core.Settings
     public class Pruner : IDisposable
     {
         public PrunerType Type { get; set; } = PrunerType.None;
+        public bool IsEnabled { get; set; }
         public int EvaluateIntervalSeconds { get; set; }
         public bool IsWatcher { get; set; }
         public string ReporterPath { get; set; } = string.Empty;
