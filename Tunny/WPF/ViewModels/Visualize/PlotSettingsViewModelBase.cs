@@ -73,7 +73,16 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         private void UpdateObjectivesAndVariables()
         {
-            StudySummary targetStudySummary = _summaries.FirstOrDefault(s => s.StudyName == _selectedStudyName.Name);
+            if (SelectedStudyName == null)
+            {
+                SelectedStudyName = StudyNameItems.FirstOrDefault();
+                if (SelectedStudyName == null)
+                {
+                    TunnyMessageBox.Error_NoStudyNameSelected();
+                    return;
+                }
+            }
+            StudySummary targetStudySummary = _summaries.FirstOrDefault(s => s.StudyName == SelectedStudyName.Name);
             if (targetStudySummary != null)
             {
                 SetVariableListItems(targetStudySummary);
