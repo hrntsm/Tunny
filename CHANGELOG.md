@@ -23,6 +23,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Disable window minimize button.
 - No log output to the Rhino console.
 - Human in the loop code was moved to the Optuna project to improve maintainability.
+- Remove Geometry & Direction input from ConstructFishAttribute component.
+  - Study direction can set in new Tunny UI.
+  - If you need save geometry, Please use artifact feature.
 - Update optuna v4.0
 
 ### Deprecated
