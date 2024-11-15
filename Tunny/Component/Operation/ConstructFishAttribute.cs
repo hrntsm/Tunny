@@ -12,12 +12,8 @@ namespace Tunny.Component.Operation
 {
     public class ConstructFishAttribute : GH_Component, IGH_VariableParameterComponent
     {
-        private const string GeomDescription
-            = "Connect model geometries here. Not required. Large size models are not recommended as it affects the speed of analysis.";
         private const string ConstraintDescription
             = "A value strictly larger than 0 means that a constraints is violated. A value equal to or smaller than 0 is considered feasible. ";
-        private const string DirectionDescription
-            = "Direction of each objective. 1 for maximization, -1 for minimization.";
         private const string AttrDescription
             = "Attributes to each trial. Attribute name will be the nickname of the input, so change it to any value.";
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -31,16 +27,12 @@ namespace Tunny.Component.Operation
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddGeometryParameter("Geometry", "Geometry", GeomDescription, GH_ParamAccess.list);
-            pManager.AddIntegerParameter("Direction", "Direction", DirectionDescription, GH_ParamAccess.list);
             pManager.AddNumberParameter("Constraint", "Constraint", ConstraintDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr1", "Attr1", AttrDescription, GH_ParamAccess.list);
             pManager.AddGenericParameter("Attr2", "Attr2", AttrDescription, GH_ParamAccess.list);
             Params.Input[0].Optional = true;
             Params.Input[1].Optional = true;
             Params.Input[2].Optional = true;
-            Params.Input[3].Optional = true;
-            Params.Input[4].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -70,10 +62,7 @@ namespace Tunny.Component.Operation
                 string key = Params.Input[i].NickName;
                 switch (i)
                 {
-                    case 1:
-                        SetDirectionDataList(DA, dict, i, key);
-                        break;
-                    case 2:
+                    case 0:
                         SetConstraintDataList(DA, dict, i, key);
                         break;
                     default:
@@ -102,20 +91,6 @@ namespace Tunny.Component.Operation
             }
         }
 
-        private void SetDirectionDataList(IGH_DataAccess DA, Dictionary<string, object> dict, int i, string key)
-        {
-            var direction = new List<int>();
-            if (DA.GetDataList(i, direction))
-            {
-                if (direction.Any(x => x != 1 && x != -1))
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Direction must be either 1(maximize) or -1(minimize).");
-                    return;
-                }
-                dict.Add(key, direction);
-            }
-        }
-
         //FIXME: Should be modified to capture and check for change events.
         private bool CheckIsNicknameDuplicated()
         {
@@ -132,29 +107,15 @@ namespace Tunny.Component.Operation
             return false;
         }
 
-        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 3);
+        public bool CanInsertParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && (Params.Input.Count == 0 || index >= 1);
 
-        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 3;
+        public bool CanRemoveParameter(GH_ParameterSide side, int index) => side != GH_ParameterSide.Output && index >= 1;
 
         public IGH_Param CreateParameter(GH_ParameterSide side, int index)
         {
             if (side == GH_ParameterSide.Input)
             {
-                if (index == 0)
-                {
-                    return SetGeometryParameterInput();
-                }
-                else
-                {
-                    if (index == 1)
-                    {
-                        return SetNumberParameterInput();
-                    }
-                    else
-                    {
-                        return SetGenericParameterInput();
-                    }
-                }
+                return SetGenericParameterInput();
             }
             return null;
         }
@@ -173,28 +134,6 @@ namespace Tunny.Component.Operation
             p.Name = p.NickName = nickname;
             p.Description = AttrDescription;
             p.Access = GH_ParamAccess.list;
-            p.Optional = true;
-            return p;
-        }
-
-        private static Param_Number SetNumberParameterInput()
-        {
-            var p = new Param_Number();
-            p.Name = p.NickName = "Constraint";
-            p.Description = ConstraintDescription;
-            p.Access = GH_ParamAccess.list;
-            p.MutableNickName = false;
-            p.Optional = true;
-            return p;
-        }
-
-        private static Param_Geometry SetGeometryParameterInput()
-        {
-            var p = new Param_Geometry();
-            p.Name = p.NickName = "Geometry";
-            p.Description = GeomDescription;
-            p.Access = GH_ParamAccess.item;
-            p.MutableNickName = false;
             p.Optional = true;
             return p;
         }
@@ -229,6 +168,6 @@ namespace Tunny.Component.Operation
         }
 
         protected override System.Drawing.Bitmap Icon => Resource.ConstructFishAttribute;
-        public override Guid ComponentGuid => new Guid("4baf9edc-fc50-4ed2-8c59-33194ec446b5");
+        public override Guid ComponentGuid => new Guid("9406666d-db8a-4955-8a6f-4200031e84aa");
     }
 }
