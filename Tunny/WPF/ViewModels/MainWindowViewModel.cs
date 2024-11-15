@@ -77,6 +77,7 @@ namespace Tunny.WPF.ViewModels
                 return _selectVisualizeTypeCommand;
             }
         }
+
         private void SelectVisualizeType(VisualizeType? visualizeType)
         {
             if (visualizeType == null)

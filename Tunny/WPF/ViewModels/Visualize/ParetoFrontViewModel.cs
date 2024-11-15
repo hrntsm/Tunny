@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -9,7 +11,11 @@ namespace Tunny.WPF.ViewModels.Visualize
         private bool? _includeDominatedTrials;
         public bool? IncludeDominatedTrials { get => _includeDominatedTrials; set => SetProperty(ref _includeDominatedTrials, value); }
 
-        public ParetoFrontViewModel()
+        public ParetoFrontViewModel() : base()
+        {
+        }
+
+        public ParetoFrontViewModel(StudySummary[] summaries) : base(summaries)
         {
             IncludeDominatedTrials = true;
         }

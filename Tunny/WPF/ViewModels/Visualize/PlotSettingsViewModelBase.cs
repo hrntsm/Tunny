@@ -7,9 +7,7 @@ using Optuna.Study;
 using Prism.Mvvm;
 
 using Tunny.Core.Settings;
-using Tunny.Core.Storage;
 using Tunny.Core.Util;
-using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 
@@ -19,7 +17,7 @@ namespace Tunny.WPF.ViewModels.Visualize
     {
         public abstract PlotSettings GetPlotSettings();
 
-        private StudySummary[] _summaries;
+        private readonly StudySummary[] _summaries;
         private ObservableCollection<NameComboBoxItem> _studyNameItems;
         public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
         private NameComboBoxItem _selectedStudyName;
@@ -43,22 +41,26 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public PlotSettingsViewModelBase()
         {
+        }
+
+        public PlotSettingsViewModelBase(StudySummary[] summaries)
+        {
+            _summaries = summaries;
             ObjectiveItems = new ObservableCollection<VisualizeListItem>();
             VariableItems = new ObservableCollection<VisualizeListItem>();
-            StudyNameItems = StudyNamesFromStorage(OptimizeProcess.Settings.Storage.Path);
+            StudyNameItems = StudyNamesFromStudySummaries();
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
 
         public void UpdateItems()
         {
-            StudyNameItems = StudyNamesFromStorage(OptimizeProcess.Settings.Storage.Path);
+            StudyNameItems = StudyNamesFromStudySummaries();
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
 
-        private ObservableCollection<NameComboBoxItem> StudyNamesFromStorage(string storagePath)
+        private ObservableCollection<NameComboBoxItem> StudyNamesFromStudySummaries()
         {
             var items = new ObservableCollection<NameComboBoxItem>();
-            _summaries = new StorageHandler().GetStudySummaries(storagePath);
             for (int i = 0; i < _summaries.Length; i++)
             {
                 StudySummary summary = _summaries[i];
@@ -73,7 +75,12 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         private void UpdateObjectivesAndVariables()
         {
-            if (SelectedStudyName == null)
+            if (_summaries == null || _summaries.Length == 0)
+            {
+                return;
+            }
+
+            if (SelectedStudyName == null && StudyNameItems.Count > 0)
             {
                 SelectedStudyName = StudyNameItems.FirstOrDefault();
                 if (SelectedStudyName == null)

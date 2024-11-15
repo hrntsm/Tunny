@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 using Tunny.WPF.Models;
 
@@ -12,7 +14,11 @@ namespace Tunny.WPF.ViewModels.Visualize
         private bool? _showErrorBar;
         public bool? ShowErrorBar { get => _showErrorBar; set => SetProperty(ref _showErrorBar, value); }
 
-        public OptimizationHistoryViewModel()
+        public OptimizationHistoryViewModel() : base()
+        {
+        }
+
+        public OptimizationHistoryViewModel(StudySummary[] summaries) : base(summaries)
         {
             ShowErrorBar = false;
         }

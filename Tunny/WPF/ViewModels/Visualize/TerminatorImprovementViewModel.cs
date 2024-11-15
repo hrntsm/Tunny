@@ -1,10 +1,12 @@
 ﻿using System.Collections.ObjectModel;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class TerminatorImprovementViewModel : PlotSettingsViewModelBase
+    internal class TerminatorImprovementViewModel : PlotSettingsViewModelBase
     {
         private ObservableCollection<string> _improvementEvaluatorItems;
         public ObservableCollection<string> ImprovementEvaluatorItems { get => _improvementEvaluatorItems; set => SetProperty(ref _improvementEvaluatorItems, value); }
@@ -19,7 +21,11 @@ namespace Tunny.WPF.ViewModels.Visualize
         private bool? _plotError;
         public bool? PlotError { get => _plotError; set => SetProperty(ref _plotError, value); }
 
-        public TerminatorImprovementViewModel()
+        public TerminatorImprovementViewModel() : base()
+        {
+        }
+
+        public TerminatorImprovementViewModel(StudySummary[] summaries) : base(summaries)
         {
             MinNumberOfTrials = "20";
             PlotError = false;

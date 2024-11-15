@@ -1,18 +1,24 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class ParamImportancesViewModel : PlotSettingsViewModelBase
+    internal class ParamImportancesViewModel : PlotSettingsViewModelBase
     {
         private ObservableCollection<string> _evaluatorItems;
         public ObservableCollection<string> EvaluatorItems { get => _evaluatorItems; set => SetProperty(ref _evaluatorItems, value); }
         private string _selectedEvaluator;
         public string SelectedEvaluator { get => _selectedEvaluator; set => SetProperty(ref _selectedEvaluator, value); }
 
-        public ParamImportancesViewModel()
+        public ParamImportancesViewModel() : base()
+        {
+        }
+
+        public ParamImportancesViewModel(StudySummary[] summaries) : base(summaries)
         {
             EvaluatorItems = new ObservableCollection<string>()
             {

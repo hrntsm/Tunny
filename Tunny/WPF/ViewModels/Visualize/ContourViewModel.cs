@@ -1,11 +1,21 @@
 ﻿using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class ContourViewModel : PlotSettingsViewModelBase
+    internal class ContourViewModel : PlotSettingsViewModelBase
     {
+        public ContourViewModel() : base()
+        {
+        }
+
+        public ContourViewModel(StudySummary[] summaries) : base(summaries)
+        {
+        }
+
         public override PlotSettings GetPlotSettings()
         {
             return new PlotSettings()
