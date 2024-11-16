@@ -12,6 +12,7 @@ namespace Tunny.Core.Input
         public bool IsInteger { get; }
         public double Epsilon { get; }
         public double Value { get; }
+        public bool IsLogScale { get; set; }
 
         public NumberVariable(
             double lowerBond, double upperBond, bool isInteger, string nickName, double epsilon,

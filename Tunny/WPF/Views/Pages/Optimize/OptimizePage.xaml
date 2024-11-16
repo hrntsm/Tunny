@@ -195,6 +195,7 @@
             Grid.Row="4"
             Grid.Column="1"
             Margin="5"
+            Background="#FF93C6F8"
             Click="OptimizeStopButton_Click"
             Content="Stop"
             IsEnabled="False" />

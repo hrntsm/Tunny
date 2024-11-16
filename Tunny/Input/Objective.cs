@@ -14,6 +14,7 @@ using Tunny.Component.Params;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
+using Tunny.WPF.Models;
 
 namespace Tunny.Input
 {
@@ -53,7 +54,6 @@ namespace Tunny.Input
             Geometries = geometries.ToArray();
 
             SetHumanInTheLoopType();
-            SetDirections(new[] { -1 });
         }
 
         private static void SetParamsValue(List<IGH_Param> sources, List<double> numbers, List<Bitmap> images, List<GeometryBase> geometries)
@@ -125,29 +125,22 @@ namespace Tunny.Input
             return nickNames.ToArray();
         }
 
-        public bool SetDirections(int[] directions)
+        internal void SetDirections(IEnumerable<ObjectiveSettingItem> items)
         {
             TLog.MethodStart();
-            Directions = new string[Length];
-            if (directions.Length == 1)
+            var directions = new List<string>();
+            foreach (ObjectiveSettingItem item in items)
             {
-                for (int i = 0; i < Length; i++)
+                if (item.Maximize)
                 {
-                    Directions[i] = directions[0] == 1 ? "maximize" : "minimize";
+                    directions.Add("maximize");
+                }
+                else
+                {
+                    directions.Add("minimize");
                 }
             }
-            else if (directions.Length != Length)
-            {
-                return false;
-            }
-            else
-            {
-                for (int i = 0; i < Length; i++)
-                {
-                    Directions[i] = directions[i] == 1 ? "maximize" : "minimize";
-                }
-            }
-            return true;
+            Directions = directions.ToArray();
         }
     }
 }
