@@ -1,15 +1,21 @@
 ﻿using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class HypervolumeViewModel : PlotSettingsViewModelBase
+    internal class HypervolumeViewModel : PlotSettingsViewModelBase
     {
         private string _referencePoint;
         public string ReferencePoint { get => _referencePoint; set => SetProperty(ref _referencePoint, value); }
 
-        public HypervolumeViewModel()
+        public HypervolumeViewModel() : base()
+        {
+        }
+
+        public HypervolumeViewModel(StudySummary[] summaries) : base(summaries)
         {
             ReferencePoint = "AUTO";
         }

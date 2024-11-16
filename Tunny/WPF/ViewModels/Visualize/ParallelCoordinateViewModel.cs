@@ -1,11 +1,21 @@
 ﻿using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class ParallelCoordinateViewModel : PlotSettingsViewModelBase
+    internal class ParallelCoordinateViewModel : PlotSettingsViewModelBase
     {
+        public ParallelCoordinateViewModel() : base()
+        {
+        }
+
+        public ParallelCoordinateViewModel(StudySummary[] summaries) : base(summaries)
+        {
+        }
+
         public override PlotSettings GetPlotSettings()
         {
             return new PlotSettings()

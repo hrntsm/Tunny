@@ -10,7 +10,10 @@
     d:DesignWidth="350"
     mc:Ignorable="d">
 
-    <GroupBox Margin="5" Header="GenericAlgorithm (NSGA-III) Settings">
+    <GroupBox
+        Margin="5"
+        Background="#FFE2E8F4"
+        Header="GenericAlgorithm (NSGA-III) Settings">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

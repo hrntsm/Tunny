@@ -1,43 +1,12 @@
+using System;
 using System.Windows;
 
 using Tunny.Core.Util;
 
 namespace Tunny.WPF.Common
 {
-    internal static class TunnyMessageBox
+    internal static partial class TunnyMessageBox
     {
-        internal static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
-        {
-            WriteLog(messageBoxText, icon);
-
-            MessageBoxResult msgResult = MessageBox.Show(messageBoxText, caption, button, icon);
-            if (msgResult != MessageBoxResult.None && msgResult != MessageBoxResult.OK)
-            {
-                TLog.Info($"Dialog result: {msgResult}");
-            }
-            return msgResult;
-        }
-
-        private static void WriteLog(string message, MessageBoxImage icon)
-        {
-            string noLineBreakMessage = message.Replace("\n", " ");
-            switch (icon)
-            {
-                case MessageBoxImage.Error:
-                    TLog.Error(noLineBreakMessage);
-                    break;
-                case MessageBoxImage.Warning:
-                    TLog.Warning(noLineBreakMessage);
-                    break;
-                case MessageBoxImage.Information:
-                    TLog.Info(noLineBreakMessage);
-                    break;
-                default:
-                    TLog.Debug(noLineBreakMessage);
-                    break;
-            }
-        }
-
         internal static void Error_IncorrectVariableInput()
         {
             TLog.MethodStart();
@@ -88,17 +57,6 @@ namespace Tunny.WPF.Common
                 MessageBoxImage.Error);
         }
 
-        internal static MessageBoxResult Info_PythonAlreadyInstalled()
-        {
-            TLog.MethodStart();
-            return Show(
-                "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
-                "Python is already installed",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Information
-            );
-        }
-
         internal static void Error_NoVariableInput()
         {
             TLog.MethodStart();
@@ -141,16 +99,6 @@ namespace Tunny.WPF.Common
             );
         }
 
-        internal static void Info_OptunaDashboardAlreadyInstalled()
-        {
-            TLog.MethodStart();
-            Show("optuna-dashboard is not installed.\nFirst install optuna-dashboard from the Tunny component.",
-                "optuna-dashboard is not installed",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
-        }
-
         internal static void Error_ComponentLoadFail()
         {
             TLog.MethodStart();
@@ -159,17 +107,6 @@ namespace Tunny.WPF.Common
                 "Tunny",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error
-            );
-        }
-
-        internal static void Warn_SettingsJsonFileLoadFail()
-        {
-            TLog.MethodStart();
-            Show(
-                "Failed to load settings file. Start with default settings.",
-                "Tunny",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning
             );
         }
 
@@ -192,17 +129,6 @@ namespace Tunny.WPF.Common
                 "Error",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error
-            );
-        }
-
-        internal static void Info_ResultFileHasNoStudy()
-        {
-            TLog.MethodStart();
-            Show(
-                "There is no study to visualize.\nPlease set 'Target Study'",
-                "Tunny",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
             );
         }
 

@@ -12,6 +12,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 
 using Tunny.Core.Settings;
+using Tunny.Core.Storage;
 using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages.Visualize;
@@ -38,19 +39,20 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         private void InitializeSettingPages()
         {
+            Optuna.Study.StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
             _plotSettingPages = new Dictionary<VisualizeType, Page>
             {
-                {VisualizeType.ParetoFront, new ParetoFrontPage()},
-                {VisualizeType.OptimizationHistory, new OptimizationHistoryPage()},
-                {VisualizeType.Slice, new SlicePage()},
-                {VisualizeType.Contour, new ContourPage()},
-                {VisualizeType.ParamImportances, new ParamImportancesPage()},
-                {VisualizeType.ParallelCoordinate, new ParallelCoordinatePage()},
-                {VisualizeType.Hypervolume, new HypervolumePage()},
-                {VisualizeType.EDF, new EdfPage()},
-                {VisualizeType.Rank, new RankPage()},
-                {VisualizeType.Timeline, new TimelinePage()},
-                {VisualizeType.TerminatorImprovement, new TerminatorImprovementPage()}
+                {VisualizeType.ParetoFront, new ParetoFrontPage(summaries)},
+                {VisualizeType.OptimizationHistory, new OptimizationHistoryPage(summaries)},
+                {VisualizeType.Slice, new SlicePage(summaries)},
+                {VisualizeType.Contour, new ContourPage(summaries)},
+                {VisualizeType.ParamImportances, new ParamImportancesPage(summaries)},
+                {VisualizeType.ParallelCoordinate, new ParallelCoordinatePage(summaries)},
+                {VisualizeType.Hypervolume, new HypervolumePage(summaries)},
+                {VisualizeType.EDF, new EdfPage(summaries)},
+                {VisualizeType.Rank, new RankPage(summaries)},
+                {VisualizeType.Timeline, new TimelinePage(summaries)},
+                {VisualizeType.TerminatorImprovement, new TerminatorImprovementPage(summaries)}
             };
             PlotSettingsFrame = _plotSettingPages[VisualizeType.ParetoFront];
         }

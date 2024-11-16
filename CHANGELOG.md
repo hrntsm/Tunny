@@ -14,6 +14,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - The drawing to viewport stops, allowing faster optimization to be performed.
 - Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
 - Optuna pruner support.
+- Variables can now be set to log scale from the UI.
 - NEW UI
 
 ### Changed
@@ -23,6 +24,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Disable window minimize button.
 - No log output to the Rhino console.
 - Human in the loop code was moved to the Optuna project to improve maintainability.
+- Remove Geometry & Direction input from ConstructFishAttribute component.
+  - Study direction can set in new Tunny UI.
+  - If you need save geometry, Please use artifact feature.
 - Update optuna v4.0
 
 ### Deprecated
@@ -38,7 +42,7 @@ for now removed features.
 - Tunny UI wont wake up when rhino7(net4.8) version settings file deserialize.
 - FishPrintByPath locks the image.
 - Mesh could not be put directly into Artifact.
-- Human in the loop exception with _stop_flag.
+- Human in the loop exception with stop_flag.
 - Even the multi-purpose Human in the loop specifies GP and the optimization does not flow, so TPE is chosen.
 - Pareto Front plot with 3 objectives visualize error
 - Delegate initialize error when push run optimize button

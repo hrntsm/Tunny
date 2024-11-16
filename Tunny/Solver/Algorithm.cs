@@ -422,9 +422,19 @@ namespace Tunny.Solver
                 switch (variable)
                 {
                     case NumberVariable number:
-                        double numParam = number.IsInteger
-                            ? trial.suggest_int(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
-                            : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon);
+                        double numParam;
+                        if (number.IsLogScale)
+                        {
+                            numParam = number.IsInteger
+                                ? trial.suggest_int(name, number.LowerBond, number.UpperBond, log: true)
+                                : trial.suggest_float(name, number.LowerBond, number.UpperBond, log: true);
+                        }
+                        else
+                        {
+                            numParam = number.IsInteger
+                                ? trial.suggest_int(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
+                                : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon);
+                        }
                         parameter[i] = new Parameter(numParam);
                         break;
                     case CategoricalVariable category:

@@ -27,7 +27,7 @@ namespace Tunny.WPF.ViewModels.Optimize
                     new Axis
                     {
                         Name = value,
-                        NameTextSize = 15,
+                        NameTextSize = 12,
                         NamePaint = new SolidColorPaint(SKColors.Black),
                         LabelsPaint = new SolidColorPaint(SKColors.Black),
                         TextSize = 12,
@@ -57,7 +57,7 @@ namespace Tunny.WPF.ViewModels.Optimize
                     new Axis
                     {
                         Name = value,
-                        NameTextSize = 15,
+                        NameTextSize = 12,
                         NamePaint = new SolidColorPaint(SKColors.Black),
                         LabelsPaint = new SolidColorPaint(SKColors.Black),
                         TextSize = 12,

@@ -9,7 +9,7 @@
     Title="{Binding WindowTitle}"
     Width="1000"
     Height="850"
-    Background="#FF93C6F8"
+    Background="#F0F4F8"
     Icon="Assets/Icon/Tunny.png"
     ResizeMode="CanMinimize"
     mc:Ignorable="d">
@@ -355,7 +355,7 @@
 
         <Frame
             Grid.Row="1"
-            Background="AliceBlue"
+            Background="#F0F4F8"
             Content="{Binding MainWindowFrame}"
             NavigationUIVisibility="Hidden" />
 

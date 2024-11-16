@@ -8,7 +8,10 @@ using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
+using Tunny.Input;
 using Tunny.PostProcess;
+using Tunny.WPF.Models;
+using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.Process
 {
@@ -17,8 +20,8 @@ namespace Tunny.Process
         public static OptimizeComponentBase Component;
         public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
-
         private static IProgress<ProgressState> s_progress;
+        private static OptimizeViewModel s_optimizeViewModel;
 
         internal static void AddProgress(IProgress<ProgressState> progress)
         {
@@ -26,10 +29,11 @@ namespace Tunny.Process
             s_progress = progress;
         }
 
-        internal async static Task RunAsync()
+        internal async static Task RunAsync(OptimizeViewModel optimizeViewModel)
         {
             TLog.MethodStart();
             Component?.GhInOutInstantiate();
+            s_optimizeViewModel = optimizeViewModel;
 
             ProgressState progressState = await RunOptimizationLoopAsync();
             if (progressState.Parameter == null || progressState.Parameter.Count == 0)
@@ -55,8 +59,8 @@ namespace Tunny.Process
         private static async Task<ProgressState> RunOptimizationLoopAsync()
         {
             TLog.MethodStart();
-            List<VariableBase> variables = Component.GhInOut.Variables;
-            Input.Objective objectives = Component.GhInOut.Objectives;
+            Objective objectives = SetObjectives();
+            List<VariableBase> variables = SetVariables();
             Dictionary<string, Type.FishEgg> fishEggs = Component.GhInOut.FishEggs;
             bool hasConstraint = Component.GhInOut.HasConstraint;
             var progressState = new ProgressState(Array.Empty<Parameter>());
@@ -69,6 +73,30 @@ namespace Tunny.Process
             return reinstateResult
                 ? new ProgressState(optunaSolver.OptimalParameters)
                 : new ProgressState(optunaSolver.OptimalParameters, true);
+        }
+
+        private static List<VariableBase> SetVariables()
+        {
+            List<VariableBase> variables = Component.GhInOut.Variables;
+            int count = 0;
+            foreach (VariableBase variable in variables)
+            {
+                if (variable is NumberVariable numberVariable)
+                {
+                    numberVariable.IsLogScale = s_optimizeViewModel.VariableSettingItems[count].IsLogScale;
+                    count++;
+                }
+            }
+
+            return variables;
+        }
+
+        private static Objective SetObjectives()
+        {
+            Input.Objective objectives = Component.GhInOut.Objectives;
+            IEnumerable<ObjectiveSettingItem> aa = s_optimizeViewModel.ObjectiveSettingItems;
+            objectives.SetDirections(aa);
+            return objectives;
         }
 
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)

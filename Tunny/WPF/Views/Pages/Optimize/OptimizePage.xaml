@@ -26,7 +26,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
 
         <Label
@@ -39,6 +40,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            Background="#FFE2E8F4"
             Header="Number of Trials">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -97,6 +99,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            Background="#FFE2E8F4"
             Header="Study Name">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -183,13 +186,16 @@
             Grid.Row="4"
             Grid.Column="0"
             Margin="5"
+            Background="#FF93C6F8"
             Click="RunOptimizeButton_Click"
-            Content="RunOptimize" />
+            Content="🐟 RunOptimize 🐟" />
+
         <Button
             x:Name="OptimizeStopButton"
             Grid.Row="4"
             Grid.Column="1"
             Margin="5"
+            Background="#FF93C6F8"
             Click="OptimizeStopButton_Click"
             Content="Stop"
             IsEnabled="False" />
@@ -200,16 +206,83 @@
             Grid.ColumnSpan="2"
             NavigationUIVisibility="Hidden" />
 
-        <Frame
-            x:Name="OptimizeLiveChart1"
-            Grid.RowSpan="4"
-            Grid.Column="2"
-            Margin="5" />
-        <Frame
-            x:Name="OptimizeLiveChart2"
-            Grid.Row="4"
-            Grid.RowSpan="3"
-            Grid.Column="2"
-            Margin="5" />
+        <Grid Grid.RowSpan="6" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="2.5*" />
+            </Grid.RowDefinitions>
+
+            <Label Content="Objectives Settings" />
+            <ListView
+                Grid.Row="1"
+                Margin="5"
+                Background="#FFE2E8F4"
+                ItemsSource="{Binding ObjectiveSettingItems}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Min">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <RadioButton
+                                        Margin="5,0"
+                                        GroupName="{Binding Name}"
+                                        IsChecked="{Binding Minimize, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Max">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <RadioButton
+                                        Margin="5,0"
+                                        GroupName="{Binding Name}"
+                                        IsChecked="{Binding Maximize}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Label Grid.Row="2" Content="Variables Settings" />
+            <ListView
+                Grid.Row="3"
+                Margin="5"
+                Background="#FFE2E8F4"
+                ItemsSource="{Binding VariableSettingItems}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="60" Header="LogScale">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        Margin="5,0"
+                                        HorizontalAlignment="Center"
+                                        IsChecked="{Binding IsLogScale, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Low}" Header="Low" />
+                        <GridViewColumn DisplayMemberBinding="{Binding High}" Header="High" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Step}" Header="Step" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.RowSpan="6" Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Frame x:Name="OptimizeLiveChart1" />
+            <Frame x:Name="OptimizeLiveChart2" Grid.Row="1" />
+        </Grid>
+
     </Grid>
 </Page>

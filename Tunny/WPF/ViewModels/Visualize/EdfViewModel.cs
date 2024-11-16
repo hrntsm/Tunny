@@ -1,11 +1,21 @@
 ﻿using System.Linq;
 
+using Optuna.Study;
+
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    class EdfViewModel : PlotSettingsViewModelBase
+    internal class EdfViewModel : PlotSettingsViewModelBase
     {
+        public EdfViewModel() : base()
+        {
+        }
+
+        public EdfViewModel(StudySummary[] summaries) : base(summaries)
+        {
+        }
+
         public override PlotSettings GetPlotSettings()
         {
             return new PlotSettings()

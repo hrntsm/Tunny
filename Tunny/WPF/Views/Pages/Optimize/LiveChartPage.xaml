@@ -65,7 +65,6 @@
         <lvc:CartesianChart
             x:Name="OptimizaLiveChart"
             Grid.Row="1"
-            Margin="5"
             AnimationsSpeed="0"
             IsEnabled="{Binding ChartEnable}"
             Series="{Binding ChartSeries}"

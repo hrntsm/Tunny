@@ -28,10 +28,11 @@
 
         <Frame
             x:Name="VisualizePlotSettingsFrame"
+            Background="#FFE2E8F4"
             Content="{Binding PlotSettingsFrame}"
             NavigationUIVisibility="Hidden" />
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Background="#FFE2E8F4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

@@ -14,6 +14,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
+using Tunny.WPF.ViewModels.Optimize;
 using Tunny.WPF.Views.Pages.Settings.Sampler;
 
 namespace Tunny.WPF.Views.Pages.Optimize
@@ -166,7 +167,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
             try
             {
-                await OptimizeProcess.RunAsync();
+                await OptimizeProcess.RunAsync(DataContext as OptimizeViewModel);
             }
             finally
             {

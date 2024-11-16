@@ -289,33 +289,10 @@ namespace Tunny.Util
                 {
                     _attributes = fishAttr;
                     HasConstraint = fishAttr.Value.ContainsKey("Constraint");
-                    SetDirection(fishAttr);
                     break;
                 }
             }
             return true;
-        }
-
-        private void SetDirection(GH_FishAttribute fishAttr)
-        {
-            int[] directions = new[] { -1 };
-            if (fishAttr.Value.TryGetValue("Direction", out object fishDirection))
-            {
-                if (fishDirection is List<int> dirList)
-                {
-                    directions = dirList.ToArray();
-                }
-                else
-                {
-                    TunnyMessageBox.Error_DirectionValue();
-                    throw new ArgumentException("Direction must be either 1(maximize) or -1(minimize).");
-                }
-            }
-            if (!Objectives.SetDirections(directions))
-            {
-                TunnyMessageBox.Error_DirectionCountNotMatch();
-                throw new ArgumentException("The number of the direction in FishAttr must be the same as the number of the objective.");
-            }
         }
 
         private static bool ShowIncorrectAttributeInputMessage()
