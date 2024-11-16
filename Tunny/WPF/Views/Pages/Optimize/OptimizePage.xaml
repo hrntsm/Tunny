@@ -40,6 +40,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            Background="#FFE2E8F4"
             Header="Number of Trials">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -98,6 +99,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            Background="#FFE2E8F4"
             Header="Study Name">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -184,8 +186,10 @@
             Grid.Row="4"
             Grid.Column="0"
             Margin="5"
+            Background="#FF93C6F8"
             Click="RunOptimizeButton_Click"
             Content="🐟 RunOptimize 🐟" />
+
         <Button
             x:Name="OptimizeStopButton"
             Grid.Row="4"
@@ -213,7 +217,7 @@
             <ListView
                 Grid.Row="1"
                 Margin="5"
-                Background="AliceBlue"
+                Background="#FFE2E8F4"
                 ItemsSource="{Binding ObjectiveSettingItems}">
                 <ListView.View>
                     <GridView>
@@ -246,7 +250,7 @@
             <ListView
                 Grid.Row="3"
                 Margin="5"
-                Background="AliceBlue"
+                Background="#FFE2E8F4"
                 ItemsSource="{Binding VariableSettingItems}">
                 <ListView.View>
                     <GridView>
