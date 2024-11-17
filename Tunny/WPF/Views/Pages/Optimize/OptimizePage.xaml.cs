@@ -38,6 +38,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private BruteForceSettingsPage _bruteForcePage;
         private AutoSettingsPage _autoPage;
         private MOEADSettingsPage _moeadPage;
+        private MoCmaEsSettingsPage _moCmaEsPage;
 
         public OptimizePage()
         {
@@ -75,6 +76,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             _bruteForcePage = BruteForceSettingsPage.FromSettings(_settings);
             _autoPage = AutoSettingsPage.FromSettings(_settings);
             _moeadPage = MOEADSettingsPage.FromSettings(_settings);
+            _moCmaEsPage = MoCmaEsSettingsPage.FromSettings(_settings);
         }
 
         private void InitializeChart()
@@ -133,6 +135,10 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 case SamplerType.MOEAD:
                     param = _moeadPage;
                     OptimizeSettingsPage.Content = _moeadPage;
+                    break;
+                case SamplerType.MoCmaEs:
+                    param = _moCmaEsPage;
+                    OptimizeSettingsPage.Content = _moCmaEsPage;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);
@@ -238,7 +244,8 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 QMC = _qmcPage.ToSettings(),
                 BruteForce = _bruteForcePage.ToSettings(),
                 Auto = _autoPage.ToSettings(),
-                MOEAD = _moeadPage.ToSettings()
+                MOEAD = _moeadPage.ToSettings(),
+                MoCmaEs = new MoCmaEsSettingsPage().ToSettings()
             };
 
             int param1 = int.Parse(OptimizeTrialNumberParam1TextBox.Text, CultureInfo.InvariantCulture);
