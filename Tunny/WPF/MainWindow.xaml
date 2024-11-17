@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="{Binding WindowTitle}"
-    Width="1000"
+    Width="1200"
     Height="850"
     Background="#F0F4F8"
     Icon="Assets/Icon/Tunny.png"
@@ -141,6 +141,7 @@
                 <RibbonGroup Header="Optuna Hub">
                     <RibbonButton
                         Command="{Binding RegisterOptunaHubSamplerCommand}"
+                        IsEnabled="False"
                         Label="Register Sampler"
                         LargeImageSource="Assets/Icon/Optuna.png"
                         SmallImageSource="Assets/Icon/Optuna.png" />
@@ -229,7 +230,10 @@
                         SmallImageSource="Assets/Icon/Tunny.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
-                    <RibbonButton Label="Register Plot" LargeImageSource="Assets/Icon/Optuna.png" />
+                    <RibbonButton
+                        IsEnabled="False"
+                        Label="Register Plot"
+                        LargeImageSource="Assets/Icon/Optuna.png" />
                 </RibbonGroup>
             </RibbonTab>
 

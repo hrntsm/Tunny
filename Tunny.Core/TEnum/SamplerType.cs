@@ -12,5 +12,9 @@ namespace Tunny.Core.TEnum
         Random = 7,
         BruteForce = 8,
         GpPreferential = 9,
+        OptunaHub = 10,
+        AUTO = 11,
+        MoCmaEs = 12,
+        MOEAD = 13,
     }
 }
