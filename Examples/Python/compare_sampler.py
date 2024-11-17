@@ -4,7 +4,8 @@
 
 import optuna
 
-n_trials = 50
+n_trials = 100
+seed = 42
 
 
 def objective(trial):
@@ -16,48 +17,57 @@ def objective(trial):
 studies = []
 
 # compare samplers
-cmaes = optuna.samplers.CmaEsSampler(with_margin=True)
+cmaes = optuna.samplers.CmaEsSampler(seed=seed)
 study_cmaes = optuna.create_study(
     sampler=cmaes, direction="minimize", study_name="cmaes"
 )
 study_cmaes.optimize(objective, n_trials=n_trials)
 studies.append(study_cmaes)
 
-nsgaii = optuna.samplers.NSGAIISampler(population_size=10)
+crossover = optuna.samplers.nsgaii.BLXAlphaCrossover()
+
+nsgaii = optuna.samplers.NSGAIISampler(seed=seed, crossover=crossover, population_size=25)
 study_nsgaii = optuna.create_study(
     sampler=nsgaii, direction="minimize", study_name="nsgaii"
 )
 study_nsgaii.optimize(objective, n_trials=n_trials)
 studies.append(study_nsgaii)
 
-nsgaiii = optuna.samplers.NSGAIIISampler(population_size=10)
+nsgaiii = optuna.samplers.NSGAIIISampler(seed=seed, crossover=crossover, population_size=25)
 study_nsgaiii = optuna.create_study(
     sampler=nsgaiii, direction="minimize", study_name="nsgaiii"
 )
 study_nsgaiii.optimize(objective, n_trials=n_trials)
 studies.append(study_nsgaiii)
 
-tpe = optuna.samplers.TPESampler()
+tpe = optuna.samplers.TPESampler(seed=seed)
 study_tpe = optuna.create_study(sampler=tpe, direction="minimize", study_name="tpe")
 study_tpe.optimize(objective, n_trials=n_trials)
 studies.append(study_tpe)
 
-bo = optuna.integration.BoTorchSampler()
+bo_optuna = optuna.samplers.GPSampler(seed=seed)
+study_optuna = optuna.create_study(
+    sampler=bo_optuna, direction="minimize", study_name="bo_optuna"
+)
+study_optuna.optimize(objective, n_trials=n_trials)
+studies.append(study_optuna)
+
+bo = optuna.integration.BoTorchSampler(seed=seed)
 study_bo = optuna.create_study(sampler=bo, direction="minimize", study_name="bo")
 study_bo.optimize(objective, n_trials=n_trials)
 studies.append(study_bo)
 
-random = optuna.samplers.RandomSampler()
+random = optuna.samplers.RandomSampler(seed=seed)
 study_random = optuna.create_study(
     sampler=random, direction="minimize", study_name="random"
 )
 study_random.optimize(objective, n_trials=n_trials)
 
-qmc = optuna.samplers.QMCSampler()
+qmc = optuna.samplers.QMCSampler(seed=seed, scramble=True)
 study_qmc = optuna.create_study(sampler=qmc, direction="minimize", study_name="qmc")
 study_qmc.optimize(objective, n_trials=n_trials)
 
-brute = optuna.samplers.BruteForceSampler()
+brute = optuna.samplers.BruteForceSampler(seed=seed)
 study_brute = optuna.create_study(
     sampler=brute, direction="minimize", study_name="brute"
 )
@@ -69,6 +79,7 @@ print("  CmaEsSampler     : ", study_cmaes.best_value, study_cmaes.best_params)
 print("  NSGAIISampler    : ", study_nsgaii.best_value, study_nsgaii.best_params)
 print("  NSGAIIISampler   : ", study_nsgaiii.best_value, study_nsgaiii.best_params)
 print("  TPESampler       : ", study_tpe.best_value, study_tpe.best_params)
+print("  GPOptunaSampler  : ", study_optuna.best_value, study_optuna.best_params)
 print("  BoTorchSampler   : ", study_bo.best_value, study_bo.best_params)
 print("  RandomSampler    : ", study_random.best_value, study_random.best_params)
 print("  QMCSampler       : ", study_qmc.best_value, study_qmc.best_params)
