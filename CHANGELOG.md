@@ -16,6 +16,8 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 - Optuna pruner support.
 - Variables can now be set to log scale from the UI.
 - NEW UI
+- Support some optunahub sampler.
+  - Auto sampler, MOEA/D sampler, MO-CMA-ES sampler,
 
 ### Changed
 
