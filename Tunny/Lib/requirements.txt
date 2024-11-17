@@ -53,4 +53,5 @@ tqdm==4.67.0
 typeguard==4.4.1
 typing_extensions==4.12.2
 urllib3==2.2.3
+wheel==0.45.0
 wrapt==1.16.0
