@@ -87,6 +87,12 @@
     <Compile Update="WPF\Views\Pages\Settings\Sampler\BruteForceSettingsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\MoCmaEsSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WPF\Views\Pages\Settings\Sampler\MOEADSettingsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="WPF\Views\Pages\Settings\Sampler\RandomSettingsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

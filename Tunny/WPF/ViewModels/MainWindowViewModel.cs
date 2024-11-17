@@ -125,10 +125,7 @@ namespace Tunny.WPF.ViewModels
             SamplerType samplerType;
             switch (selectSamplerType)
             {
-                case SelectSamplerType.AUTO:
                 case SelectSamplerType.GpPreferential:
-                case SelectSamplerType.MoCmaEs:
-                case SelectSamplerType.MOEAD:
                 case null:
                     return;
                 case SelectSamplerType.TPE:
@@ -157,6 +154,15 @@ namespace Tunny.WPF.ViewModels
                     break;
                 case SelectSamplerType.BruteForce:
                     samplerType = SamplerType.BruteForce;
+                    break;
+                case SelectSamplerType.AUTO:
+                    samplerType = SamplerType.AUTO;
+                    break;
+                case SelectSamplerType.MOEAD:
+                    samplerType = SamplerType.MOEAD;
+                    break;
+                case SelectSamplerType.MoCmaEs:
+                    samplerType = SamplerType.MoCmaEs;
                     break;
                 default:
                     samplerType = SamplerType.TPE;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Optuna.Sampler;
+using Optuna.Sampler.OptunaHub;
 
 using Python.Runtime;
 
@@ -12,6 +13,12 @@ namespace Tunny.Core.Settings
 {
     public class Sampler
     {
+        // OptunaHub
+        public AutoSampler Auto { get; set; } = new AutoSampler();
+        public MOEADSampler MOEAD { get; set; } = new MOEADSampler();
+        public MoCmaEsSampler MoCmaEs { get; set; } = new MoCmaEsSampler();
+
+        // Optuna
         public RandomSampler Random { get; set; } = new RandomSampler();
         public TpeSampler Tpe { get; set; } = new TpeSampler();
         public CmaEsSampler CmaEs { get; set; } = new CmaEsSampler();
@@ -27,6 +34,7 @@ namespace Tunny.Core.Settings
             TLog.MethodStart();
             dynamic optunaSampler;
             dynamic optuna = Py.Import("optuna");
+            dynamic optunahub = Py.Import("optunahub");
             switch (type)
             {
                 case SamplerType.TPE:
@@ -55,6 +63,15 @@ namespace Tunny.Core.Settings
                     break;
                 case SamplerType.BruteForce:
                     optunaSampler = BruteForce.ToPython(optuna);
+                    break;
+                case SamplerType.AUTO:
+                    optunaSampler = Auto.ToPython(optunahub);
+                    break;
+                case SamplerType.MOEAD:
+                    optunaSampler = MOEAD.ToPython(optuna, optunahub);
+                    break;
+                case SamplerType.MoCmaEs:
+                    optunaSampler = MoCmaEs.ToPython(optunahub);
                     break;
                 default:
                     throw new ArgumentException("Invalid sampler type.");
