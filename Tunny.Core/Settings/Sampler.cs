@@ -14,6 +14,7 @@ namespace Tunny.Core.Settings
     public class Sampler
     {
         public AutoSampler Auto { get; set; } = new AutoSampler();
+        public MOEADSampler MOEAD { get; set; } = new MOEADSampler();
         public RandomSampler Random { get; set; } = new RandomSampler();
         public TpeSampler Tpe { get; set; } = new TpeSampler();
         public CmaEsSampler CmaEs { get; set; } = new CmaEsSampler();
@@ -62,7 +63,9 @@ namespace Tunny.Core.Settings
                 case SamplerType.AUTO:
                     optunaSampler = Auto.ToPython(optunahub);
                     break;
-
+                case SamplerType.MOEAD:
+                    optunaSampler = MOEAD.ToPython(optuna, optunahub);
+                    break;
                 default:
                     throw new ArgumentException("Invalid sampler type.");
             }

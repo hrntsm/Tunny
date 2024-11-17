@@ -37,6 +37,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
         private QmcSettingsPage _qmcPage;
         private BruteForceSettingsPage _bruteForcePage;
         private AutoSettingsPage _autoPage;
+        private MOEADSettingsPage _moeadPage;
 
         public OptimizePage()
         {
@@ -73,6 +74,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             _qmcPage = QmcSettingsPage.FromSettings(_settings);
             _bruteForcePage = BruteForceSettingsPage.FromSettings(_settings);
             _autoPage = AutoSettingsPage.FromSettings(_settings);
+            _moeadPage = MOEADSettingsPage.FromSettings(_settings);
         }
 
         private void InitializeChart()
@@ -128,6 +130,10 @@ namespace Tunny.WPF.Views.Pages.Optimize
                     param = _autoPage;
                     OptimizeSettingsPage.Content = _autoPage;
                     break;
+                case SamplerType.MOEAD:
+                    param = _moeadPage;
+                    OptimizeSettingsPage.Content = _moeadPage;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);
             }
@@ -137,7 +143,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             OptimizeTrialNumberParam2Label.Visibility = param.Param2Visibility;
             OptimizeTrialNumberParam2TextBox.Visibility = param.Param2Visibility;
 
-            if (samplerType == SamplerType.NSGAII || samplerType == SamplerType.NSGAIII)
+            if (samplerType == SamplerType.NSGAII || samplerType == SamplerType.NSGAIII || samplerType == SamplerType.MOEAD)
             {
                 int total = _settings.Optimize.NumberOfTrials;
                 int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize;
@@ -231,17 +237,19 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 Random = _randomPage.ToSettings(),
                 QMC = _qmcPage.ToSettings(),
                 BruteForce = _bruteForcePage.ToSettings(),
-                Auto = _autoPage.ToSettings()
+                Auto = _autoPage.ToSettings(),
+                MOEAD = _moeadPage.ToSettings()
             };
 
             int param1 = int.Parse(OptimizeTrialNumberParam1TextBox.Text, CultureInfo.InvariantCulture);
             int param2 = int.Parse(OptimizeTrialNumberParam2TextBox.Text, CultureInfo.InvariantCulture);
             SamplerType type = _settings.Optimize.SamplerType;
-            int numOfTrials = type == SamplerType.NSGAII || type == SamplerType.NSGAIII
+            int numOfTrials = type == SamplerType.NSGAII || type == SamplerType.NSGAIII || type == SamplerType.MOEAD
                 ? param1 * param2
                 : param1;
             sampler.NsgaII.PopulationSize = param2;
             sampler.NsgaIII.PopulationSize = param2;
+            sampler.MOEAD.PopulationSize = param2;
 
             var settings = new Core.Settings.Optimize
             {
