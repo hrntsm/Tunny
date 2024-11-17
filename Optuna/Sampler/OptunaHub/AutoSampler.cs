@@ -5,7 +5,7 @@ namespace Optuna.Sampler.OptunaHub
     /// </summary>
     public class AutoSampler : SamplerBase
     {
-        private const string Package = "auto_sampler";
+        private const string Package = "samplers/auto_sampler";
 
         public dynamic ToPython(dynamic optunahub)
         {

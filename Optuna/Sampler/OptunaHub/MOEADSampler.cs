@@ -18,7 +18,7 @@ namespace Optuna.Sampler.OptunaHub
         {
             if (NumNeighbors <= 0)
             {
-                NumNeighbors = PopulationSize / 10;
+                NumNeighbors = PopulationSize / 5;
             }
             dynamic module = optunahub.load_module(package: Package);
             return module.MOEADSampler(
