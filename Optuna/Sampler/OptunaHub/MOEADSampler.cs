@@ -1,11 +1,9 @@
-using System;
-
 namespace Optuna.Sampler.OptunaHub
 {
     /// <summary>
     /// https://hub.optuna.org/samplers/moead/
     /// </summary>
-    public class MOEADSampler : SamplerBase
+    public class MOEADSampler : GASamplerBase
     {
         private const string Package = "samplers/moead";
         public double? MutationProb { get; set; }
@@ -14,7 +12,7 @@ namespace Optuna.Sampler.OptunaHub
         public double CrossoverProb { get; set; } = 0.9;
         public double SwappingProb { get; set; } = 0.5;
         public ScalarAggregationType ScalarAggregation { get; set; } = ScalarAggregationType.tchebycheff;
-        public int NumNeighbors { get; set; } = 5;
+        public int NumNeighbors { get; set; } = -1;
 
         public dynamic ToPython(dynamic optuna, dynamic optunahub)
         {
@@ -33,29 +31,6 @@ namespace Optuna.Sampler.OptunaHub
                 scalar_aggregation_func: ScalarAggregation.ToString(),
                 n_neighbors: NumNeighbors
             );
-        }
-
-        protected static dynamic SetCrossover(dynamic optuna, string crossover)
-        {
-            switch (crossover)
-            {
-                case "Uniform":
-                    return optuna.samplers.nsgaii.UniformCrossover();
-                case "BLXAlpha":
-                    return optuna.samplers.nsgaii.BLXAlphaCrossover();
-                case "SPX":
-                    return optuna.samplers.nsgaii.SPXCrossover();
-                case "SBX":
-                    return optuna.samplers.nsgaii.SBXCrossover();
-                case "VSBX":
-                    return optuna.samplers.nsgaii.VSBXCrossover();
-                case "UNDX":
-                    return optuna.samplers.nsgaii.UNDXCrossover();
-                case "":
-                    return null;
-                default:
-                    throw new ArgumentException("Unexpected crossover setting");
-            }
         }
     }
 
