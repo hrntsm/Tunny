@@ -21,11 +21,18 @@ namespace Optuna.Pruner
 
         public dynamic ToPython(dynamic optuna)
         {
-            return optuna.pruners.SuccessiveHalvingPruner(
-                min_resource: MinResource,
-                reduction_factor: ReductionFactor,
-                min_early_stopping_rate: MinEarlyStoppingRate,
-                bootstrap_count: BootstrapCount);
+            bool parseResult = int.TryParse(MinResource, out int intMinResource);
+            return parseResult && intMinResource > 0
+                ? optuna.pruners.SuccessiveHalvingPruner(
+                    min_resource: intMinResource,
+                    reduction_factor: ReductionFactor,
+                    min_early_stopping_rate: MinEarlyStoppingRate,
+                    bootstrap_count: BootstrapCount)
+                : optuna.pruners.SuccessiveHalvingPruner(
+                    min_resource: "auto",
+                    reduction_factor: ReductionFactor,
+                    min_early_stopping_rate: MinEarlyStoppingRate,
+                    bootstrap_count: BootstrapCount);
         }
     }
 }
