@@ -359,7 +359,8 @@ namespace Tunny.Solver
                     result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
                 }
 
-                if (!(bool)optInfo.Study._is_multi_objective() && (bool)trial.should_prune())
+                bool shouldPrune = CheckShouldPrune(trial);
+                if (Objective.Length == 1 && shouldPrune)
                 {
                     optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
                     TLog.Warning($"Trial {trialNum} pruned.");
@@ -386,6 +387,23 @@ namespace Tunny.Solver
             }
 
             return result;
+        }
+
+        //TODO: Fix Do not use try-catch block
+        private static bool CheckShouldPrune(dynamic trial)
+        {
+            bool shouldPrune;
+            try
+            {
+                shouldPrune = trial.should_prune();
+            }
+            catch (Exception)
+            {
+                PyObject pyShouldPrune = trial.should_prune().item();
+                shouldPrune = pyShouldPrune.As<bool>();
+            }
+
+            return shouldPrune;
         }
 
         private static bool IsSampleDuplicate(dynamic trial, out TrialGrasshopperItems result)
