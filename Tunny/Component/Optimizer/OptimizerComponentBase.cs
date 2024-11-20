@@ -90,6 +90,7 @@ namespace Tunny.Component.Optimizer
         {
             TLog.MethodStart();
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
+            TLog.Debug("Requesting Grasshopper to process the solution.");
             if (progressState.IsReportOnly)
             {
                 ExpireSolution(true);
@@ -99,6 +100,7 @@ namespace Tunny.Component.Optimizer
                 GhInOut.NewSolution(progressState.Parameter);
             }
             GrasshopperStatus = GrasshopperStates.RequestProcessed;
+            TLog.Debug("Grasshopper has processed the solution.");
         }
 
         public override void CreateAttributes()

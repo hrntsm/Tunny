@@ -93,9 +93,9 @@ namespace Tunny.Process
 
         private static Objective SetObjectives()
         {
-            Input.Objective objectives = Component.GhInOut.Objectives;
-            IEnumerable<ObjectiveSettingItem> aa = s_optimizeViewModel.ObjectiveSettingItems;
-            objectives.SetDirections(aa);
+            Objective objectives = Component.GhInOut.Objectives;
+            IEnumerable<ObjectiveSettingItem> settingItems = s_optimizeViewModel.ObjectiveSettingItems;
+            objectives.SetDirections(settingItems);
             return objectives;
         }
 
