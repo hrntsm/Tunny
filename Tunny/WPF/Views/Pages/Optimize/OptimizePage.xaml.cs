@@ -54,7 +54,6 @@ namespace Tunny.WPF.Views.Pages.Optimize
         {
             OptimizeTimeoutTextBox.Text = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
 
-            OptimizeStudyNameTextBox.Text = _settings.Optimize.StudyName;
             OptimizeInMemoryCheckBox.IsChecked = _settings.Storage.Type == StorageType.InMemory;
             OptimizeContinueCheckBox.IsChecked = _settings.Optimize.ContinueStudy;
             OptimizeCopyCheckBox.IsChecked = _settings.Optimize.CopyStudy;

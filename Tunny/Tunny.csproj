@@ -32,9 +32,6 @@
     <None Remove="WPF\Assets\DesignExplorer.png" />
     <None Remove="WPF\Assets\html\loading.html" />
     <None Remove="WPF\Assets\html\visualize_top.html" />
-    <None Remove="WPF\Assets\Icon\ContentSave.png" />
-    <None Remove="WPF\Assets\Icon\FolderOpenOutline.png" />
-    <None Remove="WPF\Assets\Icon\HelpBox.png" />
     <None Remove="WPF\Assets\Optuna.png" />
     <None Remove="WPF\Assets\Tunny.png" />
   </ItemGroup>
@@ -139,10 +136,7 @@
   <ItemGroup>
     <EmbeddedResource Include="WPF\Assets\html\loading.html" />
     <EmbeddedResource Include="WPF\Assets\html\visualize_top.html" />
-    <Resource Include="WPF\Assets\Icon\ContentSave.png" />
     <Resource Include="WPF\Assets\Icon\DesignExplorer.png" />
-    <Resource Include="WPF\Assets\Icon\FolderOpenOutline.png" />
-    <Resource Include="WPF\Assets\Icon\HelpBox.png" />
     <Resource Include="WPF\Assets\Icon\Optuna.png" />
     <Resource Include="WPF\Assets\Icon\Tunny.png">
       <PackagePath>\</PackagePath>
