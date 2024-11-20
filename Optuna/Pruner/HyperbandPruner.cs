@@ -21,11 +21,18 @@ namespace Optuna.Pruner
 
         public dynamic ToPython(dynamic optuna)
         {
-            return optuna.pruners.HyperbandPruner(
-                min_resource: MinResource,
-                max_resource: MaxResource,
-                reduction_factor: ReductionFactor,
-                bootstrap_count: BootstrapCount);
+            bool parseResult = int.TryParse(MaxResource, out int intMaxResource);
+            return parseResult && intMaxResource > MinResource
+                ? optuna.pruners.HyperbandPruner(
+                    min_resource: MinResource,
+                    max_resource: intMaxResource,
+                    reduction_factor: ReductionFactor,
+                    bootstrap_count: BootstrapCount)
+                : optuna.pruners.HyperbandPruner(
+                    min_resource: MinResource,
+                    max_resource: "auto",
+                    reduction_factor: ReductionFactor,
+                    bootstrap_count: BootstrapCount);
         }
     }
 }
