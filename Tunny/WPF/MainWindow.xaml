@@ -39,15 +39,15 @@
             <Ribbon.QuickAccessToolBar>
                 <RibbonQuickAccessToolBar>
                     <RibbonButton
-                        Command="{Binding QuickAccessFileOpenCommand}"
+                        Command="{Binding QuickAccessNewStorageFileCommand}"
                         SmallImageSource="{StaticResource NewIcon}"
                         ToolTip="Create New Result File" />
                     <RibbonButton
-                        Command="{Binding QuickAccessFileOpenCommand}"
+                        Command="{Binding QuickAccessStorageFileOpenCommand}"
                         SmallImageSource="{StaticResource OpenFolderOutline}"
                         ToolTip="Open Optimization Result File" />
                     <RibbonButton
-                        Command="{Binding QuickAccessFileSaveCommand}"
+                        Command="{Binding QuickAccessSettingsSaveCommand}"
                         SmallImageSource="{StaticResource ContentSave}"
                         ToolTip="Save Settings" />
                 </RibbonQuickAccessToolBar>
