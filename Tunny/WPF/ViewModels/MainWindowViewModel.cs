@@ -193,40 +193,75 @@ namespace Tunny.WPF.ViewModels
             MainWindowFrame = _helpPage;
         }
 
-        private DelegateCommand _quickAccessFileSaveCommand;
-        public ICommand QuickAccessFileSaveCommand
+        private DelegateCommand _quickAccessSettingsSaveCommand;
+        public ICommand QuickAccessSettingsSaveCommand
         {
             get
             {
-                if (_quickAccessFileSaveCommand == null)
+                if (_quickAccessSettingsSaveCommand == null)
                 {
-                    _quickAccessFileSaveCommand = new DelegateCommand(QuickAccessFileSave);
+                    _quickAccessSettingsSaveCommand = new DelegateCommand(QuickAccessSettingsFileSave);
                 }
 
-                return _quickAccessFileSaveCommand;
+                return _quickAccessSettingsSaveCommand;
             }
         }
 
-        private void QuickAccessFileSave()
+        private void QuickAccessSettingsFileSave()
         {
             OptimizeProcess.Settings.Optimize = _optimizePage.GetCurrentSettings();
             OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
+        private DelegateCommand _quickAccessNewStorageFileCommand;
+        public ICommand QuickAccessNewStorageFileCommand
+        {
+            get
+            {
+                if (_quickAccessNewStorageFileCommand == null)
+                {
+                    _quickAccessNewStorageFileCommand = new DelegateCommand(QuickAccessNewStorageFile);
+                }
+
+                return _quickAccessNewStorageFileCommand;
+            }
+        }
+        private void QuickAccessNewStorageFile()
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = "fish.log",
+                DefaultExt = "log",
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite|All Files (*.*)|*.*",
+                Title = @"Set Tunny Result File Path",
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                OptimizeProcess.Settings.Storage.Path = dialog.FileName;
+                if (File.Exists(dialog.FileName) == false)
+                {
+                    OptimizeProcess.Settings.Storage.CreateNewOptunaStorage(true);
+                }
+                UpdateTitle();
+            }
+        }
+
         private DelegateCommand _quickAccessFileOpenCommand;
-        public ICommand QuickAccessFileOpenCommand
+        public ICommand QuickAccessStorageFileOpenCommand
         {
             get
             {
                 if (_quickAccessFileOpenCommand == null)
                 {
-                    _quickAccessFileOpenCommand = new DelegateCommand(QuickAccessFileOpen);
+                    _quickAccessFileOpenCommand = new DelegateCommand(QuickAccessStorageFileOpen);
                 }
 
                 return _quickAccessFileOpenCommand;
             }
         }
-        private void QuickAccessFileOpen()
+        private void QuickAccessStorageFileOpen()
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
