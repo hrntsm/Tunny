@@ -329,7 +329,8 @@
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.TunnyAbout}"
                         Label="About"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource InformationOutline}"
+                        SmallImageSource="{StaticResource InformationOutline}" />
                 </RibbonGroup>
                 <RibbonGroup Header="Help Pages">
                     <RibbonButton
@@ -358,12 +359,14 @@
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.PythonPackagesLicense}"
                         Label="Python Packages"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource Snake}"
+                        SmallImageSource="{StaticResource Snake}" />
                     <RibbonButton
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.OtherLicense}"
                         Label="Others"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource LibraryShelves}"
+                        SmallImageSource="{StaticResource LibraryShelves}" />
                 </RibbonGroup>
 
             </RibbonTab>
