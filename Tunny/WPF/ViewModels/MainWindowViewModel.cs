@@ -193,17 +193,17 @@ namespace Tunny.WPF.ViewModels
             MainWindowFrame = _helpPage;
         }
 
-        private DelegateCommand _quickAccessFileSaveCommand;
-        public ICommand QuickAccessFileSaveCommand
+        private DelegateCommand _quickAccessSettingsSaveCommand;
+        public ICommand QuickAccessSettingsSaveCommand
         {
             get
             {
-                if (_quickAccessFileSaveCommand == null)
+                if (_quickAccessSettingsSaveCommand == null)
                 {
-                    _quickAccessFileSaveCommand = new DelegateCommand(QuickAccessSettingsFileSave);
+                    _quickAccessSettingsSaveCommand = new DelegateCommand(QuickAccessSettingsFileSave);
                 }
 
-                return _quickAccessFileSaveCommand;
+                return _quickAccessSettingsSaveCommand;
             }
         }
 
@@ -240,6 +240,10 @@ namespace Tunny.WPF.ViewModels
             if (result == true)
             {
                 OptimizeProcess.Settings.Storage.Path = dialog.FileName;
+                if (File.Exists(dialog.FileName) == false)
+                {
+                    OptimizeProcess.Settings.Storage.CreateNewOptunaStorage(true);
+                }
                 UpdateTitle();
             }
         }
