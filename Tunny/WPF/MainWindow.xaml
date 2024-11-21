@@ -177,68 +177,69 @@
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.ParetoFront}"
                         Label="Pareto Front"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource ChartPpf}"
+                        SmallImageSource="{StaticResource ChartPpf}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.OptimizationHistory}"
                         Label="History"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource History}"
+                        SmallImageSource="{StaticResource History}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.Slice}"
                         Label="Slice"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource Knife}"
+                        SmallImageSource="{StaticResource Knife}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.Contour}"
                         Label="Contour"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource LandslideOutline}"
+                        SmallImageSource="{StaticResource LandslideOutline}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.ParamImportances}"
                         Label="Param Importance"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource OrderBoolDescending}"
+                        SmallImageSource="{StaticResource OrderBoolDescending}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.ParallelCoordinate}"
                         Label="Parallel Coordinate"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TuneVertical}"
+                        SmallImageSource="{StaticResource TuneVertical}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.Hypervolume}"
                         Label="Hyper volume"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource PackageVariantClosed}"
+                        SmallImageSource="{StaticResource PackageVariantClosed}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.EDF}"
                         Label="EDF"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource ChartLineVariant}"
+                        SmallImageSource="{StaticResource ChartLineVariant}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.Rank}"
                         Label="Rank"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource Podium}"
+                        SmallImageSource="{StaticResource Podium}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.Timeline}"
                         Label="Timeline"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TimerPlayOutline}"
+                        SmallImageSource="{StaticResource TimerPlayOutline}" />
                     <RibbonButton
                         Command="{Binding SelectVisualizeTypeCommand}"
                         CommandParameter="{x:Static common:VisualizeType.TerminatorImprovement}"
                         IsEnabled="False"
                         Label="Terminator Improvement"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource SortClockDescendingOutline}"
+                        SmallImageSource="{StaticResource SortClockDescendingOutline}" />
                 </RibbonGroup>
                 <RibbonGroup Header="Optuna Hub">
                     <RibbonButton
