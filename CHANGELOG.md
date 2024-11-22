@@ -14,8 +14,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - The drawing to viewport stops, allowing faster optimization to be performed.
 - Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
 - Optuna pruner support.
-- Variables can now be set to log scale from the UI.
 - NEW UI
+- Variables can now be set to log scale from the UI.
+- Checkbox which minimize Rhino Window when start optimization
 - Support some optunahub sampler.
   - Auto sampler, MOEA/D sampler, MO-CMA-ES sampler,
 
