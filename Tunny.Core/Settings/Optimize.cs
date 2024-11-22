@@ -17,6 +17,7 @@ namespace Tunny.Core.Settings
         public bool ShowRealtimeResult { get; set; }
         public bool IgnoreDuplicateSampling { get; set; }
         public bool DisableViewportDrawing { get; set; }
+        public bool MinimizeRhinoWindow { get; set; }
 
         public void ComputeAutoValue()
         {
