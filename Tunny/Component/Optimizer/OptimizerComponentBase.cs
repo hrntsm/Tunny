@@ -25,7 +25,17 @@ namespace Tunny.Component.Optimizer
     public class OptimizeComponentBase : GH_Component
     {
         internal GrasshopperInOut GhInOut;
-        internal GrasshopperStates GrasshopperStatus;
+        public event EventHandler<GrasshopperStates> GrasshopperStatusChanged;
+        private GrasshopperStates _grasshopperStates;
+        internal GrasshopperStates GrasshopperStatus
+        {
+            get => _grasshopperStates;
+            set
+            {
+                _grasshopperStates = value;
+                GrasshopperStatusChanged?.Invoke(this, value);
+            }
+        }
         internal Fish[] Fishes;
         internal string Info { get; private set; } = "No optimization has been performed yet.";
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 using GalapagosComponents;
 
@@ -369,12 +370,30 @@ namespace Tunny.Util
             return (unnormalized - genePool.Minimum) / (genePool.Maximum - genePool.Minimum);
         }
 
-        private void Recalculate()
+        private async Task RecalculateAsync()
         {
             TLog.MethodStart();
             while (_document.SolutionState != GH_ProcessStep.PreProcess || _document.SolutionDepth != 0) { }
             _document.NewSolution(false);
-            while (_document.SolutionState != GH_ProcessStep.PostProcess || _document.SolutionDepth != 0) { }
+            await WaitForSolutionEnd();
+        }
+
+        private async Task WaitForSolutionEnd()
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            void Handler(object sender, EventArgs e)
+            {
+                tcs.TrySetResult(true);
+            }
+            _document.SolutionEnd += Handler;
+            try
+            {
+                await tcs.Task;
+            }
+            finally
+            {
+                _document.SolutionEnd -= Handler;
+            }
         }
 
         public void NewSolution(IList<Parameter> parameters)
@@ -386,7 +405,7 @@ namespace Tunny.Util
             SetCategoryValues(categoryParameters);
             ExpireInput(_component.Params.Input[1]); // objectives
             ExpireInput(_component.Params.Input[3]); // artifacts
-            Recalculate();
+            RecalculateAsync();
             SetObjectives();
             SetAttributes();
             SetArtifacts();

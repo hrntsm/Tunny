@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Tunny.Component.Optimizer;
@@ -43,10 +44,25 @@ namespace Tunny.Process
 
             if (Component != null)
             {
-                Component.GrasshopperStatus = GrasshopperStates.RequestSent;
-                await ReportAsync(progressState);
-                while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
-                { /* just wait until the cows come home */ }
+                var tcs = new TaskCompletionSource<bool>();
+                void EventHandler(object sender, GrasshopperStates status)
+                {
+                    if (status == GrasshopperStates.RequestProcessed)
+                    {
+                        tcs.SetResult(true);
+                    }
+                }
+                Component.GrasshopperStatusChanged += EventHandler;
+                try
+                {
+                    Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+                    await ReportAsync(progressState);
+                    await tcs.Task;
+                }
+                finally
+                {
+                    Component.GrasshopperStatusChanged -= EventHandler;
+                }
             }
         }
 
