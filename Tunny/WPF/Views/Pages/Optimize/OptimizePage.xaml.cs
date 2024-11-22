@@ -213,10 +213,13 @@ namespace Tunny.WPF.Views.Pages.Optimize
             OptimizeStopButton.IsEnabled = false;
             ghCanvas?.EnableUI();
             parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}#";
+            RhinoView.EnableDrawing = true;
 
             if (_settings.Optimize.MinimizeRhinoWindow)
             {
                 RhinoWindowHandle(9);
+                parentWindow.Topmost = true;
+                parentWindow.Topmost = false;
             }
         }
 
