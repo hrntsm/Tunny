@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -60,6 +61,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
             OptimizeIgnoreDuplicateSamplingCheckBox.IsChecked = _settings.Optimize.IgnoreDuplicateSampling;
             OptimizeDisableViewportUpdateCheckBox.IsChecked = _settings.Optimize.DisableViewportDrawing;
+            OptimizeMinimizeRhinoWindowCheckBox.IsChecked = _settings.Optimize.MinimizeRhinoWindow;
         }
 
         private void InitializeSamplerPage()
@@ -162,6 +164,9 @@ namespace Tunny.WPF.Views.Pages.Optimize
             }
         }
 
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         private async void RunOptimizeButton_Click(object sender, RoutedEventArgs e)
         {
             TLog.MethodStart();
@@ -172,10 +177,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
             _settings.Optimize = GetCurrentSettings(true);
 
-            var parentWindow = Window.GetWindow(this) as MainWindow;
-            GH_DocumentEditor ghCanvas = parentWindow.DocumentEditor;
-            ghCanvas?.DisableUI();
-            RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
+            SetupWindow(out MainWindow parentWindow, out GH_DocumentEditor ghCanvas);
 
             _progressBar = parentWindow.StatusBarProgressBar;
             _progressBar.Value = 0;
@@ -188,11 +190,40 @@ namespace Tunny.WPF.Views.Pages.Optimize
             }
             finally
             {
-                OptimizeRunButton.IsEnabled = true;
-                OptimizeStopButton.IsEnabled = false;
-                ghCanvas?.EnableUI();
-                parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}#";
+                FinalizeWindow(parentWindow, ghCanvas);
             }
+        }
+
+        private void SetupWindow(out MainWindow parentWindow, out GH_DocumentEditor ghCanvas)
+        {
+            parentWindow = Window.GetWindow(this) as MainWindow;
+            ghCanvas = parentWindow.DocumentEditor;
+            ghCanvas?.DisableUI();
+            RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
+
+            if (_settings.Optimize.MinimizeRhinoWindow)
+            {
+                RhinoWindowHandle(6);
+            }
+        }
+
+        private void FinalizeWindow(MainWindow parentWindow, GH_DocumentEditor ghCanvas)
+        {
+            OptimizeRunButton.IsEnabled = true;
+            OptimizeStopButton.IsEnabled = false;
+            ghCanvas?.EnableUI();
+            parentWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}#";
+
+            if (_settings.Optimize.MinimizeRhinoWindow)
+            {
+                RhinoWindowHandle(9);
+            }
+        }
+
+        private static void RhinoWindowHandle(int status)
+        {
+            IntPtr rhinoWindow = Rhino.RhinoApp.MainWindowHandle();
+            ShowWindow(rhinoWindow, status);
         }
 
         private void InitializeOptimizeProcess(MainWindow parentWindow, TSettings settings)
@@ -269,7 +300,8 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 GcAfterTrial = GcAfterTrial.HasGeometry,
                 ShowRealtimeResult = false,
                 IgnoreDuplicateSampling = OptimizeIgnoreDuplicateSamplingCheckBox.IsChecked == true,
-                DisableViewportDrawing = OptimizeDisableViewportUpdateCheckBox.IsChecked == true
+                DisableViewportDrawing = OptimizeDisableViewportUpdateCheckBox.IsChecked == true,
+                MinimizeRhinoWindow = OptimizeMinimizeRhinoWindowCheckBox.IsChecked == true
             };
 
             if (computeAutoValue)
