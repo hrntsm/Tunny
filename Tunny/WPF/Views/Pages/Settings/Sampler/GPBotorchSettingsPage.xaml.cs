@@ -5,6 +5,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -45,6 +46,20 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                 ? "AUTO"
                 : gpBoTorch.NStartupTrials.ToString(CultureInfo.InvariantCulture);
             return page;
+        }
+
+        private void GpBoTorchSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void GpStartupTrialsTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
         }
     }
 }

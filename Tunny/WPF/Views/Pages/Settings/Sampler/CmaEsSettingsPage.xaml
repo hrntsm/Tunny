@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="EvolutionStrategy (CMA-ES) Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,6 +40,7 @@
                 x:Name="CmaEsSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="CmaEsSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -53,6 +54,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="CmaEsSigma0TextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <CheckBox
@@ -107,6 +109,7 @@
                 Grid.Row="5"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="CmaEsPopulationSizeTextBox_LostFocus"
                 Text="1"
                 TextAlignment="Right" />
             <Label
@@ -120,6 +123,7 @@
                 Grid.Row="6"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="CmaEsIncreasingPopulationSizeTextBox_LostFocus"
                 Text="2"
                 TextAlignment="Right" />
             <CheckBox

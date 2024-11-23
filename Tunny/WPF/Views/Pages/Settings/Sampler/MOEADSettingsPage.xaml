@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="EvolutionAlgorithm (MOEA/D) Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,6 +40,7 @@
                 x:Name="MoeadSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoeadSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -53,6 +54,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoeadMutationProbabilityTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -66,6 +68,7 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoeadCrossoverProbabilityTextBox_LostFocus"
                 Text="0.90"
                 TextAlignment="Right" />
             <Label
@@ -79,6 +82,7 @@
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoeadSwappingProbabilityTextBox_LostFocus"
                 Text="0.50"
                 TextAlignment="Right" />
             <Label
@@ -103,6 +107,7 @@
                 Grid.Row="5"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoeadNeighborsTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -39,6 +40,13 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                 ? "AUTO"
                 : random.Seed.Value.ToString(CultureInfo.InvariantCulture);
             return page;
+        }
+
+        private void RandomSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
         }
     }
 }

@@ -24,12 +24,7 @@ namespace Tunny.Core.Input
                 return true;
             }
 
-            if (input.Equals("auto", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
+            return input.Equals("auto", StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool IsAutoOrInt(string input)
@@ -46,5 +41,49 @@ namespace Tunny.Core.Input
 
             return int.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
         }
+
+        public static bool IsPositiveDouble(string input, bool includeZero)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
+
+            bool isdouble = double.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out double result);
+            return isdouble &&
+                (includeZero ? result >= 0 : result > 0);
+        }
+
+        public static bool IsAutoOrPositiveDouble(string input, bool includeZero)
+        {
+            if (IsPositiveDouble(input, includeZero))
+            {
+                return true;
+            }
+
+            return input.Equals("auto", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool Is0to1(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
+
+            bool isdouble = double.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out double result);
+            return isdouble && result > 0 && result <= 1;
+        }
+
+        public static bool IsAutoOr0to1(string input)
+        {
+            if (Is0to1(input))
+            {
+                return true;
+            }
+
+            return input.Equals("auto", StringComparison.OrdinalIgnoreCase);
+        }
+
     }
 }

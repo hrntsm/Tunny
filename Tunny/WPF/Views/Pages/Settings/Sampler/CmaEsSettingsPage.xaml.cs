@@ -5,6 +5,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -74,6 +75,34 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.CmaEsConsiderPrundeTrialsCheckBox.IsChecked = cmaEs.ConsiderPrunedTrials;
             page.CmaEsLrAdaptCheckBox.IsChecked = cmaEs.LrAdapt;
             return page;
+        }
+
+        private void CmaEsSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void CmaEsSigma0TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrPositiveDouble(value, false) ? value : "AUTO";
+        }
+
+        private void CmaEsPopulationSizeTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsPositiveInt(value, false) ? value : "1";
+        }
+
+        private void CmaEsIncreasingPopulationSizeTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsPositiveInt(value, false) ? value : "2";
         }
     }
 }

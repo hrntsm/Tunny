@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="Quasi-MonteCarlo Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,6 +40,7 @@
                 x:Name="QmcSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="QmcSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
