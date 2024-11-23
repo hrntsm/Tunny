@@ -8,7 +8,7 @@
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels"
     Title="{Binding WindowTitle}"
     Width="1200"
-    Height="850"
+    Height="900"
     Background="#F0F4F8"
     Icon="Assets/Icon/Tunny.png"
     ResizeMode="CanMinimize"

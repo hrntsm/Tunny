@@ -48,10 +48,34 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         private string _trialNumberParam1Label;
         public string TrialNumberParam1Label { get => _trialNumberParam1Label; set => SetProperty(ref _trialNumberParam1Label, value); }
+        private string _trialNumberParam1;
+        public string TrialNumberParam1 { get => _trialNumberParam1; set => SetProperty(ref _trialNumberParam1, value); }
         private Visibility _trialNumberParam2Visibility;
         public Visibility TrialNumberParam2Visibility { get => _trialNumberParam2Visibility; set => SetProperty(ref _trialNumberParam2Visibility, value); }
         private string _trialNumberParam2Label;
         public string TrialNumberParam2Label { get => _trialNumberParam2Label; set => SetProperty(ref _trialNumberParam2Label, value); }
+        private string _trialNumberParam2;
+        public string TrialNumberParam2 { get => _trialNumberParam2; set => SetProperty(ref _trialNumberParam2, value); }
+        private string _timeout;
+        public string Timeout { get => _timeout; set => SetProperty(ref _timeout, value); }
+        private string _studyName;
+        public string StudyName { get => _studyName; set => SetProperty(ref _studyName, value); }
+        private bool? _isInMemory;
+        public bool? IsInMemory { get => _isInMemory; set => SetProperty(ref _isInMemory, value); }
+        private bool? _isContinue;
+        public bool? IsContinue { get => _isContinue; set => SetProperty(ref _isContinue, value); }
+        private bool? _isCopy;
+        public bool? IsCopy { get => _isCopy; set => SetProperty(ref _isCopy, value); }
+        private bool? _enableIgnoreDuplicateSampling;
+        public bool? EnableIgnoreDuplicateSampling { get => _enableIgnoreDuplicateSampling; set => SetProperty(ref _enableIgnoreDuplicateSampling, value); }
+        private bool? _disableViewportUpdate;
+        public bool? DisableViewportUpdate { get => _disableViewportUpdate; set => SetProperty(ref _disableViewportUpdate, value); }
+        private bool? _minimizeRhinoWindow;
+        public bool? MinimizeRhinoWindow { get => _minimizeRhinoWindow; set => SetProperty(ref _minimizeRhinoWindow, value); }
+        private bool _enableRunOptimizeButton;
+        public bool EnableRunOptimizeButton { get => _enableRunOptimizeButton; set => SetProperty(ref _enableRunOptimizeButton, value); }
+        private bool _enableStopOptimizeButton;
+        public bool EnableStopOptimizeButton { get => _enableStopOptimizeButton; set => SetProperty(ref _enableStopOptimizeButton, value); }
         private string _samplerTypeLabel;
         public string SamplerTypeLabel { get => _samplerTypeLabel; set => SetProperty(ref _samplerTypeLabel, value); }
         private Page _optimizeSettingsPage;
@@ -181,8 +205,10 @@ namespace Tunny.WPF.ViewModels.Optimize
             if (samplerType == SamplerType.NSGAII || samplerType == SamplerType.NSGAIII || samplerType == SamplerType.MOEAD)
             {
                 int total = _settings.Optimize.NumberOfTrials;
-                int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize;
-                int numGeneration = total / _settings.Optimize.Sampler.NsgaII.PopulationSize;
+                int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize > 0
+                    ? _settings.Optimize.Sampler.NsgaII.PopulationSize
+                    : 1;
+                int numGeneration = total / populationSize;
                 TrialNumberParam1 = numGeneration.ToString(CultureInfo.InvariantCulture);
                 TrialNumberParam2 = populationSize.ToString(CultureInfo.InvariantCulture);
             }
@@ -221,30 +247,6 @@ namespace Tunny.WPF.ViewModels.Optimize
             }
         }
 
-        private string _trialNumberParam1;
-        public string TrialNumberParam1 { get => _trialNumberParam1; set => SetProperty(ref _trialNumberParam1, value); }
-        private string _trialNumberParam2;
-        public string TrialNumberParam2 { get => _trialNumberParam2; set => SetProperty(ref _trialNumberParam2, value); }
-        private string _timeout;
-        public string Timeout { get => _timeout; set => SetProperty(ref _timeout, value); }
-        private string _studyName;
-        public string StudyName { get => _studyName; set => SetProperty(ref _studyName, value); }
-        private bool? _isInMemory;
-        public bool? IsInMemory { get => _isInMemory; set => SetProperty(ref _isInMemory, value); }
-        private bool? _isContinue;
-        public bool? IsContinue { get => _isContinue; set => SetProperty(ref _isContinue, value); }
-        private bool? _isCopy;
-        public bool? IsCopy { get => _isCopy; set => SetProperty(ref _isCopy, value); }
-        private bool? _enableIgnoreDuplicateSampling;
-        public bool? EnableIgnoreDuplicateSampling { get => _enableIgnoreDuplicateSampling; set => SetProperty(ref _enableIgnoreDuplicateSampling, value); }
-        private bool? _disableViewportUpdate;
-        public bool? DisableViewportUpdate { get => _disableViewportUpdate; set => SetProperty(ref _disableViewportUpdate, value); }
-        private bool? _minimizeRhinoWindow;
-        public bool? MinimizeRhinoWindow { get => _minimizeRhinoWindow; set => SetProperty(ref _minimizeRhinoWindow, value); }
-        private bool _enableRunOptimizeButton;
-        public bool EnableRunOptimizeButton { get => _enableRunOptimizeButton; set => SetProperty(ref _enableRunOptimizeButton, value); }
-        private bool _enableStopOptimizeButton;
-        public bool EnableStopOptimizeButton { get => _enableStopOptimizeButton; set => SetProperty(ref _enableStopOptimizeButton, value); }
         private DelegateCommand _runOptimize;
         public ICommand RunOptimize
         {
@@ -254,7 +256,6 @@ namespace Tunny.WPF.ViewModels.Optimize
                 {
                     _runOptimize = new DelegateCommand(PerformRunOptimize);
                 }
-
                 return _runOptimize;
             }
         }
@@ -383,7 +384,7 @@ namespace Tunny.WPF.ViewModels.Optimize
             };
 
             int param1 = int.Parse(TrialNumberParam1, CultureInfo.InvariantCulture);
-            bool result = int.TryParse(TrialNumberParam2, out int param2);
+            bool result = int.TryParse(TrialNumberParam2, NumberStyles.Integer, CultureInfo.InvariantCulture, out int param2);
             if (!result)
             {
                 param2 = 0;

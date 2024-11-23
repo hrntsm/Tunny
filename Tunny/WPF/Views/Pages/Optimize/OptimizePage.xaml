@@ -60,6 +60,7 @@
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
+                    LostFocus="TrialParam1TextBox_LostFocus"
                     Text="{Binding TrialNumberParam1, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
                 <Label
@@ -73,6 +74,7 @@
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
+                    LostFocus="TrialParam2TextBox_LostFocus"
                     Text="{Binding TrialNumberParam2, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right"
                     Visibility="{Binding TrialNumberParam2Visibility}" />
@@ -87,6 +89,7 @@
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
+                    LostFocus="TimeoutTextBox_LostFocus"
                     Text="{Binding Timeout, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
             </Grid>

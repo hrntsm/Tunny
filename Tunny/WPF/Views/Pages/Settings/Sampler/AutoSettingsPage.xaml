@@ -40,6 +40,7 @@
                 x:Name="AutoSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="AutoSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
         </Grid>
