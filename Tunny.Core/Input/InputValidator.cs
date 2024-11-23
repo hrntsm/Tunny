@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 
 namespace Tunny.Core.Input
 {
@@ -85,5 +86,18 @@ namespace Tunny.Core.Input
             return input.Equals("auto", StringComparison.OrdinalIgnoreCase);
         }
 
+        public static bool IsCommaSeparatedNumbers(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
+            string[] numbers = input.Split(',');
+            if (numbers.Any(string.IsNullOrWhiteSpace))
+            {
+                return false;
+            }
+            return numbers.All(n => double.TryParse(n.Trim(), out _));
+        }
     }
 }
