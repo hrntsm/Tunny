@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+
+using Grasshopper.GUI;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
@@ -11,6 +12,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.PostProcess;
+using Tunny.WPF;
 using Tunny.WPF.Models;
 using Tunny.WPF.ViewModels.Optimize;
 
@@ -21,6 +23,9 @@ namespace Tunny.Process
         public static OptimizeComponentBase Component;
         public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
+        public static GH_DocumentEditor GH_DocumentEditor { get; internal set; }
+        public static MainWindow TunnyWindow { get; internal set; }
+
         private static IProgress<ProgressState> s_progress;
         private static OptimizeViewModel s_optimizeViewModel;
 

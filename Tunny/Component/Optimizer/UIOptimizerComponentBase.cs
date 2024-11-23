@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 using Grasshopper;
 using Grasshopper.GUI;
@@ -8,6 +7,7 @@ using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
 using Tunny.Core.Util;
+using Tunny.Process;
 using Tunny.UI;
 using Tunny.WPF;
 
@@ -35,10 +35,10 @@ namespace Tunny.Component.Optimizer
 
         private void ShowOptimizationWindow()
         {
-            GH_DocumentEditor owner = Instances.DocumentEditor;
-            TEnvVariables.GrasshopperWindowHandle = owner.Handle;
+            OptimizeProcess.GH_DocumentEditor = Instances.DocumentEditor;
+            TEnvVariables.GrasshopperWindowHandle = OptimizeProcess.GH_DocumentEditor.Handle;
 
-            MainWindow = new MainWindow(owner, this);
+            MainWindow = new MainWindow(this);
             MainWindow.Show();
         }
 

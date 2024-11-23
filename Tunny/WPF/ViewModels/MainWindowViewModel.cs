@@ -10,6 +10,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
+using Tunny.WPF.ViewModels.Optimize;
 using Tunny.WPF.ViewModels.Visualize;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Expert;
@@ -22,6 +23,7 @@ namespace Tunny.WPF.ViewModels
     public class MainWindowViewModel : BindableBase, IDisposable
     {
         private readonly OptimizePage _optimizePage;
+        private readonly OptimizeViewModel _optimizeViewModel;
         private readonly VisualizePage _visualizePage;
         private readonly HelpPage _helpPage;
         private readonly ExpertPage _expertPage;
@@ -42,8 +44,9 @@ namespace Tunny.WPF.ViewModels
             UpdateTitle();
 
             _optimizePage = new OptimizePage();
-            _optimizePage.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
             MainWindowFrame = _optimizePage;
+            _optimizeViewModel = (OptimizeViewModel)_optimizePage.DataContext;
+            _optimizeViewModel.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
 
             CheckPruner();
         }
@@ -168,7 +171,7 @@ namespace Tunny.WPF.ViewModels
                     samplerType = SamplerType.TPE;
                     break;
             }
-            _optimizePage.ChangeTargetSampler(samplerType);
+            _optimizeViewModel.ChangeTargetSampler(samplerType);
             OptimizeProcess.Settings.Optimize.SamplerType = samplerType;
             MainWindowFrame = _optimizePage;
         }
@@ -209,7 +212,7 @@ namespace Tunny.WPF.ViewModels
 
         private void QuickAccessSettingsFileSave()
         {
-            OptimizeProcess.Settings.Optimize = _optimizePage.GetCurrentSettings();
+            OptimizeProcess.Settings.Optimize = _optimizeViewModel.GetCurrentSettings();
             OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 

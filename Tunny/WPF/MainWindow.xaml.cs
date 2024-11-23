@@ -14,10 +14,10 @@ namespace Tunny.WPF
     {
         internal readonly GH_DocumentEditor DocumentEditor;
 
-        public MainWindow(GH_DocumentEditor documentEditor, OptimizeComponentBase component)
+        public MainWindow(OptimizeComponentBase component)
         {
             TLog.MethodStart();
-            DocumentEditor = documentEditor;
+            OptimizeProcess.TunnyWindow = this;
             component.GhInOutInstantiate();
             if (!component.GhInOut.IsLoadCorrectly)
             {
