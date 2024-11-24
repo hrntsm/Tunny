@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="AUTO Sampler Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,6 +40,7 @@
                 x:Name="AutoSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="AutoSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
         </Grid>

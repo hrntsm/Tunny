@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="BayesianOptimization (TPE) Settings">
 
         <Grid>
@@ -41,6 +41,7 @@
                 x:Name="TpeSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="TpeSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -54,6 +55,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="TpeStartupTrialsTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -67,6 +69,7 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="5,5,5,5"
+                LostFocus="TpeEICandidateTextBox_LostFocus"
                 Text="24"
                 TextAlignment="Right" />
             <Label
@@ -80,6 +83,7 @@
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="TpeGammaTextBox_LostFocus"
                 Text="25"
                 TextAlignment="Right" />
             <Label
@@ -93,6 +97,7 @@
                 Grid.Row="4"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="TpePriorWeightTextBox_LostFocus"
                 Text="1.0"
                 TextAlignment="Right" />
             <CheckBox

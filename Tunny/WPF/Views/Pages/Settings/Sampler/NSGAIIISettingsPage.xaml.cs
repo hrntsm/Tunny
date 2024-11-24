@@ -4,6 +4,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -53,6 +54,34 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.NsgaiiiCrossoverComboBox.SelectedIndex = string.IsNullOrEmpty(nsgaiii.Crossover)
                 ? 0 : (int)Enum.Parse(typeof(NsgaCrossoverType), nsgaiii.Crossover);
             return page;
+        }
+
+        private void NsgaiiiSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void NsgaiiiMutationProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOr0to1(value) ? value : "AUTO";
+        }
+
+        private void NsgaiiiCrossoverProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.Is0to1(value) ? value : "0.9";
+        }
+
+        private void NsgaiiiSwappingProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.Is0to1(value) ? value : "0.5";
         }
     }
 }

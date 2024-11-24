@@ -50,7 +50,9 @@
         <TextBox
             Grid.Row="4"
             Margin="5"
-            Text="{Binding ReferencePoint}" />
+            LostFocus="ReferencePointTextBox_LostFocus"
+            Text="{Binding ReferencePoint}"
+            TextAlignment="Right" />
 
     </Grid>
 </Page>

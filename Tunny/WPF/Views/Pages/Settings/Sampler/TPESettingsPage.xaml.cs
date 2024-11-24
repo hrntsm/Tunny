@@ -4,6 +4,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -62,6 +63,41 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.TpeGroupCheckBox.IsChecked = tpe.Group;
             page.TpeConstantLiarCheckBox.IsChecked = tpe.ConstantLiar;
             return page;
+        }
+
+        private void TpeSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void TpeStartupTrialsTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
+        }
+
+        private void TpeEICandidateTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsPositiveInt(value, false) ? value : "24";
+        }
+
+        private void TpeGammaTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsPositiveInt(value, false) ? value : "25";
+        }
+
+        private void TpePriorWeightTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsPositiveDouble(value, false) ? value : "1.0";
         }
     }
 }

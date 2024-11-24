@@ -31,8 +31,8 @@
         </Grid.ColumnDefinitions>
 
         <Label
-            x:Name="OptimizeSamplerTypeLabel"
             Grid.ColumnSpan="2"
+            Content="{Binding SamplerTypeLabel}"
             FontSize="16"
             FontWeight="Bold" />
 
@@ -40,7 +40,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Background="#FFE2E8F4"
+            Background="#E2E8F4"
             Header="Number of Trials">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -53,31 +53,31 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label
-                    x:Name="OptimizeTrialNumberParam1Label"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="Trial Param1" />
+                    Content="{Binding TrialNumberParam1Label, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBox
-                    x:Name="OptimizeTrialNumberParam1TextBox"
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
-                    Text="100"
+                    LostFocus="TrialParam1TextBox_LostFocus"
+                    Text="{Binding TrialNumberParam1, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
                 <Label
-                    x:Name="OptimizeTrialNumberParam2Label"
                     Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="Trial Param2" />
+                    Content="{Binding TrialNumberParam2Label, UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="{Binding TrialNumberParam2Visibility, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBox
-                    x:Name="OptimizeTrialNumberParam2TextBox"
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
-                    Text="100"
-                    TextAlignment="Right" />
+                    LostFocus="TrialParam2TextBox_LostFocus"
+                    Text="{Binding TrialNumberParam2, UpdateSourceTrigger=PropertyChanged}"
+                    TextAlignment="Right"
+                    Visibility="{Binding TrialNumberParam2Visibility}" />
                 <Label
                     Grid.Row="3"
                     Grid.Column="0"
@@ -85,12 +85,12 @@
                     VerticalAlignment="Center"
                     Content="Timeout (sec)" />
                 <TextBox
-                    x:Name="OptimizeTimeoutTextBox"
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="5"
                     VerticalAlignment="Center"
-                    Text="0"
+                    LostFocus="TimeoutTextBox_LostFocus"
+                    Text="{Binding Timeout, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
             </Grid>
         </GroupBox>
@@ -99,7 +99,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Background="#FFE2E8F4"
+            Background="#E2E8F4"
             Header="Study Name">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -126,30 +126,30 @@
                     Grid.ColumnSpan="2"
                     Margin="5"
                     VerticalAlignment="Center"
-                    Text="AUTO"
+                    Text="{Binding StudyName, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
 
                 <CheckBox
-                    x:Name="OptimizeInMemoryCheckBox"
                     Grid.Row="1"
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="InMemory" />
+                    Content="InMemory"
+                    IsChecked="{Binding IsInMemory}" />
                 <CheckBox
-                    x:Name="OptimizeContinueCheckBox"
                     Grid.Row="1"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="Continue" />
+                    Content="Continue"
+                    IsChecked="{Binding IsContinue}" />
                 <CheckBox
-                    x:Name="OptimizeCopyCheckBox"
                     Grid.Row="1"
                     Grid.Column="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Content="Copy" />
+                    Content="Copy"
+                    IsChecked="{Binding IsCopy}" />
 
                 <Label
                     Grid.Row="2"
@@ -169,7 +169,7 @@
         <GroupBox
             Grid.Row="3"
             Grid.ColumnSpan="2"
-            Background="#FFE2E8F4"
+            Background="#E2E8F4"
             Header="Other Settings">
 
             <Grid>
@@ -182,48 +182,47 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <CheckBox
-                    x:Name="OptimizeIgnoreDuplicateSamplingCheckBox"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Ignore Duplicate Sampling" />
+                    Content="Ignore Duplicate Sampling"
+                    IsChecked="{Binding EnableIgnoreDuplicateSampling}" />
                 <CheckBox
-                    x:Name="OptimizeDisableViewportUpdateCheckBox"
                     Grid.Column="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Disable Viewport Update" />
+                    Content="Disable Viewport Update"
+                    IsChecked="{Binding DisableViewportUpdate}" />
                 <CheckBox
-                    x:Name="OptimizeMinimizeRhinoWindowCheckBox"
                     Grid.Row="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Content="Minimize Rhino Window" />
+                    Content="Minimize Rhino Window"
+                    IsChecked="{Binding MinimizeRhinoWindow}" />
             </Grid>
         </GroupBox>
 
         <Button
-            x:Name="OptimizeRunButton"
             Grid.Row="4"
             Grid.Column="0"
             Margin="5"
-            Background="#FF93C6F8"
-            Click="RunOptimizeButton_Click"
-            Content="🐟 RunOptimize 🐟" />
+            Background="#93C6F8"
+            Command="{Binding RunOptimize}"
+            Content="🐟 RunOptimize 🐟"
+            IsEnabled="{Binding EnableRunOptimizeButton}" />
 
         <Button
-            x:Name="OptimizeStopButton"
             Grid.Row="4"
             Grid.Column="1"
             Margin="5"
-            Background="#FF93C6F8"
-            Click="OptimizeStopButton_Click"
+            Background="#93C6F8"
+            Command="{Binding StopOptimize}"
             Content="Stop"
-            IsEnabled="False" />
+            IsEnabled="{Binding EnableStopOptimizeButton}" />
 
         <Frame
-            x:Name="OptimizeSettingsPage"
             Grid.Row="5"
             Grid.ColumnSpan="2"
+            Content="{Binding OptimizeSettingsPage}"
             NavigationUIVisibility="Hidden" />
 
         <Grid Grid.RowSpan="6" Grid.Column="2">
@@ -238,7 +237,7 @@
             <ListView
                 Grid.Row="1"
                 Margin="5"
-                Background="#FFE2E8F4"
+                Background="#E2E8F4"
                 ItemsSource="{Binding ObjectiveSettingItems}">
                 <ListView.View>
                     <GridView>
@@ -271,7 +270,7 @@
             <ListView
                 Grid.Row="3"
                 Margin="5"
-                Background="#FFE2E8F4"
+                Background="#E2E8F4"
                 ItemsSource="{Binding VariableSettingItems}">
                 <ListView.View>
                     <GridView>
@@ -300,8 +299,8 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Frame x:Name="OptimizeLiveChart1" />
-            <Frame x:Name="OptimizeLiveChart2" Grid.Row="1" />
+            <Frame Content="{Binding LiveChart1}" />
+            <Frame Grid.Row="1" Content="{Binding LiveChart2}" />
         </Grid>
 
     </Grid>

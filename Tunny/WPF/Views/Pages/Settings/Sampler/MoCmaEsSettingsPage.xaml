@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="EvolutionStrategy (MO-CMA-ES) Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,6 +40,7 @@
                 x:Name="MoCmaEsSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoCmaEsSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
             <Label
@@ -53,6 +54,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="MoCmaEsPopulationSizeTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
 

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -45,6 +46,13 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.QmcTypeComboBox.SelectedIndex = (int)Enum.Parse(typeof(QmcType), qmc.QmcType);
             page.QmcScrambleCheckBox.IsChecked = qmc.Scramble;
             return page;
+        }
+
+        private void QmcSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
         }
     }
 }

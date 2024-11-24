@@ -4,6 +4,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -46,6 +47,20 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                 : gpOptuna.NStartupTrials.ToString(CultureInfo.InvariantCulture);
             page.GpOptunaDeterministicObjectiveCheckBox.IsChecked = gpOptuna.DeterministicObjective;
             return page;
+        }
+
+        private void GpOptunaSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void GpOptunaStartupTrialsTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
         }
     }
 }

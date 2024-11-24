@@ -5,6 +5,7 @@ using System.Windows.Controls;
 
 using Optuna.Sampler.OptunaHub;
 
+using Tunny.Core.Input;
 using Tunny.Core.Settings;
 using Tunny.WPF.Common;
 
@@ -64,6 +65,41 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                 ? "AUTO"
                 : moead.NumNeighbors.ToString(CultureInfo.InvariantCulture);
             return page;
+        }
+
+        private void MoeadSeedTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
+        }
+
+        private void MoeadMutationProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOr0to1(value) ? value : "AUTO";
+        }
+
+        private void MoeadCrossoverProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.Is0to1(value) ? value : "0.9";
+        }
+
+        private void MoeadSwappingProbabilityTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.Is0to1(value) ? value : "0.5";
+        }
+
+        private void MoeadNeighborsTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            string value = textBox.Text;
+            textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
         }
     }
 }

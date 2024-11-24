@@ -12,7 +12,7 @@
 
     <GroupBox
         Margin="5"
-        Background="#FFE2E8F4"
+        Background="#E2E8F4"
         Header="Random Settings">
         <Grid>
             <Grid.RowDefinitions>
@@ -41,6 +41,7 @@
                 x:Name="RandomSeedTextBox"
                 Grid.Column="1"
                 Margin="5"
+                LostFocus="RandomSeedTextBox_LostFocus"
                 Text="AUTO"
                 TextAlignment="Right" />
 
