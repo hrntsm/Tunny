@@ -329,7 +329,6 @@ namespace Tunny.WPF.ViewModels.Optimize
             if (_settings.Optimize.MinimizeRhinoWindow)
             {
                 RhinoWindowHandle(9);
-
             }
         }
         private static void RhinoWindowHandle(int status)
@@ -359,8 +358,14 @@ namespace Tunny.WPF.ViewModels.Optimize
         {
             TLog.MethodStart();
             OptimizeProcess.IsForcedStopOptimize = true;
-            using (FileStream fs = File.Create(TEnvVariables.QuitFishingPath))
+            FileStream fs = null;
+            try
             {
+                fs = File.Create(TEnvVariables.QuitFishingPath);
+            }
+            finally
+            {
+                fs?.Dispose();
             }
         }
 
