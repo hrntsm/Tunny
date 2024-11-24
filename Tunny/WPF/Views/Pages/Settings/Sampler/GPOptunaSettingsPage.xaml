@@ -65,13 +65,13 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Deterministic Ojbective" />
+                Content="Deterministic Objective" />
 
             <Button
-                x:Name="GpOptunaDefaultButton"
                 Grid.Row="8"
                 Grid.Column="1"
                 Margin="5"
+                Click="DefaultButton_Click"
                 Content="Default" />
         </Grid>
 

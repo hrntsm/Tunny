@@ -82,5 +82,14 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             string value = textBox.Text;
             textBox.Text = InputValidator.Is0to1(value) ? value : "0.5";
         }
+
+        private void DefaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            NsgaiiSeedTextBox.Text = "AUTO";
+            NsgaiiMutationProbabilityTextBox.Text = "AUTO";
+            NsgaiiCrossoverProbabilityTextBox.Text = "0.9";
+            NsgaiiSwappingProbabilityTextBox.Text = "0.5";
+            NsgaiiCrossoverComboBox.SelectedIndex = 1;
+        }
     }
 }

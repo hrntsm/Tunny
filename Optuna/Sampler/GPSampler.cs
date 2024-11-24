@@ -8,7 +8,7 @@ namespace Optuna.Sampler
     public class GPSampler : SamplerBase
     {
         public int NStartupTrials { get; set; } = 10;
-        public bool DeterministicObjective { get; set; }
+        public bool DeterministicObjective { get; set; } = true;
 
         public void ComputeAutoValue(int numberOfTrials)
         {

@@ -61,5 +61,11 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             string value = textBox.Text;
             textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
         }
+
+        private void DefaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            GpBoTorchSeedTextBox.Text = "AUTO";
+            GpStartupTrialsTextBox.Text = "AUTO";
+        }
     }
 }
