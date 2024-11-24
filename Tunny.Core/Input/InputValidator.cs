@@ -20,6 +20,10 @@ namespace Tunny.Core.Input
 
         public static bool IsAutoOrPositiveInt(string input, bool includeZero)
         {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
             if (IsPositiveInt(input, includeZero))
             {
                 return true;
@@ -50,13 +54,17 @@ namespace Tunny.Core.Input
                 return false;
             }
 
-            bool isdouble = double.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out double result);
-            return isdouble &&
+            bool isDouble = double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out double result);
+            return isDouble &&
                 (includeZero ? result >= 0 : result > 0);
         }
 
         public static bool IsAutoOrPositiveDouble(string input, bool includeZero)
         {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
             if (IsPositiveDouble(input, includeZero))
             {
                 return true;
@@ -72,12 +80,17 @@ namespace Tunny.Core.Input
                 return false;
             }
 
-            bool isdouble = double.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out double result);
-            return isdouble && result > 0 && result <= 1;
+            bool isDouble = double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out double result);
+            return isDouble && result > 0 && result <= 1;
         }
 
         public static bool IsAutoOr0to1(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return false;
+            }
+
             if (Is0to1(input))
             {
                 return true;
