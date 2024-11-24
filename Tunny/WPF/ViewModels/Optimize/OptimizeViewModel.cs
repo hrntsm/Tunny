@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -329,7 +329,6 @@ namespace Tunny.WPF.ViewModels.Optimize
             if (_settings.Optimize.MinimizeRhinoWindow)
             {
                 RhinoWindowHandle(9);
-
             }
         }
         private static void RhinoWindowHandle(int status)
