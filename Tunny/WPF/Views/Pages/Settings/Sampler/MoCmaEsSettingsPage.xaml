@@ -62,6 +62,7 @@
                 Grid.Row="8"
                 Grid.Column="1"
                 Margin="5"
+                Click="DefaultButton_Click"
                 Content="Default" />
         </Grid>
 

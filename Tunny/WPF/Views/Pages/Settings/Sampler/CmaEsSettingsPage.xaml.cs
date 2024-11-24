@@ -46,7 +46,7 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
                     : string.Empty,
                 UseFirstEggToX0 = (bool)CmaEsUseFirstFishEggToX0CheckBox.IsChecked,
                 LrAdapt = (bool)CmaEsLrAdaptCheckBox.IsChecked,
-                ConsiderPrunedTrials = (bool)CmaEsConsiderPrundeTrialsCheckBox.IsChecked,
+                ConsiderPrunedTrials = (bool)CmaEsConsiderPrunedTrialsCheckBox.IsChecked,
             };
         }
 
@@ -72,7 +72,7 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             page.CmaEsWarmStartCmaEsCheckBox.IsChecked = cmaEs.WarmStartStudyName != string.Empty;
             page.CmaEsWarnStartCmaEsComboBox.SelectedItem = cmaEs.WarmStartStudyName;
             page.CmaEsUseFirstFishEggToX0CheckBox.IsChecked = cmaEs.UseFirstEggToX0;
-            page.CmaEsConsiderPrundeTrialsCheckBox.IsChecked = cmaEs.ConsiderPrunedTrials;
+            page.CmaEsConsiderPrunedTrialsCheckBox.IsChecked = cmaEs.ConsiderPrunedTrials;
             page.CmaEsLrAdaptCheckBox.IsChecked = cmaEs.LrAdapt;
             return page;
         }
@@ -103,6 +103,22 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             var textBox = (TextBox)sender;
             string value = textBox.Text;
             textBox.Text = InputValidator.IsPositiveInt(value, false) ? value : "2";
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var defaultSettings = new CmaEsSampler();
+            CmaEsSeedTextBox.Text = "AUTO";
+            CmaEsSigma0TextBox.Text = "AUTO";
+            CmaEsUseSepCMACheckBox.IsChecked = defaultSettings.UseSeparableCma;
+            CmaEsWithMarginCheckBox.IsChecked = defaultSettings.WithMargin;
+            CmaEsLrAdaptCheckBox.IsChecked = defaultSettings.LrAdapt;
+            CmaEsConsiderPrunedTrialsCheckBox.IsChecked = defaultSettings.ConsiderPrunedTrials;
+            CmaEsRestartStrategyComboBox.SelectedIndex = 0;
+            CmaEsPopulationSizeTextBox.Text = null;
+            CmaEsIncreasingPopulationSizeTextBox.Text = defaultSettings.IncPopsize.ToString(CultureInfo.InvariantCulture);
+            CmaEsWarmStartCmaEsCheckBox.IsChecked = defaultSettings.UseWarmStart;
+            CmaEsUseFirstFishEggToX0CheckBox.IsChecked = defaultSettings.UseFirstEggToX0;
         }
     }
 }

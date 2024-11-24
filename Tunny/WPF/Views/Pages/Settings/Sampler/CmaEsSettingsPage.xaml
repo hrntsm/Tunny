@@ -78,9 +78,9 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Learing Rate Adaptation" />
+                Content="Learning Rate Adaptation" />
             <CheckBox
-                x:Name="CmaEsConsiderPrundeTrialsCheckBox"
+                x:Name="CmaEsConsiderPrunedTrialsCheckBox"
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="10,0,0,0"
@@ -117,7 +117,7 @@
                 Margin="10,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Content="Increasint Population Size" />
+                Content="Increasing Population Size" />
             <TextBox
                 x:Name="CmaEsIncreasingPopulationSizeTextBox"
                 Grid.Row="6"
@@ -147,12 +147,11 @@
                 Content="Use First FishEgg To X0" />
 
             <Button
-                x:Name="CmaEsDefaultButton"
                 Grid.Row="8"
                 Grid.Column="1"
                 Margin="5"
+                Click="Button_Click"
                 Content="Default" />
         </Grid>
-
     </GroupBox>
 </Page>

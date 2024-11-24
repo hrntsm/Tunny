@@ -101,5 +101,16 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             string value = textBox.Text;
             textBox.Text = InputValidator.IsAutoOrPositiveInt(value, false) ? value : "AUTO";
         }
+
+        private void DefaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            MoeadSeedTextBox.Text = "AUTO";
+            MoeadMutationProbabilityTextBox.Text = "AUTO";
+            MoeadCrossoverProbabilityTextBox.Text = "0.9";
+            MoeadSwappingProbabilityTextBox.Text = "0.5";
+            MoeadCrossoverComboBox.SelectedIndex = 1;
+            MoeadNeighborsTextBox.Text = "AUTO";
+            MoeadScalarAggregationComboBox.SelectedIndex = 1;
+        }
     }
 }

@@ -47,5 +47,10 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             string value = textBox.Text;
             textBox.Text = InputValidator.IsAutoOrInt(value) ? value : "AUTO";
         }
+
+        private void DefaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            BruteForceSeedTextBox.Text = "AUTO";
+        }
     }
 }

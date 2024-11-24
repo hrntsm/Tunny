@@ -99,5 +99,20 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             string value = textBox.Text;
             textBox.Text = InputValidator.IsPositiveDouble(value, false) ? value : "1.0";
         }
+
+        private void DefaultButton_Click(object sender, RoutedEventArgs e)
+        {
+            TpeSeedTextBox.Text = "AUTO";
+            TpeStartupTrialsTextBox.Text = "AUTO";
+            TpeEICandidateTextBox.Text = "24";
+            TpeGammaTextBox.Text = "25";
+            TpePriorWeightTextBox.Text = "1.0";
+            TpeConsiderPriorCheckBox.IsChecked = true;
+            TpeConsiderEndpointsCheckBox.IsChecked = false;
+            TpeConsiderMagicClipCheckBox.IsChecked = true;
+            TpeMultivariateCheckBox.IsChecked = false;
+            TpeGroupCheckBox.IsChecked = false;
+            TpeConstantLiarCheckBox.IsChecked = false;
+        }
     }
 }
