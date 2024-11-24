@@ -15,10 +15,7 @@
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="14*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="4.5*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,38 +23,53 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <Frame
-            x:Name="VisualizePlotSettingsFrame"
-            Background="#FFE2E8F4"
-            Content="{Binding PlotSettingsFrame}"
-            NavigationUIVisibility="Hidden" />
+        <GroupBox Background="#E2E8F4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Background="#FFE2E8F4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button
-                Margin="5"
-                Command="{Binding PlotCommand}"
-                Content="Plot" />
-            <Button
-                Grid.Column="1"
-                Margin="5"
-                Command="{Binding PlotCommand}"
-                Content="Save" />
-        </Grid>
+                <Frame
+                    Grid.ColumnSpan="2"
+                    Content="{Binding PlotSettingsFrame}"
+                    NavigationUIVisibility="Hidden" />
+                <Button
+                    Grid.Row="1"
+                    Margin="5"
+                    Command="{Binding PlotCommand}"
+                    Content="Plot" />
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5"
+                    Command="{Binding PlotCommand}"
+                    Content="Save" />
+            </Grid>
+        </GroupBox>
 
-        <Label
-            Grid.Row="2"
-            Margin="5"
-            Content="Trial Number to Add Export List"
-            FontSize="10" />
-        <TextBox Grid.Row="3" Margin="5" />
-        <Button
-            Grid.Row="4"
-            Margin="20,5,20,5"
-            Content="Add Export" />
+        <GroupBox
+            Grid.Row="1"
+            Background="#E2E8F4"
+            Header="Export">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Label VerticalAlignment="Center" Content="Trial Number to Export" />
+                <TextBox Grid.Row="1" Margin="5" />
+                <Button
+                    Grid.Row="4"
+                    Margin="20,5,20,5"
+                    Content="Add Export List" />
+            </Grid>
+        </GroupBox>
 
         <Frame
             x:Name="VisualizePlotFrame"

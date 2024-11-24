@@ -227,70 +227,73 @@
 
         <Grid Grid.RowSpan="6" Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="AUTO" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="AUTO" />
                 <RowDefinition Height="2.5*" />
             </Grid.RowDefinitions>
 
-            <Label Content="Objectives Settings" />
-            <ListView
-                Grid.Row="1"
-                Margin="5"
-                Background="#E2E8F4"
-                ItemsSource="{Binding ObjectiveSettingItems}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Min">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <RadioButton
-                                        Margin="5,0"
-                                        GroupName="{Binding Name}"
-                                        IsChecked="{Binding Minimize, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="Max">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <RadioButton
-                                        Margin="5,0"
-                                        GroupName="{Binding Name}"
-                                        IsChecked="{Binding Maximize}" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <GroupBox Background="#E2E8F4" Header="Objective Settings">
+                <ListView
+                    Grid.Row="1"
+                    Margin="5"
+                    Background="#E2E8F4"
+                    ItemsSource="{Binding ObjectiveSettingItems}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Min">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <RadioButton
+                                            Margin="5,0"
+                                            GroupName="{Binding Name}"
+                                            IsChecked="{Binding Minimize, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Max">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <RadioButton
+                                            Margin="5,0"
+                                            GroupName="{Binding Name}"
+                                            IsChecked="{Binding Maximize}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
 
-            <Label Grid.Row="2" Content="Variables Settings" />
-            <ListView
-                Grid.Row="3"
-                Margin="5"
+            <GroupBox
+                Grid.Row="1"
                 Background="#E2E8F4"
-                ItemsSource="{Binding VariableSettingItems}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Width="60" Header="LogScale">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        Margin="5,0"
-                                        HorizontalAlignment="Center"
-                                        IsChecked="{Binding IsLogScale, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Low}" Header="Low" />
-                        <GridViewColumn DisplayMemberBinding="{Binding High}" Header="High" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Step}" Header="Step" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
+                Header="Variable Settings">
+                <ListView
+                    Margin="5"
+                    Background="#E2E8F4"
+                    ItemsSource="{Binding VariableSettingItems}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="60" Header="LogScale">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            Margin="5,0"
+                                            HorizontalAlignment="Center"
+                                            IsChecked="{Binding IsLogScale, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Low}" Header="Low" />
+                            <GridViewColumn DisplayMemberBinding="{Binding High}" Header="High" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Step}" Header="Step" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </GroupBox>
         </Grid>
 
         <Grid Grid.RowSpan="6" Grid.Column="3">
@@ -299,8 +302,15 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Frame Content="{Binding LiveChart1}" />
-            <Frame Grid.Row="1" Content="{Binding LiveChart2}" />
+            <GroupBox Margin="5" Background="#E2E8F4">
+                <Frame Content="{Binding LiveChart1}" />
+            </GroupBox>
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Background="#E2E8F4">
+                <Frame Content="{Binding LiveChart2}" />
+            </GroupBox>
         </Grid>
 
     </Grid>
