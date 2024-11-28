@@ -1,3 +1,5 @@
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -5,8 +7,9 @@ namespace Optuna.Sampler
     /// </summary>
     public class RandomSampler : SamplerBase
     {
-        public dynamic ToPython(dynamic optuna)
+        public dynamic ToPython()
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.samplers.RandomSampler(
                 seed: Seed
             );

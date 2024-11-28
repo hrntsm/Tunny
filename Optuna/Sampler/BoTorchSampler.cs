@@ -1,5 +1,7 @@
 using System;
 
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -17,8 +19,9 @@ namespace Optuna.Sampler
             }
         }
 
-        public dynamic ToPython(dynamic optuna, bool hasConstraints)
+        public dynamic ToPython(bool hasConstraints)
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.integration.BoTorchSampler(
                 seed: Seed,
                 n_startup_trials: NStartupTrials,

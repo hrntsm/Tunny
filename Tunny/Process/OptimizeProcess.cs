@@ -20,6 +20,9 @@ namespace Tunny.Process
 {
     internal static class OptimizeProcess
     {
+        private const string IntermediateValueKey = "intermediate_value_step_";
+        internal const string PrunedTrialReportValueKey = "pruned_trial_report_value";
+
         public static OptimizeComponentBase Component;
         public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
@@ -168,15 +171,19 @@ namespace Tunny.Process
             }
             else
             {
-                optunaTrial.report(report.Value, step);
+                optunaTrial.report(report.IntermediateValue, step);
                 if (!string.IsNullOrEmpty(report.Attribute))
                 {
-                    optunaTrial.set_user_attr("intermediate_value_step" + step, report.Attribute);
+                    optunaTrial.set_user_attr(IntermediateValueKey + step, report.Attribute);
                 }
 
                 if (optunaTrial.should_prune())
                 {
                     pruner.RunStopperProcess();
+                    if (report.TrialTellValue.HasValue)
+                    {
+                        optunaTrial.set_user_attr(PrunedTrialReportValueKey, report.TrialTellValue.Value);
+                    }
                 }
 
                 return step + 1;

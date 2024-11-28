@@ -1,3 +1,5 @@
+using Python.Runtime;
+
 namespace Optuna.Sampler.OptunaHub
 {
     /// <summary>
@@ -14,8 +16,11 @@ namespace Optuna.Sampler.OptunaHub
         public ScalarAggregationType ScalarAggregation { get; set; } = ScalarAggregationType.tchebycheff;
         public int NumNeighbors { get; set; } = -1;
 
-        public dynamic ToPython(dynamic optuna, dynamic optunahub)
+        public dynamic ToPython()
         {
+            dynamic optuna = Py.Import("optuna");
+            dynamic optunahub = Py.Import("optunahub");
+
             if (NumNeighbors <= 0)
             {
                 NumNeighbors = PopulationSize / 5;
