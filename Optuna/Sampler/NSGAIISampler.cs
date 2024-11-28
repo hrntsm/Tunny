@@ -1,5 +1,7 @@
 using System;
 
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     ///  <summary>
@@ -13,8 +15,9 @@ namespace Optuna.Sampler
         public double CrossoverProb { get; set; } = 0.9;
         public double SwappingProb { get; set; } = 0.5;
 
-        public dynamic ToPython(dynamic optuna, bool hasConstraints)
+        public dynamic ToPython(bool hasConstraints)
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.samplers.NSGAIISampler(
                 population_size: PopulationSize,
                 mutation_prob: MutationProb,

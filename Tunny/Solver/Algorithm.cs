@@ -350,26 +350,7 @@ namespace Tunny.Solver
             SetTrialUserAttr(result, trial, optInfo);
             try
             {
-                if (result.Artifacts.Count() > 0)
-                {
-                    result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
-                }
-
-                if (Objective.Length == 1 && CheckShouldPrune(trial))
-                {
-                    optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
-                    TLog.Warning($"Trial {trialNum} pruned.");
-                }
-                else if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
-                {
-                    optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
-                    TLog.Warning($"Trial {trialNum} failed.");
-                }
-                else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
-                {
-                    optInfo.Study.tell(trial, result.Objectives.Numbers);
-                    SetTrialResultLog(trialNum, result, optInfo, parameter);
-                }
+                TellResultToOptuna(optInfo, parameter, trialNum, trial, result);
             }
             catch (Exception e)
             {
@@ -382,6 +363,55 @@ namespace Tunny.Solver
             }
 
             return result;
+        }
+
+        private void TellResultToOptuna(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, dynamic trial, TrialGrasshopperItems result)
+        {
+            TLog.MethodStart();
+            dynamic optuna = Py.Import("optuna");
+
+            if (result.Artifacts.Count() > 0)
+            {
+                result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
+            }
+
+            if (Objective.Length == 1 && CheckShouldPrune(trial))
+            {
+                TellPruned(optInfo, trialNum, trial, optuna);
+            }
+            else if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
+            {
+                TellFailed(optInfo, trialNum, trial, optuna);
+            }
+            else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
+            {
+                TellCompleted(optInfo, parameter, trialNum, trial, result);
+            }
+        }
+
+        private void TellCompleted(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, dynamic trial, TrialGrasshopperItems result)
+        {
+            optInfo.Study.tell(trial, result.Objectives.Numbers);
+            SetTrialResultLog(trialNum, result, optInfo, parameter);
+        }
+
+        private static void TellFailed(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        {
+            optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
+            TLog.Warning($"Trial {trialNum} failed.");
+        }
+
+        private static void TellPruned(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        {
+            if (trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
+            {
+                optInfo.Study.tell(trial, trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey));
+            }
+            else
+            {
+                optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
+            }
+            TLog.Warning($"Trial {trialNum} pruned.");
         }
 
         //TODO: Fix Do not use try-catch block

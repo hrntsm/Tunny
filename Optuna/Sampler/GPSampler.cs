@@ -1,5 +1,7 @@
 using System;
 
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -18,8 +20,9 @@ namespace Optuna.Sampler
             }
         }
 
-        public dynamic ToPython(dynamic optuna)
+        public dynamic ToPython()
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.samplers.GPSampler(
                 seed: Seed,
                 n_startup_trials: NStartupTrials,

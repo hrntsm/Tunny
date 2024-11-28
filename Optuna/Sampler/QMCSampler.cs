@@ -1,3 +1,5 @@
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -10,8 +12,9 @@ namespace Optuna.Sampler
         public bool WarnIndependentSampling { get; set; } = true;
         public bool WarnAsynchronousSeeding { get; set; } = true;
 
-        public dynamic ToPython(dynamic optuna)
+        public dynamic ToPython()
         {
+            dynamic optuna = Py.Import("optuna");
             return optuna.samplers.QMCSampler(
                 qmc_type: QmcType,
                 scramble: Scramble,

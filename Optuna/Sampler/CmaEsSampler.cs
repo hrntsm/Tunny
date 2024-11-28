@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using Python.Runtime;
+
 namespace Optuna.Sampler
 {
     /// <summary>
@@ -21,8 +23,9 @@ namespace Optuna.Sampler
         public bool WithMargin { get; set; } = true;
         public bool LrAdapt { get; set; }
 
-        public dynamic ToPython(dynamic optuna, string storagePath, Dictionary<string, double> firstVariables)
+        public dynamic ToPython(string storagePath, Dictionary<string, double> firstVariables)
         {
+            dynamic optuna = Py.Import("optuna");
             Dictionary<string, double> x0 = UseFirstEggToX0 && firstVariables != null && firstVariables.Count > 0
                 ? firstVariables
                 : null;

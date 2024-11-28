@@ -6,8 +6,9 @@ namespace Tunny.Core.Util
 {
     public class PrunerReport
     {
-        public double Value { get; set; }
+        public double IntermediateValue { get; set; }
         public string Attribute { get; set; }
+        public double? TrialTellValue { get; set; }
 
         public static PrunerReport Deserialize(string path)
         {

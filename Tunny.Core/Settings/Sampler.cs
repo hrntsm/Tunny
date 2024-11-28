@@ -33,45 +33,43 @@ namespace Tunny.Core.Settings
         {
             TLog.MethodStart();
             dynamic optunaSampler;
-            dynamic optuna = Py.Import("optuna");
-            dynamic optunahub = Py.Import("optunahub");
             switch (type)
             {
                 case SamplerType.TPE:
-                    optunaSampler = Tpe.ToPython(optuna, hasConstraints);
+                    optunaSampler = Tpe.ToPython(hasConstraints);
                     break;
                 case SamplerType.GP:
-                    optunaSampler = GP.ToPython(optuna);
+                    optunaSampler = GP.ToPython();
                     break;
                 case SamplerType.BoTorch:
-                    optunaSampler = BoTorch.ToPython(optuna, hasConstraints);
+                    optunaSampler = BoTorch.ToPython(hasConstraints);
                     break;
                 case SamplerType.NSGAII:
-                    optunaSampler = NsgaII.ToPython(optuna, hasConstraints);
+                    optunaSampler = NsgaII.ToPython(hasConstraints);
                     break;
                 case SamplerType.NSGAIII:
-                    optunaSampler = NsgaIII.ToPython(optuna, hasConstraints);
+                    optunaSampler = NsgaIII.ToPython(hasConstraints);
                     break;
                 case SamplerType.CmaEs:
-                    optunaSampler = CmaEs.ToPython(optuna, storagePath, firstVariables);
+                    optunaSampler = CmaEs.ToPython(storagePath, firstVariables);
                     break;
                 case SamplerType.QMC:
-                    optunaSampler = QMC.ToPython(optuna);
+                    optunaSampler = QMC.ToPython();
                     break;
                 case SamplerType.Random:
-                    optunaSampler = Random.ToPython(optuna);
+                    optunaSampler = Random.ToPython();
                     break;
                 case SamplerType.BruteForce:
-                    optunaSampler = BruteForce.ToPython(optuna);
+                    optunaSampler = BruteForce.ToPython();
                     break;
                 case SamplerType.AUTO:
-                    optunaSampler = Auto.ToPython(optunahub);
+                    optunaSampler = Auto.ToPython();
                     break;
                 case SamplerType.MOEAD:
-                    optunaSampler = MOEAD.ToPython(optuna, optunahub);
+                    optunaSampler = MOEAD.ToPython();
                     break;
                 case SamplerType.MoCmaEs:
-                    optunaSampler = MoCmaEs.ToPython(optunahub);
+                    optunaSampler = MoCmaEs.ToPython();
                     break;
                 default:
                     throw new ArgumentException("Invalid sampler type.");

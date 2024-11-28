@@ -29,8 +29,9 @@ namespace Optuna.Sampler
             }
         }
 
-        public dynamic ToPython(dynamic optuna, bool hasConstraints)
+        public dynamic ToPython(bool hasConstraints)
         {
+            dynamic optuna = Py.Import("optuna");
             PyModule ps = Py.CreateScope();
             ps.Exec(
                 "def tunny_gamma(x: int) -> int:\n" +
