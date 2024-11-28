@@ -377,26 +377,41 @@ namespace Tunny.Solver
 
             if (Objective.Length == 1 && CheckShouldPrune(trial))
             {
-                if (trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
-                {
-                    optInfo.Study.tell(trial, trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey));
-                }
-                else
-                {
-                    optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
-                }
-                TLog.Warning($"Trial {trialNum} pruned.");
+                TellPruned(optInfo, trialNum, trial, optuna);
             }
             else if (result.Attribute.TryGetValue("IsFAIL", out List<string> isFail) && isFail.Contains("True"))
             {
-                optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
-                TLog.Warning($"Trial {trialNum} failed.");
+                TellFailed(optInfo, trialNum, trial, optuna);
             }
             else if (optInfo.HumanSliderInput == null && optInfo.Preferential == null)
             {
-                optInfo.Study.tell(trial, result.Objectives.Numbers);
-                SetTrialResultLog(trialNum, result, optInfo, parameter);
+                TellCompleted(optInfo, parameter, trialNum, trial, result);
             }
+        }
+
+        private void TellCompleted(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, dynamic trial, TrialGrasshopperItems result)
+        {
+            optInfo.Study.tell(trial, result.Objectives.Numbers);
+            SetTrialResultLog(trialNum, result, optInfo, parameter);
+        }
+
+        private static void TellFailed(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        {
+            optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
+            TLog.Warning($"Trial {trialNum} failed.");
+        }
+
+        private static void TellPruned(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        {
+            if (trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
+            {
+                optInfo.Study.tell(trial, trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey));
+            }
+            else
+            {
+                optInfo.Study.tell(trial, state: optuna.trial.TrialState.PRUNED);
+            }
+            TLog.Warning($"Trial {trialNum} pruned.");
         }
 
         //TODO: Fix Do not use try-catch block
