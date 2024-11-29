@@ -16,6 +16,9 @@ namespace Tunny.Handler
 {
     internal static class OptimizeLoop
     {
+        private const string IntermediateValueKey = "intermediate_value_step_";
+        internal const string PrunedTrialReportValueKey = "pruned_trial_report_value";
+
         private static BackgroundWorker s_worker;
         public static OptimizeComponentBase Component;
         public static TSettings Settings;
@@ -114,15 +117,19 @@ namespace Tunny.Handler
             }
             else
             {
-                optunaTrial.report(report.Value, step);
+                optunaTrial.report(report.IntermediateValue, step);
                 if (!string.IsNullOrEmpty(report.Attribute))
                 {
-                    optunaTrial.set_user_attr("intermediate_value_step" + step, report.Attribute);
+                    optunaTrial.set_user_attr(IntermediateValueKey + step, report.Attribute);
                 }
 
                 if (optunaTrial.should_prune())
                 {
                     pruner.RunStopperProcess();
+                    if (report.TrialTellValue.HasValue)
+                    {
+                        optunaTrial.set_user_attr(PrunedTrialReportValueKey, report.TrialTellValue.Value);
+                    }
                 }
 
                 return step + 1;
