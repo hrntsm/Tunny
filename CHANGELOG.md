@@ -31,6 +31,7 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - Study direction can set in new Tunny UI.
   - If you need save geometry, Please use artifact feature.
 - Update optuna v4.0
+- Update python v3.10 to v3.12
 
 ### Deprecated
 
