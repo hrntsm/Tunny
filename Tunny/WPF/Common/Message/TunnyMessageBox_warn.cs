@@ -22,7 +22,7 @@ namespace Tunny.WPF.Common
         {
             TLog.MethodStart();
             Show(
-                "Variable value must be larger than 0 if LogScale is True.",
+                "Variable value range must be larger than 0 if LogScale is True.",
                 "Tunny",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning
