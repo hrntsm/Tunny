@@ -254,13 +254,25 @@
                     <RibbonComboBox />
                 </RibbonGroup>
                 <RibbonGroup Header="Group Output">
-                    <RibbonButton Label="Pareto Solutions" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="All Trials" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Pareto Solutions"
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
+                    <RibbonButton
+                        Label="All Trials"
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                 </RibbonGroup>
                 <RibbonGroup Header="Use Trial Numbers Output">
                     <RibbonTextBox Label="Trial Numbers" />
-                    <RibbonButton Label="Reinstate to Slider" LargeImageSource="Assets/Icon/Tunny.png" />
-                    <RibbonButton Label="Output to Component" LargeImageSource="Assets/Icon/Tunny.png" />
+                    <RibbonButton
+                        Label="Reinstate to Slider"
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
+                    <RibbonButton
+                        Label="Output to Component"
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                 </RibbonGroup>
             </RibbonTab>
 
@@ -268,58 +280,58 @@
                 <RibbonGroup Header="Pruner">
                     <RibbonButton
                         Label="Median"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Nop"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Patient"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Percentile"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Successive Halving"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Hyperband"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Threshold"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Wilcoxon"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                 </RibbonGroup>
                 <RibbonGroup Header="Termination">
                     <RibbonButton
                         Label="Regret Bound"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="BestValue Stagnation"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="EMMR"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Static Error"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Label="Median Error"
-                        LargeImageSource="Assets/Icon/Tunny.png"
-                        SmallImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                 </RibbonGroup>
             </RibbonTab>
 
@@ -337,7 +349,8 @@
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.TunnyDocument}"
                         Label="Tunny"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.OptunaSampler}"
@@ -354,7 +367,8 @@
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.TunnyLicense}"
                         Label="Tunny"
-                        LargeImageSource="Assets/Icon/Tunny.png" />
+                        LargeImageSource="{StaticResource TunnyIcon}"
+                        SmallImageSource="{StaticResource TunnyIcon}" />
                     <RibbonButton
                         Command="{Binding OpenHelpPageCommand}"
                         CommandParameter="{x:Static common:HelpType.PythonPackagesLicense}"
