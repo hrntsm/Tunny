@@ -1,7 +1,7 @@
-using System;
 using System.Windows;
 
 using Tunny.Core.Util;
+using Tunny.Process;
 
 namespace Tunny.WPF.Common
 {
@@ -10,8 +10,19 @@ namespace Tunny.WPF.Common
         internal static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
             WriteLog(messageBoxText, icon);
+            MessageBoxResult msgResult = MessageBoxResult.None;
 
-            MessageBoxResult msgResult = MessageBox.Show(messageBoxText, caption, button, icon);
+            if (OptimizeProcess.TunnyWindow == null)
+            {
+                msgResult = MessageBox.Show(messageBoxText, caption, button, icon);
+            }
+            else
+            {
+                OptimizeProcess.TunnyWindow.Dispatcher.Invoke(() =>
+                    msgResult = MessageBox.Show(OptimizeProcess.TunnyWindow, messageBoxText, caption, button, icon)
+                );
+            }
+
             if (msgResult != MessageBoxResult.None && msgResult != MessageBoxResult.OK)
             {
                 TLog.Info($"Dialog result: {msgResult}");
