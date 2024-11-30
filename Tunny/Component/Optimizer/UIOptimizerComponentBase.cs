@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 
 using Grasshopper;
@@ -8,29 +7,17 @@ using Grasshopper.Kernel;
 
 using Tunny.Core.Util;
 using Tunny.Process;
-using Tunny.UI;
 using Tunny.WPF;
 
 namespace Tunny.Component.Optimizer
 {
-    public class UIOptimizeComponentBase : OptimizeComponentBase, IDisposable
+    public class UIOptimizeComponentBase : OptimizeComponentBase
     {
-        internal OptimizationWindow OptimizationWindow;
         internal MainWindow MainWindow;
 
         public UIOptimizeComponentBase(string name, string nickname, string description)
           : base(name, nickname, description)
         {
-        }
-
-        public void Dispose()
-        {
-            if (OptimizationWindow != null)
-            {
-                OptimizationWindow.BGDispose();
-                OptimizationWindow.Dispose();
-            }
-            GC.SuppressFinalize(this);
         }
 
         private void ShowOptimizationWindow()
