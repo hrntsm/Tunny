@@ -34,7 +34,6 @@ namespace Tunny.UI
             }
             TSettings.TryLoadFromJson(out _settings);
             SetUIValues();
-            RunPythonInstaller();
             SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
@@ -44,28 +43,6 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             DesignExplorer.SetupTTDesignExplorer();
-        }
-
-        private void RunPythonInstaller()
-        {
-            TLog.MethodStart();
-            string tunnyAssembleVersion = TEnvVariables.Version.ToString();
-            if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
-            {
-                TLog.Info("Run Python installer");
-                var installer = new PythonInstallDialog()
-                {
-                    StartPosition = FormStartPosition.CenterScreen
-                };
-                installer.Show(Owner);
-                _settings.Version = tunnyAssembleVersion;
-                _settings.CheckPythonLibraries = false;
-                checkPythonLibrariesCheckBox.Checked = false;
-            }
-            else
-            {
-                TLog.Info("Skip Python installer");
-            }
         }
 
         private void SetOptimizeBackgroundWorker()

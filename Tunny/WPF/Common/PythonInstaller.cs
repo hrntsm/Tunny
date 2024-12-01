@@ -1,42 +1,51 @@
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 using Tunny.Core.Util;
+using Tunny.WPF.ViewModels;
 
-namespace Tunny.Core.Handler
+namespace Tunny.WPF.Common
 {
-    public static class PythonInstaller
+    public class PythonInstaller
     {
-        public static void Run(object sender, DoWorkEventArgs e)
-        {
-            TLog.MethodStart();
-            var worker = sender as BackgroundWorker;
-            CheckProcess(worker);
-            string[] packageList = UnzipLibraries(worker);
-            InstallPackages(worker, packageList);
+        private readonly MainWindowViewModel _viewModel;
+        private const string NotifierPrefix = "Python Library Installer: ";
 
-            worker?.ReportProgress(100, "Finish!!");
+        public PythonInstaller(MainWindowViewModel viewModel)
+        {
+            _viewModel = viewModel;
         }
 
-        private static void CheckProcess(BackgroundWorker worker)
+        public Task RunAsync()
         {
             TLog.MethodStart();
-            worker.ReportProgress(0, "Check process...");
-            TLog.Info("Check optuna-dashboard process...");
+            return Task.Run(() =>
+            {
+                _viewModel.ReportProgress($"{NotifierPrefix}started", 0);
+                CheckDashboardProcess();
+                string[] packageList = UnzipLibraries();
+                InstallPackages(packageList);
+                _viewModel.ReportProgress($"{NotifierPrefix}Completed", 100);
+            });
+        }
+
+        private void CheckDashboardProcess()
+        {
+            TLog.MethodStart();
+            _viewModel.ReportProgress($"{NotifierPrefix}Check Dashboard process...", 0);
+
             if (Optuna.Dashboard.Handler.KillExistDashboardProcess())
             {
-                string txt = "Killed process: optuna-dashboard";
-                TLog.Info(txt);
-                worker.ReportProgress(0, txt);
+                _viewModel.ReportProgress($"{NotifierPrefix}Killed optuna-dashboard process", 0);
             }
         }
 
-        private static string[] UnzipLibraries(BackgroundWorker worker)
+        private string[] UnzipLibraries()
         {
             TLog.MethodStart();
-            worker.ReportProgress(0, "Unzip library...");
+            _viewModel.ReportProgress($"{NotifierPrefix}Unzip library...", 0);
             TLog.Info("Unzip library...");
             string envPath = TEnvVariables.TunnyEnvPath;
             string componentFolderPath = TEnvVariables.ComponentFolder;
@@ -55,7 +64,7 @@ namespace Tunny.Core.Handler
             return Directory.GetFiles(envPath + "/Lib/whl");
         }
 
-        private static void InstallPackages(BackgroundWorker worker, string[] packageList)
+        private void InstallPackages(string[] packageList)
         {
             TLog.MethodStart();
             int num = packageList.Length;
@@ -63,18 +72,18 @@ namespace Tunny.Core.Handler
             {
                 double progress = (double)i / num * 100d;
                 string packageName = Path.GetFileName(packageList[i]).Split('-')[0];
-                string state = "Installing " + packageName + "...";
-                worker.ReportProgress((int)progress, state);
+                string state = $"{NotifierPrefix}Installing {packageName}...";
+                _viewModel.ReportProgress(state, progress);
                 TLog.Info(state);
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = TEnvVariables.TunnyEnvPath + "/python/python.exe",
+                    FileName = TEnvVariables.PythonPath + "/python.exe",
                     Arguments = "-m pip install --no-deps " + packageList[i],
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                 };
-                using (var process = new Process())
+                using (var process = new System.Diagnostics.Process())
                 {
                     process.StartInfo = startInfo;
                     process.Start();

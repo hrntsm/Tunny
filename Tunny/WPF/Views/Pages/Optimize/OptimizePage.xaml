@@ -10,9 +10,6 @@
     d:DesignHeight="650"
     d:DesignWidth="1000"
     mc:Ignorable="d">
-    <Page.DataContext>
-        <viewModels:OptimizeViewModel />
-    </Page.DataContext>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -208,7 +205,7 @@
             Background="#93C6F8"
             Command="{Binding RunOptimize}"
             Content="🐟 RunOptimize 🐟"
-            IsEnabled="{Binding EnableRunOptimizeButton}" />
+            IsEnabled="{Binding EnableRunOptimizeButton, UpdateSourceTrigger=PropertyChanged}" />
 
         <Button
             Grid.Row="4"
@@ -217,7 +214,7 @@
             Background="#93C6F8"
             Command="{Binding StopOptimize}"
             Content="Stop"
-            IsEnabled="{Binding EnableStopOptimizeButton}" />
+            IsEnabled="{Binding EnableStopOptimizeButton, UpdateSourceTrigger=PropertyChanged}" />
 
         <Frame
             Grid.Row="5"

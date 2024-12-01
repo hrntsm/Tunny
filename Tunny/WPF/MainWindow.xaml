@@ -28,7 +28,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="AUTO" />
+            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
 
         <Ribbon x:Name="Ribbon" Grid.Row="0">
@@ -52,6 +52,15 @@
                         ToolTip="Save Settings" />
                 </RibbonQuickAccessToolBar>
             </Ribbon.QuickAccessToolBar>
+
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu>
+                    <RibbonApplicationMenuItem
+                        Command="{Binding InstallPythonCommand}"
+                        Header="Install Python Libraries"
+                        ImageSource="{StaticResource Snake}" />
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
 
             <RibbonTab Header="Optimize">
                 <RibbonGroup>
@@ -392,7 +401,7 @@
             Content="{Binding MainWindowFrame}"
             NavigationUIVisibility="Hidden" />
 
-        <StatusBar Grid.Row="2" Background="#FF93C6F8">
+        <StatusBar Grid.Row="2" Background="#93C6F8">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -408,24 +417,23 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem>
-                <Label x:Name="StatusBarLabel" Content="Ready" />
+                <Label Content="{Binding StatusBarNotifyText}" />
             </StatusBarItem>
             <Separator Grid.Column="1" />
-            <StatusBarItem x:Name="StatusBarTrialNumberLabel" Grid.Column="2">
-                <Label Content="Trial: #" />
+            <StatusBarItem Grid.Column="2">
+                <Label Content="{Binding StatusBarTrialNum}" />
             </StatusBarItem>
-            <StatusBarItem x:Name="StatuBarETALabel" Grid.Column="3">
-                <Label Content="ETA: #" />
+            <StatusBarItem Grid.Column="3">
+                <Label Content="{Binding StatusBarETA}" />
             </StatusBarItem>
             <Separator Grid.Column="4" />
             <StatusBarItem Grid.Column="5">
                 <ProgressBar
-                    x:Name="StatusBarProgressBar"
                     Width="300"
-                    Height="15"
+                    Height="20"
                     Maximum="100"
                     Minimum="0"
-                    Value="0" />
+                    Value="{Binding StatusBarProgress}" />
             </StatusBarItem>
         </StatusBar>
     </Grid>

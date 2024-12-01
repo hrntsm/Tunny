@@ -42,13 +42,18 @@ namespace Tunny.WPF.ViewModels
             _expertPage = new ExpertPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
+            ReportProgress("Welcome Tunny The next-gen Grasshopper optimization tool ", 0);
 
-            _optimizePage = new OptimizePage();
+            _optimizeViewModel = new OptimizeViewModel();
+            _optimizePage = new OptimizePage()
+            {
+                DataContext = _optimizeViewModel
+            };
             MainWindowFrame = _optimizePage;
-            _optimizeViewModel = (OptimizeViewModel)_optimizePage.DataContext;
             _optimizeViewModel.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
 
             CheckPruner();
+            CheckPythonInstalled();
         }
 
         private void UpdateTitle()
@@ -64,6 +69,19 @@ namespace Tunny.WPF.ViewModels
             if (OptimizeProcess.Settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
             {
                 TunnyMessageBox.Error_PrunerPath();
+            }
+        }
+
+        private void CheckPythonInstalled()
+        {
+            TLog.MethodStart();
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString();
+            if (OptimizeProcess.Settings.CheckPythonLibraries || OptimizeProcess.Settings.Version != tunnyAssembleVersion)
+            {
+                InstallPython();
+                OptimizeProcess.Settings.CheckPythonLibraries = false;
+                OptimizeProcess.Settings.Version = tunnyAssembleVersion;
+                OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
             }
         }
 
@@ -334,6 +352,50 @@ namespace Tunny.WPF.ViewModels
         {
             _helpPage.Dispose();
             GC.SuppressFinalize(this);
+        }
+
+        private DelegateCommand _installPythonCommand;
+        public ICommand InstallPythonCommand
+        {
+            get
+            {
+                if (_installPythonCommand == null)
+                {
+                    _installPythonCommand = new DelegateCommand(InstallPython);
+                }
+
+                return _installPythonCommand;
+            }
+        }
+        private async void InstallPython()
+        {
+            TLog.MethodStart();
+            var installer = new PythonInstaller(this);
+            _optimizeViewModel.EnableRunOptimizeButton = false;
+            await installer.RunAsync();
+            _optimizeViewModel.EnableRunOptimizeButton = true;
+        }
+
+        private string _statusBarNotifyText;
+        public string StatusBarNotifyText { get => _statusBarNotifyText; set => SetProperty(ref _statusBarNotifyText, value); }
+        private string _statusBarTrialNum;
+        public string StatusBarTrialNum { get => _statusBarTrialNum; set => SetProperty(ref _statusBarTrialNum, value); }
+        private string _statusBarETA;
+        public string StatusBarETA { get => _statusBarETA; set => SetProperty(ref _statusBarETA, value); }
+        private double _statusBarProgress;
+        public double StatusBarProgress { get => _statusBarProgress; set => SetProperty(ref _statusBarProgress, value); }
+
+        public void ReportProgress(string notifyText, double progress)
+        {
+            StatusBarNotifyText = notifyText;
+            StatusBarProgress = progress;
+        }
+
+        public void ReportProgress(string notifyText, string trialNum, double progress)
+        {
+            StatusBarNotifyText = notifyText;
+            StatusBarTrialNum = trialNum;
+            StatusBarProgress = progress;
         }
     }
 }
