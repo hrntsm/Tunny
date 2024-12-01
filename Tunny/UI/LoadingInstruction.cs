@@ -22,7 +22,6 @@ namespace Tunny.UI
         private ToolStripMenuItem _tutorialStripMenuItem;
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
-        private ToolStripMenuItem _pythonInstallStripMenuItem;
         private ToolStripMenuItem _ttDesignExplorerToolStripMenuItem;
         private ToolStripMenuItem _aboutTunnyStripMenuItem;
 
@@ -83,11 +82,9 @@ namespace Tunny.UI
             _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, null, "TunnyHelpStripMenuItem");
             _tutorialStripMenuItem = new ToolStripMenuItem("Tutorial Files", null, null, "TutorialStripMenuItem");
             _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run Optuna Dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
-            _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
             _ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
             _aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
 
-            SetHelpDropDownItems();
             SetTutorialDropDownItems();
 
             dropDownItems.AddRange(new ToolStripItem[] {
@@ -96,8 +93,6 @@ namespace Tunny.UI
                 new ToolStripSeparator(),
                 _optunaDashboardToolStripMenuItem,
                 _ttDesignExplorerToolStripMenuItem,
-                new ToolStripSeparator(),
-                _pythonInstallStripMenuItem,
                 new ToolStripSeparator(),
                 _aboutTunnyStripMenuItem
             });
@@ -132,15 +127,6 @@ namespace Tunny.UI
             }
         }
 
-        private void SetHelpDropDownItems()
-        {
-            TLog.MethodStart();
-            _tunnyHelpStripMenuItem.DropDownItems.AddRange(new[]{
-                new ToolStripMenuItem("Tunny Document", null, TunnyDocumentPageStripMenuItem_Click, "TunnyDocumentStripMenuItem"),
-                new ToolStripMenuItem("Optuna Sampler Document", null, OptunaSamplerPageStripMenuItem_Click, "OptunaTutorialStripMenuItem")
-            });
-        }
-
         private void AboutTunnyStripMenuItem_Click(object sender, EventArgs e)
         {
             TLog.MethodStart();
@@ -150,37 +136,6 @@ namespace Tunny.UI
                 "About Tunny",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-        }
-
-        private void PythonInstallStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TLog.MethodStart();
-            TLog.Debug("PythonInstallStripMenuItem Clicked");
-            if (Directory.Exists(TEnvVariables.PythonPath))
-            {
-                MessageBoxResult result = WPF.Common.TunnyMessageBox.Info_PythonAlreadyInstalled();
-                if (result == MessageBoxResult.Cancel)
-                {
-                    TLog.Info("From menu item Python installation canceled by user.");
-                    return;
-                }
-            }
-            TLog.Info("From menu item Python installation started.");
-            var pythonInstallDialog = new PythonInstallDialog();
-            pythonInstallDialog.ShowDialog();
-            TSettings.TryLoadFromJson(out TSettings settings);
-            settings.CheckPythonLibraries = false;
-            settings.Serialize(TEnvVariables.OptimizeSettingsPath);
-        }
-
-        private void TunnyDocumentPageStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //OpenBrowser.TunnyDocumentPage();
-        }
-
-        private void OptunaSamplerPageStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //OpenBrowser.OptunaSamplerPage();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -258,7 +213,6 @@ namespace Tunny.UI
             _tunnyHelpStripMenuItem.Dispose();
             _tutorialStripMenuItem.Dispose();
             _optunaDashboardToolStripMenuItem.Dispose();
-            _pythonInstallStripMenuItem.Dispose();
             _ttDesignExplorerToolStripMenuItem.Dispose();
             _aboutTunnyStripMenuItem.Dispose();
             GC.SuppressFinalize(this);

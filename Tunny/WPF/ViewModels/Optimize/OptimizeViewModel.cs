@@ -29,7 +29,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         private const string SamplerTypeLabelPrefix = "SamplerType: ";
         private const string TrialNumberLabelPrefix = "Trial: ";
         private readonly TSettings _settings;
-        private ProgressBar _progressBar;
+        private MainWindowViewModel _windowViewModel;
         private LiveChartPage _chart1;
         private LiveChartPage _chart2;
         private TPESettingsPage _tpePage;
@@ -44,7 +44,6 @@ namespace Tunny.WPF.ViewModels.Optimize
         private AutoSettingsPage _autoPage;
         private MOEADSettingsPage _moeadPage;
         private MoCmaEsSettingsPage _moCmaEsPage;
-
 
         private string _trialNumberParam1Label;
         public string TrialNumberParam1Label { get => _trialNumberParam1Label; set => SetProperty(ref _trialNumberParam1Label, value); }
@@ -270,9 +269,8 @@ namespace Tunny.WPF.ViewModels.Optimize
             _settings.Optimize = GetCurrentSettings(true);
             SetupWindow();
 
-            _progressBar = OptimizeProcess.TunnyWindow.StatusBarProgressBar;
-            _progressBar.Value = 0;
-
+            _windowViewModel = OptimizeProcess.TunnyWindow.DataContext as MainWindowViewModel;
+            _windowViewModel.ReportProgress("Start Optimizing...", 0);
             InitializeOptimizeProcess();
 
             try
@@ -298,8 +296,8 @@ namespace Tunny.WPF.ViewModels.Optimize
             {
                 TLog.MethodStart();
                 OptimizeProcess.Component.UpdateGrasshopper(value);
-                OptimizeProcess.TunnyWindow.StatusBarTrialNumberLabel.Content = $"{TrialNumberLabelPrefix}{value.TrialNumber + 1}";
-                _progressBar.Value = value.PercentComplete;
+                _windowViewModel.ReportProgress("Running optimization", $"{TrialNumberLabelPrefix}{value.TrialNumber + 1}", value.PercentComplete);
+
                 if (!value.IsReportOnly)
                 {
                     Input.Objective objectives = OptimizeProcess.Component.GhInOut.Objectives;
