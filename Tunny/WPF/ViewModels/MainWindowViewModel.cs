@@ -42,7 +42,7 @@ namespace Tunny.WPF.ViewModels
             _expertPage = new ExpertPage();
             IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
-            ReportProgress("Welcome Tunny The next-gen Grasshopper optimization tool ", 0);
+            ReportProgress("Welcome 🐟Tunny🐟 The next-gen Grasshopper optimization tool ", 0);
 
             _optimizeViewModel = new OptimizeViewModel();
             _optimizePage = new OptimizePage()

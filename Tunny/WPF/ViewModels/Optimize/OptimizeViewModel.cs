@@ -60,11 +60,61 @@ namespace Tunny.WPF.ViewModels.Optimize
         private string _studyName;
         public string StudyName { get => _studyName; set => SetProperty(ref _studyName, value); }
         private bool? _isInMemory;
-        public bool? IsInMemory { get => _isInMemory; set => SetProperty(ref _isInMemory, value); }
+        public bool? IsInMemory
+        {
+            get => _isInMemory;
+            set
+            {
+                if (value.Value == true)
+                {
+                    if (IsContinue == true)
+                    {
+                        IsContinue = false;
+                    }
+                    if (IsCopy == true)
+                    {
+                        IsCopy = false;
+                    }
+                    if (EnableCopyCheckbox == null || EnableCopyCheckbox == true)
+                    {
+                        EnableCopyCheckbox = false;
+                    }
+                }
+                SetProperty(ref _isInMemory, value);
+            }
+        }
         private bool? _isContinue;
-        public bool? IsContinue { get => _isContinue; set => SetProperty(ref _isContinue, value); }
+        public bool? IsContinue
+        {
+            get => _isContinue;
+            set
+            {
+                if (value.Value == true)
+                {
+                    if (IsInMemory == true)
+                    {
+                        IsInMemory = false;
+                    }
+                    if (EnableCopyCheckbox == false)
+                    {
+                        EnableCopyCheckbox = true;
+                    }
+                }
+                else
+                {
+                    if (EnableCopyCheckbox == null || EnableCopyCheckbox == true)
+                    {
+                        EnableCopyCheckbox = false;
+                        IsCopy = false;
+                    }
+                }
+                SetProperty(ref _isContinue, value);
+            }
+        }
         private bool? _isCopy;
         public bool? IsCopy { get => _isCopy; set => SetProperty(ref _isCopy, value); }
+        private bool? _enableCopyCheckbox;
+        public bool? EnableCopyCheckbox { get => _enableCopyCheckbox; set => SetProperty(ref _enableCopyCheckbox, value); }
         private bool? _enableIgnoreDuplicateSampling;
         public bool? EnableIgnoreDuplicateSampling { get => _enableIgnoreDuplicateSampling; set => SetProperty(ref _enableIgnoreDuplicateSampling, value); }
         private bool? _disableViewportUpdate;
@@ -104,6 +154,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         private void InitializeUIValues()
         {
             Timeout = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
+            StudyName = _settings.Optimize.StudyName;
 
             IsInMemory = _settings.Storage.Type == StorageType.InMemory;
             IsContinue = _settings.Optimize.ContinueStudy;
@@ -402,7 +453,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
             var settings = new Core.Settings.Optimize
             {
-                StudyName = StudyName,
+                StudyName = string.IsNullOrWhiteSpace(StudyName) ? "AUTO" : StudyName,
                 Sampler = sampler,
                 NumberOfTrials = numOfTrials,
                 ContinueStudy = IsContinue == true,
