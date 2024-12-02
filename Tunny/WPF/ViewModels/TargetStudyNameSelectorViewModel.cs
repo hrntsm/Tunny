@@ -92,18 +92,8 @@ namespace Tunny.WPF.ViewModels
 
         private static ObservableCollection<NameComboBoxItem> StudyNamesFromStorage(string storagePath)
         {
-            var items = new ObservableCollection<NameComboBoxItem>();
             StudySummary[] summaries = new StorageHandler().GetStudySummaries(storagePath);
-            for (int i = 0; i < summaries.Length; i++)
-            {
-                StudySummary summary = summaries[i];
-                items.Add(new NameComboBoxItem()
-                {
-                    Id = i,
-                    Name = summary.StudyName
-                });
-            }
-            return items;
+            return Utils.StudyNamesFromStudySummaries(summaries);
         }
     }
 }
