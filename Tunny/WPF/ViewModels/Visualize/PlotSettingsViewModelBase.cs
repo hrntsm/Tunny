@@ -48,30 +48,16 @@ namespace Tunny.WPF.ViewModels.Visualize
             _summaries = summaries;
             ObjectiveItems = new ObservableCollection<VisualizeListItem>();
             VariableItems = new ObservableCollection<VisualizeListItem>();
-            StudyNameItems = StudyNamesFromStudySummaries();
+            StudyNameItems = Utils.StudyNamesFromStudySummaries(_summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
 
         public void UpdateItems()
         {
-            StudyNameItems = StudyNamesFromStudySummaries();
+            StudyNameItems = Utils.StudyNamesFromStudySummaries(_summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
 
-        private ObservableCollection<NameComboBoxItem> StudyNamesFromStudySummaries()
-        {
-            var items = new ObservableCollection<NameComboBoxItem>();
-            for (int i = 0; i < _summaries.Length; i++)
-            {
-                StudySummary summary = _summaries[i];
-                items.Add(new NameComboBoxItem()
-                {
-                    Id = i,
-                    Name = summary.StudyName
-                });
-            }
-            return items;
-        }
 
         private void UpdateObjectivesAndVariables()
         {

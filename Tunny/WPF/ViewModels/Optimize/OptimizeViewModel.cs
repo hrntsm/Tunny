@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -14,6 +14,7 @@ using Rhino.Display;
 
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
+using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
@@ -59,12 +60,85 @@ namespace Tunny.WPF.ViewModels.Optimize
         public string Timeout { get => _timeout; set => SetProperty(ref _timeout, value); }
         private string _studyName;
         public string StudyName { get => _studyName; set => SetProperty(ref _studyName, value); }
+        private bool? _enableStudyNameTextBox;
+        public bool? EnableStudyNameTextBox { get => _enableStudyNameTextBox; set => SetProperty(ref _enableStudyNameTextBox, value); }
         private bool? _isInMemory;
-        public bool? IsInMemory { get => _isInMemory; set => SetProperty(ref _isInMemory, value); }
+        public bool? IsInMemory
+        {
+            get => _isInMemory;
+            set
+            {
+                if (value.Value == true)
+                {
+                    if (IsContinue == true)
+                    {
+                        IsContinue = false;
+                    }
+                    if (IsCopy == true)
+                    {
+                        IsCopy = false;
+                    }
+                    if (EnableCopyCheckbox == null || EnableCopyCheckbox == true)
+                    {
+                        EnableCopyCheckbox = false;
+                    }
+                    if (EnableExistStudyComboBox == null || EnableExistStudyComboBox == true)
+                    {
+                        EnableExistStudyComboBox = false;
+                    }
+                }
+                SetProperty(ref _isInMemory, value);
+            }
+        }
         private bool? _isContinue;
-        public bool? IsContinue { get => _isContinue; set => SetProperty(ref _isContinue, value); }
+        public bool? IsContinue
+        {
+            get => _isContinue;
+            set
+            {
+                EnableExistStudyComboBox = value;
+                if (value.Value == true)
+                {
+                    if (IsInMemory == true)
+                    {
+                        IsInMemory = false;
+                    }
+                    if (EnableCopyCheckbox == false)
+                    {
+                        EnableCopyCheckbox = true;
+                    }
+                    if (EnableStudyNameTextBox == null || EnableStudyNameTextBox == true)
+                    {
+                        EnableStudyNameTextBox = false;
+                    }
+                }
+                else
+                {
+                    if (EnableCopyCheckbox == null || EnableCopyCheckbox == true)
+                    {
+                        EnableCopyCheckbox = false;
+                        IsCopy = false;
+                    }
+                    if (EnableStudyNameTextBox == false)
+                    {
+                        EnableStudyNameTextBox = true;
+                    }
+                }
+                SetProperty(ref _isContinue, value);
+            }
+        }
         private bool? _isCopy;
-        public bool? IsCopy { get => _isCopy; set => SetProperty(ref _isCopy, value); }
+        public bool? IsCopy
+        {
+            get => _isCopy;
+            set
+            {
+                EnableStudyNameTextBox = value;
+                SetProperty(ref _isCopy, value);
+            }
+        }
+        private bool? _enableCopyCheckbox;
+        public bool? EnableCopyCheckbox { get => _enableCopyCheckbox; set => SetProperty(ref _enableCopyCheckbox, value); }
         private bool? _enableIgnoreDuplicateSampling;
         public bool? EnableIgnoreDuplicateSampling { get => _enableIgnoreDuplicateSampling; set => SetProperty(ref _enableIgnoreDuplicateSampling, value); }
         private bool? _disableViewportUpdate;
@@ -87,6 +161,12 @@ namespace Tunny.WPF.ViewModels.Optimize
         public ObservableCollection<ObjectiveSettingItem> ObjectiveSettingItems { get => _objectiveSettingItems; set => SetProperty(ref _objectiveSettingItems, value); }
         private ObservableCollection<VariableSettingItem> _variableSettingItems;
         public ObservableCollection<VariableSettingItem> VariableSettingItems { get => _variableSettingItems; set => SetProperty(ref _variableSettingItems, value); }
+        private NameComboBoxItem _selectedExistStudy;
+        public NameComboBoxItem SelectedExistStudy { get => _selectedExistStudy; set => SetProperty(ref _selectedExistStudy, value); }
+        private ObservableCollection<NameComboBoxItem> _existingStudies;
+        public ObservableCollection<NameComboBoxItem> ExistingStudies { get => _existingStudies; set => SetProperty(ref _existingStudies, value); }
+        private bool? _enableExistStudyComboBox;
+        public bool? EnableExistStudyComboBox { get => _enableExistStudyComboBox; set => SetProperty(ref _enableExistStudyComboBox, value); }
 
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -104,10 +184,12 @@ namespace Tunny.WPF.ViewModels.Optimize
         private void InitializeUIValues()
         {
             Timeout = _settings.Optimize.Timeout.ToString(CultureInfo.InvariantCulture);
+            StudyName = _settings.Optimize.StudyName;
 
             IsInMemory = _settings.Storage.Type == StorageType.InMemory;
             IsContinue = _settings.Optimize.ContinueStudy;
             IsCopy = _settings.Optimize.CopyStudy;
+            EnableStudyNameTextBox = !IsContinue;
 
             EnableIgnoreDuplicateSampling = _settings.Optimize.IgnoreDuplicateSampling;
             DisableViewportUpdate = _settings.Optimize.DisableViewportDrawing;
@@ -275,12 +357,66 @@ namespace Tunny.WPF.ViewModels.Optimize
 
             try
             {
+                if (!CheckContinueAndCopy())
+                {
+                    return;
+                }
                 await OptimizeProcess.RunAsync(this);
             }
             finally
             {
                 FinalizeWindow();
             }
+        }
+
+        private bool CheckContinueAndCopy()
+        {
+            bool result = true;
+            if (IsContinue == true)
+            {
+                result = CheckContinueStudy();
+            }
+            if (result && IsCopy == true)
+            {
+                result = CheckCopyStudy();
+            }
+            return result;
+        }
+
+        private bool CheckContinueStudy()
+        {
+            if (SelectedExistStudy == null)
+            {
+                TunnyMessageBox.Error_NoSourceStudySelected();
+                return false;
+            }
+            _settings.Optimize.StudyName = SelectedExistStudy.Name;
+            return true;
+        }
+
+        private bool CheckCopyStudy()
+        {
+            if (IsCopy == true)
+            {
+                if (SelectedExistStudy == null)
+                {
+                    TunnyMessageBox.Error_NoSourceStudySelected();
+                    return false;
+                }
+                if (StudyName == SelectedExistStudy.Name)
+                {
+                    TunnyMessageBox.Error_CopySourceAndDestinationAreSame();
+                    return false;
+                }
+
+                _windowViewModel.ReportProgress("Copying study...", 0);
+                if (StudyName.Equals("AUTO", StringComparison.OrdinalIgnoreCase))
+                {
+                    _settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                }
+                new StorageHandler().DuplicateStudyInStorage(SelectedExistStudy.Name, _settings.Optimize.StudyName, _settings.Storage);
+            }
+            return true;
         }
 
         private void InitializeOptimizeProcess()
@@ -328,7 +464,9 @@ namespace Tunny.WPF.ViewModels.Optimize
             {
                 RhinoWindowHandle(9);
             }
+            _windowViewModel.ReportProgress("🐟Finish🐟", 100);
         }
+
         private static void RhinoWindowHandle(int status)
         {
             IntPtr rhinoWindow = Rhino.RhinoApp.MainWindowHandle();
@@ -402,7 +540,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
             var settings = new Core.Settings.Optimize
             {
-                StudyName = StudyName,
+                StudyName = string.IsNullOrWhiteSpace(StudyName) ? "AUTO" : StudyName,
                 Sampler = sampler,
                 NumberOfTrials = numOfTrials,
                 ContinueStudy = IsContinue == true,
@@ -422,6 +560,12 @@ namespace Tunny.WPF.ViewModels.Optimize
             }
 
             return settings;
+        }
+
+        internal void UpdateExistStudies()
+        {
+            Optuna.Study.StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
+            ExistingStudies = Utils.StudyNamesFromStudySummaries(summaries);
         }
     }
 }
