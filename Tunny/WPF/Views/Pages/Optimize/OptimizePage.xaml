@@ -123,6 +123,7 @@
                     Grid.ColumnSpan="2"
                     Margin="5"
                     VerticalAlignment="Center"
+                    IsEnabled="{Binding EnableStudyNameTextBox}"
                     LostFocus="StudyNameTextBox_LostFocus"
                     Text="{Binding StudyName, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Right" />
@@ -147,8 +148,8 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Content="Copy"
-                    IsEnabled="{Binding EnableCopyCheckbox}"
-                    IsChecked="{Binding IsCopy}" />
+                    IsChecked="{Binding IsCopy}"
+                    IsEnabled="{Binding EnableCopyCheckbox}" />
 
                 <Label
                     Grid.Row="2"
@@ -161,7 +162,10 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="5"
-                    ItemsSource="{Binding Samplers}" />
+                    DisplayMemberPath="Name"
+                    IsEnabled="{Binding EnableExistStudyComboBox}"
+                    ItemsSource="{Binding ExistingStudies}"
+                    SelectedItem="{Binding SelectedExistStudy}" />
             </Grid>
         </GroupBox>
 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using Prism.Commands;
 using Prism.Mvvm;
 
+using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
@@ -50,6 +52,7 @@ namespace Tunny.WPF.ViewModels
                 DataContext = _optimizeViewModel
             };
             MainWindowFrame = _optimizePage;
+            _optimizeViewModel.UpdateExistStudies();
             _optimizeViewModel.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
 
             CheckPruner();

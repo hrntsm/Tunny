@@ -14,6 +14,7 @@ using Rhino.Display;
 
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
+using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
@@ -59,6 +60,8 @@ namespace Tunny.WPF.ViewModels.Optimize
         public string Timeout { get => _timeout; set => SetProperty(ref _timeout, value); }
         private string _studyName;
         public string StudyName { get => _studyName; set => SetProperty(ref _studyName, value); }
+        private bool? _enableStudyNameTextBox;
+        public bool? EnableStudyNameTextBox { get => _enableStudyNameTextBox; set => SetProperty(ref _enableStudyNameTextBox, value); }
         private bool? _isInMemory;
         public bool? IsInMemory
         {
@@ -79,6 +82,10 @@ namespace Tunny.WPF.ViewModels.Optimize
                     {
                         EnableCopyCheckbox = false;
                     }
+                    if (EnableExistStudyComboBox == null || EnableExistStudyComboBox == true)
+                    {
+                        EnableExistStudyComboBox = false;
+                    }
                 }
                 SetProperty(ref _isInMemory, value);
             }
@@ -89,6 +96,7 @@ namespace Tunny.WPF.ViewModels.Optimize
             get => _isContinue;
             set
             {
+                EnableExistStudyComboBox = value;
                 if (value.Value == true)
                 {
                     if (IsInMemory == true)
@@ -99,6 +107,10 @@ namespace Tunny.WPF.ViewModels.Optimize
                     {
                         EnableCopyCheckbox = true;
                     }
+                    if (EnableStudyNameTextBox == null || EnableStudyNameTextBox == true)
+                    {
+                        EnableStudyNameTextBox = false;
+                    }
                 }
                 else
                 {
@@ -107,12 +119,24 @@ namespace Tunny.WPF.ViewModels.Optimize
                         EnableCopyCheckbox = false;
                         IsCopy = false;
                     }
+                    if (EnableStudyNameTextBox == false)
+                    {
+                        EnableStudyNameTextBox = true;
+                    }
                 }
                 SetProperty(ref _isContinue, value);
             }
         }
         private bool? _isCopy;
-        public bool? IsCopy { get => _isCopy; set => SetProperty(ref _isCopy, value); }
+        public bool? IsCopy
+        {
+            get => _isCopy;
+            set
+            {
+                EnableStudyNameTextBox = value;
+                SetProperty(ref _isCopy, value);
+            }
+        }
         private bool? _enableCopyCheckbox;
         public bool? EnableCopyCheckbox { get => _enableCopyCheckbox; set => SetProperty(ref _enableCopyCheckbox, value); }
         private bool? _enableIgnoreDuplicateSampling;
@@ -137,6 +161,12 @@ namespace Tunny.WPF.ViewModels.Optimize
         public ObservableCollection<ObjectiveSettingItem> ObjectiveSettingItems { get => _objectiveSettingItems; set => SetProperty(ref _objectiveSettingItems, value); }
         private ObservableCollection<VariableSettingItem> _variableSettingItems;
         public ObservableCollection<VariableSettingItem> VariableSettingItems { get => _variableSettingItems; set => SetProperty(ref _variableSettingItems, value); }
+        private NameComboBoxItem _selectedExistStudy;
+        public NameComboBoxItem SelectedExistStudy { get => _selectedExistStudy; set => SetProperty(ref _selectedExistStudy, value); }
+        private ObservableCollection<NameComboBoxItem> _existingStudies;
+        public ObservableCollection<NameComboBoxItem> ExistingStudies { get => _existingStudies; set => SetProperty(ref _existingStudies, value); }
+        private bool? _enableExistStudyComboBox;
+        public bool? EnableExistStudyComboBox { get => _enableExistStudyComboBox; set => SetProperty(ref _enableExistStudyComboBox, value); }
 
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -473,6 +503,12 @@ namespace Tunny.WPF.ViewModels.Optimize
             }
 
             return settings;
+        }
+
+        internal void UpdateExistStudies()
+        {
+            Optuna.Study.StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
+            ExistingStudies = Utils.StudyNamesFromStudySummaries(summaries);
         }
     }
 }

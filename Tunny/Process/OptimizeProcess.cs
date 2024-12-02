@@ -71,6 +71,7 @@ namespace Tunny.Process
                 {
                     Component.GrasshopperStatusChanged -= EventHandler;
                 }
+                optimizeViewModel.UpdateExistStudies();
             }
         }
 
