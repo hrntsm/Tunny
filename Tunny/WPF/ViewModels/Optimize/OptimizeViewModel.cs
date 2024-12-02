@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -189,6 +189,7 @@ namespace Tunny.WPF.ViewModels.Optimize
             IsInMemory = _settings.Storage.Type == StorageType.InMemory;
             IsContinue = _settings.Optimize.ContinueStudy;
             IsCopy = _settings.Optimize.CopyStudy;
+            EnableStudyNameTextBox = !IsContinue;
 
             EnableIgnoreDuplicateSampling = _settings.Optimize.IgnoreDuplicateSampling;
             DisableViewportUpdate = _settings.Optimize.DisableViewportDrawing;
@@ -356,12 +357,66 @@ namespace Tunny.WPF.ViewModels.Optimize
 
             try
             {
+                if (!CheckContinueAndCopy())
+                {
+                    return;
+                }
                 await OptimizeProcess.RunAsync(this);
             }
             finally
             {
                 FinalizeWindow();
             }
+        }
+
+        private bool CheckContinueAndCopy()
+        {
+            bool result = true;
+            if (IsContinue == true)
+            {
+                result = CheckContinueStudy();
+            }
+            if (result && IsCopy == true)
+            {
+                result = CheckCopyStudy();
+            }
+            return result;
+        }
+
+        private bool CheckContinueStudy()
+        {
+            if (SelectedExistStudy == null)
+            {
+                TunnyMessageBox.Error_NoSourceStudySelected();
+                return false;
+            }
+            _settings.Optimize.StudyName = SelectedExistStudy.Name;
+            return true;
+        }
+
+        private bool CheckCopyStudy()
+        {
+            if (IsCopy == true)
+            {
+                if (SelectedExistStudy == null)
+                {
+                    TunnyMessageBox.Error_NoSourceStudySelected();
+                    return false;
+                }
+                if (StudyName == SelectedExistStudy.Name)
+                {
+                    TunnyMessageBox.Error_CopySourceAndDestinationAreSame();
+                    return false;
+                }
+
+                _windowViewModel.ReportProgress("Copying study...", 0);
+                if (StudyName.Equals("AUTO", StringComparison.OrdinalIgnoreCase))
+                {
+                    _settings.Optimize.StudyName = "no-name-" + Guid.NewGuid().ToString("D");
+                }
+                new StorageHandler().DuplicateStudyInStorage(SelectedExistStudy.Name, _settings.Optimize.StudyName, _settings.Storage);
+            }
+            return true;
         }
 
         private void InitializeOptimizeProcess()
@@ -409,7 +464,9 @@ namespace Tunny.WPF.ViewModels.Optimize
             {
                 RhinoWindowHandle(9);
             }
+            _windowViewModel.ReportProgress("🐟Finish🐟", 100);
         }
+
         private static void RhinoWindowHandle(int status)
         {
             IntPtr rhinoWindow = Rhino.RhinoApp.MainWindowHandle();

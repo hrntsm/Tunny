@@ -17,6 +17,26 @@ namespace Tunny.WPF.Common
                 MessageBoxImage.Error);
         }
 
+        internal static void Error_NoSourceStudySelected()
+        {
+            TLog.MethodStart();
+            Show(
+                "Please set CopySourceStudy.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+
+        internal static void Error_CopySourceAndDestinationAreSame()
+        {
+            TLog.MethodStart();
+            Show(
+                "Copy source and destination StudyName are the same.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+
         internal static void Error_PrunerPath()
         {
             TLog.MethodStart();
