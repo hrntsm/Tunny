@@ -19,5 +19,5 @@ def set_attr_to_duplicate_trial(base_trial, compared_trial) -> None:
         "NOTE",
         f"trial {compared_trial.number} and trial {base_trial.number} were duplicate parameters.",
     )
-    if "Constraint" in compared_trial.user_attrs:
-        base_trial.set_user_attr("Constraint", compared_trial.user_attrs["Constraint"])
+    for key, value in compared_trial.user_attrs.items():
+        base_trial.set_user_attr(key, value)
