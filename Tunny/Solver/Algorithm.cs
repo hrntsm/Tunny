@@ -677,21 +677,32 @@ namespace Tunny.Solver
             TLog.MethodStart();
             foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
             {
-                PyList pyList;
+                PyObject pyReportValues;
                 if (pair.Key == "Constraint")
                 {
                     IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
-                    pyList = PyConverter.EnumeratorToPyList(values);
+                    pyReportValues = PyConverter.EnumeratorToPyList(values);
                 }
                 else if (pair.Key == "Direction")
                 {
                     continue;
                 }
+                else if (pair.Value.Count == 1)
+                {
+                    pyReportValues = double.TryParse(pair.Value[0], out double num)
+                        ? new PyFloat(num)
+                        : (PyObject)new PyString(pair.Value[0]);
+                }
+                else if (pair.Value.All(x => double.TryParse(x, out double _)))
+                {
+                    IEnumerable<double> values = pair.Value.Select(x => double.Parse(x, CultureInfo.InvariantCulture));
+                    pyReportValues = PyConverter.EnumeratorToPyList(values);
+                }
                 else
                 {
-                    pyList = PyConverter.EnumeratorToPyList(pair.Value);
+                    pyReportValues = PyConverter.EnumeratorToPyList(pair.Value);
                 }
-                trial.set_user_attr(pair.Key, pyList);
+                trial.set_user_attr(pair.Key, pyReportValues);
             }
         }
 
