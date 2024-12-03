@@ -23,6 +23,9 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
 ### Changed
 
 - Default log file is set to "Verbose" with a retention period of 1 day.
+- Dashboard & TT-DesignExplorer trial attribute handling.
+  - Attribute values are shown in ParallelCoordinate plot in dashboard.
+  - Attribute values are shown in graph & trial value table in TT-DesignExplorer.
 - Stop log output to console.
 - Disable window minimize button.
 - No log output to the Rhino console.
