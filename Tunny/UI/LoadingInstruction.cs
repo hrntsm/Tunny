@@ -101,15 +101,20 @@ namespace Tunny.UI
         private void SetTutorialDropDownItems()
         {
             TLog.MethodStart();
-            var optExample = new ToolStripMenuItem("Optimization", null, null, "TutorialOptimizationStripMenuItem");
-            var hitlExample = new ToolStripMenuItem("Human-in-the-loop", null, null, "TutorialHITLStripMenuItem");
-            string[] optFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Optimization"), "*.gh");
-            string[] hitlFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Human-in-the-loop"), "*.gh");
-
-            SetMenuItemsFromFilePath(optExample, optFiles);
-            SetMenuItemsFromFilePath(hitlExample, hitlFiles);
-
-            _tutorialStripMenuItem.DropDownItems.AddRange(new[] { optExample, hitlExample });
+            if (Directory.Exists(Path.Combine(TEnvVariables.ExampleDirPath, "Optimization")))
+            {
+                var optExample = new ToolStripMenuItem("Optimization", null, null, "TutorialOptimizationStripMenuItem");
+                string[] optFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Optimization"), "*.gh");
+                SetMenuItemsFromFilePath(optExample, optFiles);
+                _tutorialStripMenuItem.DropDownItems.Add(optExample);
+            }
+            if (Directory.Exists(Path.Combine(TEnvVariables.ExampleDirPath, "Human-in-the-loop")))
+            {
+                var hitlExample = new ToolStripMenuItem("Human-in-the-loop", null, null, "TutorialHITLStripMenuItem");
+                string[] hitlFiles = Directory.GetFiles(Path.Combine(TEnvVariables.ExampleDirPath, "Human-in-the-loop"), "*.gh");
+                SetMenuItemsFromFilePath(hitlExample, hitlFiles);
+                _tutorialStripMenuItem.DropDownItems.Add(hitlExample);
+            }
         }
 
         private static void SetMenuItemsFromFilePath(ToolStripMenuItem menuItem, string[] filePaths)
@@ -131,11 +136,7 @@ namespace Tunny.UI
         {
             TLog.MethodStart();
             TLog.Debug("AboutTunnyStripMenuItem Clicked");
-            WPF.Common.TunnyMessageBox.Show(
-                "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
-                "About Tunny",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            WPF.Common.TunnyMessageBox.Info_About();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
