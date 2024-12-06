@@ -42,7 +42,9 @@ for soon-to-be removed features.
 
 ### Removed
 
-for now removed features.
+- Geometry & Direction input in ConstructFisAttr component.
+  - If you use Geometry, please use artifact.
+  - Direction can set in New Tunny UI.
 
 ### Fixed
 
@@ -51,8 +53,9 @@ for now removed features.
 - Mesh could not be put directly into Artifact.
 - Human in the loop exception with stop_flag.
 - Even the multi-purpose Human in the loop specifies GP and the optimization does not flow, so TPE is chosen.
-- Pareto Front plot with 3 objectives visualize error
-- Delegate initialize error when push run optimize button
+- Pareto Front plot with 3 objectives visualize error.
+- Delegate initialize error when push run optimize button.
+- If there is not examples dir in .tunny_env, tunny throw exception when Loading instruction.
 
 ### Security
 
