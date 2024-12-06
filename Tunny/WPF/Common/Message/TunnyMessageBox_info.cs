@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 
 using Tunny.Core.Util;
@@ -14,6 +13,17 @@ namespace Tunny.WPF.Common
                 "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
                 "Python is already installed",
                 MessageBoxButton.OKCancel,
+                MessageBoxImage.Information
+            );
+        }
+
+        internal static void Info_About()
+        {
+            TLog.MethodStart();
+            Show(
+                "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
+                "About Tunny",
+                MessageBoxButton.OK,
                 MessageBoxImage.Information
             );
         }
