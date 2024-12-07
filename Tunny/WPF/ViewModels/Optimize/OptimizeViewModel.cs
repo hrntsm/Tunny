@@ -33,18 +33,18 @@ namespace Tunny.WPF.ViewModels.Optimize
         private MainWindowViewModel _windowViewModel;
         private LiveChartPage _chart1;
         private LiveChartPage _chart2;
-        private TPESettingsPage _tpePage;
-        private GPOptunaSettingsPage _gpOptunaPage;
-        private GPBoTorchSettingsPage _gpBoTorchPage;
-        private NSGAIISettingsPage _nsgaiiPage;
-        private NSGAIIISettingsPage _nsgaiiiPage;
-        private CmaEsSettingsPage _cmaesPage;
-        private RandomSettingsPage _randomPage;
-        private QmcSettingsPage _qmcPage;
-        private BruteForceSettingsPage _bruteForcePage;
-        private AutoSettingsPage _autoPage;
-        private MOEADSettingsPage _moeadPage;
-        private MoCmaEsSettingsPage _moCmaEsPage;
+        private Lazy<TPESettingsPage> _tpePage;
+        private Lazy<GPOptunaSettingsPage> _gpOptunaPage;
+        private Lazy<GPBoTorchSettingsPage> _gpBoTorchPage;
+        private Lazy<NSGAIISettingsPage> _nsgaiiPage;
+        private Lazy<NSGAIIISettingsPage> _nsgaiiiPage;
+        private Lazy<CmaEsSettingsPage> _cmaesPage;
+        private Lazy<RandomSettingsPage> _randomPage;
+        private Lazy<QmcSettingsPage> _qmcPage;
+        private Lazy<BruteForceSettingsPage> _bruteForcePage;
+        private Lazy<AutoSettingsPage> _autoPage;
+        private Lazy<MOEADSettingsPage> _moeadPage;
+        private Lazy<MoCmaEsSettingsPage> _moCmaEsPage;
 
         private string _trialNumberParam1Label;
         public string TrialNumberParam1Label { get => _trialNumberParam1Label; set => SetProperty(ref _trialNumberParam1Label, value); }
@@ -208,18 +208,18 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         private void InitializeSamplerPage()
         {
-            _tpePage = TPESettingsPage.FromSettings(_settings);
-            _gpOptunaPage = GPOptunaSettingsPage.FromSettings(_settings);
-            _gpBoTorchPage = GPBoTorchSettingsPage.FromSettings(_settings);
-            _nsgaiiPage = NSGAIISettingsPage.FromSettings(_settings);
-            _nsgaiiiPage = NSGAIIISettingsPage.FromSettings(_settings);
-            _cmaesPage = CmaEsSettingsPage.FromSettings(_settings);
-            _randomPage = RandomSettingsPage.FromSettings(_settings);
-            _qmcPage = QmcSettingsPage.FromSettings(_settings);
-            _bruteForcePage = BruteForceSettingsPage.FromSettings(_settings);
-            _autoPage = AutoSettingsPage.FromSettings(_settings);
-            _moeadPage = MOEADSettingsPage.FromSettings(_settings);
-            _moCmaEsPage = MoCmaEsSettingsPage.FromSettings(_settings);
+            _tpePage = new Lazy<TPESettingsPage>(() => TPESettingsPage.FromSettings(_settings));
+            _gpOptunaPage = new Lazy<GPOptunaSettingsPage>(() => GPOptunaSettingsPage.FromSettings(_settings));
+            _gpBoTorchPage = new Lazy<GPBoTorchSettingsPage>(() => GPBoTorchSettingsPage.FromSettings(_settings));
+            _nsgaiiPage = new Lazy<NSGAIISettingsPage>(() => NSGAIISettingsPage.FromSettings(_settings));
+            _nsgaiiiPage = new Lazy<NSGAIIISettingsPage>(() => NSGAIIISettingsPage.FromSettings(_settings));
+            _cmaesPage = new Lazy<CmaEsSettingsPage>(() => CmaEsSettingsPage.FromSettings(_settings));
+            _randomPage = new Lazy<RandomSettingsPage>(() => RandomSettingsPage.FromSettings(_settings));
+            _qmcPage = new Lazy<QmcSettingsPage>(() => QmcSettingsPage.FromSettings(_settings));
+            _bruteForcePage = new Lazy<BruteForceSettingsPage>(() => BruteForceSettingsPage.FromSettings(_settings));
+            _autoPage = new Lazy<AutoSettingsPage>(() => AutoSettingsPage.FromSettings(_settings));
+            _moeadPage = new Lazy<MOEADSettingsPage>(() => MOEADSettingsPage.FromSettings(_settings));
+            _moCmaEsPage = new Lazy<MoCmaEsSettingsPage>(() => MoCmaEsSettingsPage.FromSettings(_settings));
         }
 
         public void ChangeTargetSampler(SamplerType samplerType)
@@ -228,52 +228,52 @@ namespace Tunny.WPF.ViewModels.Optimize
             switch (samplerType)
             {
                 case SamplerType.TPE:
-                    param = _tpePage;
-                    OptimizeSettingsPage = _tpePage;
+                    param = _tpePage.Value;
+                    OptimizeSettingsPage = _tpePage.Value;
                     break;
                 case SamplerType.GP:
-                    param = _gpOptunaPage;
-                    OptimizeSettingsPage = _gpOptunaPage;
+                    param = _gpOptunaPage.Value;
+                    OptimizeSettingsPage = _gpOptunaPage.Value;
                     break;
                 case SamplerType.BoTorch:
-                    param = _gpBoTorchPage;
-                    OptimizeSettingsPage = _gpBoTorchPage;
+                    param = _gpBoTorchPage.Value;
+                    OptimizeSettingsPage = _gpBoTorchPage.Value;
                     break;
                 case SamplerType.NSGAII:
-                    param = _nsgaiiPage;
-                    OptimizeSettingsPage = _nsgaiiPage;
+                    param = _nsgaiiPage.Value;
+                    OptimizeSettingsPage = _nsgaiiPage.Value;
                     break;
                 case SamplerType.NSGAIII:
-                    param = _nsgaiiiPage;
-                    OptimizeSettingsPage = _nsgaiiiPage;
+                    param = _nsgaiiiPage.Value;
+                    OptimizeSettingsPage = _nsgaiiiPage.Value;
                     break;
                 case SamplerType.CmaEs:
-                    param = _cmaesPage;
-                    OptimizeSettingsPage = _cmaesPage;
+                    param = _cmaesPage.Value;
+                    OptimizeSettingsPage = _cmaesPage.Value;
                     break;
                 case SamplerType.Random:
-                    param = _randomPage;
-                    OptimizeSettingsPage = _randomPage;
+                    param = _randomPage.Value;
+                    OptimizeSettingsPage = _randomPage.Value;
                     break;
                 case SamplerType.QMC:
-                    param = _qmcPage;
-                    OptimizeSettingsPage = _qmcPage;
+                    param = _qmcPage.Value;
+                    OptimizeSettingsPage = _qmcPage.Value;
                     break;
                 case SamplerType.BruteForce:
-                    param = _bruteForcePage;
-                    OptimizeSettingsPage = _bruteForcePage;
+                    param = _bruteForcePage.Value;
+                    OptimizeSettingsPage = _bruteForcePage.Value;
                     break;
                 case SamplerType.AUTO:
-                    param = _autoPage;
-                    OptimizeSettingsPage = _autoPage;
+                    param = _autoPage.Value;
+                    OptimizeSettingsPage = _autoPage.Value;
                     break;
                 case SamplerType.MOEAD:
-                    param = _moeadPage;
-                    OptimizeSettingsPage = _moeadPage;
+                    param = _moeadPage.Value;
+                    OptimizeSettingsPage = _moeadPage.Value;
                     break;
                 case SamplerType.MoCmaEs:
-                    param = _moCmaEsPage;
-                    OptimizeSettingsPage = _moCmaEsPage;
+                    param = _moCmaEsPage.Value;
+                    OptimizeSettingsPage = _moCmaEsPage.Value;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(samplerType), samplerType, null);
@@ -487,9 +487,6 @@ namespace Tunny.WPF.ViewModels.Optimize
             }
         }
 
-        public LiveChartPage Chart2 { get => _chart2; set => _chart2 = value; }
-        public GPOptunaSettingsPage GpOptunaPage { get => _gpOptunaPage; set => _gpOptunaPage = value; }
-
         private void PerformStopOptimize()
         {
             TLog.MethodStart();
@@ -510,18 +507,18 @@ namespace Tunny.WPF.ViewModels.Optimize
             TLog.MethodStart();
             var sampler = new Sampler
             {
-                Tpe = _tpePage.ToSettings(),
-                GP = _gpOptunaPage.ToSettings(),
-                BoTorch = _gpBoTorchPage.ToSettings(),
-                NsgaII = _nsgaiiPage.ToSettings(),
-                NsgaIII = _nsgaiiiPage.ToSettings(),
-                CmaEs = _cmaesPage.ToSettings(),
-                Random = _randomPage.ToSettings(),
-                QMC = _qmcPage.ToSettings(),
-                BruteForce = _bruteForcePage.ToSettings(),
-                Auto = _autoPage.ToSettings(),
-                MOEAD = _moeadPage.ToSettings(),
-                MoCmaEs = _moCmaEsPage.ToSettings()
+                Tpe = _tpePage.Value.ToSettings(),
+                GP = _gpOptunaPage.Value.ToSettings(),
+                BoTorch = _gpBoTorchPage.Value.ToSettings(),
+                NsgaII = _nsgaiiPage.Value.ToSettings(),
+                NsgaIII = _nsgaiiiPage.Value.ToSettings(),
+                CmaEs = _cmaesPage.Value.ToSettings(),
+                Random = _randomPage.Value.ToSettings(),
+                QMC = _qmcPage.Value.ToSettings(),
+                BruteForce = _bruteForcePage.Value.ToSettings(),
+                Auto = _autoPage.Value.ToSettings(),
+                MOEAD = _moeadPage.Value.ToSettings(),
+                MoCmaEs = _moCmaEsPage.Value.ToSettings()
             };
 
             int param1 = int.Parse(TrialNumberParam1, CultureInfo.InvariantCulture);

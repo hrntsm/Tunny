@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 
 using CefSharp;
+using CefSharp.Wpf;
 
 using Tunny.WPF.Common;
 
@@ -9,39 +10,43 @@ namespace Tunny.WPF.Views.Pages
 {
     public partial class HelpPage : Page, IDisposable
     {
-        private readonly CefSharp.Wpf.ChromiumWebBrowser _browser;
+        private readonly Lazy<ChromiumWebBrowser> _browser;
 
         public HelpPage()
         {
             InitializeComponent();
-            _browser = new CefSharp.Wpf.ChromiumWebBrowser();
-            HelpPageFrame.Content = _browser;
+            _browser = new Lazy<ChromiumWebBrowser>();
         }
+
         internal void OpenSite(HelpType? type)
         {
+            if (!_browser.IsValueCreated)
+            {
+                HelpPageFrame.Content = _browser.Value;
+            }
             switch (type)
             {
                 case null:
                 case HelpType.TunnyAbout:
-                    _browser.Address = "https://tunny-docs.deno.dev/";
+                    _browser.Value.Address = "https://tunny-docs.deno.dev/";
                     break;
                 case HelpType.TunnyDocument:
-                    _browser.Address = "https://tunny-docs.deno.dev/docs/getting-start";
+                    _browser.Value.Address = "https://tunny-docs.deno.dev/docs/getting-start";
                     break;
                 case HelpType.OptunaSampler:
-                    _browser.Address = "https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
+                    _browser.Value.Address = "https://optuna.readthedocs.io/en/stable/reference/samplers/index.html";
                     break;
                 case HelpType.OptunaHub:
-                    _browser.Address = "https://hub.optuna.org/";
+                    _browser.Value.Address = "https://hub.optuna.org/";
                     break;
                 case HelpType.TunnyLicense:
-                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/LICENSE";
+                    _browser.Value.Address = "https://github.com/hrntsm/Tunny/blob/main/LICENSE";
                     break;
                 case HelpType.PythonPackagesLicense:
-                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES";
+                    _browser.Value.Address = "https://github.com/hrntsm/Tunny/blob/main/PYTHON_PACKAGE_LICENSES";
                     break;
                 case HelpType.OtherLicense:
-                    _browser.Address = "https://github.com/hrntsm/Tunny/blob/main/THIRD_PARTY_LICENSES";
+                    _browser.Value.Address = "https://github.com/hrntsm/Tunny/blob/main/THIRD_PARTY_LICENSES";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -51,7 +56,7 @@ namespace Tunny.WPF.Views.Pages
         public void Dispose()
         {
             Cef.Shutdown();
-            _browser?.Dispose();
+            _browser?.Value.Dispose();
             GC.SuppressFinalize(this);
         }
     }
