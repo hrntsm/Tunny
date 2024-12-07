@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Mvvm;
 
+using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
@@ -29,6 +30,7 @@ namespace Tunny.WPF.ViewModels
         private readonly VisualizePage _visualizePage;
         private readonly HelpPage _helpPage;
         private readonly ExpertPage _expertPage;
+        private static SharedItems SharedItems => SharedItems.Instance;
         public bool IsSingleObjective { get => !_isMultiObjective; }
         private bool _isMultiObjective;
         public bool IsMultiObjective { get => _isMultiObjective; set => SetProperty(ref _isMultiObjective, value); }
@@ -42,7 +44,7 @@ namespace Tunny.WPF.ViewModels
             _visualizePage = new VisualizePage();
             _helpPage = new HelpPage();
             _expertPage = new ExpertPage();
-            IsMultiObjective = OptimizeProcess.Component.GhInOut.IsMultiObjective;
+            IsMultiObjective = SharedItems.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
             ReportProgress("Welcome 🐟Tunny🐟 The next-gen Grasshopper optimization tool ", 0);
 
@@ -53,7 +55,7 @@ namespace Tunny.WPF.ViewModels
             };
             MainWindowFrame = _optimizePage;
             _optimizeViewModel.UpdateExistStudies();
-            _optimizeViewModel.ChangeTargetSampler(OptimizeProcess.Settings.Optimize.SamplerType);
+            _optimizeViewModel.ChangeTargetSampler(SharedItems.Settings.Optimize.SamplerType);
 
             CheckPruner();
             CheckPythonInstalled();
@@ -61,15 +63,15 @@ namespace Tunny.WPF.ViewModels
 
         private void UpdateTitle()
         {
-            string storagePath = OptimizeProcess.Settings.Storage.Path;
+            string storagePath = SharedItems.Settings.Storage.Path;
             WindowTitle = $"Tunny v{TEnvVariables.Version.ToString(2)} - {storagePath}";
         }
 
         private static void CheckPruner()
         {
             TLog.MethodStart();
-            OptimizeProcess.Settings.Pruner.CheckStatus();
-            if (OptimizeProcess.Settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
+            SharedItems.Settings.Pruner.CheckStatus();
+            if (SharedItems.Settings.Pruner.GetPrunerStatus() == PrunerStatus.PathError)
             {
                 TunnyMessageBox.Error_PrunerPath();
             }
@@ -79,12 +81,13 @@ namespace Tunny.WPF.ViewModels
         {
             TLog.MethodStart();
             string tunnyAssembleVersion = TEnvVariables.Version.ToString();
-            if (OptimizeProcess.Settings.CheckPythonLibraries || OptimizeProcess.Settings.Version != tunnyAssembleVersion)
+            TSettings settings = SharedItems.Settings;
+            if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
             {
                 InstallPython();
-                OptimizeProcess.Settings.CheckPythonLibraries = false;
-                OptimizeProcess.Settings.Version = tunnyAssembleVersion;
-                OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
+                settings.CheckPythonLibraries = false;
+                settings.Version = tunnyAssembleVersion;
+                settings.Serialize(TEnvVariables.OptimizeSettingsPath);
             }
         }
 
@@ -193,7 +196,7 @@ namespace Tunny.WPF.ViewModels
                     break;
             }
             _optimizeViewModel.ChangeTargetSampler(samplerType);
-            OptimizeProcess.Settings.Optimize.SamplerType = samplerType;
+            SharedItems.Settings.Optimize.SamplerType = samplerType;
             MainWindowFrame = _optimizePage;
         }
 
@@ -233,8 +236,8 @@ namespace Tunny.WPF.ViewModels
 
         private void QuickAccessSettingsFileSave()
         {
-            OptimizeProcess.Settings.Optimize = _optimizeViewModel.GetCurrentSettings();
-            OptimizeProcess.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
+            SharedItems.Settings.Optimize = _optimizeViewModel.GetCurrentSettings();
+            SharedItems.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
         }
 
         private DelegateCommand _quickAccessNewStorageFileCommand;
@@ -263,10 +266,10 @@ namespace Tunny.WPF.ViewModels
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                OptimizeProcess.Settings.Storage.Path = dialog.FileName;
+                SharedItems.Settings.Storage.Path = dialog.FileName;
                 if (File.Exists(dialog.FileName) == false)
                 {
-                    OptimizeProcess.Settings.Storage.CreateNewOptunaStorage(true);
+                    SharedItems.Settings.Storage.CreateNewOptunaStorage(true);
                 }
                 UpdateTitle();
             }
@@ -298,7 +301,7 @@ namespace Tunny.WPF.ViewModels
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                OptimizeProcess.Settings.Storage.Path = dialog.FileName;
+                SharedItems.Settings.Storage.Path = dialog.FileName;
                 UpdateTitle();
             }
         }
@@ -319,13 +322,13 @@ namespace Tunny.WPF.ViewModels
         private void RunOptunaDashboard()
         {
             TLog.MethodStart();
-            if (File.Exists(OptimizeProcess.Settings.Storage.Path) == false)
+            if (File.Exists(SharedItems.Settings.Storage.Path) == false)
             {
                 TunnyMessageBox.Error_ResultFileNotExist();
                 return;
             }
             string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
-            string storagePath = OptimizeProcess.Settings.Storage.Path;
+            string storagePath = SharedItems.Settings.Storage.Path;
 
             var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
             dashboard.Run(true);

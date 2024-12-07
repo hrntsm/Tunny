@@ -32,7 +32,7 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public VisualizeViewModel()
         {
-            _settings = OptimizeProcess.Settings;
+            _settings = SharedItems.Instance.Settings;
             _plotFrame = new Lazy<ChromiumWebBrowser>();
             InitializeSettingPages();
         }

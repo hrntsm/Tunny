@@ -11,7 +11,6 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.Process;
 using Tunny.Type;
 using Tunny.WPF.Common;
 
@@ -22,6 +21,7 @@ namespace Tunny.Solver
         public Parameter[] OptimalParameters { get; private set; }
         private readonly bool _hasConstraint;
         private readonly TSettings _settings;
+        private static SharedItems SharedItems => SharedItems.Instance;
         private const string CompleteMessagePrefix = "Solver completed successfully.";
         private const string ErrorMessagePrefix = "Solver error.";
 
@@ -93,7 +93,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             MessageBoxResult msgResult = MessageBoxResult.None;
             ToComponentEndMessage(optimize);
-            if (OptimizeProcess.Component is UIOptimizeComponentBase)
+            if (SharedItems.Component is UIOptimizeComponentBase)
             {
                 msgResult = ShowUIEndMessages(optimize.EndState, isMultiObjective);
             }
@@ -128,11 +128,11 @@ namespace Tunny.Solver
                     message = ErrorMessagePrefix;
                     break;
             }
-            if (OptimizeProcess.Component is BoneFishComponent)
+            if (SharedItems.Component is BoneFishComponent)
             {
                 TLog.Info(message);
             }
-            OptimizeProcess.Component.SetInfo(message);
+            SharedItems.Component.SetInfo(message);
         }
 
         private static MessageBoxResult ShowUIEndMessages(EndState endState, bool isMultiObjective)

@@ -15,6 +15,7 @@ using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Process;
+using Tunny.WPF.Common;
 
 namespace Tunny.UI
 {
@@ -76,7 +77,7 @@ namespace Tunny.UI
             GetUIValues();
             RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
             ShowRealtimeResultCheckBox.Enabled = false;
-            OptimizeProcess.Settings = _settings;
+            SharedItems.Instance.Settings = _settings;
 
             if (!CheckInputValue(ghCanvas))
             {

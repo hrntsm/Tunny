@@ -1,25 +1,26 @@
 using System.Windows;
 
 using Tunny.Core.Util;
-using Tunny.Process;
 
 namespace Tunny.WPF.Common
 {
     internal static partial class TunnyMessageBox
     {
+        private static SharedItems SharedItems => SharedItems.Instance;
+
         internal static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
             WriteLog(messageBoxText, icon);
             MessageBoxResult msgResult = MessageBoxResult.None;
 
-            if (OptimizeProcess.TunnyWindow == null)
+            if (SharedItems.TunnyWindow == null)
             {
                 msgResult = MessageBox.Show(messageBoxText, caption, button, icon);
             }
             else
             {
-                OptimizeProcess.TunnyWindow.Dispatcher.Invoke(() =>
-                    msgResult = MessageBox.Show(OptimizeProcess.TunnyWindow, messageBoxText, caption, button, icon)
+                SharedItems.TunnyWindow.Dispatcher.Invoke(() =>
+                    msgResult = MessageBox.Show(SharedItems.TunnyWindow, messageBoxText, caption, button, icon)
                 );
             }
 

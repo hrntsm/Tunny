@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Grasshopper.GUI;
-
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
@@ -12,7 +10,7 @@ using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Input;
 using Tunny.PostProcess;
-using Tunny.WPF;
+using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 using Tunny.WPF.ViewModels.Optimize;
 
@@ -22,27 +20,14 @@ namespace Tunny.Process
     {
         private const string IntermediateValueKey = "intermediate_value_step_";
         internal const string PrunedTrialReportValueKey = "pruned_trial_report_value";
-
-        public static OptimizeComponentBase Component;
-        public static TSettings Settings;
         public static bool IsForcedStopOptimize { get; set; }
-        public static GH_DocumentEditor GH_DocumentEditor { get; internal set; }
-        public static MainWindow TunnyWindow { get; internal set; }
-
-        private static IProgress<ProgressState> s_progress;
-        private static OptimizeViewModel s_optimizeViewModel;
-
-        internal static void AddProgress(IProgress<ProgressState> progress)
-        {
-            TLog.MethodStart();
-            s_progress = progress;
-        }
+        private static SharedItems SharedItems => SharedItems.Instance;
 
         internal async static Task RunAsync(OptimizeViewModel optimizeViewModel)
         {
             TLog.MethodStart();
-            Component?.GhInOutInstantiate();
-            s_optimizeViewModel = optimizeViewModel;
+            SharedItems.Component?.GhInOutInstantiate();
+            SharedItems.OptimizeViewModel = optimizeViewModel;
 
             ProgressState progressState = await RunOptimizationLoopAsync();
             if (progressState.Parameter == null || progressState.Parameter.Count == 0)
@@ -50,7 +35,7 @@ namespace Tunny.Process
                 return;
             }
 
-            if (Component != null)
+            if (SharedItems.Component != null)
             {
                 var tcs = new TaskCompletionSource<bool>();
                 void EventHandler(object sender, GrasshopperStates status)
@@ -60,16 +45,16 @@ namespace Tunny.Process
                         tcs.SetResult(true);
                     }
                 }
-                Component.GrasshopperStatusChanged += EventHandler;
+                SharedItems.Component.GrasshopperStatusChanged += EventHandler;
                 try
                 {
-                    Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+                    SharedItems.Component.GrasshopperStatus = GrasshopperStates.RequestSent;
                     await ReportAsync(progressState);
                     await tcs.Task;
                 }
                 finally
                 {
-                    Component.GrasshopperStatusChanged -= EventHandler;
+                    SharedItems.Component.GrasshopperStatusChanged -= EventHandler;
                 }
                 optimizeViewModel.UpdateExistStudies();
             }
@@ -78,7 +63,7 @@ namespace Tunny.Process
         private static async Task ReportAsync(ProgressState progressState)
         {
             TLog.MethodStart();
-            await Task.Run(() => s_progress.Report(progressState));
+            await Task.Run(() => SharedItems.ReportProgress(progressState));
         }
 
         private static async Task<ProgressState> RunOptimizationLoopAsync()
@@ -86,11 +71,11 @@ namespace Tunny.Process
             TLog.MethodStart();
             Objective objectives = SetObjectives();
             List<VariableBase> variables = SetVariables();
-            Dictionary<string, Type.FishEgg> fishEggs = Component.GhInOut.FishEggs;
-            bool hasConstraint = Component.GhInOut.HasConstraint;
+            Dictionary<string, Type.FishEgg> fishEggs = SharedItems.Component.GhInOut.FishEggs;
+            bool hasConstraint = SharedItems.Component.GhInOut.HasConstraint;
             var progressState = new ProgressState(Array.Empty<Parameter>());
 
-            var optunaSolver = new Solver.Solver(Settings, hasConstraint);
+            var optunaSolver = new Solver.Solver(SharedItems.Settings, hasConstraint);
             bool reinstateResult = await Task.Run(() =>
                 optunaSolver.RunSolver(variables, objectives, fishEggs, EvaluateFunction)
             );
@@ -102,13 +87,13 @@ namespace Tunny.Process
 
         private static List<VariableBase> SetVariables()
         {
-            List<VariableBase> variables = Component.GhInOut.Variables;
+            List<VariableBase> variables = SharedItems.Component.GhInOut.Variables;
             int count = 0;
             foreach (VariableBase variable in variables)
             {
                 if (variable is NumberVariable numberVariable)
                 {
-                    numberVariable.IsLogScale = s_optimizeViewModel.VariableSettingItems[count].IsLogScale;
+                    numberVariable.IsLogScale = SharedItems.OptimizeViewModel.VariableSettingItems[count].IsLogScale;
                     count++;
                 }
             }
@@ -118,8 +103,8 @@ namespace Tunny.Process
 
         private static Objective SetObjectives()
         {
-            Objective objectives = Component.GhInOut.Objectives;
-            IEnumerable<ObjectiveSettingItem> settingItems = s_optimizeViewModel.ObjectiveSettingItems;
+            Objective objectives = SharedItems.Component.GhInOut.Objectives;
+            IEnumerable<ObjectiveSettingItem> settingItems = SharedItems.OptimizeViewModel.ObjectiveSettingItems;
             objectives.SetDirections(settingItems);
             return objectives;
         }
@@ -127,17 +112,18 @@ namespace Tunny.Process
         private static TrialGrasshopperItems EvaluateFunction(ProgressState pState, int progress)
         {
             TLog.MethodStart();
-            s_progress.Report(pState);
+            SharedItems.ReportProgress(pState);
+            OptimizeComponentBase component = SharedItems.Component;
             if (pState.IsReportOnly)
             {
                 return null;
             }
 
-            Component.GrasshopperStatus = GrasshopperStates.RequestSent;
+            component.GrasshopperStatus = GrasshopperStates.RequestSent;
 
             int step = 0;
             DateTime timer = DateTime.Now;
-            while (Component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
+            while (component.GrasshopperStatus != GrasshopperStates.RequestProcessed)
             {
                 PrunerProgress(pState, ref step, ref timer);
             }
@@ -145,16 +131,16 @@ namespace Tunny.Process
 
             return new TrialGrasshopperItems
             {
-                Objectives = Component.GhInOut.Objectives,
-                GeometryJson = Component.GhInOut.GetGeometryJson(),
-                Attribute = Component.GhInOut.GetAttributes(),
-                Artifacts = Component.GhInOut.Artifacts,
+                Objectives = component.GhInOut.Objectives,
+                GeometryJson = component.GhInOut.GetGeometryJson(),
+                Attribute = component.GhInOut.GetAttributes(),
+                Artifacts = component.GhInOut.Artifacts,
             };
         }
 
         private static void PrunerProgress(ProgressState pState, ref int step, ref DateTime timer)
         {
-            if (Settings.Pruner.IsEnabled
+            if (SharedItems.Instance.Settings.Pruner.IsEnabled
                 && pState.Pruner.GetPrunerStatus() == PrunerStatus.Runnable
                 && DateTime.Now - timer > TimeSpan.FromSeconds(pState.Pruner.EvaluateIntervalSeconds))
             {

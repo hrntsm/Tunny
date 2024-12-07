@@ -493,7 +493,7 @@ namespace Tunny.Solver
             sb.Remove(sb.Length - 2, 2);
             sb.Append("}.");
             string message = sb.ToString();
-            OptimizeProcess.Component.SetInfo(message);
+            SharedItems.Instance.Component.SetInfo(message);
             TLog.Info(sb.ToString());
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 
 using Grasshopper;
 using Grasshopper.GUI;
@@ -16,9 +14,10 @@ using Tunny.Component.Params;
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
-using Tunny.Handler;
 using Tunny.Process;
 using Tunny.Type;
+using Tunny.WPF.Common;
+
 namespace Tunny.Component.Optimizer
 {
     public class BoneFishComponent : OptimizeComponentBase
@@ -27,6 +26,7 @@ namespace Tunny.Component.Optimizer
         private bool _running;
         private Fish[] _allFishes;
         private string _state;
+        private static SharedItems SharedItems => SharedItems.Instance;
 
         public BoneFishComponent()
           : base("Bone Fish", "Born",
@@ -106,7 +106,7 @@ namespace Tunny.Component.Optimizer
                 Params.Output[1].ClearData();
                 Params.Output[2].ClearData();
 
-                OptimizeProcess.Settings = settings;
+                SharedItems.Settings = settings;
             }
 
             DA.SetData(0, Info);
@@ -126,8 +126,8 @@ namespace Tunny.Component.Optimizer
             OptimizeProcess.IsForcedStopOptimize = true;
 
             Message = "Outputting";
-            Study[] studies = OptimizeProcess.Settings.Storage.GetAllStudies();
-            Study study = studies.FirstOrDefault(x => x.StudyName == OptimizeProcess.Settings.Optimize.StudyName);
+            Study[] studies = SharedItems.Settings.Storage.GetAllStudies();
+            Study study = studies.FirstOrDefault(x => x.StudyName == SharedItems.Settings.Optimize.StudyName);
 
             string versionString = (study.UserAttrs["tunny_version"] as string[])[0];
             var version = new Version(versionString);

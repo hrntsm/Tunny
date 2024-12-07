@@ -29,6 +29,7 @@ namespace Tunny.WPF.ViewModels.Optimize
     {
         private const string SamplerTypeLabelPrefix = "SamplerType: ";
         private const string TrialNumberLabelPrefix = "Trial: ";
+        private static SharedItems SharedItems => SharedItems.Instance;
         private readonly TSettings _settings;
         private MainWindowViewModel _windowViewModel;
         private LiveChartPage _chart1;
@@ -173,7 +174,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         public OptimizeViewModel()
         {
-            _settings = OptimizeProcess.Settings;
+            _settings = SharedItems.Settings;
             InitializeUIValues();
             InitializeChart();
             InitializeSamplerPage();
@@ -301,7 +302,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         private void InitializeObjectivesAndVariables()
         {
-            Util.GrasshopperInOut ghIO = OptimizeProcess.Component.GhInOut;
+            Util.GrasshopperInOut ghIO = SharedItems.Component.GhInOut;
             ObjectiveSettingItems = new ObservableCollection<ObjectiveSettingItem>();
             foreach (string item in ghIO.Objectives.GetNickNames())
             {
@@ -351,7 +352,7 @@ namespace Tunny.WPF.ViewModels.Optimize
             _settings.Optimize = GetCurrentSettings(true);
             SetupWindow();
 
-            _windowViewModel = OptimizeProcess.TunnyWindow.DataContext as MainWindowViewModel;
+            _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
             _windowViewModel.ReportProgress("Start Optimizing...", 0);
             InitializeOptimizeProcess();
 
@@ -422,8 +423,8 @@ namespace Tunny.WPF.ViewModels.Optimize
         private void InitializeOptimizeProcess()
         {
             Progress<ProgressState> progress = CreateProgressAction();
-            OptimizeProcess.Settings = _settings;
-            OptimizeProcess.AddProgress(progress);
+            SharedItems.Settings = _settings;
+            SharedItems.AddProgress(progress);
         }
 
         private Progress<ProgressState> CreateProgressAction()
@@ -431,12 +432,12 @@ namespace Tunny.WPF.ViewModels.Optimize
             return new Progress<ProgressState>(value =>
             {
                 TLog.MethodStart();
-                OptimizeProcess.Component.UpdateGrasshopper(value);
+                SharedItems.Component.UpdateGrasshopper(value);
                 _windowViewModel.ReportProgress("Running optimization", $"{TrialNumberLabelPrefix}{value.TrialNumber + 1}", value.PercentComplete);
 
                 if (!value.IsReportOnly)
                 {
-                    Input.Objective objectives = OptimizeProcess.Component.GhInOut.Objectives;
+                    Input.Objective objectives = SharedItems.Component.GhInOut.Objectives;
                     _chart1.AddPoint(value.TrialNumber + 1, objectives.Numbers);
                     _chart2.AddPoint(value.TrialNumber + 1, objectives.Numbers);
                 }
@@ -445,7 +446,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         private void SetupWindow()
         {
-            OptimizeProcess.GH_DocumentEditor?.DisableUI();
+            SharedItems.GH_DocumentEditor?.DisableUI();
             RhinoView.EnableDrawing = !_settings.Optimize.DisableViewportDrawing;
 
             if (_settings.Optimize.MinimizeRhinoWindow)
@@ -457,7 +458,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         {
             EnableRunOptimizeButton = true;
             EnableStopOptimizeButton = false;
-            OptimizeProcess.GH_DocumentEditor?.EnableUI();
+            SharedItems.GH_DocumentEditor?.EnableUI();
             RhinoView.EnableDrawing = true;
 
             if (_settings.Optimize.MinimizeRhinoWindow)
