@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class ParallelCoordinateViewModel : PlotSettingsViewModelBase
+    internal sealed class ParallelCoordinateViewModel : PlotSettingsViewModelBase
     {
         public ParallelCoordinateViewModel() : base()
         {

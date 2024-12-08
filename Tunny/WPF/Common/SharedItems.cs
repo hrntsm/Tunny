@@ -10,7 +10,7 @@ using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.WPF.Common
 {
-    internal class SharedItems
+    internal sealed class SharedItems
     {
         private static SharedItems s_instance;
         internal static SharedItems Instance => s_instance ?? (s_instance = new SharedItems());

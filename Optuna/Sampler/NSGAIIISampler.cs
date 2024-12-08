@@ -8,7 +8,7 @@ namespace Optuna.Sampler
         public double[] ReferencePoints { get; set; }
         public int DividingParameter { get; set; } = 3;
 
-        public new dynamic ToPython(dynamic optuna, bool hasConstraints)
+        public dynamic ToPython(dynamic optuna, bool hasConstraints)
         {
             return optuna.samplers.NSGAIIISampler(
                 population_size: PopulationSize,

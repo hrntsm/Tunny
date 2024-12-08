@@ -79,85 +79,9 @@ namespace Tunny.UI
             Plot(PlotActionType.Save);
         }
 
-        private void Plot(PlotActionType pActionType)
+        private static void Plot(PlotActionType pActionType)
         {
             TLog.MethodStart();
-        }
-
-        private static bool CheckTargetValues(PlotSettings pSettings)
-        {
-            TLog.MethodStart();
-            switch (pSettings.PlotTypeName)
-            {
-                case "contour":
-                case "parallel coordinate":
-                case "slice":
-                case "param importances":
-                    return CheckOneObjSomeVarTargets(pSettings);
-                case "pareto front":
-                    return CheckParetoFrontTargets(pSettings);
-                case "clustering":
-                    return CheckClusteringTargets(pSettings);
-                default:
-                    return CheckOneObjectives(pSettings);
-            }
-        }
-
-        private static bool CheckClusteringTargets(PlotSettings pSettings)
-        {
-            TLog.MethodStart();
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length == 0 && pSettings.TargetVariableName.Length == 0)
-            {
-                WPF.Common.TunnyMessageBox.Show("Please select one or more.", "Tunny");
-                result = false;
-            }
-
-            return result;
-        }
-
-        private static bool CheckOneObjectives(PlotSettings pSettings)
-        {
-            TLog.MethodStart();
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1)
-            {
-                result = HandleOnly1ObjectiveMessage();
-            }
-
-            return result;
-        }
-
-        private static bool CheckParetoFrontTargets(PlotSettings pSettings)
-        {
-            TLog.MethodStart();
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 3 || pSettings.TargetObjectiveName.Length < 2)
-            {
-                result = HandleOnly2or3ObjectiveMessage();
-            }
-
-            return result;
-        }
-
-        private static bool CheckOneObjSomeVarTargets(PlotSettings pSettings)
-        {
-            TLog.MethodStart();
-            bool result = true;
-            if (pSettings.TargetObjectiveName.Length > 1 || pSettings.TargetObjectiveName.Length == 0)
-            {
-                result = HandleOnly1ObjectiveMessage();
-            }
-            else if (pSettings.PlotTypeName == "contour" && pSettings.TargetVariableName.Length < 2)
-            {
-                result = RequireLeast2VariableMessage();
-            }
-            else if (pSettings.TargetVariableName.Length == 0)
-            {
-                result = RequireLeast1VariableMessage();
-            }
-
-            return result;
         }
 
         private void TTDesignExplorerButton_Click(object sender, EventArgs e)

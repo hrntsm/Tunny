@@ -12,7 +12,7 @@ using Tunny.WPF.Common;
 
 namespace Tunny.Process
 {
-    internal class VisualizeProcess : PythonInit
+    internal sealed class VisualizeProcess : PythonInit
     {
         internal string Plot(Storage storage, PlotSettings plotSettings)
         {

@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class ContourViewModel : PlotSettingsViewModelBase
+    internal sealed class ContourViewModel : PlotSettingsViewModelBase
     {
         public ContourViewModel() : base()
         {

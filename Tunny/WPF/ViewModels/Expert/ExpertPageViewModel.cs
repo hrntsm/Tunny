@@ -2,7 +2,7 @@
 
 namespace Tunny.WPF.ViewModels.Expert
 {
-    internal class ExpertPageViewModel : BindableBase
+    internal sealed class ExpertPageViewModel : BindableBase
     {
     }
 }

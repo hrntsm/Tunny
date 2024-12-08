@@ -7,7 +7,7 @@ using Tunny.WPF.Models;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class OptimizationHistoryViewModel : PlotSettingsViewModelBase
+    internal sealed class OptimizationHistoryViewModel : PlotSettingsViewModelBase
     {
         private ObservableCollection<NameComboBoxItem> _compareStudyNameItems;
         public ObservableCollection<NameComboBoxItem> CompareStudyNameItems { get => _compareStudyNameItems; set => SetProperty(ref _compareStudyNameItems, value); }

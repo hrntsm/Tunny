@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class RankViewModel : PlotSettingsViewModelBase
+    internal sealed class RankViewModel : PlotSettingsViewModelBase
     {
         public RankViewModel() : base()
         {

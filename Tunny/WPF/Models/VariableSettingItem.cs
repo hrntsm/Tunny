@@ -2,7 +2,7 @@
 
 namespace Tunny.WPF.Models
 {
-    internal class VariableSettingItem
+    internal sealed class VariableSettingItem
     {
         public double Low { get; set; }
         public double High { get; set; }

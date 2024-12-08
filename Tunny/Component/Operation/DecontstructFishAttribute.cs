@@ -57,13 +57,13 @@ namespace Tunny.Component.Operation
             SetDataTreeToDataAccess(DA, nicknames, outputValues);
         }
 
-        private void SetOutputValues(List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> value)
+        private void SetOutputValues(List<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues, GH_Path path, Dictionary<string, object> dict)
         {
             //FIXME: This process should be done once, but foreach executes it every time.
-            _keys = value.Keys.ToList();
-            foreach (KeyValuePair<string, object> pair in value.Where(pair => nicknames.Contains(pair.Key)))
+            _keys = dict.Keys.ToList();
+            foreach (KeyValuePair<string, object> pair in dict.Where(pair => nicknames.Contains(pair.Key)))
             {
-                if (!outputValues.ContainsKey(pair.Key))
+                if (!outputValues.TryGetValue(pair.Key, out GH_Structure<IGH_Goo> value))
                 {
                     outputValues.Add(pair.Key, new GH_Structure<IGH_Goo>());
                 }
@@ -71,12 +71,12 @@ namespace Tunny.Component.Operation
                 IEnumerable<IGH_Goo> goo = GetGooFromAttributeObject(pair.Value);
                 foreach (IGH_Goo g in goo)
                 {
-                    outputValues[pair.Key].Append(g, path);
+                    value.Append(g, path);
                 }
             }
         }
 
-        private void SetDataTreeToDataAccess(IGH_DataAccess DA, IReadOnlyCollection<string> nicknames, IReadOnlyDictionary<string, GH_Structure<IGH_Goo>> outputValues)
+        private void SetDataTreeToDataAccess(IGH_DataAccess DA, IReadOnlyCollection<string> nicknames, Dictionary<string, GH_Structure<IGH_Goo>> outputValues)
         {
             if (Params.Output.Count == 0)
             {

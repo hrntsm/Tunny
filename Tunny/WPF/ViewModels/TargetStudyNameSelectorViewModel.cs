@@ -12,13 +12,12 @@ using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Core.Util;
-using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 
 namespace Tunny.WPF.ViewModels
 {
-    internal class TargetStudyNameSelectorViewModel : BindableBase
+    internal sealed class TargetStudyNameSelectorViewModel : BindableBase
     {
         private readonly TSettings _settings;
 

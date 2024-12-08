@@ -2,7 +2,7 @@
 
 namespace Tunny.WPF.Models
 {
-    internal class ObjectiveSettingItem : BindableBase
+    internal sealed class ObjectiveSettingItem : BindableBase
     {
         private bool _minimize;
         public bool Minimize

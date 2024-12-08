@@ -101,7 +101,7 @@ namespace Tunny.Component.Util
             return arrayedGeometries;
         }
 
-        private bool SetGeometryToResultArray(int countY, GH_Structure<IGH_GeometricGoo> arrayedGeometries, IReadOnlyList<List<GeometryBase>> fishGeometries)
+        private bool SetGeometryToResultArray(int countY, GH_Structure<IGH_GeometricGoo> arrayedGeometries, List<List<GeometryBase>> fishGeometries)
         {
             Vector3d yVec = _settings.Plane.YAxis * (_settings.YInterval * countY);
             for (int countX = 0; countX < _settings.XNum; countX++)
@@ -121,7 +121,7 @@ namespace Tunny.Component.Util
         }
 
         //FIXME: Possibly heavy because deep copying here and doing it for all geometry every time.
-        private void MoveGeometries(int index, Vector3d moveVec, IReadOnlyList<List<GeometryBase>> fishGeometries, GH_Structure<IGH_GeometricGoo> arrayedGeometries)
+        private void MoveGeometries(int index, Vector3d moveVec, List<List<GeometryBase>> fishGeometries, GH_Structure<IGH_GeometricGoo> arrayedGeometries)
         {
             var movedGeometries = new GeometryBase[fishGeometries[index].Count];
             Point3d modelMinPt = GetUnionBoundingBoxMinPt(fishGeometries[index]);

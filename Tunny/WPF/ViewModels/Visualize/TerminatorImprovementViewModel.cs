@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class TerminatorImprovementViewModel : PlotSettingsViewModelBase
+    internal sealed class TerminatorImprovementViewModel : PlotSettingsViewModelBase
     {
         private ObservableCollection<string> _improvementEvaluatorItems;
         public ObservableCollection<string> ImprovementEvaluatorItems { get => _improvementEvaluatorItems; set => SetProperty(ref _improvementEvaluatorItems, value); }

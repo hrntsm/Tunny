@@ -20,7 +20,7 @@ using Tunny.WPF.Views.Pages.Visualize;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class VisualizeViewModel : BindableBase
+    internal sealed class VisualizeViewModel : BindableBase
     {
         private readonly TSettings _settings;
         private VisualizeType _targetVisualizeType;

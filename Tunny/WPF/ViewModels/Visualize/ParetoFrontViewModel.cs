@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class ParetoFrontViewModel : PlotSettingsViewModelBase
+    internal sealed class ParetoFrontViewModel : PlotSettingsViewModelBase
     {
         private bool? _includeDominatedTrials;
         public bool? IncludeDominatedTrials { get => _includeDominatedTrials; set => SetProperty(ref _includeDominatedTrials, value); }

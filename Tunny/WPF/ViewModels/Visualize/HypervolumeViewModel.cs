@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class HypervolumeViewModel : PlotSettingsViewModelBase
+    internal sealed class HypervolumeViewModel : PlotSettingsViewModelBase
     {
         private string _referencePoint;
         public string ReferencePoint { get => _referencePoint; set => SetProperty(ref _referencePoint, value); }

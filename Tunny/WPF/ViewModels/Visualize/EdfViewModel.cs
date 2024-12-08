@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class EdfViewModel : PlotSettingsViewModelBase
+    internal sealed class EdfViewModel : PlotSettingsViewModelBase
     {
         public EdfViewModel() : base()
         {

@@ -2,7 +2,7 @@
 
 namespace Tunny.WPF.Models
 {
-    internal class VisualizeListItem : BindableBase
+    internal sealed class VisualizeListItem : BindableBase
     {
         private bool _isSelected;
         public bool IsSelected

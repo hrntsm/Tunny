@@ -25,7 +25,7 @@ using Tunny.WPF.Views.Pages.Settings.Sampler;
 
 namespace Tunny.WPF.ViewModels.Optimize
 {
-    internal class OptimizeViewModel : BindableBase
+    internal sealed class OptimizeViewModel : BindableBase
     {
         private const string SamplerTypeLabelPrefix = "SamplerType: ";
         private const string TrialNumberLabelPrefix = "Trial: ";

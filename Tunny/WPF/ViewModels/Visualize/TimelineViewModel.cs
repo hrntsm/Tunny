@@ -4,7 +4,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class TimelineViewModel : PlotSettingsViewModelBase
+    internal sealed class TimelineViewModel : PlotSettingsViewModelBase
     {
         public TimelineViewModel() : base()
         {

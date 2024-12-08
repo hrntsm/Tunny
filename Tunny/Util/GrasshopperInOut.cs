@@ -110,7 +110,7 @@ namespace Tunny.Util
             return CheckHasIncorrectVariableInput(errorInputGuids);
         }
 
-        private bool CheckHasIncorrectVariableInput(IReadOnlyCollection<Guid> errorInputGuids)
+        private bool CheckHasIncorrectVariableInput(List<Guid> errorInputGuids)
         {
             TLog.MethodStart();
             return errorInputGuids.Count <= 0 || ShowIncorrectVariableInputMessage(errorInputGuids);
@@ -396,7 +396,7 @@ namespace Tunny.Util
             }
         }
 
-        public void NewSolution(IList<Parameter> parameters)
+        public async void NewSolution(IList<Parameter> parameters)
         {
             TLog.MethodStart();
             decimal[] decimalParameters = parameters.Where(p => p.HasNumber).Select(p => (decimal)p.Number).ToArray();
@@ -405,7 +405,7 @@ namespace Tunny.Util
             SetCategoryValues(categoryParameters);
             ExpireInput(_component.Params.Input[1]); // objectives
             ExpireInput(_component.Params.Input[3]); // artifacts
-            RecalculateAsync();
+            await RecalculateAsync();
             SetObjectives();
             SetAttributes();
             SetArtifacts();

@@ -7,7 +7,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class ParamImportancesViewModel : PlotSettingsViewModelBase
+    internal sealed class ParamImportancesViewModel : PlotSettingsViewModelBase
     {
         private ObservableCollection<string> _evaluatorItems;
         public ObservableCollection<string> EvaluatorItems { get => _evaluatorItems; set => SetProperty(ref _evaluatorItems, value); }

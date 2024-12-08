@@ -6,7 +6,7 @@ using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
-    internal class SliceViewModel : PlotSettingsViewModelBase
+    internal sealed class SliceViewModel : PlotSettingsViewModelBase
     {
         public SliceViewModel() : base()
         {
