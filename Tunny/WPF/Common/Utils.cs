@@ -16,7 +16,7 @@ namespace Tunny.WPF.Common
                 StudySummary summary = summaries[i];
                 items.Add(new NameComboBoxItem()
                 {
-                    Id = i,
+                    Id = summary.StudyId,
                     Name = summary.StudyName
                 });
             }

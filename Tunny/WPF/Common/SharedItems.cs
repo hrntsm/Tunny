@@ -30,7 +30,7 @@ namespace Tunny.WPF.Common
         internal MainWindow TunnyWindow { get; set; }
         internal OptimizeViewModel OptimizeViewModel { get; set; }
         internal StudySummary[] StudySummaries { get; set; }
-        internal List<OutputTrialItem> OutputTrialItems { get; set; }
+        internal Dictionary<int, List<OutputTrialItem>> OutputTrialDict { get; set; } = new Dictionary<int, List<OutputTrialItem>>();
 
         private IProgress<ProgressState> _progress;
 
@@ -44,6 +44,25 @@ namespace Tunny.WPF.Common
         {
             TLog.MethodStart();
             _progress?.Report(progressState);
+        }
+
+        private void ClearProgress()
+        {
+            TLog.MethodStart();
+            _progress = null;
+        }
+
+        internal void Clear()
+        {
+            TLog.MethodStart();
+            Component = null;
+            Settings = null;
+            GH_DocumentEditor = null;
+            TunnyWindow = null;
+            OptimizeViewModel = null;
+            StudySummaries = null;
+            OutputTrialDict.Clear();
+            ClearProgress();
         }
     }
 }

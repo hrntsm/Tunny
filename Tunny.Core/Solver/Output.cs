@@ -6,7 +6,6 @@ using Optuna.Storage;
 using Optuna.Study;
 using Optuna.Trial;
 
-using Tunny.Core.Storage;
 using Tunny.Core.Util;
 
 namespace Tunny.Core.Solver
@@ -61,11 +60,11 @@ namespace Tunny.Core.Solver
             }
         }
 
-        private static Trial[] UseTrialNumber(IReadOnlyList<int> targetNumbers, Study study)
+        private static Trial[] UseTrialNumber(int[] targetNumbers, Study study)
         {
             TLog.MethodStart();
             var trials = new List<Trial>();
-            for (int i = 0; i < targetNumbers.Count; i++)
+            for (int i = 0; i < targetNumbers.Length; i++)
             {
                 int target = targetNumbers[i];
                 Trial trial = study.Trials.FirstOrDefault(t => t.Number == target);

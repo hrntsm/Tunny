@@ -1,0 +1,260 @@
+﻿<Page
+    x:Class="Tunny.WPF.Views.Pages.Output.OutputPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Output"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Output"
+    Title="OutputPage"
+    d:DesignHeight="650"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:OutputViewModel />
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="AUTO" />
+            </Grid.RowDefinitions>
+            <GroupBox
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Target Study">
+                <ComboBox
+                    Grid.Row="1"
+                    Margin="10"
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding StudyNameItems}"
+                    SelectedItem="{Binding SelectedStudyName}" />
+            </GroupBox>
+
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Use Trial Number">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                    </Grid.RowDefinitions>
+                    <TextBox Margin="5" Text="{Binding TargetTrialNumber}" />
+                    <Button
+                        Grid.Row="1"
+                        Margin="20,5,20,5"
+                        Command="{Binding AddToListCommand}"
+                        Content="Add to List" />
+                    <Button
+                        Grid.Row="2"
+                        Margin="20,5,20,5"
+                        Command="{Binding ReinstateCommand}"
+                        Content="Reinstate Sliders" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox
+                Grid.Row="2"
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Group Addition">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                    </Grid.RowDefinitions>
+                    <Button
+                        Margin="20,5,20,5"
+                        Command="{Binding AddAllCommand}"
+                        Content="All" />
+                    <Button
+                        Grid.Row="1"
+                        Margin="20,5,20,5"
+                        Command="{Binding AddParetoFrontCommand}"
+                        Content="Pareto-Front" />
+                    <Button
+                        Grid.Row="2"
+                        Margin="20,5,20,5"
+                        Command="{Binding AddFeasibleCommand}"
+                        Content="Feasible" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox
+                Grid.Row="3"
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Use Dashboard Selection">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                    </Grid.RowDefinitions>
+                    <Button
+                        Margin="20,5,20,5"
+                        Command="{Binding OpenOptunaDashboardTrialSelectionCommand}"
+                        Content="Open Dashboard" />
+                    <Button
+                        Grid.Row="1"
+                        Margin="20,5,20,5"
+                        Command="{Binding LoadDashboardSelectionCommand}"
+                        Content="Load Selection CSV" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <GroupBox
+            Grid.Column="1"
+            Margin="5"
+            Background="#E2E8F4"
+            Header="Listed Trials">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="AUTO" />
+                    <RowDefinition Height="AUTO" />
+                    <RowDefinition Height="AUTO" />
+                </Grid.RowDefinitions>
+
+                <ListView Margin="5" ItemsSource="{Binding OutputListedItems}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="20">
+                                <GridViewColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.HeaderTemplate>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding Id}"
+                                Header="Trial ID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Objectives" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Variables" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button
+                    Grid.Row="1"
+                    Margin="20,5,20,5"
+                    Background="#93C6F8"
+                    Command="{Binding AddOutputTargetListCommand}"
+                    Content="Add Output Trial List" />
+                <Button
+                    Grid.Row="2"
+                    Margin="20,5,20,5"
+                    Command="{Binding RemoveFromListCommand}"
+                    CommandParameter="ListedTrial"
+                    Content="Remove Selected" />
+                <Button
+                    Grid.Row="4"
+                    Margin="20,5,20,5"
+                    Command="{Binding ClearListCommand}"
+                    CommandParameter="ListedTrial"
+                    Content="Clear List" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Column="2"
+            Margin="5"
+            Background="#E2E8F4"
+            Header="Output Target Trials">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="AUTO" />
+                    <RowDefinition Height="AUTO" />
+                    <RowDefinition Height="AUTO" />
+                </Grid.RowDefinitions>
+
+                <ListView Margin="5" ItemsSource="{Binding OutputTargetItems}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="20">
+                                <GridViewColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.HeaderTemplate>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn
+                                Width="50"
+                                DisplayMemberBinding="{Binding Name}"
+                                Header="Trial ID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Objectives" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Variables" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button
+                    Grid.Row="1"
+                    Margin="20,5,20,5"
+                    Background="#93C6F8"
+                    Command="{Binding AddOutputTargetListCommand}"
+                    Content="Output to Component 🎣" />
+                <Button
+                    Grid.Row="2"
+                    Margin="20,5,20,5"
+                    Command="{Binding RemoveFromListCommand}"
+                    CommandParameter="OutputTargetTrials"
+                    Content="Remove Selected" />
+                <Button
+                    Grid.Row="3"
+                    Margin="20,5,20,5"
+                    Command="{Binding ClearListCommand}"
+                    CommandParameter="OutputTargetTrials"
+                    Content="Clear List" />
+            </Grid>
+        </GroupBox>
+
+        <Grid Grid.Column="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <GroupBox
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Output Analysis 1" />
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Output Analysis 2" />
+        </Grid>
+    </Grid>
+</Page>
