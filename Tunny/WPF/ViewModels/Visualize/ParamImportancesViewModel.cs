@@ -16,10 +16,6 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public ParamImportancesViewModel() : base()
         {
-        }
-
-        public ParamImportancesViewModel(StudySummary[] summaries) : base(summaries)
-        {
             EvaluatorItems = new ObservableCollection<string>()
             {
                 "AUTO",

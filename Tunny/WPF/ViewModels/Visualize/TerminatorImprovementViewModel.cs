@@ -23,10 +23,6 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public TerminatorImprovementViewModel() : base()
         {
-        }
-
-        public TerminatorImprovementViewModel(StudySummary[] summaries) : base(summaries)
-        {
             MinNumberOfTrials = "20";
             PlotError = false;
 

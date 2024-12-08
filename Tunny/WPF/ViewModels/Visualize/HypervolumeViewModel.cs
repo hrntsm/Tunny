@@ -15,11 +15,6 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public HypervolumeViewModel(StudySummary[] summaries) : base(summaries)
-        {
-            ReferencePoint = "AUTO";
-        }
-
         public override PlotSettings GetPlotSettings()
         {
             double[] referencePoint = string.IsNullOrEmpty(ReferencePoint) || ReferencePoint.Equals("AUTO", System.StringComparison.OrdinalIgnoreCase)

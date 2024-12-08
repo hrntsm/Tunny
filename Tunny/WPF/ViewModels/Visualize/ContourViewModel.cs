@@ -12,10 +12,6 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public ContourViewModel(StudySummary[] summaries) : base(summaries)
-        {
-        }
-
         public override PlotSettings GetPlotSettings()
         {
             return new PlotSettings()

@@ -13,10 +13,6 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public ParetoFrontViewModel() : base()
         {
-        }
-
-        public ParetoFrontViewModel(StudySummary[] summaries) : base(summaries)
-        {
             IncludeDominatedTrials = true;
         }
 

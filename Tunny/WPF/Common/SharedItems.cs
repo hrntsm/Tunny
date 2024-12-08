@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 
 using Grasshopper.GUI;
+
+using Optuna.Study;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
+using Tunny.WPF.Models;
 using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.WPF.Common
@@ -14,6 +18,7 @@ namespace Tunny.WPF.Common
     {
         private static SharedItems s_instance;
         internal static SharedItems Instance => s_instance ?? (s_instance = new SharedItems());
+
 
         private SharedItems()
         {
@@ -24,6 +29,8 @@ namespace Tunny.WPF.Common
         internal GH_DocumentEditor GH_DocumentEditor { get; set; }
         internal MainWindow TunnyWindow { get; set; }
         internal OptimizeViewModel OptimizeViewModel { get; set; }
+        internal StudySummary[] StudySummaries { get; set; }
+        internal List<OutputTrialItem> OutputTrialItems { get; set; }
 
         private IProgress<ProgressState> _progress;
 

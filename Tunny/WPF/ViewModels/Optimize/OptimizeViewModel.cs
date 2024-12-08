@@ -466,6 +466,7 @@ namespace Tunny.WPF.ViewModels.Optimize
                 RhinoWindowHandle(9);
             }
             _windowViewModel.ReportProgress("🐟Finish🐟", 100);
+            SharedItems.StudySummaries = new StorageHandler().GetStudySummaries(SharedItems.Settings.Storage.Path);
         }
 
         private static void RhinoWindowHandle(int status)
@@ -562,8 +563,7 @@ namespace Tunny.WPF.ViewModels.Optimize
 
         internal void UpdateExistStudies()
         {
-            Optuna.Study.StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
-            ExistingStudies = Utils.StudyNamesFromStudySummaries(summaries);
+            ExistingStudies = Utils.StudyNamesFromStudySummaries(SharedItems.StudySummaries);
         }
     }
 }
