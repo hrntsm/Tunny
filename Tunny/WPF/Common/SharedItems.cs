@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Grasshopper.GUI;
 
 using Optuna.Study;
+using Optuna.Trial;
 
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
+using Tunny.Core.Solver;
 using Tunny.Core.Util;
 using Tunny.WPF.Models;
 using Tunny.WPF.ViewModels.Optimize;
@@ -29,7 +32,23 @@ namespace Tunny.WPF.Common
         internal GH_DocumentEditor GH_DocumentEditor { get; set; }
         internal MainWindow TunnyWindow { get; set; }
         internal OptimizeViewModel OptimizeViewModel { get; set; }
-        internal StudySummary[] StudySummaries { get; set; }
+        internal Dictionary<int, Trial[]> Trials { get; set; }
+        private StudySummary[] _studySummaries;
+        internal StudySummary[] StudySummaries
+        {
+            get => _studySummaries;
+            set
+            {
+                TLog.MethodStart();
+                if (value == null)
+                {
+                    return;
+                }
+                _studySummaries = value;
+                var output = new Output(Settings.Storage.Path);
+                Trials = output.GetAllTrial();
+            }
+        }
         internal Dictionary<int, List<OutputTrialItem>> OutputTrialDict { get; set; } = new Dictionary<int, List<OutputTrialItem>>();
 
         private IProgress<ProgressState> _progress;
@@ -63,6 +82,17 @@ namespace Tunny.WPF.Common
             StudySummaries = null;
             OutputTrialDict.Clear();
             ClearProgress();
+        }
+
+        internal OutputTrialItem GetOutputTrial(int studyId, int trialId)
+        {
+            return new OutputTrialItem
+            {
+                Id = trialId,
+                IsSelected = false,
+                Objectives = string.Join(", ", Trials[studyId][trialId].Values),
+                Variables = string.Join(", ", Trials[studyId][trialId].Params.Select(p => $"{p.Key}:{p.Value}")),
+            };
         }
     }
 }

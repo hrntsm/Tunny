@@ -11,6 +11,7 @@ using Prism.Mvvm;
 
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
+using Tunny.WPF.Views.Pages.Optimize;
 
 namespace Tunny.WPF.ViewModels.Output
 {
@@ -31,7 +32,19 @@ namespace Tunny.WPF.ViewModels.Output
                 dict.Add(SelectedStudyName.Id, item);
             }
             OutputListedItems = new ObservableCollection<OutputTrialItem>(item);
+            InitializeChart();
         }
+
+        private void InitializeChart()
+        {
+            _chart1 = new LiveChartPage();
+            OutputChart1 = _chart1;
+            _chart2 = new LiveChartPage();
+            OutputChart2 = _chart2;
+        }
+
+        private LiveChartPage _chart1;
+        private LiveChartPage _chart2;
 
         private ObservableCollection<NameComboBoxItem> _studyNameItems;
         public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
@@ -40,12 +53,14 @@ namespace Tunny.WPF.ViewModels.Output
         private string _targetTrialNumber;
         public string TargetTrialNumber { get => _targetTrialNumber; set => SetProperty(ref _targetTrialNumber, value); }
 
+        private ObservableCollection<OutputTrialItem> _outputListedItems;
+        public ObservableCollection<OutputTrialItem> OutputListedItems { get => _outputListedItems; set => SetProperty(ref _outputListedItems, value); }
+        private ObservableCollection<OutputTrialItem> _outputTargetItems;
+        public ObservableCollection<OutputTrialItem> OutputTargetItems { get => _outputTargetItems; set => SetProperty(ref _outputTargetItems, value); }
         private object _outputChart1;
         public object OutputChart1 { get => _outputChart1; set => SetProperty(ref _outputChart1, value); }
         private object _outputChart2;
         public object OutputChart2 { get => _outputChart2; set => SetProperty(ref _outputChart2, value); }
-        private ObservableCollection<OutputTrialItem> _outputListedItems;
-        public ObservableCollection<OutputTrialItem> OutputListedItems { get => _outputListedItems; set => SetProperty(ref _outputListedItems, value); }
 
         private DelegateCommand _addToListCommand;
         public ICommand AddToListCommand
@@ -61,27 +76,26 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void AddToList()
         {
+            if (string.IsNullOrEmpty(TargetTrialNumber))
+            {
+                return;
+            }
             Dictionary<int, List<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
             if (!dict.TryGetValue(SelectedStudyName.Id, out List<OutputTrialItem> item))
             {
                 item = new List<OutputTrialItem>();
                 dict.Add(SelectedStudyName.Id, item);
             }
-            var outputTrialItem = new OutputTrialItem()
-            {
-                IsSelected = false,
-                Id = int.Parse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture),
-            };
-            if (item.Any(x => x.Id == outputTrialItem.Id))
+
+            int trialId = int.Parse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture);
+            if (item.Any(x => x.Id == trialId))
             {
                 return;
             }
+            OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
             item.Add(outputTrialItem);
             OutputListedItems.Add(outputTrialItem);
         }
-
-        private ObservableCollection<OutputTrialItem> _outputTargetItems;
-        public ObservableCollection<OutputTrialItem> OutputTargetItems { get => _outputTargetItems; set => SetProperty(ref _outputTargetItems, value); }
 
         private DelegateCommand _loadDashboardSelectionCommand;
         public ICommand LoadDashboardSelectionCommand
@@ -174,6 +188,94 @@ namespace Tunny.WPF.ViewModels.Output
             else if (target == "OutputTargetTrials")
             {
             }
+        }
+
+        private DelegateCommand _addOutputTargetListCommand;
+        public ICommand AddOutputTargetListCommand
+        {
+            get
+            {
+                if (_addOutputTargetListCommand == null)
+                {
+                    _addOutputTargetListCommand = new DelegateCommand(AddOutputTargetList);
+                }
+                return _addOutputTargetListCommand;
+            }
+        }
+        private void AddOutputTargetList()
+        {
+            var selected = OutputListedItems.Where(x => x.IsSelected).ToList();
+            foreach (OutputTrialItem item in selected)
+            {
+                OutputListedItems.Remove(item);
+                OutputTargetItems.Add(item);
+            }
+        }
+
+        private DelegateCommand _addAllCommand;
+        public ICommand AddAllCommand
+        {
+            get
+            {
+                if (_addAllCommand == null)
+                {
+                    _addAllCommand = new DelegateCommand(AddAll);
+                }
+                return _addAllCommand;
+            }
+        }
+        private void AddAll()
+        {
+            Dictionary<int, List<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
+            if (!dict.TryGetValue(SelectedStudyName.Id, out List<OutputTrialItem> item))
+            {
+                item = new List<OutputTrialItem>();
+                dict.Add(SelectedStudyName.Id, item);
+            }
+
+            IEnumerable<int> trialIds = SharedItems.Instance.Trials[SelectedStudyName.Id].Select(x => x.TrialId);
+            foreach (int trialId in trialIds)
+            {
+                if (item.Any(x => x.Id == trialId))
+                {
+                    continue;
+                }
+                OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
+                item.Add(outputTrialItem);
+                OutputListedItems.Add(outputTrialItem);
+            }
+        }
+
+        private DelegateCommand _addParetoFrontCommand;
+        public ICommand AddParetoFrontCommand
+        {
+            get
+            {
+                if (_addParetoFrontCommand == null)
+                {
+                    _addParetoFrontCommand = new DelegateCommand(AddParetoFront);
+                }
+                return _addParetoFrontCommand;
+            }
+        }
+        private void AddParetoFront()
+        {
+        }
+
+        private DelegateCommand _addFeasibleCommand;
+        public ICommand AddFeasibleCommand
+        {
+            get
+            {
+                if (_addFeasibleCommand == null)
+                {
+                    _addFeasibleCommand = new DelegateCommand(AddFeasible);
+                }
+                return _addFeasibleCommand;
+            }
+        }
+        private void AddFeasible()
+        {
         }
     }
 }

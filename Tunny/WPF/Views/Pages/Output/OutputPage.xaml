@@ -16,7 +16,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.7*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
@@ -137,10 +137,19 @@
                     <RowDefinition Height="AUTO" />
                 </Grid.RowDefinitions>
 
-                <ListView Margin="5" ItemsSource="{Binding OutputListedItems}">
+                <ListView
+                    Margin="5"
+                    Background="#E2E8F4"
+                    ItemsSource="{Binding OutputListedItems}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="BorderBrush" Value="LightGray" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="20">
+                            <GridViewColumn Width="40">
                                 <GridViewColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
@@ -153,11 +162,11 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn
-                                Width="50"
+                                Width="40"
                                 DisplayMemberBinding="{Binding Id}"
-                                Header="Trial ID" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Objectives" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Variables" />
+                                Header="ID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Objectives}" Header="Objectives" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Variables}" Header="Variables" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -195,10 +204,21 @@
                     <RowDefinition Height="AUTO" />
                 </Grid.RowDefinitions>
 
-                <ListView Margin="5" ItemsSource="{Binding OutputTargetItems}">
+                <ListView
+                    Margin="5"
+                    Background="#E2E8F4"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    ItemsSource="{Binding OutputTargetItems}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="BorderBrush" Value="LightGray" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Width="20">
+                            <GridViewColumn Width="40">
                                 <GridViewColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
@@ -211,11 +231,11 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn
-                                Width="50"
-                                DisplayMemberBinding="{Binding Name}"
-                                Header="Trial ID" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Objectives" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Variables" />
+                                Width="40"
+                                DisplayMemberBinding="{Binding Id}"
+                                Header="ID" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Objectives}" Header="Objectives" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Variables}" Header="Variables" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -249,12 +269,16 @@
             <GroupBox
                 Margin="5"
                 Background="#E2E8F4"
-                Header="Output Analysis 1" />
+                Header="Output Analysis 1">
+                <Frame Content="{Binding OutputChart1}" />
+            </GroupBox>
             <GroupBox
                 Grid.Row="1"
                 Margin="5"
                 Background="#E2E8F4"
-                Header="Output Analysis 2" />
+                Header="Output Analysis 2">
+                <Frame Content="{Binding OutputChart2}" />
+            </GroupBox>
         </Grid>
     </Grid>
 </Page>

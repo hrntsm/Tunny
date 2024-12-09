@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Optuna.Storage;
 using Optuna.Study;
@@ -25,6 +26,19 @@ namespace Tunny.Core.Solver
             IOptunaStorage storage = StorageHelper.GetStorage(_storagePath);
             Study targetStudy = storage.GetAllStudies().FirstOrDefault(s => s.StudyName == studyName);
             return targetStudy == null ? Array.Empty<Trial>() : GetTargetTrials(targetNumbers, targetStudy);
+        }
+
+        public Dictionary<int, Trial[]> GetAllTrial()
+        {
+            TLog.MethodStart();
+            IOptunaStorage storage = StorageHelper.GetStorage(_storagePath);
+            Study[] studies = storage.GetAllStudies();
+            var dict = new Dictionary<int, Trial[]>();
+            foreach (Study study in studies)
+            {
+                dict[study.StudyId] = storage.GetAllTrials(study.StudyId, false);
+            }
+            return dict;
         }
 
         public string[] GetMetricNames(string studyName)

@@ -18,11 +18,18 @@ namespace Tunny.WPF.Models
             set => SetProperty(ref _id, value);
         }
 
-        private string _value;
-        public string Value
+        private string _objectives;
+        public string Objectives
         {
-            get => _value;
-            set => SetProperty(ref _value, value);
+            get => _objectives;
+            set => SetProperty(ref _objectives, value);
+        }
+
+        private string _variables;
+        public string Variables
+        {
+            get => _variables;
+            set => SetProperty(ref _variables, value);
         }
     }
 }
