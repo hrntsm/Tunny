@@ -8,7 +8,7 @@
     xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Output"
     Title="OutputPage"
     d:DesignHeight="650"
-    d:DesignWidth="1000"
+    d:DesignWidth="1200"
     mc:Ignorable="d">
     <Page.DataContext>
         <viewModels:OutputViewModel />
@@ -122,6 +122,30 @@
                         Content="Load Selection CSV" />
                 </Grid>
             </GroupBox>
+
+            <GroupBox
+                Grid.Row="4"
+                Margin="5"
+                Background="#E2E8F4"
+                Header="Use TT-DesignExplorer">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                        <RowDefinition Height="AUTO" />
+                    </Grid.RowDefinitions>
+                    <Button
+                        Margin="20,5,20,5"
+                        Command="{Binding OpenDesignExplorerSelectionCommand}"
+                        Content="Open DesignExplorer" />
+                    <Button
+                        Grid.Row="1"
+                        Margin="20,5,20,5"
+                        Command="{Binding LoadDesignExplorerSelectionCommand}"
+                        Content="Load Selection CSV" />
+                </Grid>
+            </GroupBox>
         </Grid>
 
         <GroupBox
@@ -150,11 +174,12 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40">
-                                <GridViewColumn.HeaderTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
-                                    </DataTemplate>
-                                </GridViewColumn.HeaderTemplate>
+                                <GridViewColumn.Header>
+                                    <CheckBox
+                                        Command="{Binding CheckAllCommand}"
+                                        CommandParameter="ListedTrials"
+                                        IsChecked="{Binding IsListedAllChecked}" />
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
@@ -180,13 +205,13 @@
                     Grid.Row="2"
                     Margin="20,5,20,5"
                     Command="{Binding RemoveFromListCommand}"
-                    CommandParameter="ListedTrial"
+                    CommandParameter="ListedTrials"
                     Content="Remove Selected" />
                 <Button
                     Grid.Row="4"
                     Margin="20,5,20,5"
                     Command="{Binding ClearListCommand}"
-                    CommandParameter="ListedTrial"
+                    CommandParameter="ListedTrials"
                     Content="Clear List" />
             </Grid>
         </GroupBox>
@@ -219,11 +244,12 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Width="40">
-                                <GridViewColumn.HeaderTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Command="{Binding DataContext.CheckAllCommand, RelativeSource={RelativeSource AncestorType=ListView}}" IsChecked="{Binding DataContext.IsAllChecked, RelativeSource={RelativeSource AncestorType=ListView}}" />
-                                    </DataTemplate>
-                                </GridViewColumn.HeaderTemplate>
+                                <GridViewColumn.Header>
+                                    <CheckBox
+                                        Command="{Binding CheckAllCommand}"
+                                        CommandParameter="OutputTargetTrials"
+                                        IsChecked="{Binding IsTargetsAllChecked}" />
+                                </GridViewColumn.Header>
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox Margin="5,0" IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />

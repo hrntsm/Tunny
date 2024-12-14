@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
@@ -9,6 +10,7 @@ using Optuna.Study;
 using Prism.Commands;
 using Prism.Mvvm;
 
+using Tunny.Core.Util;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 using Tunny.WPF.Views.Pages.Optimize;
@@ -22,16 +24,15 @@ namespace Tunny.WPF.ViewModels.Output
             StudySummary[] summaries = SharedItems.Instance.StudySummaries;
             StudyNameItems = Utils.StudyNamesFromStudySummaries(summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
-            OutputListedItems = new ObservableCollection<OutputTrialItem>();
             OutputTargetItems = new ObservableCollection<OutputTrialItem>();
 
-            Dictionary<int, List<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out List<OutputTrialItem> item))
+            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
+            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
             {
-                item = new List<OutputTrialItem>();
+                item = new ObservableCollection<OutputTrialItem>();
                 dict.Add(SelectedStudyName.Id, item);
             }
-            OutputListedItems = new ObservableCollection<OutputTrialItem>(item);
+            OutputListedItems = item;
             InitializeChart();
         }
 
@@ -49,7 +50,24 @@ namespace Tunny.WPF.ViewModels.Output
         private ObservableCollection<NameComboBoxItem> _studyNameItems;
         public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
         private NameComboBoxItem _selectedStudyName;
-        public NameComboBoxItem SelectedStudyName { get => _selectedStudyName; set => SetProperty(ref _selectedStudyName, value); }
+        public NameComboBoxItem SelectedStudyName
+        {
+            get => _selectedStudyName;
+            set
+            {
+                SetProperty(ref _selectedStudyName, value);
+                if (!SharedItems.Instance.OutputTrialDict.TryGetValue(value.Id, out ObservableCollection<OutputTrialItem> items))
+                {
+                    items = new ObservableCollection<OutputTrialItem>();
+                    SharedItems.Instance.OutputTrialDict.Add(value.Id, items);
+                }
+                if (OutputListedItems != null)
+                {
+                    OutputTargetItems.Clear();
+                }
+                OutputListedItems = items;
+            }
+        }
         private string _targetTrialNumber;
         public string TargetTrialNumber { get => _targetTrialNumber; set => SetProperty(ref _targetTrialNumber, value); }
 
@@ -80,10 +98,10 @@ namespace Tunny.WPF.ViewModels.Output
             {
                 return;
             }
-            Dictionary<int, List<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out List<OutputTrialItem> item))
+            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
+            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
             {
-                item = new List<OutputTrialItem>();
+                item = new ObservableCollection<OutputTrialItem>();
                 dict.Add(SelectedStudyName.Id, item);
             }
 
@@ -94,7 +112,6 @@ namespace Tunny.WPF.ViewModels.Output
             }
             OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
             item.Add(outputTrialItem);
-            OutputListedItems.Add(outputTrialItem);
         }
 
         private DelegateCommand _loadDashboardSelectionCommand;
@@ -114,7 +131,6 @@ namespace Tunny.WPF.ViewModels.Output
         }
 
         private DelegateCommand _openOptunaDashboardTrialSelectionCommand;
-
         public ICommand OpenOptunaDashboardTrialSelectionCommand
         {
             get
@@ -128,6 +144,18 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void OpenOptunaDashboardTrialSelection()
         {
+            TLog.MethodStart();
+            if (!File.Exists(SharedItems.Instance.Settings.Storage.Path))
+            {
+                TunnyMessageBox.Error_ResultFileNotExist();
+                return;
+            }
+            string dashboardPath = Path.Combine(TEnvVariables.TunnyEnvPath, "python", "Scripts", "optuna-dashboard.exe");
+            string storagePath = SharedItems.Instance.Settings.Storage.Path;
+
+            var dashboard = new Optuna.Dashboard.Handler(dashboardPath, storagePath);
+            string path = Path.Combine("dashboard", "studies", SelectedStudyName.Id.ToString(CultureInfo.InvariantCulture), "trialCompare");
+            dashboard.Run(true, path);
         }
 
         private DelegateCommand _reinstateCommand;
@@ -162,9 +190,26 @@ namespace Tunny.WPF.ViewModels.Output
         {
             if (target == "ListedTrials")
             {
+                var removedList = OutputListedItems.Where(i => i.IsSelected == false).ToList();
+                OutputListedItems = new ObservableCollection<OutputTrialItem>(removedList);
             }
             else if (target == "OutputTargetTrials")
             {
+                var remainItems = new List<OutputTrialItem>();
+                foreach (OutputTrialItem item in OutputTargetItems)
+                {
+                    if (item.IsSelected)
+                    {
+                        item.IsSelected = false;
+                        OutputListedItems.Add(item);
+                        SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Add(item);
+                    }
+                    else
+                    {
+                        remainItems.Add(item);
+                    }
+                }
+                OutputTargetItems = new ObservableCollection<OutputTrialItem>(remainItems);
             }
         }
 
@@ -184,9 +229,18 @@ namespace Tunny.WPF.ViewModels.Output
         {
             if (target == "ListedTrials")
             {
+                OutputListedItems.Clear();
+                SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Clear();
             }
             else if (target == "OutputTargetTrials")
             {
+                foreach (OutputTrialItem item in OutputTargetItems)
+                {
+                    item.IsSelected = false;
+                    OutputListedItems.Add(item);
+                    SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Add(item);
+                }
+                OutputTargetItems.Clear();
             }
         }
 
@@ -226,10 +280,10 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void AddAll()
         {
-            Dictionary<int, List<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out List<OutputTrialItem> item))
+            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
+            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
             {
-                item = new List<OutputTrialItem>();
+                item = new ObservableCollection<OutputTrialItem>();
                 dict.Add(SelectedStudyName.Id, item);
             }
 
@@ -242,7 +296,6 @@ namespace Tunny.WPF.ViewModels.Output
                 }
                 OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
                 item.Add(outputTrialItem);
-                OutputListedItems.Add(outputTrialItem);
             }
         }
 
@@ -277,5 +330,72 @@ namespace Tunny.WPF.ViewModels.Output
         private void AddFeasible()
         {
         }
+
+        private DelegateCommand _openDesignExplorerSelectionCommand;
+        public ICommand OpenDesignExplorerSelectionCommand
+        {
+            get
+            {
+                if (_openDesignExplorerSelectionCommand == null)
+                {
+                    _openDesignExplorerSelectionCommand = new DelegateCommand(OpenDesignExplorerSelection);
+                }
+                return _openDesignExplorerSelectionCommand;
+            }
+        }
+        private void OpenDesignExplorerSelection()
+        {
+        }
+
+        private DelegateCommand _loadDesignExplorerSelectionCommand;
+        public ICommand LoadDesignExplorerSelectionCommand
+        {
+            get
+            {
+                if (_loadDesignExplorerSelectionCommand == null)
+                {
+                    _loadDesignExplorerSelectionCommand = new DelegateCommand(LoadDesignExplorerSelection);
+                }
+                return _loadDesignExplorerSelectionCommand;
+            }
+        }
+        private void LoadDesignExplorerSelection()
+        {
+        }
+
+        private DelegateCommand<string> _checkAllCommand;
+        public ICommand CheckAllCommand
+        {
+            get
+            {
+                if (_checkAllCommand == null)
+                {
+                    _checkAllCommand = new DelegateCommand<string>(CheckAll);
+                }
+                return _checkAllCommand;
+            }
+        }
+        private void CheckAll(string target)
+        {
+            if (target == "ListedTrials")
+            {
+                foreach (OutputTrialItem item in OutputListedItems)
+                {
+                    item.IsSelected = IsListedAllChecked ?? false;
+                }
+            }
+            else if (target == "OutputTargetTrials")
+            {
+                foreach (OutputTrialItem item in OutputTargetItems)
+                {
+                    item.IsSelected = IsTargetsAllChecked ?? false;
+                }
+            }
+        }
+
+        private bool? _isTargetsAllChecked;
+        public bool? IsTargetsAllChecked { get => _isTargetsAllChecked; set => SetProperty(ref _isTargetsAllChecked, value); }
+        private bool? _isListedAllChecked;
+        public bool? IsListedAllChecked { get => _isListedAllChecked; set => SetProperty(ref _isListedAllChecked, value); }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 using Grasshopper.GUI;
@@ -49,7 +50,7 @@ namespace Tunny.WPF.Common
                 Trials = output.GetAllTrial();
             }
         }
-        internal Dictionary<int, List<OutputTrialItem>> OutputTrialDict { get; set; } = new Dictionary<int, List<OutputTrialItem>>();
+        internal Dictionary<int, ObservableCollection<OutputTrialItem>> OutputTrialDict { get; set; } = new Dictionary<int, ObservableCollection<OutputTrialItem>>();
 
         private IProgress<ProgressState> _progress;
 
