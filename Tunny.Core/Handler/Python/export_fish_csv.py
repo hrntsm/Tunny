@@ -37,6 +37,7 @@ def set_metric_names(study: Study) -> list[str]:
 def create_csv_label(
     label: list[str], trials: list[FrozenTrial], metric_names: list[str]
 ) -> bool:
+    set_other_label(label)
     param_keys = list(trials[0].params.keys())
     set_in_param_label(label, param_keys)
     set_in_attr_label(label, trials)
@@ -44,6 +45,10 @@ def create_csv_label(
     has_img = set_img_label(label, trials)
 
     return has_img
+
+
+def set_other_label(label: list[str]) -> None:
+    label.append("trial_id")
 
 
 def set_in_attr_label(label: list[str], trials: list[FrozenTrial]) -> None:
@@ -97,11 +102,16 @@ def write_fish_csv(
 
         for t in trial:
             row = []
+            add_row_other(t, row)
             add_row_in_params(t, row, param_keys)
             add_row_in_attr(t, row)
             add_row_out_values(t, row)
             add_row_img(t, row, artifact_path)
             writer.writerow(row)
+
+
+def add_row_other(trial: FrozenTrial, row: list[str]) -> None:
+    row.append((str)(trial.number))
 
 
 def add_row_img(trial: FrozenTrial, row: list[str], artifact_path: str) -> None:
