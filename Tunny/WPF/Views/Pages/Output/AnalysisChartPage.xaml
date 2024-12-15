@@ -4,11 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Tunny.WPF.Views.Pages.Output"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:output="clr-namespace:Tunny.WPF.ViewModels.Output"
+    xmlns:viewModels="clr-namespace:Tunny.WPF.ViewModels.Output"
     Title="AnalysisChart"
     d:DesignHeight="250"
     d:DesignWidth="500"
     mc:Ignorable="d">
+    <Page.DataContext>
+        <viewModels:AnalysisChartViewModel />
+    </Page.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,13 +25,16 @@
             <ColumnDefinition Width="75" />
             <ColumnDefinition Width="AUTO" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="AUTO" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="AUTO" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button Margin="5" Content="Draw" />
+        <Button
+            Margin="5"
+            Command="{Binding DrawChartCommand}"
+            Content="Draw" />
         <Label
             Grid.Column="1"
             Margin="5"
@@ -40,25 +49,27 @@
             Margin="5"
             Content="X-Axis" />
         <ComboBox
-            Grid.Column="2"
+            Grid.Column="4"
             Margin="5"
-            DisplayMemberPath="Name"
-            ItemsSource="{Binding TargetItems}"
-            SelectedItem="{Binding SelectedTarget}" />
+            ItemsSource="{Binding XAxisItems}"
+            SelectedItem="{Binding SelectedXAxis}" />
         <Label
             Grid.Column="5"
             Margin="5"
             Content="Y-Axis" />
         <ComboBox
-            Grid.Column="2"
+            Grid.Column="6"
             Margin="5"
-            DisplayMemberPath="Name"
-            ItemsSource="{Binding TargetItems}"
-            SelectedItem="{Binding SelectedTarget}" />
+            ItemsSource="{Binding YAxisItems}"
+            SelectedItem="{Binding SelectedYAxis}" />
 
-        <Frame
+        <lvc:CartesianChart
+            x:Name="AnalysisChart"
             Grid.Row="1"
             Grid.ColumnSpan="10"
-            Content="{Binding OutputChart}" />
+            AnimationsSpeed="0"
+            Series="{Binding ChartSeries}"
+            XAxes="{Binding ChartXAxes}"
+            YAxes="{Binding ChartYAxes}" />
     </Grid>
 </Page>

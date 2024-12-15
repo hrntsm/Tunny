@@ -51,6 +51,11 @@ namespace Tunny.WPF.ViewModels.Output
                     var tableViewModel = AnalysisTable.DataContext as AnalysisTableViewModel;
                     tableViewModel.SelectedStudyId = value.Id;
                 }
+                if (AnalysisChart != null)
+                {
+                    var chartViewModel = AnalysisChart.DataContext as AnalysisChartViewModel;
+                    chartViewModel.SetStudyId(value.Id);
+                }
             }
         }
         private ObservableCollection<OutputTrialItem> _outputListedItems;
