@@ -269,8 +269,8 @@
                     Grid.Row="1"
                     Margin="20,5,20,5"
                     Background="#93C6F8"
-                    Command="{Binding AddOutputTargetListCommand}"
-                    Content="Output to Component 🎣" />
+                    Command="{Binding OutputSelectionCommand}"
+                    Content="Output Selection 🎣" />
                 <Button
                     Grid.Row="2"
                     Margin="20,5,20,5"

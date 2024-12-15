@@ -10,7 +10,9 @@ using Optuna.Study;
 using Prism.Commands;
 using Prism.Mvvm;
 
+using Tunny.Component.Optimizer;
 using Tunny.Core.Util;
+using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
 using Tunny.WPF.Views.Pages.Optimize;
@@ -172,6 +174,13 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void Reinstate()
         {
+            TLog.MethodStart();
+            OutputProcess.StudyName = SelectedStudyName.Name;
+            OutputProcess.Indices = new[] { int.Parse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture) };
+            OutputProcess.Run();
+
+            OptimizeComponentBase component = SharedItems.Instance.Component;
+            component.GhInOut.NewSolution(component.Fishes[0].GetParameterClassFormatVariables());
         }
 
         private DelegateCommand<string> _removeFromListCommand;
@@ -386,5 +395,25 @@ namespace Tunny.WPF.ViewModels.Output
         public bool? IsTargetsAllChecked { get => _isTargetsAllChecked; set => SetProperty(ref _isTargetsAllChecked, value); }
         private bool? _isListedAllChecked;
         public bool? IsListedAllChecked { get => _isListedAllChecked; set => SetProperty(ref _isListedAllChecked, value); }
+
+        private DelegateCommand _outputSelectionCommand;
+        public ICommand OutputSelectionCommand
+        {
+            get
+            {
+                if (_outputSelectionCommand == null)
+                {
+                    _outputSelectionCommand = new DelegateCommand(OutputSelection);
+                }
+                return _outputSelectionCommand;
+            }
+        }
+        private void OutputSelection()
+        {
+            TLog.MethodStart();
+            OutputProcess.StudyName = SelectedStudyName.Name;
+            OutputProcess.Indices = OutputTargetItems.Where(t => t.IsSelected).Select(t => t.Id).ToArray();
+            OutputProcess.Run();
+        }
     }
 }
