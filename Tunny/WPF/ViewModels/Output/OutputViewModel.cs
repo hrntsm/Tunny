@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 
 using Optuna.Study;
+using Optuna.Trial;
 
 using Prism.Commands;
 using Prism.Mvvm;
@@ -327,6 +328,34 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void AddFeasible()
         {
+            Trial[] trials = SharedItems.Instance.Trials[SelectedStudyName.Id];
+            var feasibleTrials = new List<Trial>();
+            foreach (Trial trial in trials)
+            {
+                trial.SystemAttrs.TryGetValue("constraints", out object constraints);
+                if (constraints is string[] c)
+                {
+                    if (c.All(x => double.Parse(x, NumberStyles.Float, CultureInfo.InvariantCulture) <= 0))
+                    {
+                        feasibleTrials.Add(trial);
+                    }
+                }
+                else if (constraints == null)
+                {
+                    feasibleTrials.Add(trial);
+                }
+            }
+
+            IEnumerable<int> trialIds = feasibleTrials.Select(x => x.Number);
+            foreach (int trialId in trialIds)
+            {
+                if (OutputListedItems.Any(x => x.Id == trialId))
+                {
+                    continue;
+                }
+                OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
+                OutputListedItems.Add(outputTrialItem);
+            }
         }
 
         private DelegateCommand _openDesignExplorerSelectionCommand;
