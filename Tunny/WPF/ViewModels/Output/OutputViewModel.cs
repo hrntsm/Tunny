@@ -289,12 +289,7 @@ namespace Tunny.WPF.ViewModels.Output
             IEnumerable<int> trialIds = SharedItems.Instance.Trials[SelectedStudyName.Id].Select(x => x.Number);
             foreach (int trialId in trialIds)
             {
-                if (OutputListedItems.Any(x => x.Id == trialId))
-                {
-                    continue;
-                }
-                OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
-                OutputListedItems.Add(outputTrialItem);
+                AddOutputListedItems(trialId);
             }
         }
 
@@ -312,6 +307,27 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void AddParetoFront()
         {
+            Trial[] trials = SharedItems.Instance.Trials[SelectedStudyName.Id];
+            Trial[] feasibleTrials = GetFeasibleTrials(trials);
+            StudyDirection[] directions = SharedItems.Instance.StudySummaries.FirstOrDefault(x => x.StudyId == SelectedStudyName.Id).Directions;
+            if (directions.Length == 1)
+            {
+                IOrderedEnumerable<Trial> orderedTrials = feasibleTrials.OrderBy(x => x.Values[0]);
+                int trialId = directions[0] == StudyDirection.Maximize
+                    ? orderedTrials.Last().Number
+                    : orderedTrials.First().Number;
+                AddOutputListedItems(trialId);
+            }
+            else
+            {
+                Trial[] pareto = MultiObjective.GetParetoFrontTrials(feasibleTrials.ToList(), directions);
+
+                IEnumerable<int> trialIds = pareto.Select(x => x.Number);
+                foreach (int trialId in trialIds)
+                {
+                    AddOutputListedItems(trialId);
+                }
+            }
         }
 
         private DelegateCommand _addFeasibleCommand;
@@ -329,6 +345,17 @@ namespace Tunny.WPF.ViewModels.Output
         private void AddFeasible()
         {
             Trial[] trials = SharedItems.Instance.Trials[SelectedStudyName.Id];
+            Trial[] feasibleTrials = GetFeasibleTrials(trials);
+
+            IEnumerable<int> trialIds = feasibleTrials.Select(x => x.Number);
+            foreach (int trialId in trialIds)
+            {
+                AddOutputListedItems(trialId);
+            }
+        }
+
+        private static Trial[] GetFeasibleTrials(Trial[] trials)
+        {
             var feasibleTrials = new List<Trial>();
             foreach (Trial trial in trials)
             {
@@ -345,14 +372,13 @@ namespace Tunny.WPF.ViewModels.Output
                     feasibleTrials.Add(trial);
                 }
             }
+            return feasibleTrials.ToArray();
+        }
 
-            IEnumerable<int> trialIds = feasibleTrials.Select(x => x.Number);
-            foreach (int trialId in trialIds)
+        private void AddOutputListedItems(int trialId)
+        {
+            if (!OutputListedItems.Any(x => x.Id == trialId))
             {
-                if (OutputListedItems.Any(x => x.Id == trialId))
-                {
-                    continue;
-                }
                 OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
                 OutputListedItems.Add(outputTrialItem);
             }
