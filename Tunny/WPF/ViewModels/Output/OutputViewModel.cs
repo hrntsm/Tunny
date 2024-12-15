@@ -12,6 +12,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 
 using Tunny.Component.Optimizer;
+using Tunny.Core.Handler;
 using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
@@ -398,6 +399,8 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void OpenDesignExplorerSelection()
         {
+            var designExplorer = new DesignExplorer(SelectedStudyName.Name, SharedItems.Instance.Settings.Storage);
+            designExplorer.Run();
         }
 
         private DelegateCommand _loadDesignExplorerSelectionCommand;
