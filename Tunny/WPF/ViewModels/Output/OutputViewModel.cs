@@ -17,7 +17,7 @@ using Tunny.Core.Util;
 using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Models;
-using Tunny.WPF.Views.Pages.Optimize;
+using Tunny.WPF.Views.Pages.Output;
 
 namespace Tunny.WPF.ViewModels.Output
 {
@@ -29,19 +29,9 @@ namespace Tunny.WPF.ViewModels.Output
             StudyNameItems = Utils.StudyNamesFromStudySummaries(summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
 
-            InitializeChart();
+            AnalysisChart = new AnalysisChartPage();
+            AnalysisTable = new AnalysisTablePage();
         }
-
-        private void InitializeChart()
-        {
-            _chart1 = new LiveChartPage();
-            OutputChart1 = _chart1;
-            _chart2 = new LiveChartPage();
-            OutputChart2 = _chart2;
-        }
-
-        private LiveChartPage _chart1;
-        private LiveChartPage _chart2;
 
         private string _targetTrialNumber;
         public string TargetTrialNumber { get => _targetTrialNumber; set => SetProperty(ref _targetTrialNumber, value); }
@@ -56,6 +46,11 @@ namespace Tunny.WPF.ViewModels.Output
                 SetProperty(ref _selectedStudyName, value);
                 OutputListedItems = GetOutputViewListItem("Listed", value.Id);
                 OutputTargetItems = GetOutputViewListItem("Target", value.Id);
+                if (AnalysisTable != null)
+                {
+                    var tableViewModel = AnalysisTable.DataContext as AnalysisTableViewModel;
+                    tableViewModel.SelectedStudyId = value.Id;
+                }
             }
         }
         private ObservableCollection<OutputTrialItem> _outputListedItems;
@@ -75,8 +70,8 @@ namespace Tunny.WPF.ViewModels.Output
         private static ObservableCollection<OutputTrialItem> GetOutputViewListItem(string type, int id)
         {
             Dictionary<int, ObservableCollection<OutputTrialItem>> dict = type == "Target"
-                ? SharedItems.Instance.OutputListedTrialDict
-                : SharedItems.Instance.OutputTargetTrialDict;
+                ? SharedItems.Instance.OutputTargetTrialDict
+                : SharedItems.Instance.OutputListedTrialDict;
             if (!dict.TryGetValue(id, out ObservableCollection<OutputTrialItem> item))
             {
                 item = new ObservableCollection<OutputTrialItem>();
@@ -84,11 +79,6 @@ namespace Tunny.WPF.ViewModels.Output
             }
             return item;
         }
-
-        private object _outputChart1;
-        public object OutputChart1 { get => _outputChart1; set => SetProperty(ref _outputChart1, value); }
-        private object _outputChart2;
-        public object OutputChart2 { get => _outputChart2; set => SetProperty(ref _outputChart2, value); }
 
         private DelegateCommand _addToListCommand;
         public ICommand AddToListCommand
@@ -473,5 +463,10 @@ namespace Tunny.WPF.ViewModels.Output
             OutputProcess.Indices = OutputTargetItems.Where(t => t.IsSelected).Select(t => t.Id).ToArray();
             OutputProcess.Run();
         }
+
+        private AnalysisTablePage _analysisTable;
+        public AnalysisTablePage AnalysisTable { get => _analysisTable; set => SetProperty(ref _analysisTable, value); }
+        private AnalysisChartPage _analysisChart;
+        public AnalysisChartPage AnalysisChart { get => _analysisChart; set => SetProperty(ref _analysisChart, value); }
     }
 }

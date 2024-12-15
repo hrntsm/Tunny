@@ -295,15 +295,16 @@
             <GroupBox
                 Margin="5"
                 Background="#E2E8F4"
-                Header="Output Analysis 1">
-                <Frame Content="{Binding OutputChart1}" />
+                Header="Output Analysis Table">
+                <Frame Content="{Binding AnalysisTable}" />
             </GroupBox>
+
             <GroupBox
                 Grid.Row="1"
                 Margin="5"
                 Background="#E2E8F4"
-                Header="Output Analysis 2">
-                <Frame Content="{Binding OutputChart2}" />
+                Header="Output Analysis Chart">
+                <Frame Content="{Binding AnalysisChart}" />
             </GroupBox>
         </Grid>
     </Grid>

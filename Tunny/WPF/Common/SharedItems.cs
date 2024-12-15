@@ -83,6 +83,7 @@ namespace Tunny.WPF.Common
             OptimizeViewModel = null;
             StudySummaries = null;
             OutputListedTrialDict.Clear();
+            OutputTargetTrialDict.Clear();
             ClearProgress();
         }
 
