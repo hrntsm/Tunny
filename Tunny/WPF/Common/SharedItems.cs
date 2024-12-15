@@ -50,7 +50,8 @@ namespace Tunny.WPF.Common
                 Trials = output.GetAllTrial();
             }
         }
-        internal Dictionary<int, ObservableCollection<OutputTrialItem>> OutputTrialDict { get; set; } = new Dictionary<int, ObservableCollection<OutputTrialItem>>();
+        internal Dictionary<int, ObservableCollection<OutputTrialItem>> OutputListedTrialDict { get; set; } = new Dictionary<int, ObservableCollection<OutputTrialItem>>();
+        internal Dictionary<int, ObservableCollection<OutputTrialItem>> OutputTargetTrialDict { get; set; } = new Dictionary<int, ObservableCollection<OutputTrialItem>>();
 
         private IProgress<ProgressState> _progress;
 
@@ -81,7 +82,7 @@ namespace Tunny.WPF.Common
             TunnyWindow = null;
             OptimizeViewModel = null;
             StudySummaries = null;
-            OutputTrialDict.Clear();
+            OutputListedTrialDict.Clear();
             ClearProgress();
         }
 

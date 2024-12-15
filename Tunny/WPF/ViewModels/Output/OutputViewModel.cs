@@ -24,15 +24,7 @@ namespace Tunny.WPF.ViewModels.Output
             StudySummary[] summaries = SharedItems.Instance.StudySummaries;
             StudyNameItems = Utils.StudyNamesFromStudySummaries(summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
-            OutputTargetItems = new ObservableCollection<OutputTrialItem>();
 
-            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
-            {
-                item = new ObservableCollection<OutputTrialItem>();
-                dict.Add(SelectedStudyName.Id, item);
-            }
-            OutputListedItems = item;
             InitializeChart();
         }
 
@@ -47,6 +39,8 @@ namespace Tunny.WPF.ViewModels.Output
         private LiveChartPage _chart1;
         private LiveChartPage _chart2;
 
+        private string _targetTrialNumber;
+        public string TargetTrialNumber { get => _targetTrialNumber; set => SetProperty(ref _targetTrialNumber, value); }
         private ObservableCollection<NameComboBoxItem> _studyNameItems;
         public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
         private NameComboBoxItem _selectedStudyName;
@@ -56,25 +50,37 @@ namespace Tunny.WPF.ViewModels.Output
             set
             {
                 SetProperty(ref _selectedStudyName, value);
-                if (!SharedItems.Instance.OutputTrialDict.TryGetValue(value.Id, out ObservableCollection<OutputTrialItem> items))
-                {
-                    items = new ObservableCollection<OutputTrialItem>();
-                    SharedItems.Instance.OutputTrialDict.Add(value.Id, items);
-                }
-                if (OutputListedItems != null)
-                {
-                    OutputTargetItems.Clear();
-                }
-                OutputListedItems = items;
+                OutputListedItems = GetOutputViewListItem("Listed", value.Id);
+                OutputTargetItems = GetOutputViewListItem("Target", value.Id);
             }
         }
-        private string _targetTrialNumber;
-        public string TargetTrialNumber { get => _targetTrialNumber; set => SetProperty(ref _targetTrialNumber, value); }
-
         private ObservableCollection<OutputTrialItem> _outputListedItems;
-        public ObservableCollection<OutputTrialItem> OutputListedItems { get => _outputListedItems; set => SetProperty(ref _outputListedItems, value); }
+        public ObservableCollection<OutputTrialItem> OutputListedItems
+        {
+            get => _outputListedItems ?? GetOutputViewListItem("Listed", SelectedStudyName?.Id ?? 0);
+            set => SetProperty(ref _outputListedItems, value);
+        }
+
         private ObservableCollection<OutputTrialItem> _outputTargetItems;
-        public ObservableCollection<OutputTrialItem> OutputTargetItems { get => _outputTargetItems; set => SetProperty(ref _outputTargetItems, value); }
+        public ObservableCollection<OutputTrialItem> OutputTargetItems
+        {
+            get => _outputTargetItems ?? GetOutputViewListItem("Target", SelectedStudyName?.Id ?? 0);
+            set => SetProperty(ref _outputTargetItems, value);
+        }
+
+        private static ObservableCollection<OutputTrialItem> GetOutputViewListItem(string type, int id)
+        {
+            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = type == "Target"
+                ? SharedItems.Instance.OutputListedTrialDict
+                : SharedItems.Instance.OutputTargetTrialDict;
+            if (!dict.TryGetValue(id, out ObservableCollection<OutputTrialItem> item))
+            {
+                item = new ObservableCollection<OutputTrialItem>();
+                dict.Add(id, item);
+            }
+            return item;
+        }
+
         private object _outputChart1;
         public object OutputChart1 { get => _outputChart1; set => SetProperty(ref _outputChart1, value); }
         private object _outputChart2;
@@ -98,20 +104,14 @@ namespace Tunny.WPF.ViewModels.Output
             {
                 return;
             }
-            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
-            {
-                item = new ObservableCollection<OutputTrialItem>();
-                dict.Add(SelectedStudyName.Id, item);
-            }
 
             int trialId = int.Parse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture);
-            if (item.Any(x => x.Id == trialId))
+            if (OutputListedItems.Any(x => x.Id == trialId))
             {
                 return;
             }
             OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
-            item.Add(outputTrialItem);
+            OutputListedItems.Add(outputTrialItem);
         }
 
         private DelegateCommand _loadDashboardSelectionCommand;
@@ -190,26 +190,24 @@ namespace Tunny.WPF.ViewModels.Output
         {
             if (target == "ListedTrials")
             {
-                var removedList = OutputListedItems.Where(i => i.IsSelected == false).ToList();
-                OutputListedItems = new ObservableCollection<OutputTrialItem>(removedList);
+                var removedList = OutputListedItems.Where(i => i.IsSelected == true).ToList();
+                foreach (OutputTrialItem item in removedList)
+                {
+                    OutputListedItems.Remove(item);
+                }
             }
             else if (target == "OutputTargetTrials")
             {
-                var remainItems = new List<OutputTrialItem>();
-                foreach (OutputTrialItem item in OutputTargetItems)
+                var removedList = OutputTargetItems.Where(i => i.IsSelected == true).ToList();
+                foreach (OutputTrialItem item in removedList)
                 {
                     if (item.IsSelected)
                     {
                         item.IsSelected = false;
                         OutputListedItems.Add(item);
-                        SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Add(item);
-                    }
-                    else
-                    {
-                        remainItems.Add(item);
+                        OutputTargetItems.Remove(item);
                     }
                 }
-                OutputTargetItems = new ObservableCollection<OutputTrialItem>(remainItems);
             }
         }
 
@@ -230,7 +228,6 @@ namespace Tunny.WPF.ViewModels.Output
             if (target == "ListedTrials")
             {
                 OutputListedItems.Clear();
-                SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Clear();
             }
             else if (target == "OutputTargetTrials")
             {
@@ -238,7 +235,6 @@ namespace Tunny.WPF.ViewModels.Output
                 {
                     item.IsSelected = false;
                     OutputListedItems.Add(item);
-                    SharedItems.Instance.OutputTrialDict[SelectedStudyName.Id].Add(item);
                 }
                 OutputTargetItems.Clear();
             }
@@ -280,22 +276,15 @@ namespace Tunny.WPF.ViewModels.Output
         }
         private void AddAll()
         {
-            Dictionary<int, ObservableCollection<OutputTrialItem>> dict = SharedItems.Instance.OutputTrialDict;
-            if (!dict.TryGetValue(SelectedStudyName.Id, out ObservableCollection<OutputTrialItem> item))
-            {
-                item = new ObservableCollection<OutputTrialItem>();
-                dict.Add(SelectedStudyName.Id, item);
-            }
-
-            IEnumerable<int> trialIds = SharedItems.Instance.Trials[SelectedStudyName.Id].Select(x => x.TrialId);
+            IEnumerable<int> trialIds = SharedItems.Instance.Trials[SelectedStudyName.Id].Select(x => x.Number);
             foreach (int trialId in trialIds)
             {
-                if (item.Any(x => x.Id == trialId))
+                if (OutputListedItems.Any(x => x.Id == trialId))
                 {
                     continue;
                 }
                 OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
-                item.Add(outputTrialItem);
+                OutputListedItems.Add(outputTrialItem);
             }
         }
 
