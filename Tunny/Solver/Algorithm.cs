@@ -721,7 +721,7 @@ namespace Tunny.Solver
 
             dynamic optunaSampler = Settings.Optimize.Sampler.ToPython(samplerType, storagePath, hasConstraints, firstVariables);
             if (
-                (samplerType == SamplerType.GP || samplerType == SamplerType.CmaEs || samplerType == SamplerType.QMC || samplerType == SamplerType.Random)
+                (samplerType == SamplerType.GP || samplerType == SamplerType.CmaEs || samplerType == SamplerType.QMC || samplerType == SamplerType.Random || samplerType == SamplerType.AUTO || samplerType == SamplerType.BruteForce)
                 && hasConstraints
             )
             {
