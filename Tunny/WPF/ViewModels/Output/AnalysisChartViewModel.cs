@@ -198,8 +198,15 @@ namespace Tunny.WPF.ViewModels.Output
         {
             _chartPoints.Clear();
             Trial[] trials = SharedItems.Instance.Trials[_selectedStudyId];
+            IEnumerable<int> targetIds = SelectedTarget == "Listed Trials"
+                ? SharedItems.Instance.OutputListedTrialDict[_selectedStudyId].Select(t => t.Id)
+                : SharedItems.Instance.OutputTargetTrialDict[_selectedStudyId].Select(t => t.Id);
             foreach (Trial trial in trials)
             {
+                if (!targetIds.Contains(trial.TrialId))
+                {
+                    continue;
+                }
                 double x = GetTargetValue(trial, SelectedXAxis);
                 double y = GetTargetValue(trial, SelectedYAxis);
                 _chartPoints.Add(new ObservablePoint(x, y));
