@@ -117,7 +117,7 @@ namespace Tunny.WPF.ViewModels.Output
                 }
             };
             SelectedXAxis = XAxisItems[0];
-            SelectedYAxis = YAxisItems[1];
+            SelectedYAxis = YAxisItems.Count > 2 ? YAxisItems[1] : YAxisItems[0];
         }
 
         internal void SetStudyId(int studyId)
@@ -127,6 +127,11 @@ namespace Tunny.WPF.ViewModels.Output
             YAxisItems.Clear();
             XAxisItems.Add("ID");
             YAxisItems.Add("ID");
+
+            if (SharedItems.Instance.StudySummaries == null || SharedItems.Instance.StudySummaries.Length == 0)
+            {
+                return;
+            }
 
             StudySummary study = SharedItems.Instance.StudySummaries[_selectedStudyId];
             study.SystemAttrs.TryGetValue("study:metric_names", out object metricNameObjs);

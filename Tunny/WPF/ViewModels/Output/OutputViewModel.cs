@@ -44,6 +44,10 @@ namespace Tunny.WPF.ViewModels.Output
             set
             {
                 SetProperty(ref _selectedStudyName, value);
+                if (StudyNameItems == null || StudyNameItems.Count == 0)
+                {
+                    return;
+                }
                 OutputListedItems = GetOutputViewListItem("Listed", value.Id);
                 OutputTargetItems = GetOutputViewListItem("Target", value.Id);
                 if (AnalysisTable != null)
