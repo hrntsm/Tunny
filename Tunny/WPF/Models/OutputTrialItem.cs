@@ -2,7 +2,7 @@
 
 namespace Tunny.WPF.Models
 {
-    internal class OutputTrialItem : BindableBase
+    internal sealed class OutputTrialItem : BindableBase
     {
         private bool _isSelected;
         public bool IsSelected

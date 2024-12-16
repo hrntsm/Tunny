@@ -13,19 +13,17 @@ namespace Tunny.Process
 {
     internal static class OutputProcess
     {
-        private static OptimizeComponentBase s_component;
-
         public static string StudyName;
         public static int[] Indices;
 
         internal static void Run()
         {
             TLog.MethodStart();
-            s_component = SharedItems.Instance.Component;
+            OptimizeComponentBase component = SharedItems.Instance.Component;
 
             var fishes = new List<Fish>();
 
-            if (s_component != null)
+            if (component != null)
             {
                 var output = new Output(SharedItems.Instance.Settings.Storage.Path);
                 Trial[] targetTrials = output.GetTargetTrial(Indices, StudyName);
@@ -41,8 +39,8 @@ namespace Tunny.Process
                 {
                     SetResultToFish(fishes, trial, nickNames, metricNames);
                 }
-                s_component.Fishes = fishes.ToArray();
-                s_component.ExpireSolution(true);
+                component.Fishes = fishes.ToArray();
+                component.ExpireSolution(true);
             }
 
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");

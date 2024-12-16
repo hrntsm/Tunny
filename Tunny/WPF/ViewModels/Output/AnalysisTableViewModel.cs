@@ -14,7 +14,7 @@ using Tunny.WPF.Common;
 
 namespace Tunny.WPF.ViewModels.Output
 {
-    internal class AnalysisTableViewModel : BindableBase
+    internal sealed class AnalysisTableViewModel : BindableBase
     {
         internal int SelectedStudyId { get; set; }
 

@@ -23,7 +23,7 @@ using Tunny.WPF.Common;
 
 namespace Tunny.WPF.ViewModels.Output
 {
-    internal class AnalysisChartViewModel : BindableBase
+    internal sealed class AnalysisChartViewModel : BindableBase
     {
         private int _selectedStudyId;
         private string[] _metricNames;
@@ -219,12 +219,12 @@ namespace Tunny.WPF.ViewModels.Output
             {
                 return trial.TrialId;
             }
-            else if (target.StartsWith("Param: "))
+            else if (target.StartsWith("Param: ", StringComparison.InvariantCulture))
             {
                 string key = target.Substring(7);
                 return (double)trial.Params[key];
             }
-            else if (target.StartsWith("Attr: "))
+            else if (target.StartsWith("Attr: ", StringComparison.InvariantCulture))
             {
                 Dictionary<string, object>.KeyCollection attrKeys = trial.UserAttrs.Keys;
                 foreach (string k in attrKeys)
