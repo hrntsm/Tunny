@@ -14,8 +14,9 @@ using Python.Runtime;
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
 using Tunny.Resources;
+using Tunny.WPF.Views.Windows;
 
-namespace Tunny.UI
+namespace Tunny.Component
 {
     public class LoadingInstruction : GH_AssemblyPriority, IDisposable
     {
@@ -203,8 +204,8 @@ namespace Tunny.UI
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 settings.Storage.Path = ofd.FileName;
-                var deStudyNameSelector = new DEStudyNameSelector(settings.Storage);
-                deStudyNameSelector.ShowDialog();
+                var deStudyNameSelector = new TargetStudyNameSelector();
+                deStudyNameSelector.Show();
             }
         }
 
