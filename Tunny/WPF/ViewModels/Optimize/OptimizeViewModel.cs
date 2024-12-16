@@ -287,9 +287,9 @@ namespace Tunny.WPF.ViewModels.Optimize
             if (samplerType == SamplerType.NSGAII || samplerType == SamplerType.NSGAIII || samplerType == SamplerType.MOEAD)
             {
                 int total = _settings.Optimize.NumberOfTrials;
-                int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize > 0
+                int populationSize = _settings.Optimize.Sampler.NsgaII.PopulationSize > 2
                     ? _settings.Optimize.Sampler.NsgaII.PopulationSize
-                    : 1;
+                    : 2;
                 int numGeneration = total / populationSize;
                 TrialNumberParam1 = numGeneration.ToString(CultureInfo.InvariantCulture);
                 TrialNumberParam2 = populationSize.ToString(CultureInfo.InvariantCulture);
