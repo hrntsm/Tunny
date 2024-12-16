@@ -118,7 +118,8 @@
                     <Button
                         Grid.Row="1"
                         Margin="20,5,20,5"
-                        Command="{Binding LoadDashboardSelectionCommand}"
+                        Command="{Binding LoadSelectionCommand}"
+                        CommandParameter="Dashboard"
                         Content="Load Selection CSV" />
                 </Grid>
             </GroupBox>
@@ -142,7 +143,8 @@
                     <Button
                         Grid.Row="1"
                         Margin="20,5,20,5"
-                        Command="{Binding LoadDesignExplorerSelectionCommand}"
+                        Command="{Binding LoadSelectionCommand}"
+                        CommandParameter="DesignExplorer"
                         Content="Load Selection CSV" />
                 </Grid>
             </GroupBox>

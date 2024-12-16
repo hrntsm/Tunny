@@ -25,6 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestFile\ColumnsError.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\empty.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\Dashboard.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\DesignExplorer.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFile\journal.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -104,29 +104,50 @@ namespace Tunny.WPF.ViewModels.Output
                 return;
             }
 
-            int trialId = int.Parse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture);
-            if (OutputListedItems.Any(x => x.Id == trialId))
+            if (int.TryParse(TargetTrialNumber, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
             {
-                return;
+                AddOutputListedItems(result);
             }
-            OutputTrialItem outputTrialItem = SharedItems.Instance.GetOutputTrial(SelectedStudyName.Id, trialId);
-            OutputListedItems.Add(outputTrialItem);
         }
 
-        private DelegateCommand _loadDashboardSelectionCommand;
-        public ICommand LoadDashboardSelectionCommand
+        private DelegateCommand<string> _loadSelectionCommand;
+        public ICommand LoadSelectionCommand
         {
             get
             {
-                if (_loadDashboardSelectionCommand == null)
+                if (_loadSelectionCommand == null)
                 {
-                    _loadDashboardSelectionCommand = new DelegateCommand(LoadDashboardSelection);
+                    _loadSelectionCommand = new DelegateCommand<string>(LoadSelection);
                 }
-                return _loadDashboardSelectionCommand;
+                return _loadSelectionCommand;
             }
         }
-        private void LoadDashboardSelection()
+        private void LoadSelection(string param)
         {
+            CsvType type = param == "Dashboard" ? CsvType.Dashboard : CsvType.DesignExplorer;
+            LoadCsv(type);
+        }
+
+        private void LoadCsv(CsvType type)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                FileName = "",
+                DefaultExt = "csv",
+                Filter = @"selection csv(*.csv)|*.csv|All Files (*.*)|*.*",
+                Title = @"Set Selection File Path",
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                var reader = new SelectionCsvReader(dialog.FileName);
+                int[] indices = reader.ReadSelection(type);
+                foreach (int index in indices)
+                {
+                    AddOutputListedItems(index);
+                }
+            }
         }
 
         private DelegateCommand _openOptunaDashboardTrialSelectionCommand;
@@ -396,22 +417,6 @@ namespace Tunny.WPF.ViewModels.Output
         {
             var designExplorer = new DesignExplorer(SelectedStudyName.Name, SharedItems.Instance.Settings.Storage);
             designExplorer.Run();
-        }
-
-        private DelegateCommand _loadDesignExplorerSelectionCommand;
-        public ICommand LoadDesignExplorerSelectionCommand
-        {
-            get
-            {
-                if (_loadDesignExplorerSelectionCommand == null)
-                {
-                    _loadDesignExplorerSelectionCommand = new DelegateCommand(LoadDesignExplorerSelection);
-                }
-                return _loadDesignExplorerSelectionCommand;
-            }
-        }
-        private void LoadDesignExplorerSelection()
-        {
         }
 
         private DelegateCommand<string> _checkAllCommand;
