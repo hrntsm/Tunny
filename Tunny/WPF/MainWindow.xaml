@@ -259,27 +259,10 @@
             </RibbonTab>
 
             <RibbonTab Header="Output">
-                <RibbonGroup Header="Target">
-                    <RibbonComboBox />
-                </RibbonGroup>
-                <RibbonGroup Header="Group Output">
+                <RibbonGroup Header="List Output">
                     <RibbonButton
-                        Label="Pareto Solutions"
-                        LargeImageSource="{StaticResource TunnyIcon}"
-                        SmallImageSource="{StaticResource TunnyIcon}" />
-                    <RibbonButton
-                        Label="All Trials"
-                        LargeImageSource="{StaticResource TunnyIcon}"
-                        SmallImageSource="{StaticResource TunnyIcon}" />
-                </RibbonGroup>
-                <RibbonGroup Header="Use Trial Numbers Output">
-                    <RibbonTextBox Label="Trial Numbers" />
-                    <RibbonButton
-                        Label="Reinstate to Slider"
-                        LargeImageSource="{StaticResource TunnyIcon}"
-                        SmallImageSource="{StaticResource TunnyIcon}" />
-                    <RibbonButton
-                        Label="Output to Component"
+                        Command="{Binding ListOutputCommand}"
+                        Label="Selection"
                         LargeImageSource="{StaticResource TunnyIcon}"
                         SmallImageSource="{StaticResource TunnyIcon}" />
                 </RibbonGroup>

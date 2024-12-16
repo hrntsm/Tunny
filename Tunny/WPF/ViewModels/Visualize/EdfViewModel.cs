@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -9,10 +7,6 @@ namespace Tunny.WPF.ViewModels.Visualize
     internal sealed class EdfViewModel : PlotSettingsViewModelBase
     {
         public EdfViewModel() : base()
-        {
-        }
-
-        public EdfViewModel(StudySummary[] summaries) : base(summaries)
         {
         }
 

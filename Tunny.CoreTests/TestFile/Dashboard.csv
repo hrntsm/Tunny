@@ -1,0 +1,5 @@
+Number,State,v0,v1,Param x,Param y,UserAttribute Constraint
+1,COMPLETE,580.0,305.0,1,-12,"[420.0, 195.0]"
+8,COMPLETE,1960.0,260.0,7,21,"[-960.0, 240.0]"
+10,COMPLETE,2132.0,333.0,23,2,"[-1132.0, 167.0]"
+11,COMPLETE,2644.0,401.0,25,6,"[-1644.0, 99.0]"

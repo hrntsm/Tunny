@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using LiveChartsCore.Defaults;
 
 using Tunny.Component.Optimizer;
-using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels.Optimize;
 

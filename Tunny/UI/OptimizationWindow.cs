@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
@@ -11,7 +10,6 @@ using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Handler;
 
 namespace Tunny.UI
 {
@@ -48,7 +46,6 @@ namespace Tunny.UI
         private void SetOptimizeBackgroundWorker()
         {
             TLog.MethodStart();
-            //optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
             optimizeBackgroundWorker.WorkerReportsProgress = true;
@@ -58,7 +55,6 @@ namespace Tunny.UI
         private void SetOutputResultBackgroundWorker()
         {
             TLog.MethodStart();
-            outputResultBackgroundWorker.DoWork += OutputLoop.Run;
             outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
             outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;
             outputResultBackgroundWorker.WorkerReportsProgress = true;

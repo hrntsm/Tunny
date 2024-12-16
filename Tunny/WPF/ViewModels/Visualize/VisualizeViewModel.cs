@@ -39,20 +39,19 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         private void InitializeSettingPages()
         {
-            Optuna.Study.StudySummary[] summaries = new StorageHandler().GetStudySummaries(_settings.Storage.Path);
             _plotSettingPages = new Dictionary<VisualizeType, Lazy<Page>>
             {
-                {VisualizeType.ParetoFront, new Lazy<Page>(() => new ParetoFrontPage(summaries))},
-                {VisualizeType.OptimizationHistory, new Lazy<Page>(() => new OptimizationHistoryPage(summaries))},
-                {VisualizeType.Slice, new Lazy<Page>(() => new SlicePage(summaries))},
-                {VisualizeType.Contour, new Lazy<Page>(() => new ContourPage(summaries))},
-                {VisualizeType.ParamImportances, new Lazy<Page>(() => new ParamImportancesPage(summaries))},
-                {VisualizeType.ParallelCoordinate, new Lazy<Page>(() => new ParallelCoordinatePage(summaries))},
-                {VisualizeType.Hypervolume, new Lazy<Page>(() => new HypervolumePage(summaries))},
-                {VisualizeType.EDF, new Lazy<Page>(() => new EdfPage(summaries))},
-                {VisualizeType.Rank, new Lazy<Page>(() => new RankPage(summaries))},
-                {VisualizeType.Timeline, new Lazy<Page>(() => new TimelinePage(summaries))},
-                {VisualizeType.TerminatorImprovement, new Lazy<Page>(() => new TerminatorImprovementPage(summaries))}
+                {VisualizeType.ParetoFront, new Lazy<Page>(() => new ParetoFrontPage())},
+                {VisualizeType.OptimizationHistory, new Lazy<Page>(() => new OptimizationHistoryPage())},
+                {VisualizeType.Slice, new Lazy<Page>(() => new SlicePage())},
+                {VisualizeType.Contour, new Lazy<Page>(() => new ContourPage())},
+                {VisualizeType.ParamImportances, new Lazy<Page>(() => new ParamImportancesPage())},
+                {VisualizeType.ParallelCoordinate, new Lazy<Page>(() => new ParallelCoordinatePage())},
+                {VisualizeType.Hypervolume, new Lazy<Page>(() => new HypervolumePage())},
+                {VisualizeType.EDF, new Lazy<Page>(() => new EdfPage())},
+                {VisualizeType.Rank, new Lazy<Page>(() => new RankPage())},
+                {VisualizeType.Timeline, new Lazy<Page>(() => new TimelinePage())},
+                {VisualizeType.TerminatorImprovement, new Lazy<Page>(() => new TerminatorImprovementPage())}
             };
             PlotSettingsFrame = _plotSettingPages[VisualizeType.ParetoFront].Value;
         }

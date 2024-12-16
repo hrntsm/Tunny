@@ -41,11 +41,7 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public PlotSettingsViewModelBase()
         {
-        }
-
-        public PlotSettingsViewModelBase(StudySummary[] summaries)
-        {
-            _summaries = summaries;
+            _summaries = SharedItems.Instance.StudySummaries;
             ObjectiveItems = new ObservableCollection<VisualizeListItem>();
             VariableItems = new ObservableCollection<VisualizeListItem>();
             StudyNameItems = Utils.StudyNamesFromStudySummaries(_summaries);

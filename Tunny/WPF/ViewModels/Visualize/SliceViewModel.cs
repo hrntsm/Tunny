@@ -12,10 +12,6 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public SliceViewModel(StudySummary[] summaries) : base(summaries)
-        {
-        }
-
         public override PlotSettings GetPlotSettings()
         {
             return new PlotSettings()

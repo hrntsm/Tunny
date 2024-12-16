@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -11,13 +10,13 @@ using Tunny.Core.Settings;
 using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
-using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.ViewModels.Optimize;
 using Tunny.WPF.ViewModels.Visualize;
 using Tunny.WPF.Views.Pages;
 using Tunny.WPF.Views.Pages.Expert;
 using Tunny.WPF.Views.Pages.Optimize;
+using Tunny.WPF.Views.Pages.Output;
 using Tunny.WPF.Views.Pages.Visualize;
 using Tunny.WPF.Views.Windows;
 
@@ -27,9 +26,10 @@ namespace Tunny.WPF.ViewModels
     {
         private readonly OptimizePage _optimizePage;
         private readonly OptimizeViewModel _optimizeViewModel;
-        private readonly VisualizePage _visualizePage;
-        private readonly HelpPage _helpPage;
-        private readonly ExpertPage _expertPage;
+        private readonly Lazy<VisualizePage> _visualizePage;
+        private readonly Lazy<OutputPage> _outputPage;
+        private readonly Lazy<HelpPage> _helpPage;
+        private readonly Lazy<ExpertPage> _expertPage;
         private static SharedItems SharedItems => SharedItems.Instance;
         public bool IsSingleObjective { get => !_isMultiObjective; }
         private bool _isMultiObjective;
@@ -41,9 +41,10 @@ namespace Tunny.WPF.ViewModels
 
         public MainWindowViewModel()
         {
-            _visualizePage = new VisualizePage();
-            _helpPage = new HelpPage();
-            _expertPage = new ExpertPage();
+            _visualizePage = new Lazy<VisualizePage>();
+            _outputPage = new Lazy<OutputPage>();
+            _helpPage = new Lazy<HelpPage>();
+            _expertPage = new Lazy<ExpertPage>();
             IsMultiObjective = SharedItems.Component.GhInOut.IsMultiObjective;
             UpdateTitle();
             ReportProgress("Welcome 🐟Tunny🐟 The next-gen Grasshopper optimization tool ", 0);
@@ -54,6 +55,7 @@ namespace Tunny.WPF.ViewModels
                 DataContext = _optimizeViewModel
             };
             MainWindowFrame = _optimizePage;
+            SharedItems.StudySummaries = new StorageHandler().GetStudySummaries(SharedItems.Settings.Storage.Path);
             _optimizeViewModel.UpdateExistStudies();
             _optimizeViewModel.ChangeTargetSampler(SharedItems.Settings.Optimize.SamplerType);
 
@@ -100,7 +102,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _selectVisualizeTypeCommand = new DelegateCommand<VisualizeType?>(SelectVisualizeType);
                 }
-
                 return _selectVisualizeTypeCommand;
             }
         }
@@ -111,9 +112,9 @@ namespace Tunny.WPF.ViewModels
             {
                 return;
             }
-            var viewModel = (VisualizeViewModel)_visualizePage.DataContext;
+            var viewModel = (VisualizeViewModel)_visualizePage.Value.DataContext;
             viewModel.SetTargetVisualizeType(visualizeType.Value);
-            MainWindowFrame = _visualizePage;
+            MainWindowFrame = _visualizePage.Value;
         }
 
         private DelegateCommand _registerOptunaHubSamplerCommand;
@@ -125,7 +126,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _registerOptunaHubSamplerCommand = new DelegateCommand(RegisterOptunaHubSampler);
                 }
-
                 return _registerOptunaHubSamplerCommand;
             }
         }
@@ -142,7 +142,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _selectSamplerCommand = new DelegateCommand<SelectSamplerType?>(SelectSampler);
                 }
-
                 return _selectSamplerCommand;
             }
         }
@@ -209,15 +208,14 @@ namespace Tunny.WPF.ViewModels
                 {
                     _openHelpPageCommand = new DelegateCommand<HelpType?>(OpenHelpPage);
                 }
-
                 return _openHelpPageCommand;
             }
         }
 
         private void OpenHelpPage(HelpType? helpType)
         {
-            _helpPage.OpenSite(helpType);
-            MainWindowFrame = _helpPage;
+            _helpPage.Value.OpenSite(helpType);
+            MainWindowFrame = _helpPage.Value;
         }
 
         private DelegateCommand _quickAccessSettingsSaveCommand;
@@ -229,7 +227,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _quickAccessSettingsSaveCommand = new DelegateCommand(QuickAccessSettingsFileSave);
                 }
-
                 return _quickAccessSettingsSaveCommand;
             }
         }
@@ -249,7 +246,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _quickAccessNewStorageFileCommand = new DelegateCommand(QuickAccessNewStorageFile);
                 }
-
                 return _quickAccessNewStorageFileCommand;
             }
         }
@@ -284,7 +280,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _quickAccessFileOpenCommand = new DelegateCommand(QuickAccessStorageFileOpen);
                 }
-
                 return _quickAccessFileOpenCommand;
             }
         }
@@ -343,7 +338,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _runDesignExplorerCommand = new DelegateCommand(RunDesignExplorer);
                 }
-
                 return _runDesignExplorerCommand;
             }
         }
@@ -356,7 +350,7 @@ namespace Tunny.WPF.ViewModels
 
         public void Dispose()
         {
-            _helpPage.Dispose();
+            _helpPage.Value.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -369,7 +363,6 @@ namespace Tunny.WPF.ViewModels
                 {
                     _installPythonCommand = new DelegateCommand(InstallPython);
                 }
-
                 return _installPythonCommand;
             }
         }
@@ -402,6 +395,24 @@ namespace Tunny.WPF.ViewModels
             StatusBarNotifyText = notifyText;
             StatusBarTrialNum = trialNum;
             StatusBarProgress = progress;
+        }
+
+        private DelegateCommand _listOutputCommand;
+        public ICommand ListOutputCommand
+        {
+            get
+            {
+                if (_listOutputCommand == null)
+                {
+                    _listOutputCommand = new DelegateCommand(ListOutput);
+                }
+                return _listOutputCommand;
+            }
+        }
+
+        private void ListOutput()
+        {
+            MainWindowFrame = _outputPage.Value;
         }
     }
 }

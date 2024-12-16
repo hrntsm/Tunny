@@ -14,6 +14,7 @@ namespace Tunny.WPF
         public MainWindow(OptimizeComponentBase component)
         {
             TLog.MethodStart();
+            SharedItems.Clear();
             SharedItems.TunnyWindow = this;
             component.GhInOutInstantiate();
             if (!component.GhInOut.IsLoadCorrectly)

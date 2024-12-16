@@ -1,88 +1,48 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 
 using Optuna.Trial;
 
-using Rhino.Geometry;
-using Rhino.Runtime;
-
 using Tunny.Component.Optimizer;
-using Tunny.Core.Settings;
 using Tunny.Core.Solver;
-using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.WPF.Common;
 
-namespace Tunny.Handler
+namespace Tunny.Process
 {
-    internal static class OutputLoop
+    internal static class OutputProcess
     {
-        private static BackgroundWorker s_worker;
-        public static OptimizeComponentBase Component;
-        public static TSettings Settings;
         public static string StudyName;
-        public static string[] NickNames;
         public static int[] Indices;
-        public static OutputMode Mode;
-        public static bool IsForcedStopOutput;
 
-        internal static void Run(object sender, DoWorkEventArgs e)
+        internal static void Run()
         {
             TLog.MethodStart();
-            s_worker = sender as BackgroundWorker;
-            Component = e.Argument as UIOptimizeComponentBase;
+            OptimizeComponentBase component = SharedItems.Instance.Component;
 
             var fishes = new List<Fish>();
 
-            if (Component != null)
+            if (component != null)
             {
-                var output = new Output(Settings.Storage.Path);
+                var output = new Output(SharedItems.Instance.Settings.Storage.Path);
                 Trial[] targetTrials = output.GetTargetTrial(Indices, StudyName);
                 string[] metricNames = output.GetMetricNames(StudyName);
-                if (targetTrials.Length == 0)
-                {
-                    TunnyMessageBox.Show(
-                        "There are no output models. Please check study name.",
-                        "Tunny",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                    return;
-                }
-                if (Component.GhInOut.HasConstraint && Indices[0] == -1)
-                {
-                    TunnyMessageBox.Show(
-                        "Pareto solution is output with no constraints taken into account.",
-                        "Tunny",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                }
+                Dictionary<string, object>.KeyCollection nickNames = targetTrials[0].Params.Keys;
 
                 if (metricNames == null || metricNames.Length == 0)
                 {
-                    metricNames = Component.GhInOut.Objectives.GetNickNames();
-                    if (metricNames.Length != targetTrials[0].Values.Length)
-                    {
-                        TunnyMessageBox.Show(
-                            "The number of objective functions in the result file does not match the number of objective functions in the Grasshopper file.\nThe two should be the same number.",
-                            "Tunny",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error);
-                        return;
-                    }
+                    metricNames = targetTrials[0].Values.Select((_, i) => $"Objective{i}").ToArray();
                 }
 
                 foreach (Trial trial in targetTrials)
                 {
-                    SetResultToFish(fishes, trial, NickNames, metricNames);
+                    SetResultToFish(fishes, trial, nickNames, metricNames);
                 }
-                Component.Fishes = fishes.ToArray();
+                component.Fishes = fishes.ToArray();
+                component.ExpireSolution(true);
             }
 
-            s_worker?.ReportProgress(100);
-            s_worker?.Dispose();
             TunnyMessageBox.Show("Output result to fish completed successfully.", "Tunny");
         }
 
@@ -134,17 +94,7 @@ namespace Tunny.Handler
             var attribute = new Dictionary<string, object>();
             foreach (KeyValuePair<string, List<string>> attr in trialAttr)
             {
-                if (attr.Key == "Geometry")
-                {
-                    var geometries = attr.Value.Where(json => !string.IsNullOrEmpty(json))
-                        .Select(json => CommonObject.FromJSON(json) as GeometryBase)
-                        .ToList();
-                    attribute.Add(attr.Key, geometries);
-                }
-                else
-                {
-                    attribute.Add(attr.Key, attr.Value);
-                }
+                attribute.Add(attr.Key, attr.Value);
             }
             return attribute;
         }

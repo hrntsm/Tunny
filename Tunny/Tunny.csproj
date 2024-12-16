@@ -52,11 +52,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf" Version="130.1.90" />
+    <PackageReference Include="CefSharp.Wpf" Version="131.3.10" />
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc3.3" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />
-    <PackageReference Include="System.Resources.Extensions" Version="6.0.0">
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.0">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <Reference Include="WindowsBase" />

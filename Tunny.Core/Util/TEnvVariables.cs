@@ -8,7 +8,7 @@ namespace Tunny.Core.Util
     {
         public static Version Version { get; } = Assembly.GetExecutingAssembly().GetName().Version;
         public static string DefaultStoragePath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log");
-        public static string TunnyEnvPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".tunny_env");
+        public static string TunnyEnvPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".tunny_dev_env");
         public static string LogPath { get; } = Path.Combine(TunnyEnvPath, "logs");
         public static string QuitFishingPath { get; } = Path.Combine(TunnyEnvPath, "quit.fishing");
         public static string DesignExplorerPath { get; } = Path.Combine(TunnyEnvPath, "TT-DesignExplorer");
