@@ -14,10 +14,14 @@ namespace Tunny.Process
 {
     internal sealed class VisualizeProcess : PythonInit
     {
-        internal string Plot(Storage storage, PlotSettings plotSettings)
+        internal void Save(Storage storage, PlotSettings plotSettings, string htmlPath)
+        {
+            Plot(storage, plotSettings, htmlPath);
+        }
+
+        internal string Plot(Storage storage, PlotSettings plotSettings, string htmlPath = "")
         {
             TLog.MethodStart();
-            string htmlPath = string.Empty;
             InitializePythonEngine();
             using (Py.GIL())
             {
@@ -31,8 +35,11 @@ namespace Tunny.Process
                 try
                 {
                     PlotlyFigure figure = CreateFigure(optunaStudy, plotSettings);
-                    htmlPath = Path.Combine(TEnvVariables.TmpDirPath, "plot.html");
-                    figure.UpdateLayout(new FigureLayout { PaperBgColor = "rgba(0,0,0,0)" });
+                    if (string.IsNullOrEmpty(htmlPath))
+                    {
+                        htmlPath = Path.Combine(TEnvVariables.TmpDirPath, "plot.html");
+                        figure.UpdateLayout(new FigureLayout { PaperBgColor = "rgba(0,0,0,0)" });
+                    }
                     figure.WriteHtml(htmlPath);
                 }
                 catch (Exception)

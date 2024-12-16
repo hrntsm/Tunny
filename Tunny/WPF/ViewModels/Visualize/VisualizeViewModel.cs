@@ -13,7 +13,6 @@ using Prism.Commands;
 using Prism.Mvvm;
 
 using Tunny.Core.Settings;
-using Tunny.Core.Storage;
 using Tunny.Process;
 using Tunny.WPF.Common;
 using Tunny.WPF.Views.Pages.Visualize;
@@ -128,6 +127,41 @@ namespace Tunny.WPF.ViewModels.Visualize
                 string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
                 PlotFrame.Load(fileUrl);
             });
+        }
+
+        private DelegateCommand _saveCommand;
+        public ICommand SaveCommand
+        {
+            get
+            {
+                if (_saveCommand == null)
+                {
+                    _saveCommand = new DelegateCommand(Save);
+                }
+                return _saveCommand;
+            }
+        }
+        private async void Save()
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = "fish",
+                DefaultExt = "html",
+                Filter = @"html(*.html)|*.html|All Files (*.*)|*.*",
+                Title = @"Set File Path",
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
+                PlotSettings plotSettings = viewModel.GetPlotSettings();
+                await Task.Run(() =>
+                {
+                    var vis = new VisualizeProcess();
+                    vis.Save(_settings.Storage, plotSettings, dialog.FileName);
+                });
+            }
         }
     }
 }

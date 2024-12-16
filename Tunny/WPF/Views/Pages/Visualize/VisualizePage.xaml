@@ -47,7 +47,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5"
-                    Command="{Binding PlotCommand}"
+                    Command="{Binding SaveCommand}"
                     Content="Save" />
             </Grid>
         </GroupBox>
@@ -55,19 +55,19 @@
         <GroupBox
             Grid.Row="1"
             Background="#E2E8F4"
-            Header="Export">
+            Header="Output">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Label VerticalAlignment="Center" Content="Trial Number to Export" />
+                <Label VerticalAlignment="Center" Content="Trial Id to Output" />
                 <TextBox Grid.Row="1" Margin="5" />
                 <Button
                     Grid.Row="4"
                     Margin="20,5,20,5"
-                    Content="Add Export List" />
+                    Content="Add Output List" />
             </Grid>
         </GroupBox>
 
