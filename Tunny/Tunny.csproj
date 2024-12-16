@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>0.12.0</Version>
+    <Version>1.0.100</Version>
     <Title>Tunny</Title>
     <Description>Tunny is an optimization component wrapped in optuna.</Description>
     <TargetExt>.gha</TargetExt>
