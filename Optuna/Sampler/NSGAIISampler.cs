@@ -9,6 +9,7 @@ namespace Optuna.Sampler
     /// </summary>
     public class NSGAIISampler : GASamplerBase
     {
+        private const string Package = "samplers/nsgaii_with_initial_trials";
         public double? MutationProb { get; set; }
         public int PopulationSize { get; set; } = 50;
         public string Crossover { get; set; } = "BLXAlpha";
@@ -18,7 +19,9 @@ namespace Optuna.Sampler
         public dynamic ToPython(bool hasConstraints)
         {
             dynamic optuna = Py.Import("optuna");
-            return optuna.samplers.NSGAIISampler(
+            dynamic optunahub = Py.Import("optunahub");
+            dynamic module = optunahub.load_module(package: Package);
+            return module.NSGAIIwITSampler(
                 population_size: PopulationSize,
                 mutation_prob: MutationProb,
                 crossover_prob: CrossoverProb,
