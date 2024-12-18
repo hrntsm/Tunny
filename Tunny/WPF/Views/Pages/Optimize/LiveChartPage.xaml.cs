@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -55,20 +54,9 @@ namespace Tunny.WPF.Views.Pages.Optimize
 
         private static double? GetChartValue(int trialNumber, double[] objectives, int index)
         {
-            double? value;
-            if (index == 0)
-            {
-                value = trialNumber;
-            }
-            else if (index <= objectives.Length)
-            {
-                value = objectives[index - 1];
-            }
-            else
-            {
-                value = null;
-            }
-
+            double? value = index == 0
+                ? trialNumber
+                : index <= objectives.Length ? objectives[index - 1] : (double?)null;
             return value;
         }
 
