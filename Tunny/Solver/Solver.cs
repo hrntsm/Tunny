@@ -140,7 +140,7 @@ namespace Tunny.Solver
             TLog.MethodStart();
             MessageBoxResult msgResult;
             MessageBoxButton button = isMultiObjective ? MessageBoxButton.OK : MessageBoxButton.YesNo;
-            string reinstateMessage = isMultiObjective ? string.Empty : "\nReinstate the best trial to the slider?";
+            string reinstateMessage = isMultiObjective ? string.Empty : "\nReinstate the best trial to the slider?\n\nIf reinstated, The components connected to the sliders are recomputed as the sliders are updated.\n";
             switch (endState)
             {
                 case EndState.Timeout:
