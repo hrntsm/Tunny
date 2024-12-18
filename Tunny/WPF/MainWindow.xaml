@@ -46,15 +46,15 @@
                         Command="{Binding QuickAccessStorageFileOpenCommand}"
                         SmallImageSource="{StaticResource OpenFolderOutline}"
                         ToolTip="Open Optimization Result File" />
-                    <RibbonButton
-                        Command="{Binding QuickAccessSettingsSaveCommand}"
-                        SmallImageSource="{StaticResource ContentSave}"
-                        ToolTip="Save Settings" />
                 </RibbonQuickAccessToolBar>
             </Ribbon.QuickAccessToolBar>
 
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu>
+                    <RibbonApplicationMenuItem
+                        Command="{Binding SettingsSaveCommand}"
+                        Header="Save Settings"
+                        ImageSource="{StaticResource ContentSave}" />
                     <RibbonApplicationMenuItem
                         Command="{Binding InstallPythonCommand}"
                         Header="Install Python Libraries"

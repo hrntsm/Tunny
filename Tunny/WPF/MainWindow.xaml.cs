@@ -4,6 +4,7 @@ using Tunny.Component.Optimizer;
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
 using Tunny.WPF.Common;
+using Tunny.WPF.ViewModels;
 
 namespace Tunny.WPF
 {
@@ -34,6 +35,7 @@ namespace Tunny.WPF
             }
 
             InitializeComponent();
+            Closing += (sender, e) => ((MainWindowViewModel)DataContext).SaveSettingsFile();
         }
     }
 }

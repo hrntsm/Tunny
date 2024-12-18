@@ -219,20 +219,20 @@ namespace Tunny.WPF.ViewModels
             MainWindowFrame = _helpPage.Value;
         }
 
-        private DelegateCommand _quickAccessSettingsSaveCommand;
-        public ICommand QuickAccessSettingsSaveCommand
+        private DelegateCommand _settingsSaveCommand;
+        public ICommand SettingsSaveCommand
         {
             get
             {
-                if (_quickAccessSettingsSaveCommand == null)
+                if (_settingsSaveCommand == null)
                 {
-                    _quickAccessSettingsSaveCommand = new DelegateCommand(QuickAccessSettingsFileSave);
+                    _settingsSaveCommand = new DelegateCommand(SaveSettingsFile);
                 }
-                return _quickAccessSettingsSaveCommand;
+                return _settingsSaveCommand;
             }
         }
 
-        private void QuickAccessSettingsFileSave()
+        internal void SaveSettingsFile()
         {
             SharedItems.Settings.Optimize = _optimizeViewModel.GetCurrentSettings();
             SharedItems.Settings.Serialize(TEnvVariables.OptimizeSettingsPath);
