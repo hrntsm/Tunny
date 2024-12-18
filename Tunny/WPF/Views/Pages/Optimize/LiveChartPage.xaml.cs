@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -42,14 +43,33 @@ namespace Tunny.WPF.Views.Pages.Optimize
         {
             if (_viewModel.ChartEnable)
             {
-                double x = ChartXTargetComboBox.SelectedIndex == 0
-                    ? trialNumber
-                    : objectives[ChartXTargetComboBox.SelectedIndex - 1];
-                double y = ChartYTargetComboBox.SelectedIndex == 0
-                    ? trialNumber
-                    : objectives[ChartYTargetComboBox.SelectedIndex - 1];
+                double? x = GetChartValue(trialNumber, objectives, ChartXTargetComboBox.SelectedIndex);
+                double? y = GetChartValue(trialNumber, objectives, ChartYTargetComboBox.SelectedIndex);
+                if (x == null || y == null)
+                {
+                    return;
+                }
                 _viewModel.ChartPoints.Add(new ObservablePoint(x, y));
             }
+        }
+
+        private static double? GetChartValue(int trialNumber, double[] objectives, int index)
+        {
+            double? value;
+            if (index == 0)
+            {
+                value = trialNumber;
+            }
+            else if (index <= objectives.Length)
+            {
+                value = objectives[index - 1];
+            }
+            else
+            {
+                value = null;
+            }
+
+            return value;
         }
 
         internal void ClearPoints()
