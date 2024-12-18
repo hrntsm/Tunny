@@ -17,7 +17,7 @@ namespace Tunny.WPF.ViewModels.Visualize
     {
         public abstract PlotSettings GetPlotSettings();
 
-        private readonly StudySummary[] _summaries;
+        private StudySummary[] _summaries;
         private ObservableCollection<NameComboBoxItem> _studyNameItems;
         public ObservableCollection<NameComboBoxItem> StudyNameItems { get => _studyNameItems; set => SetProperty(ref _studyNameItems, value); }
         private NameComboBoxItem _selectedStudyName;
@@ -50,10 +50,10 @@ namespace Tunny.WPF.ViewModels.Visualize
 
         public void UpdateItems()
         {
+            _summaries = SharedItems.Instance.StudySummaries;
             StudyNameItems = Utils.StudyNamesFromStudySummaries(_summaries);
             SelectedStudyName = StudyNameItems.FirstOrDefault();
         }
-
 
         private void UpdateObjectivesAndVariables()
         {
@@ -112,6 +112,5 @@ namespace Tunny.WPF.ViewModels.Visualize
             }
             SelectedVariable = VariableItems.FirstOrDefault();
         }
-
     }
 }

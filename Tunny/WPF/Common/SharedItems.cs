@@ -12,8 +12,10 @@ using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Settings;
 using Tunny.Core.Solver;
+using Tunny.Core.Storage;
 using Tunny.Core.Util;
 using Tunny.WPF.Models;
+using Tunny.WPF.ViewModels;
 using Tunny.WPF.ViewModels.Optimize;
 
 namespace Tunny.WPF.Common
@@ -48,6 +50,8 @@ namespace Tunny.WPF.Common
                 _studySummaries = value;
                 var output = new Output(Settings.Storage.Path);
                 Trials = output.GetAllTrial();
+                var windowVM = TunnyWindow.DataContext as MainWindowViewModel;
+                windowVM?.UpdateExistStudySummaries();
             }
         }
         internal Dictionary<int, ObservableCollection<OutputTrialItem>> OutputListedTrialDict { get; set; } = new Dictionary<int, ObservableCollection<OutputTrialItem>>();
@@ -96,6 +100,12 @@ namespace Tunny.WPF.Common
                 Objectives = string.Join(", ", Trials[studyId][trialId].Values),
                 Variables = string.Join(", ", Trials[studyId][trialId].Params.Select(p => $"{p.Key}:{p.Value}")),
             };
+        }
+
+        internal void UpdateStudySummaries()
+        {
+            TLog.MethodStart();
+            StudySummaries = new StorageHandler().GetStudySummaries(Settings.Storage.Path);
         }
     }
 }

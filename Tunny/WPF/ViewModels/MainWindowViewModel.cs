@@ -7,7 +7,6 @@ using Prism.Commands;
 using Prism.Mvvm;
 
 using Tunny.Core.Settings;
-using Tunny.Core.Storage;
 using Tunny.Core.TEnum;
 using Tunny.Core.Util;
 using Tunny.WPF.Common;
@@ -56,8 +55,7 @@ namespace Tunny.WPF.ViewModels
             };
             MainWindowFrame = _optimizePage;
             EnableMainFrame = true;
-            SharedItems.StudySummaries = new StorageHandler().GetStudySummaries(SharedItems.Settings.Storage.Path);
-            _optimizeViewModel.UpdateExistStudies();
+            SharedItems.UpdateStudySummaries();
             _optimizeViewModel.ChangeTargetSampler(SharedItems.Settings.Optimize.SamplerType);
 
             CheckPruner();
@@ -267,6 +265,7 @@ namespace Tunny.WPF.ViewModels
                 if (File.Exists(dialog.FileName) == false)
                 {
                     SharedItems.Settings.Storage.CreateNewOptunaStorage(true);
+                    SharedItems.UpdateStudySummaries();
                 }
                 UpdateTitle();
             }
@@ -298,6 +297,7 @@ namespace Tunny.WPF.ViewModels
             if (result == true)
             {
                 SharedItems.Settings.Storage.Path = dialog.FileName;
+                SharedItems.UpdateStudySummaries();
                 UpdateTitle();
             }
         }
@@ -418,5 +418,15 @@ namespace Tunny.WPF.ViewModels
 
         private bool _enableMainFrame;
         public bool EnableMainFrame { get => _enableMainFrame; set => SetProperty(ref _enableMainFrame, value); }
+
+        internal void UpdateExistStudySummaries()
+        {
+            _optimizeViewModel.UpdateExistStudySummaries();
+            if (_visualizePage.IsValueCreated)
+            {
+                var viewModel = (VisualizeViewModel)_visualizePage.Value.DataContext;
+                viewModel.UpdateExistStudySummaries();
+            }
+        }
     }
 }

@@ -163,5 +163,17 @@ namespace Tunny.WPF.ViewModels.Visualize
                 });
             }
         }
+
+        internal void UpdateExistStudySummaries()
+        {
+            foreach (Lazy<Page> page in _plotSettingPages.Values)
+            {
+                if (page.IsValueCreated)
+                {
+                    var viewModel = page.Value.DataContext as PlotSettingsViewModelBase;
+                    viewModel.UpdateItems();
+                }
+            }
+        }
     }
 }
