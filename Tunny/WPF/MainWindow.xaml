@@ -99,7 +99,7 @@
                         LargeImageSource="{StaticResource Compare}"
                         SmallImageSource="{StaticResource Compare}" />
                 </RibbonGroup>
-                <RibbonGroup Header="Genetic Algorighm">
+                <RibbonGroup Header="Genetic Algorithm">
                     <RibbonButton
                         Command="{Binding SelectSamplerCommand}"
                         CommandParameter="{x:Static common:SelectSamplerType.NSGAII}"
@@ -382,6 +382,7 @@
             Grid.Row="1"
             Background="#F0F4F8"
             Content="{Binding MainWindowFrame}"
+            IsEnabled="{Binding EnableMainFrame}"
             NavigationUIVisibility="Hidden" />
 
         <StatusBar Grid.Row="2" Background="#93C6F8">

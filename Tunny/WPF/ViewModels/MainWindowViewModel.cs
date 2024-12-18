@@ -55,6 +55,7 @@ namespace Tunny.WPF.ViewModels
                 DataContext = _optimizeViewModel
             };
             MainWindowFrame = _optimizePage;
+            EnableMainFrame = true;
             SharedItems.StudySummaries = new StorageHandler().GetStudySummaries(SharedItems.Settings.Storage.Path);
             _optimizeViewModel.UpdateExistStudies();
             _optimizeViewModel.ChangeTargetSampler(SharedItems.Settings.Optimize.SamplerType);
@@ -370,9 +371,9 @@ namespace Tunny.WPF.ViewModels
         {
             TLog.MethodStart();
             var installer = new PythonInstaller(this);
-            _optimizeViewModel.EnableRunOptimizeButton = false;
+            EnableMainFrame = false;
             await installer.RunAsync();
-            _optimizeViewModel.EnableRunOptimizeButton = true;
+            EnableMainFrame = true;
         }
 
         private string _statusBarNotifyText;
@@ -414,5 +415,8 @@ namespace Tunny.WPF.ViewModels
         {
             MainWindowFrame = _outputPage.Value;
         }
+
+        private bool _enableMainFrame;
+        public bool EnableMainFrame { get => _enableMainFrame; set => SetProperty(ref _enableMainFrame, value); }
     }
 }
