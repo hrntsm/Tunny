@@ -11,23 +11,23 @@ using Grasshopper.Kernel.Types;
 
 namespace Tunny.Type
 {
-    public class GH_FishEgg : GH_Goo<Dictionary<string, FishEgg>>
+    public class GH_FishEgg : GH_Goo<List<FishEgg>>
     {
         public GH_FishEgg()
         {
         }
 
-        public GH_FishEgg(Dictionary<string, FishEgg> internalData) : base(internalData)
+        public GH_FishEgg(List<FishEgg> internalData) : base(internalData)
         {
         }
 
-        public GH_FishEgg(GH_Goo<Dictionary<string, FishEgg>> other) : base(other)
+        public GH_FishEgg(GH_Goo<List<FishEgg>> other) : base(other)
         {
         }
 
         public override bool IsValid => Value != null;
         public override string TypeName => "FishEgg";
-        public override string TypeDescription => "DictionaryGoo for Tunny fish egg";
+        public override string TypeDescription => "Goo for Tunny fish egg";
         public override IGH_Goo Duplicate() => new GH_FishEgg { Value = Value };
 
         public override bool Read(GH_IReader reader)
@@ -49,20 +49,19 @@ namespace Tunny.Type
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (KeyValuePair<string, FishEgg> attr in Value)
+            for (int i = 0; i < Value.Count; i++)
             {
-                string valueStrings = string.Empty;
-                valueStrings = string.Join(", ", attr.Value.Values.Select(v => $"{v,6}"));
-                sb.AppendLine(attr.Key + ":\n  " + valueStrings);
+                FishEgg v = Value[i];
+                sb.AppendLine($"[{i}] {v}");
             }
             return sb.ToString();
         }
 
         public override bool CastFrom(object source)
         {
-            if (source is Dictionary<string, FishEgg> dict)
+            if (source is List<FishEgg> eggs)
             {
-                Value = dict;
+                Value = eggs;
                 return true;
             }
             else
@@ -74,7 +73,7 @@ namespace Tunny.Type
         public override bool CastTo<T>(ref T target)
         {
             target = default;
-            if (typeof(T).IsAssignableFrom(typeof(Dictionary<string, FishEgg>)))
+            if (typeof(T).IsAssignableFrom(typeof(List<FishEgg>)))
             {
                 target = (T)(object)Value;
                 return true;
@@ -85,16 +84,16 @@ namespace Tunny.Type
             }
         }
 
-        private static Dictionary<string, FishEgg> FromBase64(string base64)
+        private static List<FishEgg> FromBase64(string base64)
         {
             byte[] bytes = Convert.FromBase64String(base64);
             using (var ms = new MemoryStream(bytes))
             {
-                return (Dictionary<string, FishEgg>)new BinaryFormatter().Deserialize(ms);
+                return (List<FishEgg>)new BinaryFormatter().Deserialize(ms);
             }
         }
 
-        private static string ToBase64(Dictionary<string, FishEgg> value)
+        private static string ToBase64(List<FishEgg> value)
         {
             using (var ms = new MemoryStream())
             {

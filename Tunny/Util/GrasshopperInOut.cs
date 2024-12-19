@@ -38,7 +38,7 @@ namespace Tunny.Util
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
-        public Dictionary<string, FishEgg> FishEggs { get; private set; }
+        public List<FishEgg> FishEggs { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsMultiObjective => Objectives.Length > 1;
         public bool IsLoadCorrectly { get; }

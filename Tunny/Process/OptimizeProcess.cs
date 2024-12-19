@@ -71,13 +71,12 @@ namespace Tunny.Process
             TLog.MethodStart();
             Objective objectives = SetObjectives();
             List<VariableBase> variables = SetVariables();
-            Dictionary<string, Type.FishEgg> fishEggs = SharedItems.Component.GhInOut.FishEggs;
             bool hasConstraint = SharedItems.Component.GhInOut.HasConstraint;
             var progressState = new ProgressState(Array.Empty<Parameter>());
 
             var optunaSolver = new Solver.Solver(SharedItems.Settings, hasConstraint);
             bool reinstateResult = await Task.Run(() =>
-                optunaSolver.RunSolver(variables, objectives, fishEggs, EvaluateFunction)
+                optunaSolver.RunSolver(variables, objectives, EvaluateFunction)
             );
 
             return reinstateResult

@@ -14,13 +14,13 @@ namespace Tunny.Solver
         public dynamic Study { get; set; }
         public dynamic Storage { get; set; }
         public dynamic ArtifactBackend { get; set; }
-        public Dictionary<string, FishEgg> EnqueueItems { get; set; }
+        public List<FishEgg> EnqueueItems { get; set; }
         public string[] ObjectiveNames { get; set; }
         public HumanSliderInput HumanSliderInput { get; set; }
         public Preferential Preferential { get; set; }
 
         public OptimizationHandlingInfo(int nTrials, double timeout, dynamic study, dynamic storage,
-                                        dynamic artifactBackend, Dictionary<string, FishEgg> enqueueItems,
+                                        dynamic artifactBackend, List<FishEgg> enqueueItems,
                                         string[] objectiveNames)
         {
             TLog.MethodStart();
