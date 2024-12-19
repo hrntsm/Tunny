@@ -4,6 +4,6 @@ namespace Tunny.WPF.Common
 {
     public interface IPlotSettings
     {
-        PlotSettings GetPlotSettings();
+        bool TryGetPlotSettings(out PlotSettings plotSettings);
     }
 }

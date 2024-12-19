@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using Tunny.Core.Settings;
+﻿using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
 {
@@ -10,15 +8,23 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings()
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                ObjectiveItems.Count == 0)
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings()
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "EDF",
-                TargetObjectiveName = ObjectiveItems.Where(o => o.IsSelected).Select(o => o.Name).ToArray(),
-                TargetObjectiveIndex = ObjectiveItems.Where(o => o.IsSelected).Select(o => ObjectiveItems.IndexOf(o)).ToArray()
+                TargetObjectiveName = new[] { SelectedObjective.Name },
+                TargetObjectiveIndex = new[] { ObjectiveItems.IndexOf(SelectedObjective) }
             };
+            return true;
         }
     }
 }

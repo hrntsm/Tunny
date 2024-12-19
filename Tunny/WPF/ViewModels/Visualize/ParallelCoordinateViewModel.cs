@@ -12,9 +12,17 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings()
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                SelectedObjective == null || ObjectiveItems.Count == 0 ||
+                VariableItems.Count == 0 || !VariableItems.Any(v => v.IsSelected))
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings()
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "parallel coordinate",
@@ -22,6 +30,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                 TargetObjectiveIndex = new int[] { ObjectiveItems.IndexOf(SelectedObjective) },
                 TargetVariableName = VariableItems.Where(v => v.IsSelected).Select(v => v.Name).ToArray(),
             };
+            return true;
         }
     }
 }

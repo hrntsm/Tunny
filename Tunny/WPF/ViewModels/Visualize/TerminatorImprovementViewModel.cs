@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -44,7 +42,7 @@ namespace Tunny.WPF.ViewModels.Visualize
             SelectedErrorEvaluator = ErrorEvaluatorItems[0];
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
             throw new System.NotImplementedException();
         }

@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -15,17 +13,24 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null)
+            {
+                plotSettings = null;
+                return false;
+            }
+
             double[] referencePoint = string.IsNullOrEmpty(ReferencePoint) || ReferencePoint.Equals("AUTO", System.StringComparison.OrdinalIgnoreCase)
                 ? null
                 : ReferencePoint.Split(',').Select(double.Parse).ToArray();
-            return new PlotSettings()
+            plotSettings = new PlotSettings()
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "hypervolume",
                 ReferencePoint = referencePoint
             };
+            return true;
         }
     }
 }

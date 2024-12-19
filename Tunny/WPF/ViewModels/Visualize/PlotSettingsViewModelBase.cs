@@ -15,7 +15,7 @@ namespace Tunny.WPF.ViewModels.Visualize
 {
     internal abstract class PlotSettingsViewModelBase : BindableBase, IPlotSettings
     {
-        public abstract PlotSettings GetPlotSettings();
+        public abstract bool TryGetPlotSettings(out PlotSettings plotSettings);
 
         private StudySummary[] _summaries;
         private ObservableCollection<NameComboBoxItem> _studyNameItems;

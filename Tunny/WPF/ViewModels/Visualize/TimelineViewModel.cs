@@ -8,13 +8,20 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null)
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings
             {
                 PlotTypeName = "timeline",
                 TargetStudyName = SelectedStudyName.Name,
             };
+            return true;
         }
     }
 }
