@@ -56,7 +56,7 @@ namespace Tunny.Process
                 {
                     SharedItems.Component.GrasshopperStatusChanged -= EventHandler;
                 }
-                optimizeViewModel.UpdateExistStudies();
+                SharedItems.UpdateStudySummaries();
             }
         }
 

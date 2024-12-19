@@ -62,6 +62,11 @@ namespace Tunny.WPF.ViewModels.Visualize
             var frameViewModel = (PlotSettingsViewModelBase)PlotSettingsFrame.DataContext;
             frameViewModel.UpdateItems();
 
+            ShowInitialView();
+        }
+
+        private void ShowInitialView()
+        {
             string resource = "Tunny.WPF.Assets.html.visualize_top.html";
             string content = LoadEmbeddedHtml(resource);
             PlotFrame.LoadHtml(content);
@@ -82,7 +87,6 @@ namespace Tunny.WPF.ViewModels.Visualize
         }
 
         private DelegateCommand _plotCommand;
-
         public ICommand PlotCommand
         {
             get
@@ -95,7 +99,6 @@ namespace Tunny.WPF.ViewModels.Visualize
                 return _plotCommand;
             }
         }
-
         private void Plot()
         {
             SetLoadingPage();
@@ -119,7 +122,12 @@ namespace Tunny.WPF.ViewModels.Visualize
         private async void PlotAsync()
         {
             var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
-            PlotSettings plotSettings = viewModel.GetPlotSettings();
+            if (!viewModel.TryGetPlotSettings(out PlotSettings plotSettings))
+            {
+                TunnyMessageBox.Error_PlotParameterSet();
+                ShowInitialView();
+                return;
+            }
             await Task.Run(() =>
             {
                 var vis = new VisualizeProcess();
@@ -155,12 +163,29 @@ namespace Tunny.WPF.ViewModels.Visualize
             if (result == true)
             {
                 var viewModel = (IPlotSettings)PlotSettingsFrame.DataContext;
-                PlotSettings plotSettings = viewModel.GetPlotSettings();
+                if (!viewModel.TryGetPlotSettings(out PlotSettings plotSettings))
+                {
+                    TunnyMessageBox.Error_PlotParameterSet();
+                    ShowInitialView();
+                    return;
+                }
                 await Task.Run(() =>
                 {
                     var vis = new VisualizeProcess();
                     vis.Save(_settings.Storage, plotSettings, dialog.FileName);
                 });
+            }
+        }
+
+        internal void UpdateExistStudySummaries()
+        {
+            foreach (Lazy<Page> page in _plotSettingPages.Values)
+            {
+                if (page.IsValueCreated)
+                {
+                    var viewModel = page.Value.DataContext as PlotSettingsViewModelBase;
+                    viewModel.UpdateItems();
+                }
             }
         }
     }

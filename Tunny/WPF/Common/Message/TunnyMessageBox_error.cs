@@ -163,11 +163,11 @@ namespace Tunny.WPF.Common
             );
         }
 
-        internal static void Error_NoImplemented()
+        internal static void Error_PlotParameterSet()
         {
             TLog.MethodStart();
             Show(
-                "This feature is not implemented yet.",
+                "Your plot parameter is not set correctly.",
                 "Tunny",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error

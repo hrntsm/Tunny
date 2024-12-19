@@ -65,6 +65,7 @@
         <ListView
             Grid.Row="6"
             Margin="5"
+            IsEnabled="False"
             ItemsSource="{Binding CompareStudyNameItems}">
             <ListView.View>
                 <GridView>
@@ -87,6 +88,7 @@
             Grid.Row="7"
             Margin="5"
             Content="Show Error Bar"
-            IsChecked="{Binding ShowErrorBar}" />
+            IsChecked="{Binding ShowErrorBar}"
+            IsEnabled="False" />
     </Grid>
 </Page>

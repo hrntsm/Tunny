@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -12,9 +10,17 @@ namespace Tunny.WPF.ViewModels.Visualize
         {
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                ObjectiveItems.Count == 0 ||
+                VariableItems.Count < 2 || VariableItems.Where(v => v.IsSelected).Count() != 2)
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "rank",
@@ -22,6 +28,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                 TargetObjectiveIndex = new int[] { ObjectiveItems.IndexOf(SelectedObjective) },
                 TargetVariableName = VariableItems.Where(v => v.IsSelected).Select(v => v.Name).ToArray()
             };
+            return true;
         }
     }
 }

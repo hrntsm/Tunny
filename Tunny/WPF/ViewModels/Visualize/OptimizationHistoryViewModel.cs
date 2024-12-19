@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 
 using Tunny.Core.Settings;
 using Tunny.WPF.Models;
@@ -17,15 +18,23 @@ namespace Tunny.WPF.ViewModels.Visualize
             ShowErrorBar = false;
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                ObjectiveItems.Count == 0 || SelectedObjective == null)
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "optimization history",
                 TargetObjectiveName = new string[] { SelectedObjective.Name },
                 TargetObjectiveIndex = new int[] { ObjectiveItems.IndexOf(SelectedObjective) },
             };
+            return true;
         }
     }
 }

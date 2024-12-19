@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -27,9 +25,16 @@ namespace Tunny.WPF.ViewModels.Visualize
             SelectedEvaluator = EvaluatorItems[0];
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                VariableItems.Count == 0 || !VariableItems.Any(v => v.IsSelected))
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "param importances",
@@ -38,6 +43,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                 TargetVariableName = VariableItems.Where(v => v.IsSelected).Select(v => v.Name).ToArray(),
                 ImportanceEvaluator = SelectedEvaluator
             };
+            return true;
         }
     }
 }

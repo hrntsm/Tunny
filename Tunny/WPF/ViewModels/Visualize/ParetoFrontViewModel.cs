@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using Optuna.Study;
-
 using Tunny.Core.Settings;
 
 namespace Tunny.WPF.ViewModels.Visualize
@@ -16,9 +14,16 @@ namespace Tunny.WPF.ViewModels.Visualize
             IncludeDominatedTrials = true;
         }
 
-        public override PlotSettings GetPlotSettings()
+        public override bool TryGetPlotSettings(out PlotSettings plotSettings)
         {
-            return new PlotSettings()
+            if (StudyNameItems.Count == 0 || SelectedStudyName == null ||
+                ObjectiveItems.Count == 0 || ObjectiveItems.Where(o => o.IsSelected).Count() < 2 || ObjectiveItems.Where(o => o.IsSelected).Count() > 3)
+            {
+                plotSettings = null;
+                return false;
+            }
+
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "pareto front",
@@ -26,6 +31,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                 TargetObjectiveName = ObjectiveItems.Where(o => o.IsSelected).Select(o => o.Name).ToArray(),
                 TargetObjectiveIndex = ObjectiveItems.Where(o => o.IsSelected).Select(o => ObjectiveItems.IndexOf(o)).ToArray()
             };
+            return true;
         }
     }
 }
