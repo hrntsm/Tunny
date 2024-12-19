@@ -22,7 +22,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                 return false;
             }
 
-            plotSettings = new PlotSettings()
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "parallel coordinate",

@@ -24,7 +24,7 @@ namespace Tunny.WPF.ViewModels.Visualize
             double[] referencePoint = string.IsNullOrEmpty(ReferencePoint) || ReferencePoint.Equals("AUTO", System.StringComparison.OrdinalIgnoreCase)
                 ? null
                 : ReferencePoint.Split(',').Select(double.Parse).ToArray();
-            plotSettings = new PlotSettings()
+            plotSettings = new PlotSettings
             {
                 TargetStudyName = SelectedStudyName.Name,
                 PlotTypeName = "hypervolume",
