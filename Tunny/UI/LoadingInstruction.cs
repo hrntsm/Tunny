@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -8,18 +8,21 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
 
+using Tunny.Core.Settings;
+using Tunny.Core.Util;
 using Tunny.Resources;
-using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
     public class LoadingInstruction : GH_AssemblyPriority, IDisposable
     {
+        private ToolStripMenuItem _tunnyHelpStripMenuItem;
         private ToolStripMenuItem _optunaDashboardToolStripMenuItem;
+        private ToolStripMenuItem _pythonInstallStripMenuItem;
 
         public override GH_LoadingInstruction PriorityLoad()
         {
+            TLog.InitializeLogger();
             Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
             Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
             Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
@@ -28,6 +31,7 @@ namespace Tunny.UI
 
         void RegisterTunnyMenuItems(GH_Canvas canvas)
         {
+            TLog.MethodStart();
             Grasshopper.Instances.CanvasCreated -= RegisterTunnyMenuItems;
 
             GH_DocumentEditor docEditor = Grasshopper.Instances.DocumentEditor;
@@ -36,8 +40,10 @@ namespace Tunny.UI
                 SetupTunnyMenu(docEditor);
             }
         }
+
         private void SetupTunnyMenu(GH_DocumentEditor docEditor)
         {
+            TLog.MethodStart();
             ToolStripMenuItem tunnyToolStripMenuItem;
             tunnyToolStripMenuItem = new ToolStripMenuItem();
 
@@ -47,10 +53,10 @@ namespace Tunny.UI
                 tunnyToolStripMenuItem
             });
 
-            tunnyToolStripMenuItem.DropDownItems.AddRange(TunnyMenuItems.ToArray());
             tunnyToolStripMenuItem.Name = "TunnyToolStripMenuItem";
             tunnyToolStripMenuItem.Size = new Size(125, 29);
             tunnyToolStripMenuItem.Text = "Tunny";
+            AddTunnyMenuItems(tunnyToolStripMenuItem.DropDownItems);
 
             docEditor.MainMenuStrip.ResumeLayout(false);
             docEditor.MainMenuStrip.PerformLayout();
@@ -63,28 +69,77 @@ namespace Tunny.UI
             e.AppendItem(_optunaDashboardToolStripMenuItem);
         }
 
-        private List<ToolStripMenuItem> TunnyMenuItems
+        private void AddTunnyMenuItems(ToolStripItemCollection dropDownItems)
         {
-            get
+            TLog.MethodStart();
+            _tunnyHelpStripMenuItem = new ToolStripMenuItem("Help", null, TunnyHelpStripMenuItem_Click, "TunnyHelpStripMenuItem");
+            _optunaDashboardToolStripMenuItem = new ToolStripMenuItem("Run optuna-dashboard...", Resource.optuna_dashboard, OptunaDashboardToolStripMenuItem_Click, "OptunaDashboardToolStripMenuItem");
+            _pythonInstallStripMenuItem = new ToolStripMenuItem("Install Python...", null, PythonInstallStripMenuItem_Click, "PythonInstallStripMenuItem");
+            var ttDesignExplorerToolStripMenuItem = new ToolStripMenuItem("Run TT DesignExplorer...", Resource.TTDesignExplorer, TTDesignExplorerToolStripMenuItem_Click, "TTDesignExplorerToolStripMenuItem");
+            var aboutTunnyStripMenuItem = new ToolStripMenuItem("About...", Resource.TunnyIcon, AboutTunnyStripMenuItem_Click, "AboutTunnyStripMenuItem");
+
+            dropDownItems.AddRange(new ToolStripItem[] {
+                _tunnyHelpStripMenuItem,
+                _optunaDashboardToolStripMenuItem,
+                ttDesignExplorerToolStripMenuItem,
+                new ToolStripSeparator(),
+                _pythonInstallStripMenuItem,
+                new ToolStripSeparator(),
+                aboutTunnyStripMenuItem
+            });
+        }
+
+        private void AboutTunnyStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            TLog.Debug("AboutTunnyStripMenuItem Clicked");
+            TunnyMessageBox.Show(
+                "Tunny\nVersion: " + TEnvVariables.Version + "\n\n🐟Tunny🐟 is Grasshopper's optimization component using Optuna, an open source hyperparameter auto-optimization framework.\n\nTunny is developed by hrntsm.\nFor more information, visit https://tunny-docs.deno.dev/",
+                "About Tunny",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
+        private void PythonInstallStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            TLog.Debug("PythonInstallStripMenuItem Clicked");
+            if (Directory.Exists(TEnvVariables.PythonPath))
             {
-                var list = new List<ToolStripMenuItem>();
-
-                _optunaDashboardToolStripMenuItem = new ToolStripMenuItem
+                DialogResult result = TunnyMessageBox.Show(
+                    "It appears that the Tunny Python environment is already installed.\nWould you like to reinstall it?",
+                    "Python is already installed",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Information);
+                if (result == DialogResult.Cancel)
                 {
-                    Name = "OptunaDashboardToolStripMenuItem",
-                    Size = new Size(265, 30),
-                    Text = "Run optuna-dashboard",
-                };
-                _optunaDashboardToolStripMenuItem.Click += OptunaDashboardToolStripMenuItem_Click;
-
-                list.Add(_optunaDashboardToolStripMenuItem);
-                return list;
+                    TLog.Info("From menu item Python installation canceled by user.");
+                    return;
+                }
             }
+            TLog.Info("From menu item Python installation started.");
+            var pythonInstallDialog = new PythonInstallDialog();
+            pythonInstallDialog.ShowDialog();
+            var settings = TSettings.LoadFromJson();
+            settings.CheckPythonLibraries = false;
+            settings.Serialize(TEnvVariables.OptimizeSettingsPath);
+        }
+
+        private void TunnyHelpStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            TLog.Debug("TunnyHelpStripMenuItem Clicked");
+            var browser = new Process();
+            browser.StartInfo.FileName = $@"https://tunny-docs.deno.dev/";
+            browser.StartInfo.UseShellExecute = true;
+            browser.Start();
         }
 
         private void OptunaDashboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string pythonDirectory = Path.Combine(TunnyVariables.TunnyEnvPath, "python");
+            TLog.MethodStart();
+            TLog.Debug("OptunaDashboardToolStripMenuItem Clicked");
+            string pythonDirectory = Path.Combine(TEnvVariables.TunnyEnvPath, "python");
             string dashboardPath = Path.Combine(pythonDirectory, "Scripts", "optuna-dashboard.exe");
 
             if (!Directory.Exists(pythonDirectory) && !File.Exists(dashboardPath))
@@ -102,11 +157,12 @@ namespace Tunny.UI
 
         private static void RunOptunaDashboard(string dashboardPath)
         {
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
+            TLog.MethodStart();
+            string settingsPath = TEnvVariables.OptimizeSettingsPath;
             string storagePath = string.Empty;
             if (File.Exists(settingsPath))
             {
-                var settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
+                var settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
                 storagePath = settings.Storage.Path;
             }
             var ofd = new OpenFileDialog
@@ -118,13 +174,45 @@ namespace Tunny.UI
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 var dashboard = new Optuna.Dashboard.Handler(dashboardPath, ofd.FileName);
-                dashboard.Run();
+                dashboard.Run(true);
+            }
+        }
+
+        private void TTDesignExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TLog.MethodStart();
+            string settingsPath = TEnvVariables.OptimizeSettingsPath;
+            string storagePath = string.Empty;
+            TSettings settings;
+            if (File.Exists(settingsPath))
+            {
+                settings = TSettings.Deserialize(File.ReadAllText(settingsPath));
+                storagePath = settings.Storage.Path;
+            }
+            else
+            {
+                settings = new TSettings();
+            }
+            var ofd = new OpenFileDialog
+            {
+                FileName = Path.GetFileName(storagePath),
+                Filter = @"Journal Storage(*.log)|*.log|SQLite Storage(*.db,*.sqlite)|*.db;*.sqlite",
+                Title = @"Set Tunny result file path",
+            };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                settings.Storage.Path = ofd.FileName;
+                var deStudyNameSelector = new DEStudyNameSelector(settings.Storage);
+                deStudyNameSelector.ShowDialog();
             }
         }
 
         public void Dispose()
         {
+            TLog.MethodStart();
+            _tunnyHelpStripMenuItem.Dispose();
             _optunaDashboardToolStripMenuItem.Dispose();
+            _pythonInstallStripMenuItem.Dispose();
             GC.SuppressFinalize(this);
         }
     }

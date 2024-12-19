@@ -1,0 +1,54 @@
+name: "\U0001F41BBug-report"
+description: Create a report to help us improve
+labels:
+  - "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please write a clear and concise description of what the bug is.
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Please write a clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please give us your environment information. You can get this information by typing the following.
+      value: |
+        - OS:
+        - Rhino version:
+        - Tunny version:
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide how we reproduce your reported bugs.
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error messages, stack traces, or logs
+      description: Please upload log output or screenshot. The log files are located in the folder [UserProfile]/.tunny_env/logs. Please send us the file for the date of the error.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context (optional)
+      description: Please provide additional contexts if you have.
+    validations:
+      required: false

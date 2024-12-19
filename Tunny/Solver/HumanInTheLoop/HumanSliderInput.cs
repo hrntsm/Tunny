@@ -1,7 +1,10 @@
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 using Python.Runtime;
+
+using Tunny.Core.Util;
 
 namespace Tunny.Solver.HumanInTheLoop
 {
@@ -10,8 +13,9 @@ namespace Tunny.Solver.HumanInTheLoop
         private readonly PyModule _importedLibrary;
         private readonly dynamic _artifactBackend;
 
-        public HumanSliderInput(string path) : base(path)
+        public HumanSliderInput(string tmpPath, string storagePath) : base(tmpPath, storagePath)
         {
+            TLog.MethodStart();
             PyModule importedLibrary = ImportBaseLibrary();
             importedLibrary.Exec("from optuna_dashboard import save_note");
             importedLibrary.Exec("from optuna_dashboard import SliderWidget");
@@ -28,17 +32,15 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SetObjective(dynamic study, string[] objectiveNames)
         {
+            TLog.MethodStart();
             dynamic setObjectiveNames = _importedLibrary.Get("set_objective_names");
-            var pyNameList = new PyList();
-            foreach (string objectiveName in objectiveNames)
-            {
-                pyNameList.Append(new PyString(objectiveName.Replace("Human-in-the-Loop", "HITL")));
-            }
+            PyList pyNameList = PyConverter.EnumeratorToPyList(objectiveNames.Select(s => s.Replace("Human-in-the-Loop", "HITL")));
             setObjectiveNames(study, pyNameList);
         }
 
         public void SetWidgets(dynamic study, string[] objectiveNames)
         {
+            TLog.MethodStart();
             dynamic registerObjectiveFromWidgets = _importedLibrary.Get("register_objective_form_widgets");
             dynamic sliderWidget = _importedLibrary.Get("SliderWidget");
             dynamic objectiveUserAttrRef = _importedLibrary.Get("ObjectiveUserAttrRef");
@@ -62,6 +64,7 @@ namespace Tunny.Solver.HumanInTheLoop
 
         public void SaveNote(dynamic study, dynamic trial, Bitmap[] bitmaps)
         {
+            TLog.MethodStart();
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             var noteText = new StringBuilder();
             noteText.AppendLine("# Image");
@@ -71,7 +74,7 @@ namespace Tunny.Solver.HumanInTheLoop
             for (int i = 0; i < bitmaps.Length; i++)
             {
                 Bitmap bitmap = bitmaps[i];
-                string path = $"{_basePath}/tmp/image_{study._study_id}_{trial._trial_id}.png";
+                string path = $"{_tmpPath}/image_{study._study_id}_{trial._trial_id}.png";
                 bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
                 dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
                 noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})");

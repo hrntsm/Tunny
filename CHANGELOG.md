@@ -6,6 +6,118 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Please see [here](https://github.com/hrntsm/Tunny/releases) for the data released for each version.
 
+## [v0.12.0] -2024-06-22
+
+### Added
+
+- Help & Install Python menu strip items
+- The initial value of FishEgg be the mean value X0 assumed for the first normal distribution of CMA-ES.
+- FishAttr now allows you to specify the optimization direction for each objective function.
+  - A value of 1 indicates maximization, while -1 indicates minimization.
+- BruteForceSampler
+  - It is a sampler of the total number of hits.
+- Output result for TT-Design Explorer
+- Optimization state output to fishing component
+- Use component OBSOLETE feature
+  - Old components are now marked "OLD" to indicate that they are older version.
+- TPE gamma setting.
+  - The smaller of the number input and 10% of the completed trials is the number of trials included in L(x).
+  - The higher this number, the higher the exploitation of the completed trials.
+
+### Changed
+
+- When outputting results from TunnyUI, even if the number of objective functions in Grasshopper does not match the number of objective functions in the result file, the results can still be output.
+- After optimization is finished, a window allows the user to choose whether to reinstate the results or not.
+- The words "reflect" and "restore" are changed to "reinstate" to match the Galapagos expression.
+- ModelNumber in the output section is changed to TrialNumber.
+
+### Fixed
+
+- Python install error when there is optuna dashboard process
+  - Add check and kill the process method
+- Rhino7 and Rhino8 compatibility
+  - There was a difference in specifications between Rhino 7 (net48) and Rhino 8 (net7) when serializing its Version to JSON for saving settings.
+- Optuna-Dashboard doesn't work when artifact-dir contains space.
+- Fixed an error when there is no file in the path specified in FishPrintByPath.
+- Rhino crashes when reinstating a value to a slider if the categorical value is a number.
+- MessageBox is now not below the back of Grasshopper window.
+
+### Security
+
+- Bump scikit-learn 1.3.1 => 1.5.0
+
+## [v0.11.1] -2024-05-10
+
+### Added
+
+- Ignore duplicate sampling setting
+
+### Changed
+
+- Bump optuna library
+  - optuna 3.6.0 => 3.6.1
+  - optuna-dashboard 0.15.0 => 0.15.1
+
+### Fixed
+
+- SolutionExpire timing was wrong when using ValueList.
+- FishAttribute component "Attr" input index off by one error.
+
+## [v0.11.0] -2024-03-20
+
+### Added
+
+- Bone Fish component
+  - It is Tunny UI less mode component.
+- Categorical optimization.
+  - Sample gh file also added
+- Log output.
+  - Improved ease of support.
+- Log level selector.
+  - It is located in the Misc tab of the Settings tab.
+  - There are three levels: "Verbose," "Debug," and "Information.
+- New GP sampler support
+  - This is related optuna 3.6
+- Sample python code to create a gif animation.
+- Tunny.Core csproj for improve develop environment.
+- CI build with python.
+
+### Changed
+
+- DeconstructFish component output
+  - To support categorical optimization, the variable output was split from "Variables" into "NumberVariables" and "TextVariables".
+- Move FishPrint component to Print subcategory
+- Move Construct & Deconstruct component ot Operation subcategory
+- Use optuna.csproj sqlite handler instead of tunny.storage
+- Improve result fish output to use new storage handler
+  - The handler is independent from python process.
+- Human in the loop mode support log storage format.
+- Allows clustering with any combination of variables and objective function.
+- Speedup optimization.
+  - Do not recalculate irrelevant components.
+  - Previously, all components were recalculated for each trial, but this has been changed so that components not involved in optimization are not recalculated
+- Bump Python library
+  - optuna-dashboard 0.14 to 0.15
+    - csv can be downloaded from the trial table.
+    - The Pareto Front and History plots can jump to the corresponding trial page when click dot plot.
+    - Settings have been added to change the appearance of the plots.
+    - When uploading surfaces with no thickness to Artifacts, both sides are rendered.
+    - Human-in-the-loop works with journal storage
+    - Fix overflow when preferential optimization
+    - [see more detail](https://github.com/optuna/optuna-dashboard/releases/tag/v0.15.0)
+  - optuna 3.5 to 3.6
+    - New GP sampler support
+    - Fixed bug in parallelization in log files
+    - [see more detail](https://github.com/optuna/optuna/releases/tag/v3.6.0)
+
+### Fixed
+
+- When launching a window, if all the objectives are null, the window will not launch.
+- Empty 3dm is always saved even if you want to save only images in artifact.
+- FishEgg feature does not work.
+- Fish Print by capture timing
+  - Viewport capture at the end of all Grasshopper processing.
+
 ## [v0.10.0] -2024-01-27
 
 ### Changed

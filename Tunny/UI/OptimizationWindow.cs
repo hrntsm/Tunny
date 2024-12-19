@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 
 using Grasshopper.GUI;
 
+using Serilog.Events;
+
 using Tunny.Component.Optimizer;
-using Tunny.Enum;
+using Tunny.Core.Handler;
+using Tunny.Core.Input;
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Handler;
-using Tunny.Settings;
-using Tunny.Util;
 
 namespace Tunny.UI
 {
     public partial class OptimizationWindow : Form
     {
-        private readonly FishingComponent _component;
-        private TunnySettings _settings;
+        private readonly OptimizeComponentBase _component;
+        private readonly TSettings _settings;
         internal GrasshopperStates GrasshopperStatus;
 
-        public OptimizationWindow(FishingComponent component)
+        public OptimizationWindow(OptimizeComponentBase component)
         {
+            TLog.MethodStart();
+            TLog.Info("OptimizationWindow is open");
             InitializeComponent();
 
             _component = component;
@@ -29,30 +34,45 @@ namespace Tunny.UI
             {
                 FormClosingXButton(this, null);
             }
-            LoadSettingJson();
+            _settings = TSettings.LoadFromJson();
             SetUIValues();
             RunPythonInstaller();
+            SetupTTDesignExplorer();
             SetOptimizeBackgroundWorker();
             SetOutputResultBackgroundWorker();
         }
 
+        private static void SetupTTDesignExplorer()
+        {
+            TLog.MethodStart();
+            DesignExplorer.SetupTTDesignExplorer();
+        }
+
         private void RunPythonInstaller()
         {
-            PythonInstaller.ComponentFolderPath = _component.GhInOut.ComponentFolder;
-            if (_settings.CheckPythonLibraries)
+            TLog.MethodStart();
+            string tunnyAssembleVersion = TEnvVariables.Version.ToString();
+            if (_settings.CheckPythonLibraries || _settings.Version != tunnyAssembleVersion)
             {
+                TLog.Info("Run Python installer");
                 var installer = new PythonInstallDialog()
                 {
                     StartPosition = FormStartPosition.CenterScreen
                 };
                 installer.Show(Owner);
+                _settings.Version = tunnyAssembleVersion;
                 _settings.CheckPythonLibraries = false;
                 checkPythonLibrariesCheckBox.Checked = false;
+            }
+            else
+            {
+                TLog.Info("Skip Python installer");
             }
         }
 
         private void SetOptimizeBackgroundWorker()
         {
+            TLog.MethodStart();
             optimizeBackgroundWorker.DoWork += OptimizeLoop.RunMultiple;
             optimizeBackgroundWorker.ProgressChanged += OptimizeProgressChangedHandler;
             optimizeBackgroundWorker.RunWorkerCompleted += OptimizeStopButton_Click;
@@ -62,6 +82,7 @@ namespace Tunny.UI
 
         private void SetOutputResultBackgroundWorker()
         {
+            TLog.MethodStart();
             outputResultBackgroundWorker.DoWork += OutputLoop.Run;
             outputResultBackgroundWorker.ProgressChanged += OutputProgressChangedHandler;
             outputResultBackgroundWorker.RunWorkerCompleted += OutputStopButton_Click;
@@ -71,33 +92,14 @@ namespace Tunny.UI
 
         public void BGDispose()
         {
+            TLog.MethodStart();
             optimizeBackgroundWorker.Dispose();
             outputResultBackgroundWorker.Dispose();
         }
 
-        private void LoadSettingJson()
+        private void UpdateGrasshopper(IList<Parameter> parameters)
         {
-            string settingsPath = TunnyVariables.OptimizeSettingsPath;
-            if (File.Exists(settingsPath))
-            {
-                _settings = TunnySettings.Deserialize(File.ReadAllText(settingsPath));
-            }
-            else
-            {
-                _settings = new TunnySettings
-                {
-                    Storage = new Settings.Storage
-                    {
-                        Path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "fish.log"),
-                        Type = StorageType.Journal
-                    }
-                };
-                _settings.CreateNewSettingsFile(settingsPath);
-            }
-        }
-
-        private void UpdateGrasshopper(IList<decimal> parameters)
-        {
+            TLog.MethodStart();
             GrasshopperStatus = GrasshopperStates.RequestProcessing;
 
             //Calculate Grasshopper
@@ -108,6 +110,7 @@ namespace Tunny.UI
 
         private void OptimizationWindow_Load(object sender, EventArgs e)
         {
+            TLog.MethodStart();
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -115,10 +118,11 @@ namespace Tunny.UI
 
         private void FormClosingXButton(object sender, FormClosingEventArgs e)
         {
+            TLog.MethodStart();
             var ghCanvas = Owner as GH_DocumentEditor;
             ghCanvas?.EnableUI();
             GetUIValues();
-            _settings.Serialize(TunnyVariables.OptimizeSettingsPath);
+            _settings.Serialize(TEnvVariables.OptimizeSettingsPath);
 
             //TODO: use cancelAsync to stop the background worker safely
             optimizeBackgroundWorker?.Dispose();
@@ -127,11 +131,14 @@ namespace Tunny.UI
 
         private void SetUIValues()
         {
+            TLog.MethodStart();
+            TLog.Info("Set UI values");
             HumanInTheLoopType type = _component.GhInOut.Objectives.HumanInTheLoopType;
             if (type != HumanInTheLoopType.None)
             {
+                TLog.Info("Set Tunny Human-in-the-loop mode");
                 Text = "Tunny (Human in the Loop mode)";
-                samplerComboBox.SelectedIndex = 1; // GP
+                samplerComboBox.SelectedIndex = (int)SamplerType.GP; // GP
                 samplerComboBox.Enabled = false;
                 nTrialText.Text = "Number of batches";
                 nTrialNumUpDown.Value = type == HumanInTheLoopType.Preferential ? 6 : 4;
@@ -140,9 +147,10 @@ namespace Tunny.UI
             }
             else
             {
+                TLog.Info("Set Tunny normal optimization mode");
                 Text = "Tunny";
                 samplerComboBox.Enabled = true;
-                samplerComboBox.SelectedIndex = _settings.Optimize.SelectSampler;
+                samplerComboBox.SelectedIndex = (int)_settings.Optimize.SelectSampler;
                 nTrialText.Text = "Number of trials";
                 nTrialNumUpDown.Value = _settings.Optimize.NumberOfTrials;
                 timeoutNumUpDown.Enabled = true;
@@ -164,10 +172,14 @@ namespace Tunny.UI
             InitializeSamplerSettings();
 
             runGarbageCollectionComboBox.SelectedIndex = (int)_settings.Optimize.GcAfterTrial;
+            miscLogComboBox.SelectedIndex = (int)_settings.LogLevel;
+            ignoreDuplicateSamplingCheckBox.Checked = _settings.Optimize.IgnoreDuplicateSampling;
         }
+
         private void GetUIValues()
         {
-            _settings.Optimize.SelectSampler = samplerComboBox.SelectedIndex;
+            TLog.MethodStart();
+            _settings.Optimize.SelectSampler = (SamplerType)samplerComboBox.SelectedIndex;
             _settings.Optimize.NumberOfTrials = (int)nTrialNumUpDown.Value;
             _settings.Optimize.Timeout = (double)timeoutNumUpDown.Value;
             _settings.Optimize.ContinueStudy = continueStudyCheckBox.Checked;
@@ -179,8 +191,10 @@ namespace Tunny.UI
             _settings.Result.SelectVisualizeType = visualizeTypeComboBox.SelectedIndex;
             _settings.Result.NumberOfClusters = (int)visualizeClusterNumUpDown.Value;
             _settings.CheckPythonLibraries = checkPythonLibrariesCheckBox.Checked;
+            _settings.Optimize.IgnoreDuplicateSampling = ignoreDuplicateSamplingCheckBox.Checked;
             _settings.Optimize.Sampler = GetSamplerSettings(_settings.Optimize.Sampler);
             _settings.Optimize.GcAfterTrial = (GcAfterTrial)runGarbageCollectionComboBox.SelectedIndex;
+            _settings.LogLevel = (LogEventLevel)miscLogComboBox.SelectedIndex;
         }
     }
 }

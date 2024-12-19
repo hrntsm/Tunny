@@ -18,9 +18,9 @@ namespace Optuna.Study
         public int StudyId { get; }
 
         private readonly bool _isMultiObjective;
-        private readonly BaseStorage _storage;
+        private readonly IOptunaStorage _storage;
 
-        public Study(BaseStorage storage, int studyID, string studyName, StudyDirection[] directions)
+        public Study(IOptunaStorage storage, int studyID, string studyName, StudyDirection[] directions)
         {
             StudyId = studyID;
             _storage = storage;
@@ -95,7 +95,7 @@ namespace Optuna.Study
             return MultiObjective.GetParetoFrontTrials(Trials, Directions);
         }
 
-        public static StudySummary[] GetAllStudySummaries(BaseStorage storage)
+        public static StudySummary[] GetAllStudySummaries(IOptunaStorage storage)
         {
             Study[] studies = storage.GetAllStudies();
             var studySummaries = new StudySummary[studies.Length];
@@ -105,7 +105,7 @@ namespace Optuna.Study
                 IEnumerable<Trial.Trial> completeTrials = allTrials.Where(trial => trial.State == TrialState.COMPLETE);
 
                 StudyDirection direction = StudyDirection.NotSet;
-                StudyDirection[] directions = Array.Empty<StudyDirection>();
+                StudyDirection[] directions = null;
                 Trial.Trial bestTrial = null;
                 if (studies[i].Directions.Length == 1)
                 {
@@ -134,6 +134,26 @@ namespace Optuna.Study
                                                      directions);
             }
             return studySummaries;
+        }
+
+        public static dynamic CreateStudy(dynamic optuna, string studyName, dynamic sampler, string[] directions, dynamic storage, bool loadIfExists = true)
+        {
+            dynamic study = optuna.create_study(
+                sampler: sampler,
+                directions: directions,
+                storage: storage,
+                study_name: studyName,
+                load_if_exists: loadIfExists
+            );
+            // for escape exception in Brute Force sampler
+            // Study.stop() method throws exception when in_optimize_loop is false
+            study._thread_local.in_optimize_loop = true;
+            return study;
+        }
+
+        public static dynamic LoadStudy(dynamic optuna, dynamic storage, string studyName)
+        {
+            return optuna.load_study(storage: storage, study_name: studyName);
         }
     }
 }

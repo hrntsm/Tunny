@@ -1,3 +1,9 @@
 {
-    "dotnet.defaultSolution": "Tunny.sln"
+    "dotnet.defaultSolution": "Tunny.sln",
+    "cSpell.words": [
+        "hovertemplate",
+        "showlegend",
+        "yaxis",
+        "zaxis"
+    ]
 }

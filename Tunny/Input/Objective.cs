@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,12 +8,11 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 
-using Python.Runtime;
-
 using Rhino.Geometry;
 
 using Tunny.Component.Params;
-using Tunny.Enum;
+using Tunny.Core.TEnum;
+using Tunny.Core.Util;
 using Tunny.Type;
 
 namespace Tunny.Input
@@ -24,12 +24,23 @@ namespace Tunny.Input
         public Bitmap[] Images { get; private set; }
         public GeometryBase[] Geometries { get; private set; }
         public HumanInTheLoopType HumanInTheLoopType { get; private set; }
+        public string[] Directions { get; private set; }
 
         public int Length => Numbers.Length + Images.Length + (Geometries.Length > 0 ? 1 : 0);
         public int NoNumberLength => Images.Length + (Geometries.Length > 0 ? 1 : 0);
 
+        public Objective(double[] values)
+        {
+            TLog.MethodStart();
+            Numbers = values;
+            Images = Array.Empty<Bitmap>();
+            Geometries = Array.Empty<GeometryBase>();
+            HumanInTheLoopType = HumanInTheLoopType.None;
+        }
+
         public Objective(List<IGH_Param> sources)
         {
+            TLog.MethodStart();
             var numbers = new List<double>();
             var images = new List<Bitmap>();
             var geometries = new List<GeometryBase>();
@@ -42,14 +53,20 @@ namespace Tunny.Input
             Geometries = geometries.ToArray();
 
             SetHumanInTheLoopType();
+            SetDirections(new[] { -1 });
         }
 
         private static void SetParamsValue(List<IGH_Param> sources, List<double> numbers, List<Bitmap> images, List<GeometryBase> geometries)
         {
+            TLog.MethodStart();
             foreach (IGH_StructureEnumerator ghEnumerator in sources.Select(objective => objective.VolatileData.AllData(false)))
             {
                 foreach (IGH_Goo goo in ghEnumerator)
                 {
+                    if (goo == null)
+                    {
+                        continue;
+                    }
                     bool result = goo.CastTo(out GeometryBase geometry);
                     if (result)
                     {
@@ -72,6 +89,7 @@ namespace Tunny.Input
 
         private void SetHumanInTheLoopType()
         {
+            TLog.MethodStart();
             if (NoNumberLength == 0)
             {
                 HumanInTheLoopType = HumanInTheLoopType.None;
@@ -88,6 +106,7 @@ namespace Tunny.Input
 
         public string[] GetNickNames()
         {
+            TLog.MethodStart();
             var nickNames = new List<string>();
             foreach (IGH_Param source in Sources)
             {
@@ -106,14 +125,29 @@ namespace Tunny.Input
             return nickNames.ToArray();
         }
 
-        public PyList GetPyListStyleNickname()
+        public bool SetDirections(int[] directions)
         {
-            var name = new PyList();
-            foreach (string objName in GetNickNames())
+            TLog.MethodStart();
+            Directions = new string[Length];
+            if (directions.Length == 1)
             {
-                name.Append(new PyString(objName));
+                for (int i = 0; i < Length; i++)
+                {
+                    Directions[i] = directions[0] == 1 ? "maximize" : "minimize";
+                }
             }
-            return name;
+            else if (directions.Length != Length)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    Directions[i] = directions[i] == 1 ? "maximize" : "minimize";
+                }
+            }
+            return true;
         }
     }
 }

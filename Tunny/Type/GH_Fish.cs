@@ -52,7 +52,7 @@ namespace Tunny.Type
         public override string ToString()
         {
             var sb = new StringBuilder();
-            SetModelNumber(sb);
+            SetTrialNumber(sb);
             SetVariables(sb);
             SetObjectives(sb);
             SetAttributes(sb);
@@ -80,7 +80,7 @@ namespace Tunny.Type
                 int maxLength = geometries.Count > 5 ? 5 : geometries.Count;
                 for (int i = 0; i < maxLength; i++)
                 {
-                    string geomString = Converter.GeometryBaseToGoo(geometries[i]).ToString();
+                    string geomString = GooConverter.GeometryBaseToGoo(geometries[i]).ToString();
                     valueStrings.Append("\n    ");
                     valueStrings.Append(geomString);
                 }
@@ -91,7 +91,7 @@ namespace Tunny.Type
             }
             else
             {
-                if (attr.Value is List<string> values)
+                if (attr.Value is IEnumerable<string> values)
                 {
                     foreach (string val in values)
                     {
@@ -117,10 +117,10 @@ namespace Tunny.Type
             }
         }
 
-        private void SetModelNumber(StringBuilder sb)
+        private void SetTrialNumber(StringBuilder sb)
         {
             sb.AppendLine("====================================");
-            sb.AppendLine("Model Number: " + m_value.ModelNumber + "");
+            sb.AppendLine("Trial Number: " + m_value.TrialNumber + "");
             sb.AppendLine("====================================");
         }
 
@@ -128,7 +128,7 @@ namespace Tunny.Type
         {
             sb.AppendLine("Variables:");
             sb.AppendLine("------------------------------------");
-            foreach (KeyValuePair<string, double> variable in m_value.Variables)
+            foreach (KeyValuePair<string, object> variable in m_value.Variables)
             {
                 sb.AppendLine("  \"" + variable.Key + "\": " + variable.Value + "");
             }

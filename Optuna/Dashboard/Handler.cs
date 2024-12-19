@@ -14,6 +14,7 @@ namespace Optuna.Dashboard
 
         public Handler(string dashboardPath, string storagePath, string artifactDir = null, string host = "127.0.0.1", string port = "8080")
         {
+            CheckFileExist(dashboardPath, storagePath);
             _dashboardPath = dashboardPath;
             _storage = GetStorageArgument(storagePath);
             _host = host;
@@ -22,6 +23,18 @@ namespace Optuna.Dashboard
             if (!Directory.Exists(_artifactDir))
             {
                 Directory.CreateDirectory(_artifactDir);
+            }
+        }
+
+        private static void CheckFileExist(string dashboardPath, string storagePath)
+        {
+            if (!File.Exists(dashboardPath))
+            {
+                throw new FileNotFoundException("Dashboard file not found.", dashboardPath);
+            }
+            if (!File.Exists(storagePath))
+            {
+                throw new FileNotFoundException("Storage file not found.", storagePath);
             }
         }
 
@@ -35,38 +48,49 @@ namespace Optuna.Dashboard
                 case ".log":
                     return $"\"{path}\"";
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentException("Unsupported storage file.");
             }
         }
 
-        public void Run()
+        public void Run(bool openBrowser)
         {
-            CheckExistDashboardProcess();
-            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir {_artifactDir}";
+            KillExistDashboardProcess();
+            string argument = $"{_storage} --host {_host} --port {_port} --artifact-dir \"{_artifactDir}\"";
 
             var dashboard = new Process();
             dashboard.StartInfo.FileName = _dashboardPath;
             dashboard.StartInfo.Arguments = argument;
             dashboard.StartInfo.UseShellExecute = false;
-            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            dashboard.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             dashboard.Start();
 
+            if (openBrowser)
+            {
+                OpenBrowser();
+            }
+        }
+
+        private void OpenBrowser()
+        {
             var browser = new Process();
             browser.StartInfo.FileName = $@"http://{_host}:{_port}/";
             browser.StartInfo.UseShellExecute = true;
             browser.Start();
         }
 
-        private static void CheckExistDashboardProcess()
+        public static bool KillExistDashboardProcess()
         {
+            int killCount = 0;
             Process[] dashboardProcess = Process.GetProcessesByName("optuna-dashboard");
             if (dashboardProcess.Length > 0)
             {
                 foreach (Process p in dashboardProcess)
                 {
                     p.Kill();
+                    killCount++;
                 }
             }
+            return killCount > 0;
         }
     }
 }
