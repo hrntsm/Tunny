@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
-using Tunny.Core.Input;
+using Python.Runtime;
+
 using Tunny.Core.Util;
 
 namespace Tunny.Type
@@ -9,29 +11,85 @@ namespace Tunny.Type
     [Serializable]
     public class FishEgg
     {
-        public bool IsInteger { get; }
-        public bool IsCategorical { get; }
-        public bool IsNumber => !IsCategorical;
-        public string NickName { get; }
-        public List<double> Values { get; }
-        public string Category { get; }
+        private bool _skipIfExist;
+        private Dictionary<string, string> _paramDict;
+        private Dictionary<string, string> _attrDict;
 
-        public FishEgg(VariableBase variable)
+        public FishEgg()
         {
             TLog.MethodStart();
-            NickName = variable.NickName;
-            switch (variable)
+            Initialize(true);
+        }
+
+        public FishEgg(bool skipIfExist)
+        {
+            TLog.MethodStart();
+            Initialize(skipIfExist);
+        }
+
+        private void Initialize(bool skipIfExist)
+        {
+            _skipIfExist = skipIfExist;
+            _paramDict = new Dictionary<string, string>();
+            _attrDict = new Dictionary<string, string>();
+            AddAttr("TunnyInfo", "Trial with FishEgg");
+        }
+
+        public override string ToString()
+        {
+            TLog.MethodStart();
+            var sb = new StringBuilder();
+            foreach (KeyValuePair<string, string> item in _paramDict)
             {
-                case NumberVariable numberVariable:
-                    IsCategorical = false;
-                    IsInteger = numberVariable.IsInteger;
-                    Values = new List<double> { numberVariable.Value };
-                    break;
-                case CategoricalVariable categoricalVariable:
-                    IsCategorical = true;
-                    Category = categoricalVariable.SelectedItem;
-                    break;
+                sb.Append($"\"{item.Key}\": {item.Value}, ");
             }
+            return sb.ToString();
+        }
+
+        public void AddParam(string key, string value)
+        {
+            TLog.MethodStart();
+            _paramDict.Add(key, value);
+        }
+
+        public void AddAttr(string key, string value)
+        {
+            TLog.MethodStart();
+            _attrDict.Add(key, value);
+        }
+
+        internal PyDict GetParamPyDict()
+        {
+            TLog.MethodStart();
+            var dict = new PyDict();
+            foreach (KeyValuePair<string, string> item in _paramDict)
+            {
+                var key = new PyString(item.Key);
+                PyObject value = double.TryParse(item.Value, out double result)
+                    ? new PyFloat(result)
+                    : (PyObject)new PyString(item.Value);
+                dict.SetItem(key, value);
+            }
+            return dict;
+        }
+
+        private PyDict GetAttrPyDict()
+        {
+            TLog.MethodStart();
+            var dict = new PyDict();
+            foreach (KeyValuePair<string, string> item in _attrDict)
+            {
+                var key = new PyString(item.Key);
+                PyObject value = new PyString(item.Value);
+                dict.SetItem(key, value);
+            }
+            return dict;
+        }
+
+        public void EnqueueStudy(dynamic study)
+        {
+            TLog.MethodStart();
+            study.enqueue_trial(GetParamPyDict(), user_attrs: GetAttrPyDict(), skip_if_exists: _skipIfExist);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Tunny.Util
         public Objective Objectives { get; private set; }
         public List<VariableBase> Variables { get; private set; }
         public Artifact Artifacts { get; private set; }
-        public Dictionary<string, FishEgg> FishEggs { get; private set; }
+        public List<FishEgg> FishEggs { get; private set; }
         public bool HasConstraint { get; private set; }
         public bool IsMultiObjective => Objectives.Length > 1;
         public bool IsLoadCorrectly { get; }
@@ -61,6 +61,7 @@ namespace Tunny.Util
             _sliders = new List<GH_NumberSlider>();
             _valueLists = new List<TunnyValueList>();
             _genePool = new List<GalapagosGeneListObject>();
+            FishEggs = new List<FishEgg>();
 
             _inputGuids.AddRange(_component.Params.Input[0].Sources.Select(source => source.InstanceGuid));
             if (_inputGuids.Count == 0)
@@ -97,10 +98,7 @@ namespace Tunny.Util
                         _valueLists.Add(valueList);
                         break;
                     case Param_FishEgg fishEgg:
-                        if (fishEgg.VolatileDataCount != 0)
-                        {
-                            FishEggs = ((GH_FishEgg)fishEgg.VolatileData.AllData(true).First()).Value;
-                        }
+                        SetFishEggs(fishEgg);
                         break;
                     default:
                         errorInputGuids.Add(docObject.InstanceGuid);
@@ -108,6 +106,22 @@ namespace Tunny.Util
                 }
             }
             return CheckHasIncorrectVariableInput(errorInputGuids);
+        }
+
+        private void SetFishEggs(Param_FishEgg fishEgg)
+        {
+            if (fishEgg.VolatileDataCount == 0)
+            {
+                return;
+            }
+            IGH_StructureEnumerator a = fishEgg.VolatileData.AllData(true);
+            foreach (IGH_Goo goo in a)
+            {
+                if (goo is GH_FishEgg fishEggGoo)
+                {
+                    FishEggs.Add(fishEggGoo.Value);
+                }
+            }
         }
 
         private bool CheckHasIncorrectVariableInput(List<Guid> errorInputGuids)

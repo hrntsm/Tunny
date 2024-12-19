@@ -16,19 +16,16 @@ namespace Optuna.Sampler
         public bool ConsiderPrunedTrials { get; set; }
         public string RestartStrategy { get; set; } = string.Empty;
         public int IncPopsize { get; set; } = 2;
-        public int? PopulationSize { get; set; }
+        public int? PopulationSize { get; set; } = 2;
         public bool UseSeparableCma { get; set; }
         public bool UseWarmStart { get; set; }
         public string WarmStartStudyName { get; set; } = string.Empty;
-        public bool WithMargin { get; set; } = true;
+        public bool WithMargin { get; set; }
         public bool LrAdapt { get; set; }
 
-        public dynamic ToPython(string storagePath, Dictionary<string, double> firstVariables)
+        public dynamic ToPython(string storagePath, PyDict x0)
         {
             dynamic optuna = Py.Import("optuna");
-            Dictionary<string, double> x0 = UseFirstEggToX0 && firstVariables != null && firstVariables.Count > 0
-                ? firstVariables
-                : null;
 
             return UseWarmStart
                 ? optuna.samplers.CmaEsSampler(

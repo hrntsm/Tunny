@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using Grasshopper.Kernel;
 
 using Tunny.Component.Params;
 using Tunny.Core.Input;
-using Tunny.Core.Util;
 using Tunny.Type;
 using Tunny.Util;
 
 namespace Tunny.Component.Operation
 {
-    public partial class ConstructFishEgg : GH_Component
+    public class ConstructFishEgg : GH_Component
     {
-        private readonly Dictionary<string, FishEgg> _fishEggs = new Dictionary<string, FishEgg>();
+        private readonly List<FishEgg> _fishEggs = new List<FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 
         public ConstructFishEgg()
@@ -53,85 +53,33 @@ namespace Tunny.Component.Operation
                 LayFishEgg();
             }
 
-            DA.SetData(0, _fishEggs);
+            DA.SetDataList(0, _fishEggs);
         }
 
         private void LayFishEgg()
         {
             var ghIO = new GrasshopperInOut(this, getVariableOnly: true);
             List<VariableBase> variables = ghIO.Variables;
-
-            bool isContainedVariableSets = false;
-            if (_fishEggs.Count > 0)
-            {
-                isContainedVariableSets = CheckVariableSetsIsContained(variables);
-            }
-
-            if (!isContainedVariableSets)
-            {
-                AddVariablesToFishEgg(variables);
-            }
-        }
-
-        private bool CheckVariableSetsIsContained(IEnumerable<VariableBase> variables)
-        {
-            int sameValueCount = 0;
-            foreach (VariableBase variable in variables)
-            {
-                string name = variable.NickName;
-                switch (variable)
-                {
-                    case NumberVariable number:
-                        if (_fishEggs.TryGetValue(name, out FishEgg eggNum) && eggNum.Values.Contains(number.Value))
-                        {
-                            sameValueCount++;
-                        }
-                        break;
-                    case CategoricalVariable category:
-                        if (_fishEggs.TryGetValue(name, out FishEgg eggCat) && eggCat.Category == category.SelectedItem)
-                        {
-                            sameValueCount++;
-                        }
-                        continue;
-                    default:
-                        throw new ArgumentException(nameof(variable));
-                }
-            }
-            bool isContainVariableSets = sameValueCount == _fishEggs.Count;
-            return isContainVariableSets;
+            AddVariablesToFishEgg(variables);
         }
 
         private void AddVariablesToFishEgg(IEnumerable<VariableBase> variables)
         {
+            var egg = new FishEgg();
             foreach (VariableBase variable in variables)
             {
                 string name = variable.NickName;
                 switch (variable)
                 {
                     case NumberVariable number:
-                        if (_fishEggs.TryGetValue(name, out FishEgg eggNum))
-                        {
-                            eggNum.Values.Add(number.Value);
-                        }
-                        else
-                        {
-                            _fishEggs.Add(name, new FishEgg(number));
-                        }
+                        egg.AddParam(name, number.Value.ToString(CultureInfo.InvariantCulture));
                         break;
                     case CategoricalVariable category:
-                        if (_fishEggs.TryGetValue(name, out FishEgg eggCat))
-                        {
-                            string message = $"This Categorical variable {name} is already contained in fish egg.";
-                            TLog.Error(message);
-                            throw new ArgumentException(message);
-                        }
-                        else
-                        {
-                            _fishEggs.Add(name, new FishEgg(category));
-                        }
+                        egg.AddParam(name, category.SelectedItem);
                         break;
                 }
             }
+            _fishEggs.Add(egg);
         }
 
         public override void CreateAttributes()

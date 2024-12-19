@@ -29,7 +29,7 @@ namespace Tunny.Core.Settings
         public GPSampler GP { get; set; } = new GPSampler();
         public BruteForceSampler BruteForce { get; set; } = new BruteForceSampler();
 
-        public dynamic ToPython(SamplerType type, string storagePath, bool hasConstraints, Dictionary<string, double> firstVariables)
+        public dynamic ToPython(SamplerType type, string storagePath, bool hasConstraints, PyDict cmaEsX0)
         {
             TLog.MethodStart();
             dynamic optunaSampler;
@@ -51,7 +51,7 @@ namespace Tunny.Core.Settings
                     optunaSampler = NsgaIII.ToPython(hasConstraints);
                     break;
                 case SamplerType.CmaEs:
-                    optunaSampler = CmaEs.ToPython(storagePath, firstVariables);
+                    optunaSampler = CmaEs.ToPython(storagePath, cmaEsX0);
                     break;
                 case SamplerType.QMC:
                     optunaSampler = QMC.ToPython();

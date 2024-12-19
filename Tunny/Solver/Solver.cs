@@ -35,7 +35,6 @@ namespace Tunny.Solver
         public bool RunSolver(
             List<VariableBase> variables,
             Objective objectives,
-            Dictionary<string, FishEgg> fishEggs,
             Func<ProgressState, int, TrialGrasshopperItems> evaluate)
         {
             TLog.MethodStart();
@@ -47,7 +46,7 @@ namespace Tunny.Solver
             try
             {
                 InitializeTmpDir();
-                var optimize = new Algorithm(variables, _hasConstraint, objectives, fishEggs, _settings, Eval);
+                var optimize = new Algorithm(variables, _hasConstraint, objectives, _settings, Eval);
                 optimize.Solve();
                 OptimalParameters = optimize.OptimalParameters;
                 MessageBoxResult msgResult = EndMessage(optimize, objectives.Length > 1);
