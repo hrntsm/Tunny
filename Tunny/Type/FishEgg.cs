@@ -11,13 +11,24 @@ namespace Tunny.Type
     [Serializable]
     public class FishEgg
     {
-        private readonly bool _skipIfExist;
-        private readonly Dictionary<string, string> _paramDict;
-        private readonly Dictionary<string, string> _attrDict;
+        private bool _skipIfExist;
+        private Dictionary<string, string> _paramDict;
+        private Dictionary<string, string> _attrDict;
 
-        public FishEgg(bool skipIfExist = true)
+        public FishEgg()
         {
             TLog.MethodStart();
+            Initialize(true);
+        }
+
+        public FishEgg(bool skipIfExist)
+        {
+            TLog.MethodStart();
+            Initialize(skipIfExist);
+        }
+
+        private void Initialize(bool skipIfExist)
+        {
             _skipIfExist = skipIfExist;
             _paramDict = new Dictionary<string, string>();
             _attrDict = new Dictionary<string, string>();

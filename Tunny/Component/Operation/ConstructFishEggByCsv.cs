@@ -12,7 +12,7 @@ using Tunny.Util;
 
 namespace Tunny.Component.Operation
 {
-    public partial class ConstructFishEggByCsv : GH_Component
+    public class ConstructFishEggByCsv : GH_Component
     {
         private readonly List<FishEgg> _fishEggs = new List<FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -63,14 +63,17 @@ namespace Tunny.Component.Operation
             foreach (VariableBase variable in variables)
             {
                 string name = variable.NickName;
-                switch (variable)
+                if (variable is NumberVariable numberVariable)
                 {
-                    case NumberVariable number:
-                        variableRange.Add(name, new double[] { number.LowerBond, number.UpperBond });
-                        break;
-                    case CategoricalVariable _:
-                        variableRange.Add(name, Array.Empty<double>());
-                        break;
+                    variableRange.Add(name, new double[] { numberVariable.LowerBond, numberVariable.UpperBond });
+                }
+                else if (variable is CategoricalVariable)
+                {
+                    variableRange.Add(name, Array.Empty<double>());
+                }
+                else
+                {
+                    throw new InvalidOperationException("Variable type is not supported.");
                 }
             }
             return variableRange;
