@@ -41,11 +41,12 @@ namespace Tunny.Component.Operation
             if (!DA.GetData(1, ref csvPath)) { return; }
             LayFishEgg(csvPath);
 
-            DA.SetData(0, _fishEggs);
+            DA.SetDataList(0, _fishEggs);
         }
 
         private void LayFishEgg(string csvPath)
         {
+            _fishEggs.Clear();
             var ghIO = new GrasshopperInOut(this, getVariableOnly: true);
             List<VariableBase> variables = ghIO.Variables;
             Dictionary<string, double[]> variableRange = GetVariableRange(variables);

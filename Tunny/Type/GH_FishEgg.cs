@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 using GH_IO.Serialization;
 
@@ -11,17 +8,17 @@ using Grasshopper.Kernel.Types;
 
 namespace Tunny.Type
 {
-    public class GH_FishEgg : GH_Goo<List<FishEgg>>
+    public class GH_FishEgg : GH_Goo<FishEgg>
     {
         public GH_FishEgg()
         {
         }
 
-        public GH_FishEgg(List<FishEgg> internalData) : base(internalData)
+        public GH_FishEgg(FishEgg internalData) : base(internalData)
         {
         }
 
-        public GH_FishEgg(GH_Goo<List<FishEgg>> other) : base(other)
+        public GH_FishEgg(GH_Goo<FishEgg> other) : base(other)
         {
         }
 
@@ -46,20 +43,9 @@ namespace Tunny.Type
             return base.Write(writer);
         }
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < Value.Count; i++)
-            {
-                FishEgg v = Value[i];
-                sb.AppendLine($"[{i}] {v}");
-            }
-            return sb.ToString();
-        }
-
         public override bool CastFrom(object source)
         {
-            if (source is List<FishEgg> eggs)
+            if (source is FishEgg eggs)
             {
                 Value = eggs;
                 return true;
@@ -73,7 +59,7 @@ namespace Tunny.Type
         public override bool CastTo<T>(ref T target)
         {
             target = default;
-            if (typeof(T).IsAssignableFrom(typeof(List<FishEgg>)))
+            if (typeof(T).IsAssignableFrom(typeof(FishEgg)))
             {
                 target = (T)(object)Value;
                 return true;
@@ -84,22 +70,27 @@ namespace Tunny.Type
             }
         }
 
-        private static List<FishEgg> FromBase64(string base64)
+        private static FishEgg FromBase64(string base64)
         {
             byte[] bytes = Convert.FromBase64String(base64);
             using (var ms = new MemoryStream(bytes))
             {
-                return (List<FishEgg>)new BinaryFormatter().Deserialize(ms);
+                return (FishEgg)new BinaryFormatter().Deserialize(ms);
             }
         }
 
-        private static string ToBase64(List<FishEgg> value)
+        private static string ToBase64(FishEgg value)
         {
             using (var ms = new MemoryStream())
             {
                 new BinaryFormatter().Serialize(ms, value);
                 return Convert.ToBase64String(ms.ToArray());
             }
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
         }
     }
 }

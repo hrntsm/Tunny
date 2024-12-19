@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 
 namespace Tunny.Component.Operation
 {
-    internal class ConstructFishEggByCsvAttributes : Tunny_ComponentAttributes
+    internal sealed class ConstructFishEggByCsvAttributes : Tunny_ComponentAttributes
     {
         public ConstructFishEggByCsvAttributes(IGH_Component component) : base(component)
         {

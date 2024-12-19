@@ -53,7 +53,7 @@ namespace Tunny.Component.Operation
                 LayFishEgg();
             }
 
-            DA.SetData(0, _fishEggs);
+            DA.SetDataList(0, _fishEggs);
         }
 
         private void LayFishEgg()
