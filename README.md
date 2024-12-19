@@ -46,9 +46,9 @@ First, Tunny runs on Windows only.
 This software is being updated with your support.
 If you like this software, please donation.
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
+[![GitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=ff69b4)](https://github.com/sponsors/hrntsm)
 
-<iframe src="https://github.com/sponsors/hrntsm/card" title="Sponsor hrntsm" height="225" width="600" style="border: 0;"></iframe>
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
 ## :blowfish: License
 
@@ -70,13 +70,3 @@ https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-
 Please see Tunny documentation page.
 
 - https://tunny-docs.deno.dev/
-
-## :surfer: Contact information
-
-[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/hiron_rgkr)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/hiroaki-natsume-20a22118b/)
-
-- HP : [https://hiron.dev/](https://hiron.dev/)
-- Mail : support(at)hrntsm.com
-  - change (at) to @
-- Postings to [the discussion page](https://github.com/hrntsm/Tunny/discussions) are also welcome.
