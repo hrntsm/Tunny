@@ -41,7 +41,7 @@ First, Tunny runs on Windows only.
 1. In Grasshopper, Place the Tunny component and double-click the icon to start downloading the necessary libraries.
 1. Enjoy!
 
-## :sushi: Support
+## :sushi: Donation
 
 This software is being updated with your support.
 If you like this software, please donation.
@@ -53,7 +53,7 @@ If you like this software, please donation.
 ## :blowfish: License
 
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
-Copyright© 2022, hrntsm
+Copyright© 2022-2025, hrntsm
 
 Tunny use TT-DesignExplorer & Python runtime & some python packages.
 These depend on their own licenses.
@@ -70,3 +70,10 @@ https://user-images.githubusercontent.com/23289252/178105107-5e9dd9f7-5680-40d4-
 Please see Tunny documentation page.
 
 - https://tunny-docs.deno.dev/
+
+## :surfer: Support
+
+If you have any questions or report any bug for Tunny, please post them in the [mcneel forum](https://discourse.mcneel.com/).
+If you can send a mentions to [my account](https://discourse.mcneel.com/u/hiron/summary), I will be able to respond faster.
+
+For specific questions by email, this is available for supporters who have made a donation.
