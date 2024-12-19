@@ -48,6 +48,8 @@ If you like this software, please donation.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5C2MIU)
 
+<iframe src="https://github.com/sponsors/hrntsm/card" title="Sponsor hrntsm" height="225" width="600" style="border: 0;"></iframe>
+
 ## :blowfish: License
 
 Tunny is licensed under the [MIT](https://github.com/hrntsm/Tunny/blob/main/LICENSE) license.  
