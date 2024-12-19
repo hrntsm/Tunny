@@ -11,7 +11,7 @@ using Tunny.Util;
 
 namespace Tunny.Component.Operation
 {
-    public partial class ConstructFishEgg : GH_Component
+    public class ConstructFishEgg : GH_Component
     {
         private readonly List<FishEgg> _fishEggs = new List<FishEgg>();
         public override GH_Exposure Exposure => GH_Exposure.secondary;

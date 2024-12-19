@@ -7,9 +7,9 @@ using Grasshopper.Kernel;
 
 namespace Tunny.Component.Operation
 {
-    internal class ConstructFishEggAttributes : Tunny_ComponentAttributes
+    internal class ConstructFishEggByCsvAttributes : Tunny_ComponentAttributes
     {
-        public ConstructFishEggAttributes(IGH_Component component) : base(component)
+        public ConstructFishEggByCsvAttributes(IGH_Component component) : base(component)
         {
         }
 
@@ -49,16 +49,14 @@ namespace Tunny.Component.Operation
                 {
                         new Wire(3, Color.Orange),
                         new Wire(3, GH_Skin.wire_selected_a, GH_Skin.wire_selected_b),
-                        new Wire(3, GH_Skin.wire_selected_a, GH_Skin.wire_selected_b),
                 })
                 : (new[]
                 {
                         new Wire(2, Color.FromArgb(Convert.ToInt32("33FFA500", 16))),
                         new Wire(3, GH_Skin.wire_default),
-                        new Wire(3, GH_Skin.wire_default)
                 });
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 DrawPath(canvas, graphics, Owner.Params.Input[i], wires[i]);
             }

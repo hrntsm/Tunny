@@ -37,6 +37,12 @@
     <None Update="TestFile\DesignExplorer.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestFile\EggTest1.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFile\EggTest2.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFile\journal.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

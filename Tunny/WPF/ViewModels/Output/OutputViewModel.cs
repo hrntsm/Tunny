@@ -145,8 +145,8 @@ namespace Tunny.WPF.ViewModels.Output
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                var reader = new SelectionCsvReader(dialog.FileName);
-                int[] indices = reader.ReadSelection(type);
+                var reader = new CsvReader(dialog.FileName);
+                int[] indices = reader.ReadSelectionCsv(type);
                 foreach (int index in indices)
                 {
                     AddOutputListedItems(index);
