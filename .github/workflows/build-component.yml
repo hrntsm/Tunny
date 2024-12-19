@@ -1,8 +1,6 @@
 name: Build Grasshopper Plugin
 
 on:
-  push:
-    branches: [develop]
   pull_request:
     branches: [main, develop]
 
@@ -10,49 +8,33 @@ jobs:
   build:
     strategy:
       matrix:
-        configuration: [Release]
+        configuration: [Debug]
 
     runs-on: windows-latest # For a list of available runner types, refer to
 
     env:
-      Solution_Name: Tunny.sln
+      Main_Solution_Name: Tunny.sln
       Plugin_File_Name: Tunny
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: true
 
       - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
+        uses: NuGet/setup-nuget@v2
 
-      - name: Restore the application
-        run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      - name: Restore the Tunny application
+        run: msbuild $env:Main_Solution_Name /t:Restore /p:Configuration=$env:Configuration
         env:
           Configuration: ${{ matrix.configuration }}
 
-      - name: Build the application
-        run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      - name: Build the Tunny application
+        run: msbuild $env:Main_Solution_Name /p:Configuration=$env:Configuration
         env:
           Configuration: ${{ matrix.configuration }}
-
-      - name: Copy items to /Release dir
-        if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        shell: powershell
-        run: |
-          cp ./Samples ./Release/Samples -recurse
-          cp ./LICENSE ./Release/LICENSE.txt
-          cp ./PYTHON_PACKAGE_LICENSES ./Release/PYTHON_PACKAGE_LICENSES.txt
-          cp ./Tunny/bin/Release/net48 ./Release/Tunny -recurse
-
-      - name: Upload release build of plugin as artefact
-        if: ${{ matrix.configuration == 'Release' }} # Only upload gha from a release build
-        uses: actions/upload-artifact@v2
-        with:
-          name: Tunny
-          path: |
-            ./Release
