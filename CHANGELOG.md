@@ -58,6 +58,7 @@ for soon-to-be removed features.
 - Pareto Front plot with 3 objectives visualize error.
 - Delegate initialize error when push run optimize button.
 - If there is not examples dir in .tunny_env, tunny throw exception when Loading instruction.
+- Use try-catch syntax to avoid LoadingInstruction exception.
 
 ### Security
 
