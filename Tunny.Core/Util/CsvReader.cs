@@ -19,7 +19,7 @@ namespace Tunny.Core.Util
 
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("File not found", filePath);
+                throw new FileNotFoundException("CSV file not found", filePath);
             }
 
             _filePath = filePath;

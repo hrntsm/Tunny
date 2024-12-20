@@ -39,7 +39,15 @@ namespace Tunny.Component.Operation
         {
             string csvPath = string.Empty;
             if (!DA.GetData(1, ref csvPath)) { return; }
-            LayFishEgg(csvPath);
+            try
+            {
+                LayFishEgg(csvPath);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                return;
+            }
 
             DA.SetDataList(0, _fishEggs);
         }
