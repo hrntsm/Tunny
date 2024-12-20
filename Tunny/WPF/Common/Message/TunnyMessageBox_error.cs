@@ -173,5 +173,16 @@ namespace Tunny.WPF.Common
                 MessageBoxImage.Error
             );
         }
+
+        internal static void Error_NoStudyFound()
+        {
+            Show(
+                "No study found.",
+                "Tunny",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+        }
+
     }
 }
