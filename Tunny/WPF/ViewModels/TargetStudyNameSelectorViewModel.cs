@@ -86,6 +86,12 @@ namespace Tunny.WPF.ViewModels
         {
             _settings = SharedItems.Instance.Settings;
             StudyNameItems = StudyNamesFromStorage(_settings.Storage.Path);
+            if (StudyNameItems.Count == 0)
+            {
+                TunnyMessageBox.Error_NoStudyFound();
+                Close();
+                return;
+            }
             SelectedStudyName = StudyNameItems[0];
         }
 
