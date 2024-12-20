@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Windows;
 using System.Windows.Forms;
 
 using CefSharp;
@@ -29,12 +28,49 @@ namespace Tunny.Component
         public override GH_LoadingInstruction PriorityLoad()
         {
             TLog.InitializeLogger();
-            CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
-            Runtime.PythonDLL = Path.Combine(TEnvVariables.PythonDllPath);
-            Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
-            Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
-            Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
+            InitializePythonDllPath();
+            InitializeTunnyMenuItem();
+            InitializeCefRuntimeResolver();
+
             return GH_LoadingInstruction.Proceed;
+        }
+
+        private static void InitializeCefRuntimeResolver()
+        {
+            try
+            {
+                CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
+            }
+            catch (Exception e)
+            {
+                TLog.Error($"CefSharp Assembly Resolver error: {e.Message}: {e.StackTrace}");
+            }
+        }
+
+        private void InitializeTunnyMenuItem()
+        {
+            try
+            {
+                Grasshopper.Instances.ComponentServer.AddCategoryIcon("Tunny", Resource.TunnyIcon);
+                Grasshopper.Instances.ComponentServer.AddCategorySymbolName("Tunny", 'T');
+                Grasshopper.Instances.CanvasCreated += RegisterTunnyMenuItems;
+            }
+            catch (Exception e)
+            {
+                TLog.Error($"Register Tunny Menu Items error: {e.Message}: {e.StackTrace}");
+            }
+        }
+
+        private static void InitializePythonDllPath()
+        {
+            try
+            {
+                Runtime.PythonDLL = Path.Combine(TEnvVariables.PythonDllPath);
+            }
+            catch (Exception e)
+            {
+                TLog.Error($"Python RuntimeDLL path set error: {e.Message}: {e.StackTrace}");
+            }
         }
 
         void RegisterTunnyMenuItems(GH_Canvas canvas)

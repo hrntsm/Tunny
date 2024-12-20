@@ -27,7 +27,7 @@ namespace Tunny.Component.Operation
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddNumberParameter("Variables", "Vars", "Variables pair to enqueue optimize.", GH_ParamAccess.list);
-            pManager.AddTextParameter("CSV File", "CSV", "CSV file path to enqueue optimize.", GH_ParamAccess.item);
+            pManager.AddTextParameter("CSV File Path", "Path", "CSV file path to enqueue optimize.", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
