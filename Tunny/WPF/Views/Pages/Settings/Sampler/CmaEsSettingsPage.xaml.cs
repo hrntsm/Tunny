@@ -115,7 +115,9 @@ namespace Tunny.WPF.Views.Pages.Settings.Sampler
             CmaEsLrAdaptCheckBox.IsChecked = defaultSettings.LrAdapt;
             CmaEsConsiderPrunedTrialsCheckBox.IsChecked = defaultSettings.ConsiderPrunedTrials;
             CmaEsRestartStrategyComboBox.SelectedIndex = 0;
-            CmaEsPopulationSizeTextBox.Text = null;
+            CmaEsPopulationSizeTextBox.Text = defaultSettings.PopulationSize == null
+                ? "2"
+                : defaultSettings.PopulationSize.Value.ToString(CultureInfo.InvariantCulture);
             CmaEsIncreasingPopulationSizeTextBox.Text = defaultSettings.IncPopsize.ToString(CultureInfo.InvariantCulture);
             CmaEsWarmStartCmaEsCheckBox.IsChecked = defaultSettings.UseWarmStart;
             CmaEsUseFirstFishEggToX0CheckBox.IsChecked = defaultSettings.UseFirstEggToX0;
