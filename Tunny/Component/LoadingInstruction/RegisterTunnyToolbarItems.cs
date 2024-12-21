@@ -2,13 +2,9 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-using CefSharp;
-
 using Grasshopper.GUI;
 using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel;
-
-using Python.Runtime;
 
 using Tunny.Core.Settings;
 using Tunny.Core.Util;
@@ -17,7 +13,7 @@ using Tunny.WPF.Views.Windows;
 
 namespace Tunny.Component
 {
-    public class LoadingInstruction : GH_AssemblyPriority, IDisposable
+    public class RegisterTunnyToolbarItems : GH_AssemblyPriority, IDisposable
     {
         private ToolStripMenuItem _tutorialStripMenuItem;
         private ToolStripMenuItem _tunnyHelpStripMenuItem;
@@ -27,24 +23,9 @@ namespace Tunny.Component
 
         public override GH_LoadingInstruction PriorityLoad()
         {
-            TLog.InitializeLogger();
-            InitializePythonDllPath();
             InitializeTunnyMenuItem();
-            InitializeCefRuntimeResolver();
 
             return GH_LoadingInstruction.Proceed;
-        }
-
-        private static void InitializeCefRuntimeResolver()
-        {
-            try
-            {
-                CefRuntime.SubscribeAnyCpuAssemblyResolver(TEnvVariables.ComponentFolder);
-            }
-            catch (Exception e)
-            {
-                TLog.Error($"CefSharp Assembly Resolver error: {e.Message}: {e.StackTrace}");
-            }
         }
 
         private void InitializeTunnyMenuItem()
@@ -58,18 +39,6 @@ namespace Tunny.Component
             catch (Exception e)
             {
                 TLog.Error($"Register Tunny Menu Items error: {e.Message}: {e.StackTrace}");
-            }
-        }
-
-        private static void InitializePythonDllPath()
-        {
-            try
-            {
-                Runtime.PythonDLL = Path.Combine(TEnvVariables.PythonDllPath);
-            }
-            catch (Exception e)
-            {
-                TLog.Error($"Python RuntimeDLL path set error: {e.Message}: {e.StackTrace}");
             }
         }
 

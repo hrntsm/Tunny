@@ -14,13 +14,14 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - The drawing to viewport stops, allowing faster optimization to be performed.
 - Creating a file named quit.fishing in the .tunny_env folder to stop optimization.
 - Optuna pruner support.
-- NEW UI
+- Fully NEW UI
 - Variables can now be set to log scale from the UI.
 - Checkbox which minimize Rhino Window when start optimization
 - Support some optunahub sampler.
   - Auto sampler, MOEA/D sampler, MO-CMA-ES sampler
 - ConstructFishEggByCsv component
   - Make it easy to set FishEgg to use csv.
+- Other Grasshopper component compatibility check.
 
 ### Changed
 
@@ -37,10 +38,6 @@ Please see [here](https://github.com/hrntsm/Tunny/releases) for the data release
   - If you need save geometry, Please use artifact feature.
 - Update optuna v4.0
 - Update python v3.10 to v3.12
-
-### Deprecated
-
-for soon-to-be removed features.
 
 ### Removed
 
