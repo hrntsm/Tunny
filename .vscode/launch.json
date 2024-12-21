@@ -26,5 +26,15 @@
       "console": "internalConsole",
       "stopAtEntry": true
     },
+    {
+      "name": "Run Revit2025",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "C:/Program Files/Autodesk/Revit 2025/Revit.exe",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": true
+    },
   ]
 }
