@@ -344,8 +344,26 @@ namespace Tunny.WPF.ViewModels.Optimize
         private async void PerformRunOptimize()
         {
             TLog.MethodStart();
+            InitializePerformRunOptimize();
+
+            try
+            {
+                if (!CheckContinueAndCopy())
+                {
+                    return;
+                }
+                await OptimizeProcess.RunAsync(this);
+            }
+            finally
+            {
+                FinalizeWindow();
+            }
+        }
+
+        private void InitializePerformRunOptimize()
+        {
             _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
-            if (CheckPythonDllExistence() == false)
+            if (!CheckPythonDllExistence())
             {
                 return;
             }
@@ -360,19 +378,6 @@ namespace Tunny.WPF.ViewModels.Optimize
 
             _windowViewModel.ReportProgress("Start Optimizing...", 0);
             InitializeOptimizeProcess();
-
-            try
-            {
-                if (!CheckContinueAndCopy())
-                {
-                    return;
-                }
-                await OptimizeProcess.RunAsync(this);
-            }
-            finally
-            {
-                FinalizeWindow();
-            }
         }
 
         private bool CheckPythonDllExistence()

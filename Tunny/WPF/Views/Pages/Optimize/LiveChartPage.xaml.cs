@@ -19,8 +19,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             InitializeComponent();
             _viewModel = new LiveChartViewModel();
             DataContext = _viewModel;
-
-            Loaded += (s, e) => SetTargetComboBoxItems(1, e);
+            Loaded += (_, e) => SetTargetComboBoxItems(1, e);
         }
 
         public LiveChartPage(int yIndex)
@@ -29,7 +28,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
             _viewModel = new LiveChartViewModel();
             DataContext = _viewModel;
 
-            Loaded += (s, e) => SetTargetComboBoxItems(yIndex, e);
+            Loaded += (_, e) => SetTargetComboBoxItems(yIndex, e);
         }
 
         private void SetTargetComboBoxItems(object sender, RoutedEventArgs e)
