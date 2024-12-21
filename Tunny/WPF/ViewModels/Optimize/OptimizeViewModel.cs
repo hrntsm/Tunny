@@ -203,7 +203,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         {
             _chart1 = new LiveChartPage();
             LiveChart1 = _chart1;
-            _chart2 = new LiveChartPage();
+            _chart2 = new LiveChartPage(2);
             LiveChart2 = _chart2;
         }
 
@@ -344,6 +344,12 @@ namespace Tunny.WPF.ViewModels.Optimize
         private async void PerformRunOptimize()
         {
             TLog.MethodStart();
+            _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
+            if (CheckPythonDllExistence() == false)
+            {
+                return;
+            }
+
             EnableRunOptimizeButton = false;
             EnableStopOptimizeButton = true;
             _chart1.ClearPoints();
@@ -352,7 +358,6 @@ namespace Tunny.WPF.ViewModels.Optimize
             _settings.Optimize = GetCurrentSettings(true);
             SetupWindow();
 
-            _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
             _windowViewModel.ReportProgress("Start Optimizing...", 0);
             InitializeOptimizeProcess();
 
@@ -368,6 +373,20 @@ namespace Tunny.WPF.ViewModels.Optimize
             {
                 FinalizeWindow();
             }
+        }
+
+        private bool CheckPythonDllExistence()
+        {
+            if (File.Exists(TEnvVariables.PythonDllPath) == false)
+            {
+                MessageBoxResult result = TunnyMessageBox.Error_PythonDllNotFound();
+                if (result == MessageBoxResult.Yes)
+                {
+                    _windowViewModel.InstallPython();
+                }
+                return false;
+            }
+            return true;
         }
 
         private bool CheckContinueAndCopy()

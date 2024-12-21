@@ -20,11 +20,21 @@ namespace Tunny.WPF.Views.Pages.Optimize
             _viewModel = new LiveChartViewModel();
             DataContext = _viewModel;
 
-            Loaded += SetTargetComboBoxItems;
+            Loaded += (s, e) => SetTargetComboBoxItems(1, e);
+        }
+
+        public LiveChartPage(int yIndex)
+        {
+            InitializeComponent();
+            _viewModel = new LiveChartViewModel();
+            DataContext = _viewModel;
+
+            Loaded += (s, e) => SetTargetComboBoxItems(yIndex, e);
         }
 
         private void SetTargetComboBoxItems(object sender, RoutedEventArgs e)
         {
+            int yIndex = (int)sender;
             OptimizeComponentBase component = SharedItems.Instance.Component;
             string[] metricNames = component.GhInOut.Objectives.GetNickNames();
             _viewModel.XTarget = new ObservableCollection<string> { "Trial Number" };
@@ -35,7 +45,7 @@ namespace Tunny.WPF.Views.Pages.Optimize
                 _viewModel.YTarget.Add(s);
             }
             ChartXTargetComboBox.SelectedIndex = 0;
-            ChartYTargetComboBox.SelectedIndex = 1;
+            ChartYTargetComboBox.SelectedIndex = ChartYTargetComboBox.Items.Count > yIndex ? yIndex : 1;
         }
 
         public void AddPoint(int trialNumber, double[] objectives)
