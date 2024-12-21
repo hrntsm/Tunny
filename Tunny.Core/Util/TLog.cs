@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 using Serilog;
 using Serilog.Core;
-using Serilog.Events;
 
 using Tunny.Core.Settings;
 
@@ -13,6 +12,7 @@ namespace Tunny.Core.Util
 {
     public static class TLog
     {
+        private static bool s_isInitialized;
         private static readonly LoggingLevelSwitch LevelSwitch = new LoggingLevelSwitch();
 
         public static void InitializeLogger()
@@ -22,19 +22,16 @@ namespace Tunny.Core.Util
                 .MinimumLevel.ControlledBy(LevelSwitch)
                 .WriteTo.File(path: TEnvVariables.LogPath + "/log_.txt", rollingInterval: RollingInterval.Day, formatProvider: CultureInfo.InvariantCulture)
                 .CreateLogger();
-            Log.Information("Tunny is loaded.");
             CheckAndDeleteOldLogFiles();
+
+            s_isInitialized = true;
+            Log.Information("Tunny is loaded.");
         }
 
         private static void SetInitialLogLevels()
         {
             TSettings.TryLoadFromJson(out TSettings settings);
             LevelSwitch.MinimumLevel = settings.LogLevel;
-        }
-
-        public static void SetLoggingLevel(LogEventLevel level)
-        {
-            LevelSwitch.MinimumLevel = level;
         }
 
         private static void CheckAndDeleteOldLogFiles()
@@ -55,38 +52,57 @@ namespace Tunny.Core.Util
             }
         }
 
-        public static void CloseAndFlush()
-        {
-            Log.CloseAndFlush();
-        }
-
         public static void Verbose(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Verbose(message);
         }
 
         public static void Debug(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Debug(message);
         }
 
         public static void Info(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Information(message);
         }
 
         public static void Warning(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Warning(message);
         }
 
         public static void Error(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Error(message);
         }
 
         public static void Fatal(string message)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             Log.Fatal(message);
         }
 
@@ -96,6 +112,10 @@ namespace Tunny.Core.Util
             [CallerFilePath] string filePath = "",
             [CallerLineNumber] int lineNumber = -1)
         {
+            if (!s_isInitialized)
+            {
+                return;
+            }
             string fileName = Path.GetFileName(filePath);
             Log.Verbose($"|{fileName}|{memberName}|{lineNumber}|{message}");
         }
