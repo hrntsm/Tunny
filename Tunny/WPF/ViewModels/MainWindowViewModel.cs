@@ -83,7 +83,8 @@ namespace Tunny.WPF.ViewModels
             TLog.MethodStart();
             string tunnyAssembleVersion = TEnvVariables.Version.ToString();
             TSettings settings = SharedItems.Settings;
-            if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion)
+            bool isPythonDllExist = File.Exists(TEnvVariables.PythonDllPath);
+            if (settings.CheckPythonLibraries || settings.Version != tunnyAssembleVersion || isPythonDllExist == false)
             {
                 InstallPython();
                 settings.CheckPythonLibraries = false;
@@ -367,7 +368,8 @@ namespace Tunny.WPF.ViewModels
                 return _installPythonCommand;
             }
         }
-        private async void InstallPython()
+
+        internal async void InstallPython()
         {
             TLog.MethodStart();
             var installer = new PythonInstaller(this);

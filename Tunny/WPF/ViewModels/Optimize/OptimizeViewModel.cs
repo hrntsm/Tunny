@@ -203,7 +203,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         {
             _chart1 = new LiveChartPage();
             LiveChart1 = _chart1;
-            _chart2 = new LiveChartPage();
+            _chart2 = new LiveChartPage(2);
             LiveChart2 = _chart2;
         }
 
@@ -344,17 +344,7 @@ namespace Tunny.WPF.ViewModels.Optimize
         private async void PerformRunOptimize()
         {
             TLog.MethodStart();
-            EnableRunOptimizeButton = false;
-            EnableStopOptimizeButton = true;
-            _chart1.ClearPoints();
-            _chart2.ClearPoints();
-
-            _settings.Optimize = GetCurrentSettings(true);
-            SetupWindow();
-
-            _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
-            _windowViewModel.ReportProgress("Start Optimizing...", 0);
-            InitializeOptimizeProcess();
+            InitializePerformRunOptimize();
 
             try
             {
@@ -368,6 +358,40 @@ namespace Tunny.WPF.ViewModels.Optimize
             {
                 FinalizeWindow();
             }
+        }
+
+        private void InitializePerformRunOptimize()
+        {
+            _windowViewModel = SharedItems.TunnyWindow.DataContext as MainWindowViewModel;
+            if (!CheckPythonDllExistence())
+            {
+                return;
+            }
+
+            EnableRunOptimizeButton = false;
+            EnableStopOptimizeButton = true;
+            _chart1.ClearPoints();
+            _chart2.ClearPoints();
+
+            _settings.Optimize = GetCurrentSettings(true);
+            SetupWindow();
+
+            _windowViewModel.ReportProgress("Start Optimizing...", 0);
+            InitializeOptimizeProcess();
+        }
+
+        private bool CheckPythonDllExistence()
+        {
+            if (File.Exists(TEnvVariables.PythonDllPath) == false)
+            {
+                MessageBoxResult result = TunnyMessageBox.Error_PythonDllNotFound();
+                if (result == MessageBoxResult.Yes)
+                {
+                    _windowViewModel.InstallPython();
+                }
+                return false;
+            }
+            return true;
         }
 
         private bool CheckContinueAndCopy()

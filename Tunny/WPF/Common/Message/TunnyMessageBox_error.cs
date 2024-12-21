@@ -1,4 +1,3 @@
-using System;
 using System.Windows;
 
 using Tunny.Core.Util;
@@ -184,5 +183,14 @@ namespace Tunny.WPF.Common
             );
         }
 
+        internal static MessageBoxResult Error_PythonDllNotFound()
+        {
+            return Show(
+                "Tunny Python Runtime is not found. \nDo you want to install the Tunny Python environment?",
+                "Tunny",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Error
+            );
+        }
     }
 }
