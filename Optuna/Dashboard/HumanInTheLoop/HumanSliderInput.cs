@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
+using Optuna.Trial;
+
 using Python.Runtime;
 
 namespace Optuna.Dashboard.HumanInTheLoop
@@ -58,7 +60,7 @@ namespace Optuna.Dashboard.HumanInTheLoop
             registerObjectiveFromWidgets(study, widgets: widgets);
         }
 
-        public void SaveNote(dynamic study, dynamic trial, Bitmap[] bitmaps)
+        public void SaveNote(dynamic study, TrialWrapper trial, Bitmap[] bitmaps)
         {
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             var noteText = new StringBuilder();
@@ -69,16 +71,16 @@ namespace Optuna.Dashboard.HumanInTheLoop
             for (int i = 0; i < bitmaps.Length; i++)
             {
                 Bitmap bitmap = bitmaps[i];
-                string path = $"{_tmpPath}/image_{study._study_id}_{trial._trial_id}.png";
+                string path = $"{_tmpPath}/image_{study._study_id}_{trial.Id}.png";
                 bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-                dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
-                noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial._trial_id}/{artifactId})");
+                dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyObject, path);
+                noteText.AppendLine($"![](/artifacts/{study._study_id}/{trial.Id}/{artifactId})");
             }
 
             dynamic textWrap = _importedLibrary.Get("textwrap");
             dynamic note = textWrap.dedent(noteText.ToString());
             dynamic saveNote = _importedLibrary.Get("save_note");
-            saveNote(trial, note);
+            saveNote(trial.PyObject, note);
         }
 
         public static PyList EnumeratorToPyList(IEnumerable<string> enumerator)

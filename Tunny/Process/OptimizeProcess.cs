@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Optuna.Trial;
+
 using Tunny.Component.Optimizer;
 using Tunny.Core.Handler;
 using Tunny.Core.Input;
@@ -148,7 +150,7 @@ namespace Tunny.Process
             }
         }
 
-        private static int ReportPruner(dynamic optunaTrial, int step, Pruner pruner)
+        private static int ReportPruner(TrialWrapper trial, int step, Pruner pruner)
         {
             PrunerReport report = pruner.Evaluate();
             if (report == null)
@@ -157,18 +159,18 @@ namespace Tunny.Process
             }
             else
             {
-                optunaTrial.report(report.IntermediateValue, step);
+                trial.Report(report.IntermediateValue, step);
                 if (!string.IsNullOrEmpty(report.Attribute))
                 {
-                    optunaTrial.set_user_attr(IntermediateValueKey + step, report.Attribute);
+                    trial.SetUserAttribute(IntermediateValueKey + step, report.Attribute);
                 }
 
-                if (optunaTrial.should_prune())
+                if (trial.ShouldPrune())
                 {
                     pruner.RunStopperProcess();
                     if (report.TrialTellValue.HasValue)
                     {
-                        optunaTrial.set_user_attr(PrunedTrialReportValueKey, report.TrialTellValue.Value);
+                        trial.SetUserAttribute(PrunedTrialReportValueKey, report.TrialTellValue.Value);
                     }
                 }
 

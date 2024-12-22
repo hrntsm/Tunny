@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
+using Optuna.Trial;
+
 using Python.Runtime;
 
 using Rhino;
@@ -34,17 +36,17 @@ namespace Tunny.Input
             return Geometries.Count + Images.Count + ArtifactPaths.Count;
         }
 
-        public void UploadArtifacts(dynamic artifactBackend, dynamic trial)
+        public void UploadArtifacts(dynamic artifactBackend, TrialWrapper trial)
         {
             TLog.MethodStart();
-            string fileName = $"artifact_trial_{trial.number}";
+            string fileName = $"artifact_trial_{trial.Number}";
             string basePath = Path.Combine(TEnvVariables.TmpDirPath, fileName);
             SaveAllArtifacts(basePath);
 
             dynamic optuna = Py.Import("optuna");
             foreach (string path in ArtifactPaths)
             {
-                optuna.artifacts.upload_artifact(trial, path, artifactBackend);
+                optuna.artifacts.upload_artifact(trial.PyObject, path, artifactBackend);
             }
         }
 

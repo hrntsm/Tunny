@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Optuna.Trial;
+
 using Tunny.Core.Input;
 using Tunny.Core.Settings;
 
@@ -15,7 +17,7 @@ namespace Tunny.Core.Handler
         public double HypervolumeRatio { get; set; }
         public TimeSpan EstimatedTimeRemaining { get; set; }
         public bool IsReportOnly { get; set; }
-        public dynamic OptunaTrial { get; set; }
+        public TrialWrapper OptunaTrial { get; set; }
         public Pruner Pruner { get; set; }
         public int PercentComplete { get; set; }
 
