@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+using Optuna.Trial;
+
 namespace Optuna.Artifacts
 {
     public class Artifacts
@@ -20,7 +22,7 @@ namespace Optuna.Artifacts
             _artifactStore = optuna.artifacts.FileSystemArtifactStore(base_path: backendPath);
         }
 
-        public string UploadArtifact(dynamic optuna, dynamic trial, string filePath)
+        public string UploadArtifact(dynamic optuna, TrialWrapper trial, string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -34,7 +36,7 @@ namespace Optuna.Artifacts
             {
                 throw new ArgumentException("artifactStore is null. please call CreateFileSystemArtifactStore first.");
             }
-            return optuna.artifacts.upload_artifact(trial, filePath, _artifactStore);
+            return optuna.artifacts.upload_artifact(trial.PyObject, filePath, _artifactStore);
         }
     }
 }

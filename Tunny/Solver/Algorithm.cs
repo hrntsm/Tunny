@@ -10,6 +10,7 @@ using System.Windows;
 
 using Optuna.Dashboard.HumanInTheLoop;
 using Optuna.Study;
+using Optuna.Trial;
 using Optuna.Util;
 
 using Python.Runtime;
@@ -294,7 +295,7 @@ namespace Tunny.Solver
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
-            dynamic trial;
+            TrialWrapper trial;
             int progress = trialNum * 100 / optInfo.NTrials;
             var result = new TrialGrasshopperItems();
 
@@ -308,7 +309,7 @@ namespace Tunny.Solver
                     continue;
                 }
 
-                trial = optInfo.Study.ask();
+                trial = new TrialWrapper(optInfo.Study.ask());
                 SetOptimizationParameter(parameter, trial);
                 ProgressState pState = SetProgressState(optInfo, parameter, trialNum, startTime, trial, _settings.Pruner, progress);
                 if (_settings.Optimize.IgnoreDuplicateSampling && IsSampleDuplicate(trial, out result))
@@ -364,7 +365,7 @@ namespace Tunny.Solver
             return result;
         }
 
-        private void TellResultToOptuna(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, dynamic trial, TrialGrasshopperItems result)
+        private void TellResultToOptuna(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, TrialWrapper trial, TrialGrasshopperItems result)
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
@@ -374,7 +375,7 @@ namespace Tunny.Solver
                 result.Artifacts.UploadArtifacts(optInfo.ArtifactBackend, trial);
             }
 
-            if (_objective.Length == 1 && CheckShouldPrune(trial))
+            if (_objective.Length == 1 && trial.ShouldPrune())
             {
                 TellPruned(optInfo, trialNum, trial, optuna);
             }
@@ -388,23 +389,23 @@ namespace Tunny.Solver
             }
         }
 
-        private void TellCompleted(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, dynamic trial, TrialGrasshopperItems result)
+        private void TellCompleted(OptimizationHandlingInfo optInfo, Parameter[] parameter, int trialNum, TrialWrapper trial, TrialGrasshopperItems result)
         {
-            optInfo.Study.tell(trial, result.Objectives.Numbers);
+            optInfo.Study.tell(trial.PyObject, result.Objectives.Numbers);
             SetTrialResultLog(trialNum, result, optInfo, parameter);
         }
 
-        private static void TellFailed(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        private static void TellFailed(OptimizationHandlingInfo optInfo, int trialNum, TrialWrapper trial, dynamic optuna)
         {
-            optInfo.Study.tell(trial, state: optuna.trial.TrialState.FAIL);
+            optInfo.Study.tell(trial.PyObject, state: optuna.trial.TrialState.FAIL);
             TLog.Warning($"Trial {trialNum} failed.");
         }
 
-        private static void TellPruned(OptimizationHandlingInfo optInfo, int trialNum, dynamic trial, dynamic optuna)
+        private static void TellPruned(OptimizationHandlingInfo optInfo, int trialNum, TrialWrapper trial, dynamic optuna)
         {
-            if (trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
+            if (trial.PyObject.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
             {
-                optInfo.Study.tell(trial, trial.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey));
+                optInfo.Study.tell(trial, trial.PyObject.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey));
             }
             else
             {
@@ -413,36 +414,19 @@ namespace Tunny.Solver
             TLog.Warning($"Trial {trialNum} pruned.");
         }
 
-        //TODO: Fix Do not use try-catch block
-        private static bool CheckShouldPrune(dynamic trial)
-        {
-            bool shouldPrune;
-            try
-            {
-                shouldPrune = trial.should_prune();
-            }
-            catch (Exception)
-            {
-                PyObject pyShouldPrune = trial.should_prune().item();
-                shouldPrune = pyShouldPrune.As<bool>();
-            }
-
-            return shouldPrune;
-        }
-
-        private static bool IsSampleDuplicate(dynamic trial, out TrialGrasshopperItems result)
+        private static bool IsSampleDuplicate(TrialWrapper trial, out TrialGrasshopperItems result)
         {
             double[] values;
             PyModule ps = Py.CreateScope();
             var assembly = Assembly.GetExecutingAssembly();
             ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Solver.Python.check_duplication.py"));
             dynamic checkDuplicate = ps.Get("check_duplicate");
-            values = checkDuplicate(trial);
+            values = checkDuplicate(trial.PyObject);
             result = new TrialGrasshopperItems(values);
             return values != null;
         }
 
-        private void SetOptimizationParameter(Parameter[] parameter, dynamic trial)
+        private void SetOptimizationParameter(Parameter[] parameter, TrialWrapper trial)
         {
             TLog.MethodStart();
             foreach ((VariableBase variable, int i) in _variables.Select((v, i) => (v, i)))
@@ -455,19 +439,19 @@ namespace Tunny.Solver
                         if (number.IsLogScale)
                         {
                             numParam = number.IsInteger
-                                ? trial.suggest_int(name, number.LowerBond, number.UpperBond, log: true)
-                                : trial.suggest_float(name, number.LowerBond, number.UpperBond, log: true);
+                                ? trial.SuggestInt(name, number.LowerBond, number.UpperBond, log: true)
+                                : trial.SuggestFloat(name, number.LowerBond, number.UpperBond, true);
                         }
                         else
                         {
                             numParam = number.IsInteger
-                                ? trial.suggest_int(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
-                                : trial.suggest_float(name, number.LowerBond, number.UpperBond, step: number.Epsilon);
+                                ? trial.SuggestInt(name, number.LowerBond, number.UpperBond, step: number.Epsilon)
+                                : trial.SuggestFloat(name, number.LowerBond, number.UpperBond, number.Epsilon);
                         }
                         parameter[i] = new Parameter(numParam);
                         break;
                     case CategoricalVariable category:
-                        string catParam = (string)trial.suggest_categorical(name, category.Categories);
+                        string catParam = trial.SuggestCategorical(name, category.Categories);
                         parameter[i] = new Parameter(catParam);
                         break;
                 }
@@ -554,7 +538,7 @@ namespace Tunny.Solver
             return isOptimizeCompleted;
         }
 
-        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, dynamic trial, Pruner pruner, int progress)
+        private ProgressState SetProgressState(OptimizationHandlingInfo optSet, Parameter[] parameter, int trialNum, DateTime startTime, TrialWrapper trial, Pruner pruner, int progress)
         {
             TLog.MethodStart();
             double[][] bestValues = ComputeBestValues(optSet.Study);
@@ -638,13 +622,12 @@ namespace Tunny.Solver
             }
         }
 
-        private static void SetTrialUserAttr(TrialGrasshopperItems result, dynamic trial, OptimizationHandlingInfo optSet)
+        private static void SetTrialUserAttr(TrialGrasshopperItems result, TrialWrapper trial, OptimizationHandlingInfo optSet)
         {
             TLog.MethodStart();
             if (result.GeometryJson.Length != 0)
             {
-                PyList pyJson = PyConverter.EnumeratorToPyList(result.GeometryJson);
-                trial.set_user_attr("Geometry", pyJson);
+                trial.SetUserAttribute("Geometry", result.GeometryJson);
             }
 
             if (result.Attribute != null)
@@ -659,9 +642,9 @@ namespace Tunny.Solver
                 {
                     if (!optSet.ObjectiveNames[i].Contains("Human-in-the-Loop"))
                     {
-                        var key = new PyString("result_" + optSet.ObjectiveNames[i]);
-                        var value = new PyFloat(result.Objectives.Numbers[i - imageCount]);
-                        trial.set_user_attr(key, value);
+                        string key = "result_" + optSet.ObjectiveNames[i];
+                        double value = result.Objectives.Numbers[i - imageCount];
+                        trial.SetUserAttribute(key, value);
                     }
                     else
                     {
@@ -671,7 +654,7 @@ namespace Tunny.Solver
             }
         }
 
-        private static void SetNonGeometricAttr(TrialGrasshopperItems result, dynamic trial)
+        private static void SetNonGeometricAttr(TrialGrasshopperItems result, TrialWrapper trial)
         {
             TLog.MethodStart();
             foreach (KeyValuePair<string, List<string>> pair in result.Attribute)
@@ -701,7 +684,7 @@ namespace Tunny.Solver
                 {
                     pyReportValues = PyConverter.EnumeratorToPyList(pair.Value);
                 }
-                trial.set_user_attr(pair.Key, pyReportValues);
+                trial.SetUserAttribute(pair.Key, pyReportValues);
             }
         }
 

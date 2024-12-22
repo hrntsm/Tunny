@@ -1,5 +1,10 @@
 using System.Collections.Generic;
 
+using Optuna.Trial;
+
+using Tunny.Core.Settings;
+using Tunny.Core.TEnum;
+
 using Xunit;
 
 namespace Tunny.Core.Handler.Tests
@@ -26,7 +31,10 @@ namespace Tunny.Core.Handler.Tests
                 BestValues = bests,
                 HypervolumeRatio = 0,
                 EstimatedTimeRemaining = new System.TimeSpan(),
-                IsReportOnly = false
+                IsReportOnly = false,
+                OptunaTrial = new TrialWrapper(1),
+                Pruner = new Pruner(),
+                PercentComplete = 0
             };
 
             Assert.Equal(param, progressState.Parameter);
@@ -36,6 +44,9 @@ namespace Tunny.Core.Handler.Tests
             Assert.Equal(0, progressState.HypervolumeRatio);
             Assert.Equal(new System.TimeSpan(), progressState.EstimatedTimeRemaining);
             Assert.False(progressState.IsReportOnly);
+            Assert.Equal(1, progressState.OptunaTrial.PyObject);
+            Assert.Equal(PrunerType.None, progressState.Pruner.Type);
+            Assert.Equal(0, progressState.PercentComplete);
         }
 
         [Fact]

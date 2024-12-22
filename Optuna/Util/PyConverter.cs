@@ -2,13 +2,12 @@ using System.Collections.Generic;
 
 using Python.Runtime;
 
-namespace Tunny.Core.Util
+namespace Optuna.Util
 {
     public static class PyConverter
     {
         public static PyList EnumeratorToPyList(IEnumerable<string> enumerator)
         {
-            TLog.MethodStart();
             var pyList = new PyList();
             foreach (string item in enumerator)
             {
@@ -19,7 +18,6 @@ namespace Tunny.Core.Util
 
         public static PyList EnumeratorToPyList(IEnumerable<int> enumerator)
         {
-            TLog.MethodStart();
             var pyList = new PyList();
             foreach (int item in enumerator)
             {
@@ -30,7 +28,6 @@ namespace Tunny.Core.Util
 
         public static PyList EnumeratorToPyList(IEnumerable<double> enumerator)
         {
-            TLog.MethodStart();
             var pyList = new PyList();
             foreach (double item in enumerator)
             {

@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 
+using Optuna.Trial;
+
 using Python.Runtime;
 
 namespace Optuna.Dashboard.HumanInTheLoop
@@ -43,14 +45,14 @@ namespace Optuna.Dashboard.HumanInTheLoop
             return study;
         }
 
-        public void UploadArtifact(dynamic trial, Bitmap image)
+        public void UploadArtifact(TrialWrapper trial, Bitmap image)
         {
             dynamic uploadArtifact = _importedLibrary.Get("upload_artifact");
             CheckDirectoryIsExist();
-            string path = $"{_tmpPath}/image_{trial.number}.png";
+            string path = $"{_tmpPath}/image_{trial.Number}.png";
             image.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            dynamic artifactId = uploadArtifact(_artifactBackend, trial, path);
-            trial.set_user_attr(_userAttrKey, artifactId);
+            dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyObject, path);
+            trial.SetUserAttribute(_userAttrKey, artifactId);
         }
     }
 }
