@@ -64,8 +64,10 @@ namespace Tunny.Core.Storage
         {
             TLog.MethodStart();
             dynamic optuna = Py.Import("optuna");
-            dynamic lockObj = optuna.storages.JournalFileOpenLock(storagePath);
-            Storage = optuna.storages.JournalStorage(optuna.storages.JournalFileStorage(storagePath, lock_obj: lockObj));
+            dynamic optunaJournal = Py.Import("optuna.storages.journal");
+            dynamic lockObj = optunaJournal.JournalFileOpenLock(storagePath);
+            dynamic backend = optunaJournal.JournalFileBackend(storagePath, lock_obj: lockObj);
+            Storage = optuna.storages.JournalStorage(backend);
         }
 
         public void DuplicateStudyInStorage(string fromStudyName, string toStudyName, Settings.Storage storageSetting)
