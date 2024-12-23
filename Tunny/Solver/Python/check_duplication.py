@@ -1,10 +1,10 @@
-from optuna.trial import TrialState
+from optuna import Trial
+from optuna.trial import TrialState, FrozenTrial
 
 
-def check_duplicate(trial):
-
+def check_duplicate(trial: Trial):
     states_to_consider = (TrialState.COMPLETE,)
-    trials_to_consider = trial.study.get_trials(
+    trials_to_consider: list[FrozenTrial] = trial.study.get_trials(
         deepcopy=False, states=states_to_consider
     )
     for t in reversed(trials_to_consider):
@@ -14,7 +14,7 @@ def check_duplicate(trial):
     return None
 
 
-def set_attr_to_duplicate_trial(base_trial, compared_trial) -> None:
+def set_attr_to_duplicate_trial(base_trial: Trial, compared_trial: FrozenTrial) -> None:
     base_trial.set_user_attr(
         "NOTE",
         f"trial {compared_trial.number} and trial {base_trial.number} were duplicate parameters.",

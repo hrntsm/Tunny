@@ -1,6 +1,8 @@
 using System.IO;
-using System.Text;
-using System.Windows;
+using System.Reflection;
+
+using Optuna.Study;
+using Optuna.Util;
 
 using Python.Runtime;
 
@@ -53,21 +55,14 @@ namespace Optuna.Dashboard.HumanInTheLoop
             dashboard.Run(true);
         }
 
-        public static int GetRunningTrialNumber(dynamic study)
+        public static int GetRunningTrialNumber(StudyWrapper study)
         {
-            PyModule lenModule = Py.CreateScope();
-            var pyCode = new StringBuilder();
-            pyCode.AppendLine("import optuna");
-            pyCode.AppendLine("from optuna.trial import TrialState");
-            pyCode.AppendLine("");
-            pyCode.AppendLine("def len4cs(study):");
-            pyCode.AppendLine("    running_trials = study.get_trials(deepcopy=False, states=(TrialState.RUNNING, ))");
-            pyCode.AppendLine("    return len(running_trials)");
-            lenModule.Exec(pyCode.ToString());
+            PyModule ps = Py.CreateScope();
+            var assembly = Assembly.GetExecutingAssembly();
+            ps.Exec(ReadFileFromResource.Text(assembly, "Optuna.Dashboard.HumanInTheLoop.Python.running_trials_length.py"));
+            dynamic runningTrialsLength = ps.Get("running_trials_length");
 
-            dynamic len = lenModule.Get("len4cs");
-
-            return len(study);
+            return runningTrialsLength(study.PyInstance);
         }
 
         public void CheckDirectoryIsExist()
