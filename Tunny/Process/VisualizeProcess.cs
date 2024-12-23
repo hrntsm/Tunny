@@ -14,27 +14,27 @@ namespace Tunny.Process
 {
     internal sealed class VisualizeProcess : PythonInit
     {
-        internal void Save(Storage storage, PlotSettings plotSettings, string htmlPath)
+        internal static void Save(Storage storage, PlotSettings plotSettings, string htmlPath)
         {
             Plot(storage, plotSettings, htmlPath);
         }
 
-        internal string Plot(Storage storage, PlotSettings plotSettings, string htmlPath = "")
+        internal static string Plot(Storage storage, PlotSettings plotSettings, string htmlPath = "")
         {
             TLog.MethodStart();
             InitializePythonEngine();
             using (Py.GIL())
             {
                 dynamic optunaStorage = storage.CreateNewOptunaStorage(false);
-                dynamic optunaStudy = Study.LoadStudy(optunaStorage, plotSettings.TargetStudyName);
-                if (optunaStudy == null)
+                StudyWrapper study = StudyWrapper.LoadStudy(optunaStorage, plotSettings.TargetStudyName);
+                if (study == null || study.PyInstance == null)
                 {
                     return string.Empty;
                 }
 
                 try
                 {
-                    PlotlyFigure figure = CreateFigure(optunaStudy, plotSettings);
+                    PlotlyFigure figure = CreateFigure(study, plotSettings);
                     if (string.IsNullOrEmpty(htmlPath))
                     {
                         htmlPath = Path.Combine(TEnvVariables.TmpDirPath, "plot.html");
@@ -52,7 +52,7 @@ namespace Tunny.Process
             return htmlPath;
         }
 
-        private static PlotlyFigure CreateFigure(dynamic study, PlotSettings settings)
+        private static PlotlyFigure CreateFigure(StudyWrapper study, PlotSettings settings)
         {
             TLog.MethodStart();
             switch (settings.PlotTypeName)

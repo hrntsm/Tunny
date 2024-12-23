@@ -130,8 +130,7 @@ namespace Tunny.WPF.ViewModels.Visualize
             }
             await Task.Run(() =>
             {
-                var vis = new VisualizeProcess();
-                string htmlPath = vis.Plot(_settings.Storage, plotSettings);
+                string htmlPath = VisualizeProcess.Plot(_settings.Storage, plotSettings);
                 string fileUrl = "file:///" + htmlPath.Replace("\\", "/");
                 PlotFrame.Load(fileUrl);
             });
@@ -169,11 +168,7 @@ namespace Tunny.WPF.ViewModels.Visualize
                     ShowInitialView();
                     return;
                 }
-                await Task.Run(() =>
-                {
-                    var vis = new VisualizeProcess();
-                    vis.Save(_settings.Storage, plotSettings, dialog.FileName);
-                });
+                await Task.Run(() => VisualizeProcess.Save(_settings.Storage, plotSettings, dialog.FileName));
             }
         }
 

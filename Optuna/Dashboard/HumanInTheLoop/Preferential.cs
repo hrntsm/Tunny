@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 
+using Optuna.Study;
 using Optuna.Trial;
 
 using Python.Runtime;
@@ -27,7 +28,7 @@ namespace Optuna.Dashboard.HumanInTheLoop
             _importedLibrary = importedLibrary;
         }
 
-        public dynamic CreateStudy(int nGenerate, string studyName, dynamic storage, string objectiveName)
+        public StudyWrapper CreateStudy(int nGenerate, string studyName, dynamic storage, string objectiveName)
         {
             dynamic createStudy = _importedLibrary.Get("create_study");
             dynamic preferentialGPSampler = _importedLibrary.Get("PreferentialGPSampler");
@@ -42,7 +43,7 @@ namespace Optuna.Dashboard.HumanInTheLoop
             dynamic registerPreferenceFeedbackComponent = _importedLibrary.Get("register_preference_feedback_component");
             _userAttrKey = objectiveName;
             registerPreferenceFeedbackComponent(study, "artifact", objectiveName);
-            return study;
+            return new StudyWrapper(study);
         }
 
         public void UploadArtifact(TrialWrapper trial, Bitmap image)

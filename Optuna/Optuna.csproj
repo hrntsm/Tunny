@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dashboard\HumanInTheLoop\Python\running_trials_length.py" />
     <None Remove="Sampler\Python\constraints.py" />
     <None Remove="Visualization\Python\plot_clustering.py" />
     <None Remove="Visualization\Python\plot_contour.py" />
@@ -24,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Dashboard\HumanInTheLoop\Python\running_trials_length.py" />
     <EmbeddedResource Include="Sampler\Python\constraints.py" />
     <EmbeddedResource Include="Visualization\Python\plot_clustering.py" />
     <EmbeddedResource Include="Visualization\Python\plot_contour.py" />

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Optuna.Study;
+
 using Python.Runtime;
 
 using Tunny.Core.Util;
@@ -86,10 +88,10 @@ namespace Tunny.Type
             return dict;
         }
 
-        public void EnqueueStudy(dynamic study)
+        public void EnqueueStudy(StudyWrapper study)
         {
             TLog.MethodStart();
-            study.enqueue_trial(GetParamPyDict(), user_attrs: GetAttrPyDict(), skip_if_exists: _skipIfExist);
+            study.EnqueueTrial(GetParamPyDict(), GetAttrPyDict(), _skipIfExist);
         }
     }
 }
