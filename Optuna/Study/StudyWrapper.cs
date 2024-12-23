@@ -95,7 +95,7 @@ namespace Optuna.Study
             PyInstance.set_metric_names(pyList);
         }
 
-        public static StudyWrapper CreateStudy(string studyName, dynamic sampler, string[] directions, dynamic storage, dynamic pruner, bool loadIfExists = true)
+        public static StudyWrapper CreateStudy(string studyName, dynamic sampler, string[] directions, dynamic storage, dynamic pruner, bool loadIfExists)
         {
             dynamic optuna = Py.Import("optuna");
             dynamic study = optuna.create_study(
