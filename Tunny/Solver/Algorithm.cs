@@ -400,9 +400,9 @@ namespace Tunny.Solver
 
         private static void TellPruned(OptimizationHandlingInfo optInfo, int trialNum, TrialWrapper trial)
         {
-            if (trial.PyObject.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
+            if (trial.PyInstance.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey) != null)
             {
-                double prunedValue = trial.PyObject.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey);
+                double prunedValue = trial.PyInstance.user_attrs.get(OptimizeProcess.PrunedTrialReportValueKey);
                 optInfo.Study.Tell(trial, prunedValue);
             }
             else
@@ -419,7 +419,7 @@ namespace Tunny.Solver
             var assembly = Assembly.GetExecutingAssembly();
             ps.Exec(ReadFileFromResource.Text(assembly, "Tunny.Solver.Python.check_duplication.py"));
             dynamic checkDuplicate = ps.Get("check_duplicate");
-            values = checkDuplicate(trial.PyObject);
+            values = checkDuplicate(trial.PyInstance);
             result = new TrialGrasshopperItems(values);
             return values != null;
         }

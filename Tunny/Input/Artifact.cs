@@ -46,7 +46,7 @@ namespace Tunny.Input
             dynamic optuna = Py.Import("optuna");
             foreach (string path in ArtifactPaths)
             {
-                optuna.artifacts.upload_artifact(trial.PyObject, path, artifactBackend);
+                optuna.artifacts.upload_artifact(trial.PyInstance, path, artifactBackend);
             }
         }
 

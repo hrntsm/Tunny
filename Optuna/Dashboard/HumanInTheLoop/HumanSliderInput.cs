@@ -74,14 +74,14 @@ namespace Optuna.Dashboard.HumanInTheLoop
                 Bitmap bitmap = bitmaps[i];
                 string path = $"{_tmpPath}/image_{study.Id}_{trial.Id}.png";
                 bitmap?.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-                dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyObject, path);
+                dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyInstance, path);
                 noteText.AppendLine($"![](/artifacts/{study.Id}/{trial.Id}/{artifactId})");
             }
 
             dynamic textWrap = _importedLibrary.Get("textwrap");
             dynamic note = textWrap.dedent(noteText.ToString());
             dynamic saveNote = _importedLibrary.Get("save_note");
-            saveNote(trial.PyObject, note);
+            saveNote(trial.PyInstance, note);
         }
 
         public static PyList EnumeratorToPyList(IEnumerable<string> enumerator)

@@ -52,7 +52,7 @@ namespace Optuna.Dashboard.HumanInTheLoop
             CheckDirectoryIsExist();
             string path = $"{_tmpPath}/image_{trial.Number}.png";
             image.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-            dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyObject, path);
+            dynamic artifactId = uploadArtifact(_artifactBackend, trial.PyInstance, path);
             trial.SetUserAttribute(_userAttrKey, artifactId);
         }
     }

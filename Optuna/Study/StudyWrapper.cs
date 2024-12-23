@@ -40,12 +40,12 @@ namespace Optuna.Study
 
         public void Tell(TrialWrapper trial, double value)
         {
-            PyInstance.tell(trial.PyObject, value);
+            PyInstance.tell(trial.PyInstance, value);
         }
 
         public void Tell(TrialWrapper trial, double[] values)
         {
-            PyInstance.tell(trial.PyObject, values);
+            PyInstance.tell(trial.PyInstance, values);
         }
 
         public void Tell(TrialWrapper trial, TrialState state)
@@ -70,7 +70,7 @@ namespace Optuna.Study
                     pyState = PyInstance.Complete;
                     break;
             }
-            PyInstance.tell(trial.PyObject, pyState);
+            PyInstance.tell(trial.PyInstance, pyState);
         }
 
         public void EnqueueTrial(PyDict paramDict, PyDict attrDict, bool skipIfExist)

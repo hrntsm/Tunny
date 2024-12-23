@@ -36,7 +36,7 @@ namespace Optuna.Artifacts
             {
                 throw new ArgumentException("artifactStore is null. please call CreateFileSystemArtifactStore first.");
             }
-            return optuna.artifacts.upload_artifact(trial.PyObject, filePath, _artifactStore);
+            return optuna.artifacts.upload_artifact(trial.PyInstance, filePath, _artifactStore);
         }
     }
 }

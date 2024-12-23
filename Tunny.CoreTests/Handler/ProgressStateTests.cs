@@ -44,7 +44,7 @@ namespace Tunny.Core.Handler.Tests
             Assert.Equal(0, progressState.HypervolumeRatio);
             Assert.Equal(new System.TimeSpan(), progressState.EstimatedTimeRemaining);
             Assert.False(progressState.IsReportOnly);
-            Assert.Equal(1, progressState.OptunaTrial.PyObject);
+            Assert.Equal(1, progressState.OptunaTrial.PyInstance);
             Assert.Equal(PrunerType.None, progressState.Pruner.Type);
             Assert.Equal(0, progressState.PercentComplete);
         }
